@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>McGilchrist · El Maestro y Su Emisario</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#08090c;--surface:#0e1016;--surface2:#13161e;--border:#181c28;--border2:#202840;
+  --text:#c4c8d8;--text2:#6a7090;--text3:#2a3050;
+  --hd:#4a6aaa;--hi:#aa6a3a;
+  --gold:#a8a048;
+}
+body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;min-height:100vh;padding:2rem 1rem 3rem;display:flex;flex-direction:column;align-items:center;}
+.header{text-align:center;margin-bottom:1.8rem;}
+.header-label{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.25em;color:var(--text3);text-transform:uppercase;margin-bottom:.4rem;}
+.header h1{font-family:'Cinzel',serif;font-size:clamp(1.2rem,3vw,1.9rem);color:var(--gold);letter-spacing:.06em;margin-bottom:.25rem;}
+.header p{font-size:.9rem;color:var(--text2);font-style:italic;}
+.line{width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:.8rem auto 0;}
+
+/* BRAIN VISUAL */
+.brain-section{width:100%;max-width:900px;display:grid;grid-template-columns:1fr 180px 1fr;gap:1rem;align-items:center;margin-bottom:1.5rem;}
+.hemi-col{display:flex;flex-direction:column;gap:.7rem;}
+.hemi-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1rem;cursor:pointer;transition:all .3s;}
+.hemi-card:hover{background:var(--surface2);}
+.hd .hemi-card:hover,.hd .hemi-card.active{border-color:var(--hd);box-shadow:0 0 16px -4px var(--hd);}
+.hi .hemi-card:hover,.hi .hemi-card.active{border-color:var(--hi);box-shadow:0 0 16px -4px var(--hi);}
+.hd{--accent:var(--hd);}
+.hi{--accent:var(--hi);}
+.hemi-label{font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.2rem;}
+.hemi-concept{font-family:'Cinzel',serif;font-size:.82rem;font-weight:600;color:var(--text);margin-bottom:.2rem;}
+.hemi-desc{font-size:.76rem;color:var(--text2);line-height:1.5;}
+
+/* CENTER BRAIN SVG */
+.brain-center{display:flex;align-items:center;justify-content:center;}
+
+/* COMPARISON TABLE */
+.comparison{width:100%;max-width:900px;margin-bottom:1.5rem;}
+.comp-title{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--text3);letter-spacing:.15em;text-transform:uppercase;text-align:center;margin-bottom:.8rem;}
+.comp-table{width:100%;border-collapse:collapse;}
+.comp-table th{font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:.6rem 1rem;text-align:left;}
+.th-left{color:var(--hd);background:#0a0e18;border-bottom:2px solid var(--hd);}
+.th-center{color:var(--text3);background:var(--surface);border-bottom:1px solid var(--border);text-align:center;font-size:.55rem;}
+.th-right{color:var(--hi);background:#180e08;border-bottom:2px solid var(--hi);text-align:right;}
+.comp-table td{padding:.55rem 1rem;font-size:.82rem;color:var(--text2);border-bottom:1px solid var(--border);line-height:1.4;}
+.td-left{background:#09101a;border-right:1px solid var(--border);}
+.td-center{background:var(--surface);text-align:center;font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--text3);}
+.td-right{background:#1a0e08;text-align:right;border-left:1px solid var(--border);}
+
+/* THESIS */
+.thesis-section{width:100%;max-width:900px;}
+.thesis-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.8rem;}
+.thesis-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.2rem;}
+.th-title{font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold);margin-bottom:.5rem;}
+.th-body{font-size:.82rem;color:var(--text2);line-height:1.7;}
+
+.section-title{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--text3);letter-spacing:.15em;text-transform:uppercase;text-align:center;margin-bottom:.8rem;}
+@media(max-width:700px){.brain-section{grid-template-columns:1fr;}.brain-center{order:-1;}.thesis-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-label">Segundo Cerebro Soberano · Esquema</div>
+  <h1>El Maestro y Su Emisario</h1>
+  <p>Iain McGilchrist — Hemisferios cerebrales y civilización occidental (2009)</p>
+  <div class="line"></div>
+</div>
+
+<!-- BRAIN SPLIT -->
+<div class="brain-section">
+  <!-- LEFT: HEMISFERIO DERECHO (el maestro) -->
+  <div class="hemi-col hd">
+    <div style="text-align:center;margin-bottom:.3rem;">
+      <span style="font-family:'Cinzel',serif;font-size:1rem;color:var(--hd);font-weight:600;">Hemisferio Derecho</span><br>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--text3);">EL MAESTRO</span>
+    </div>
+    <div class="hemi-card"><div class="hemi-label">Modo de conocer</div><div class="hemi-concept">Totalidad y contexto</div><div class="hemi-desc">Capta la situación completa, la ambigüedad, la novedad. Ve el bosque antes que los árboles.</div></div>
+    <div class="hemi-card"><div class="hemi-label">Atención</div><div class="hemi-concept">Amplia y vigilante</div><div class="hemi-desc">Atención abierta al entorno completo. Detecta lo inesperado. Orientado al fondo.</div></div>
+    <div class="hemi-card"><div class="hemi-label">Lenguaje</div><div class="hemi-concept">Metáfora y tono</div><div class="hemi-desc">Procesa el significado implícito, la ironía, el humor, el tono emocional. El "entre líneas".</div></div>
+    <div class="hemi-card"><div class="hemi-label">Tiempo</div><div class="hemi-concept">Flujo continuo</div><div class="hemi-desc">Tiempo como experiencia vivida, no como secuencia de instantes discretos.</div></div>
+    <div class="hemi-card"><div class="hemi-label">Emoción</div><div class="hemi-concept">Integrada y matizada</div><div class="hemi-desc">Las emociones son información sobre el mundo. No separadas del pensamiento.</div></div>
+  </div>
+
+  <!-- CENTER BRAIN -->
+  <div class="brain-center">
+    <svg viewBox="0 0 160 260" width="160" height="260" xmlns="http://www.w3.org/2000/svg">
+      <!-- Right hemisphere (visually left in brain-forward view) -->
+      <path d="M80,20 C40,20 10,50 10,90 C10,130 20,160 30,185 C40,210 50,230 80,240" fill="#0a0e18" stroke="#4a6aaa" stroke-width="1.5"/>
+      <path d="M80,20 C40,20 10,50 10,90 C10,130 20,160 30,185 C40,210 50,230 80,240" fill="#4a6aaa" fill-opacity=".12"/>
+      <!-- Left hemisphere (visually right) -->
+      <path d="M80,20 C120,20 150,50 150,90 C150,130 140,160 130,185 C120,210 110,230 80,240" fill="#180e08" stroke="#aa6a3a" stroke-width="1.5"/>
+      <path d="M80,20 C120,20 150,50 150,90 C150,130 140,160 130,185 C120,210 110,230 80,240" fill="#aa6a3a" fill-opacity=".12"/>
+      <!-- Corpus callosum -->
+      <line x1="80" y1="20" x2="80" y2="240" stroke="#202840" stroke-width="2" stroke-dasharray="4 3"/>
+      <!-- Labels -->
+      <text x="42" y="130" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="#4a6aaa" opacity=".8">HD</text>
+      <text x="118" y="130" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="#aa6a3a" opacity=".8">HI</text>
+      <!-- Corpus callosum label -->
+      <text x="80" y="255" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6" fill="#2a3050">CUERPO CALLOSO</text>
+    </svg>
+  </div>
+
+  <!-- RIGHT: HEMISFERIO IZQUIERDO (el emisario) -->
+  <div class="hemi-col hi">
+    <div style="text-align:center;margin-bottom:.3rem;">
+      <span style="font-family:'Cinzel',serif;font-size:1rem;color:var(--hi);font-weight:600;">Hemisferio Izquierdo</span><br>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--text3);">EL EMISARIO</span>
+    </div>
+    <div class="hemi-card"><div class="hemi-label">Modo de conocer</div><div class="hemi-concept">Análisis y reducción</div><div class="hemi-desc">Descompone en partes, abstrae, categoriza. Ve los árboles, pierde el bosque.</div></div>
+    <div class="hemi-card"><div class="hemi-label">Atención</div><div class="hemi-concept">Focalizada y estrecha</div><div class="hemi-desc">Atención dirigida a lo conocido y esperado. Orientado a la figura, no al fondo.</div></div>
+    <div class="hemi-card"><div class="hemi-label">Lenguaje</div><div class="hemi-concept">Literal y denotativo</div><div class="hemi-desc">Procesa el significado explícito, las reglas gramaticales, el contenido proposicional.</div></div>
+    <div class="hemi-card"><div class="hemi-label">Tiempo</div><div class="hemi-concept">Secuencia discreta</div><div class="hemi-desc">Tiempo como serie de instantes medibles. El reloj como modelo del tiempo.</div></div>
+    <div class="hemi-card"><div class="hemi-label">Emoción</div><div class="hemi-concept">Separada y controlada</div><div class="hemi-desc">Las emociones interfieren con el pensamiento "claro". Deben ser controladas.</div></div>
+  </div>
+</div>
+
+<!-- COMPARISON TABLE -->
+<div class="comparison">
+  <div class="comp-title">Tabla comparativa de modos hemisféricos</div>
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th class="th-left">Hemisferio Derecho (Maestro)</th>
+        <th class="th-center">DIMENSIÓN</th>
+        <th class="th-right">Hemisferio Izquierdo (Emisario)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="td-left">Conocimiento implícito, tácito</td><td class="td-center">Conocimiento</td><td class="td-right">Conocimiento explícito, declarativo</td></tr>
+      <tr><td class="td-left">Lo vivo, lo único, lo irrepetible</td><td class="td-center">Objeto</td><td class="td-right">Lo muerto, lo categorizable, lo repetible</td></tr>
+      <tr><td class="td-left">Experiencia directa del mundo</td><td class="td-center">Acceso</td><td class="td-right">Representación del mundo</td></tr>
+      <tr><td class="td-left">Ambigüedad productiva</td><td class="td-center">Incertidumbre</td><td class="td-right">Certeza buscada, ambigüedad resuelta</td></tr>
+      <tr><td class="td-left">Apertura a lo desconocido</td><td class="td-center">Novedad</td><td class="td-right">Clasificación en lo ya conocido</td></tr>
+      <tr><td class="td-left">Cuerpo como parte del yo</td><td class="td-center">Cuerpo</td><td class="td-right">Cuerpo como objeto del yo</td></tr>
+      <tr><td class="td-left">Artes, música, espiritualidad</td><td class="td-center">Dominio</td><td class="td-right">Ciencia formal, lógica, burocracia</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- THESIS CARDS -->
+<div class="thesis-section">
+  <div class="section-title">La tesis central y sus implicaciones</div>
+  <div class="thesis-grid">
+    <div class="thesis-card">
+      <div class="th-title">El golpe de estado del emisario</div>
+      <div class="th-body">El hemisferio izquierdo fue diseñado evolutivamente para servir al derecho: el maestro envía al emisario a hacer tareas específicas. La patología surge cuando el emisario toma el control y opera como si su representación del mundo fuera el mundo mismo. McGilchrist argumenta que la civilización occidental ha permitido este golpe de estado.</div>
+    </div>
+    <div class="thesis-card">
+      <div class="th-title">Síntomas culturales del dominio izquierdo</div>
+      <div class="th-body">Burocracia que trata personas como categorías. Ciencia que reduce lo vivo a lo medible. Arte que privilegia el concepto sobre la experiencia. Economía que trata la riqueza como número abstracto. Política que aplica soluciones universales a contextos únicos. McGilchrist ve estos síntomas en aceleración desde la Ilustración.</div>
+    </div>
+    <div class="thesis-card">
+      <div class="th-title">La paradoja del lenguaje</div>
+      <div class="th-body">El hemisferio izquierdo domina el lenguaje proposicional, por lo que cualquier argumento verbal sobre cuál hemisferio es superior está sesgado hacia su propio modo. McGilchrist resuelve esto argumentando que el derecho es el que origina el lenguaje como música y gesto, y el izquierdo lo convierte en sistema formal.</div>
+    </div>
+    <div class="thesis-card">
+      <div class="th-title">Conexión con el SCS</div>
+      <div class="th-body">McGilchrist y Kahneman se complementan: el hemisferio derecho no es el Sistema 1 ni el 2 — es un modo de conocer que integra ambos con la experiencia vivida. El HI corresponde parcialmente al Sistema 2 en su modo analítico. Sapolsky ancla la lateralización en neuroendocrinología. Buzsáki: los ritmos oscilatorios distintos de cada hemisferio sustentan los modos de McGilchrist.</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

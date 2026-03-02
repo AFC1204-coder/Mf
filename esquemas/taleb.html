@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Taleb · Antifrágil y el Cisne Negro</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#08090a;--surface:#0f1214;--surface2:#141a1e;--border:#1a2228;--border2:#202e38;
+  --text:#c0ccd4;--text2:#607080;--text3:#2a3840;
+  --fragil:#aa3a3a;--robusto:#7a7a3a;--antifragil:#3a8a6a;
+  --swan:#1a3a5a;--gold:#a8b840;
+}
+body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;min-height:100vh;padding:2rem 1rem 3rem;display:flex;flex-direction:column;align-items:center;}
+.header{text-align:center;margin-bottom:2rem;}
+.header-label{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.25em;color:var(--text3);text-transform:uppercase;margin-bottom:.4rem;}
+.header h1{font-family:'Cinzel',serif;font-size:clamp(1.3rem,3.5vw,2rem);color:var(--gold);letter-spacing:.06em;margin-bottom:.25rem;}
+.header p{font-size:.9rem;color:var(--text2);font-style:italic;}
+.line{width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:.8rem auto 0;}
+
+/* SPECTRUM */
+.spectrum-section{width:100%;max-width:900px;margin-bottom:2rem;}
+.spec-title{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--text3);letter-spacing:.15em;text-transform:uppercase;text-align:center;margin-bottom:1.2rem;}
+.spec-bar{height:12px;border-radius:6px;background:linear-gradient(90deg,var(--fragil),#6a6a3a,var(--antifragil));margin:0 2rem;position:relative;margin-bottom:.4rem;}
+.spec-labels{display:flex;justify-content:space-between;padding:0 2rem;margin-bottom:1.5rem;}
+.spec-label{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;}
+
+.triad{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;}
+.triad-card{border-radius:8px;padding:1.4rem;cursor:pointer;transition:all .3s;border:1px solid transparent;}
+.fragil-card{background:#1a0808;border-color:#3a1a1a;}
+.robusto-card{background:#141408;border-color:#2a2a10;}
+.antifragil-card{background:#081a10;border-color:#103a20;}
+.fragil-card:hover,.fragil-card.active{border-color:var(--fragil);box-shadow:0 0 24px -6px var(--fragil);}
+.robusto-card:hover,.robusto-card.active{border-color:var(--robusto);box-shadow:0 0 24px -6px var(--robusto);}
+.antifragil-card:hover,.antifragil-card.active{border-color:var(--antifragil);box-shadow:0 0 24px -6px var(--antifragil);}
+.tc-icon{font-size:2rem;margin-bottom:.5rem;}
+.tc-name{font-family:'Cinzel',serif;font-size:1rem;font-weight:600;margin-bottom:.3rem;}
+.fragil-card .tc-name{color:var(--fragil);}
+.robusto-card .tc-name{color:var(--robusto);}
+.antifragil-card .tc-name{color:var(--antifragil);}
+.tc-def{font-size:.82rem;color:var(--text2);line-height:1.6;margin-bottom:.8rem;}
+.tc-examples{list-style:none;padding:0;}
+.tc-examples li{font-size:.76rem;color:var(--text2);padding:.18rem 0 .18rem 1rem;position:relative;}
+.tc-examples li::before{content:'·';position:absolute;left:0;font-size:1rem;line-height:.9;}
+.fragil-card .tc-examples li::before{color:var(--fragil);}
+.robusto-card .tc-examples li::before{color:var(--robusto);}
+.antifragil-card .tc-examples li::before{color:var(--antifragil);}
+.tc-volatility{font-family:'JetBrains Mono',monospace;font-size:.62rem;margin-top:.6rem;padding:.25rem .5rem;border-radius:3px;border:1px solid currentColor;display:inline-block;}
+
+/* BLACK SWAN */
+.swan-section{width:100%;max-width:900px;margin:1.5rem 0;}
+.swan-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.swan-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.2rem;}
+.sw-title{font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold);margin-bottom:.5rem;}
+.sw-body{font-size:.82rem;color:var(--text2);line-height:1.7;}
+
+/* MEDIOCRISTAN vs EXTREMISTAN */
+.world-section{width:100%;max-width:900px;}
+.world-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.8rem;}
+.world-card{background:var(--surface);border-radius:6px;padding:1.2rem;border:1px solid var(--border);}
+.w-title{font-family:'Cinzel',serif;font-size:.95rem;margin-bottom:.5rem;}
+.medio-card .w-title{color:#7a9aaa;}
+.extremi-card .w-title{color:#aa6a3a;}
+.w-desc{font-size:.8rem;color:var(--text2);line-height:1.7;margin-bottom:.6rem;}
+.w-examples{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--text3);}
+
+/* DETAIL */
+.detail{background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:1.5rem;margin-top:1rem;display:none;width:100%;max-width:900px;}
+.detail.visible{display:block;animation:fadeUp .3s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.d-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2rem;}
+.d-box h4{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--text3);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.5rem;padding-bottom:.3rem;border-bottom:1px solid var(--border);}
+.d-box p,.d-box li{font-size:.83rem;color:var(--text2);line-height:1.7;}
+.d-box ul{list-style:none;padding:0;}
+.d-box li{padding:.15rem 0 .15rem 1rem;position:relative;}
+.d-box li::before{content:'›';position:absolute;left:0;}
+@media(max-width:700px){.triad{grid-template-columns:1fr;}.swan-grid,.world-grid{grid-template-columns:1fr;}.d-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-label">Segundo Cerebro Soberano · Esquema</div>
+  <h1>Antifrágil y el Cisne Negro</h1>
+  <p>Nassim Nicholas Taleb — Marco conceptual completo</p>
+  <div class="line"></div>
+</div>
+
+<!-- SPECTRUM -->
+<div class="spectrum-section">
+  <div class="spec-title">El espectro de respuesta a la volatilidad</div>
+  <div class="spec-bar"></div>
+  <div class="spec-labels">
+    <span class="spec-label" style="color:var(--fragil)">FRÁGIL</span>
+    <span class="spec-label" style="color:var(--robusto)">ROBUSTO</span>
+    <span class="spec-label" style="color:var(--antifragil)">ANTIFRÁGIL</span>
+  </div>
+
+  <div class="triad">
+    <div class="triad-card fragil-card" onclick="selectTriad('fragil')">
+      <div class="tc-icon">🏺</div>
+      <div class="tc-name">Frágil</div>
+      <div class="tc-def">Se deteriora con el estrés, la volatilidad y los shocks. Odia la aleatoriedad. Requiere estabilidad para funcionar.</div>
+      <ul class="tc-examples">
+        <li>Sistema financiero altamente apalancado</li>
+        <li>Empresa con un solo cliente</li>
+        <li>Inversor que no puede soportar drawdowns</li>
+        <li>Gobierno centralizado sin redundancia</li>
+        <li>Persona sin ahorros de emergencia</li>
+      </ul>
+      <span class="tc-volatility" style="color:var(--fragil)">VOLATILIDAD → DAÑO</span>
+    </div>
+    <div class="triad-card robusto-card" onclick="selectTriad('robusto')">
+      <div class="tc-icon">🪨</div>
+      <div class="tc-name">Robusto</div>
+      <div class="tc-def">Resiste el estrés sin deteriorarse. No mejora con los shocks pero tampoco empeora. Neutral ante la volatilidad.</div>
+      <ul class="tc-examples">
+        <li>Cartera 60/40 diversificada</li>
+        <li>Empresa con múltiples fuentes de ingreso</li>
+        <li>Reservas de efectivo sustanciales</li>
+        <li>Sistema político con separación de poderes</li>
+        <li>Habilidades transferibles a múltiples contextos</li>
+      </ul>
+      <span class="tc-volatility" style="color:var(--robusto)">VOLATILIDAD → NEUTRAL</span>
+    </div>
+    <div class="triad-card antifragil-card" onclick="selectTriad('antifragil')">
+      <div class="tc-icon">🔥</div>
+      <div class="tc-name">Antifrágil</div>
+      <div class="tc-def">Se beneficia del estrés, la volatilidad y los shocks. Como el músculo bajo ejercicio: necesita el estímulo para crecer.</div>
+      <ul class="tc-examples">
+        <li>Opciones de compra (payoff asimétrico)</li>
+        <li>Startup con capital limitado pero opcionalidad</li>
+        <li>Investigación científica especulativa</li>
+        <li>Evolución biológica</li>
+        <li>Barbell: máxima seguridad + máxima especulación</li>
+      </ul>
+      <span class="tc-volatility" style="color:var(--antifragil)">VOLATILIDAD → BENEFICIO</span>
+    </div>
+  </div>
+</div>
+
+<!-- BLACK SWAN -->
+<div class="swan-section">
+  <div class="spec-title">El marco del Cisne Negro</div>
+  <div class="swan-grid">
+    <div class="swan-card">
+      <div class="sw-title">¿Qué es un Cisne Negro?</div>
+      <div class="sw-body">Evento que cumple tres condiciones simultáneamente: (1) es un outlier fuera de las expectativas regulares — nada en el pasado apunta a su posibilidad; (2) tiene un impacto extremo; (3) es explicado retrospectivamente como predecible. La narrativa posterior crea la ilusión de que podría haberse anticipado.</div>
+    </div>
+    <div class="swan-card">
+      <div class="sw-title">La falacia narrativa</div>
+      <div class="sw-body">El cerebro humano construye historias causales para dar sentido a eventos aleatorios. Esta necesidad de narrativa nos hace ver patrones donde hay ruido y causalidad donde hay contingencia. La historia parece más predecible después de que ocurre. Los modelos que la explican bien retrospectivamente fracasan prospectivamente.</div>
+    </div>
+    <div class="swan-card">
+      <div class="sw-title">El problema de la inducción</div>
+      <div class="sw-body">El pavo que ha sido alimentado 1.000 días consecutivos generaliza "siempre seré alimentado". El día 1.001 es Acción de Gracias. Cuanto más larga la serie de confirmaciones, más confianza y más destructiva la violación. Los modelos extrapolados de períodos de calma son especialmente frágiles ante los Cisnes Negros.</div>
+    </div>
+    <div class="swan-card">
+      <div class="sw-title">Estrategia barbell</div>
+      <div class="sw-body">La respuesta óptima ante la incertidumbre radical: combinar activos de máxima seguridad (80-90% en efectivo, bonos del estado) con activos de máxima asimetría (10-20% en opciones, startups, especulaciones con pérdida máxima definida). Evitar el centro: los activos "moderadamente seguros" tienen la peor relación riesgo/retorno ante Cisnes Negros.</div>
+    </div>
+  </div>
+</div>
+
+<!-- MEDIOCRISTAN vs EXTREMISTAN -->
+<div class="world-section">
+  <div class="spec-title">Mediocrístán vs Extremistán</div>
+  <div class="world-grid">
+    <div class="world-card medio-card">
+      <div class="w-title">Mediocrístán</div>
+      <div class="w-desc">Dominado por la media. Los outliers tienen impacto limitado. La adición de una muestra más no cambia significativamente el total. Las distribuciones son gaussianas. Los modelos estadísticos funcionan.</div>
+      <div class="w-examples">Altura humana · Peso · Temperatura · Velocidad física · QI</div>
+    </div>
+    <div class="world-card extremi-card">
+      <div class="w-title">Extremistán</div>
+      <div class="w-desc">Dominado por los outliers. Una sola observación puede cambiar todo lo acumulado. Distribuciones de cola gruesa. Los modelos gaussianos son peligrosos: subestiman sistemáticamente el riesgo de eventos extremos.</div>
+      <div class="w-examples">Riqueza · Ventas de libros · Precios financieros · Guerras · Pandemias · Terremotos</div>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL -->
+<div class="detail" id="detail">
+  <div style="margin-bottom:.8rem;">
+    <span id="d-title" style="font-family:'Cinzel',serif;font-size:1.1rem;font-weight:600;"></span>
+  </div>
+  <div class="d-grid">
+    <div class="d-box"><h4>Exposición a shocks</h4><p id="d-shock"></p></div>
+    <div class="d-box"><h4>Aplicación en carteras</h4><p id="d-portfolio"></p></div>
+    <div class="d-box"><h4>Cómo construirlo</h4><ul id="d-build"></ul></div>
+  </div>
+</div>
+
+<script>
+const TRIAD={
+  fragil:{color:'var(--fragil)',title:'Frágil — Amante del orden, víctima del caos',
+    shock:'Cada shock reduce el valor, la capacidad o la supervivencia. El daño es convexo: shocks grandes producen daño desproporcionalmente mayor que shocks pequeños. La estabilidad aparente oculta la acumulación de fragilidad.',
+    portfolio:'Cartera apalancada sin stops. Posiciones concentradas en un solo activo o sector. Dependencia de mercados líquidos que pueden secarse. Alta correlación entre posiciones. Stop-loss ausente o ignorado bajo presión emocional.',
+    build:['Eliminar el apalancamiento primero','Definir la pérdida máxima aceptable antes de entrar','Diversificar fuentes de ingreso y activos','Mantener reservas de liquidez no invertidas','Nunca depender de un escenario específico']},
+  robusto:{color:'var(--robusto)',title:'Robusto — Neutral ante la tormenta',
+    shock:'Los shocks no producen beneficio ni daño sistemático. La cartera robusta no gana de la volatilidad pero tampoco es destruida por ella. Conserva el capital bajo estrés pero no lo multiplica.',
+    portfolio:'Diversificación real entre activos no correlacionados. Posición de efectivo sustancial. Stops predefinidos. Sin apalancamiento. La cartera puede perder en el corto plazo pero sobrevive al largo plazo con capital intacto.',
+    build:['Diversificar en activos con correlación real baja (no teórica)','Mantener 20-30% en efectivo o equivalentes','Definir stops en frío antes de abrir posiciones','Revisar correlaciones en períodos de estrés, no en calma','Aplicar análisis de estadio de Weinstein para timing']},
+  antifragil:{color:'var(--antifragil)',title:'Antifrágil — Gana con el caos',
+    shock:'Los shocks producen beneficio neto. El daño máximo está limitado (pérdida definida); la ganancia máxima es ilimitada o muy grande. La convexidad es asimétrica en la dirección correcta.',
+    portfolio:'Estrategia barbell: máxima seguridad en el núcleo + opcionalidad especulativa en los márgenes. Opciones de compra con prima limitada. Inversiones en startups con pérdida máxima definida. Posiciones que se benefician de la volatilidad extrema.',
+    build:['Separar el capital en dos categorías: núcleo seguro (80%) + opcionalidad (20%)','En el núcleo: efectivo, bonos soberanos de máxima calidad','En la opcionalidad: opciones, exposición a convexidad positiva','Nunca mezclar: evitar el "centro" de riesgo moderado','Rebalancear tras cada evento de volatilidad']}
+};
+
+function selectTriad(id){
+  const t=TRIAD[id];
+  const detail=document.getElementById('detail');
+  document.getElementById('d-title').textContent=t.title;
+  document.getElementById('d-title').style.color=t.color;
+  document.getElementById('d-shock').textContent=t.shock;
+  document.getElementById('d-portfolio').textContent=t.portfolio;
+  document.getElementById('d-build').innerHTML=t.build.map(b=>`<li style="--c:${t.color}">${b}</li>`).join('');
+  document.querySelectorAll('.d-box li').forEach(li=>li.style.setProperty('--accent',t.color));
+  document.querySelectorAll('.d-box li::before');
+  detail.classList.remove('visible');void detail.offsetWidth;detail.classList.add('visible');
+  document.querySelectorAll('.triad-card').forEach(c=>{
+    c.classList.remove('active');
+    if(c.onclick.toString().includes(id)) c.classList.add('active');
+  });
+}
+setTimeout(()=>selectTriad('antifragil'),400);
+</script>
+</body>
+</html>

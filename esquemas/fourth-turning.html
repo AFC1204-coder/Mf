@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Fourth Turning · Ciclos Generacionales</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#09080a;--surface:#110e14;--surface2:#17131c;--border:#201c28;--border2:#2a2438;
+  --text:#ccc0d8;--text2:#7a6a8e;--text3:#3a2e50;
+  --t1:#8a6aaa;--t2:#4a8a7a;--t3:#aa8a4a;--t4:#aa4a4a;
+  --gold:#c0a848;
+}
+body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;min-height:100vh;padding:2rem 1rem 3rem;display:flex;flex-direction:column;align-items:center;}
+.header{text-align:center;margin-bottom:2rem;}
+.header-label{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.25em;color:var(--text3);text-transform:uppercase;margin-bottom:.4rem;}
+.header h1{font-family:'Cinzel',serif;font-size:clamp(1.3rem,3.5vw,2rem);color:var(--gold);letter-spacing:.06em;margin-bottom:.25rem;}
+.header p{font-size:.9rem;color:var(--text2);font-style:italic;}
+.line{width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:.8rem auto 0;}
+
+/* SAECULUM WHEEL */
+.wheel-section{width:100%;max-width:700px;margin-bottom:2rem;}
+.wheel-center-wrap{position:relative;width:340px;height:340px;margin:0 auto;}
+.wheel-svg{width:100%;height:100%;}
+.wheel-inner{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120px;height:120px;border-radius:50%;background:var(--surface);border:1px solid var(--border2);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none;}
+.inner-title{font-family:'Cinzel',serif;font-size:.7rem;color:var(--gold);letter-spacing:.08em;}
+.inner-sub{font-family:'JetBrains Mono',monospace;font-size:.5rem;color:var(--text3);margin-top:.2rem;}
+
+/* TURNING CARDS */
+.turnings{display:grid;grid-template-columns:1fr 1fr;gap:1rem;width:100%;max-width:900px;margin-bottom:1.5rem;}
+.turning-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.2rem;cursor:pointer;transition:all .3s;position:relative;overflow:hidden;}
+.turning-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);}
+.turning-card:hover,.turning-card.active{border-color:var(--accent);background:var(--surface2);box-shadow:0 0 24px -6px var(--accent);}
+.t-num{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--accent);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.3rem;}
+.t-name{font-family:'Cinzel',serif;font-size:.95rem;font-weight:600;color:var(--text);margin-bottom:.2rem;}
+.t-archetype{font-size:.78rem;color:var(--text2);font-style:italic;margin-bottom:.6rem;}
+.t-mood{font-size:.8rem;color:var(--text2);line-height:1.6;}
+.t-examples{display:flex;flex-wrap:wrap;gap:.25rem;margin-top:.6rem;}
+.t-ex{font-family:'JetBrains Mono',monospace;font-size:.58rem;background:var(--bg);border:1px solid var(--border2);border-radius:2px;padding:.15rem .35rem;color:var(--text3);}
+
+/* GENERATIONAL ARCHETYPES */
+.arche-section{width:100%;max-width:900px;}
+.section-title{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--text3);letter-spacing:.15em;text-transform:uppercase;text-align:center;margin-bottom:1rem;}
+.arche-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.8rem;}
+.arche-card{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:.9rem;text-align:center;}
+.arche-icon{font-size:1.5rem;margin-bottom:.4rem;}
+.arche-name{font-family:'Cinzel',serif;font-size:.82rem;color:var(--gold);margin-bottom:.3rem;}
+.arche-trait{font-size:.75rem;color:var(--text2);line-height:1.5;margin-bottom:.4rem;}
+.arche-examples{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--text3);}
+
+/* DETAIL */
+.detail{background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:1.5rem;margin-top:1rem;display:none;width:100%;max-width:900px;}
+.detail.visible{display:block;animation:fadeUp .3s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.d-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2rem;margin-top:1rem;}
+.d-box h4{font-family:'JetBrains Mono',monospace;font-size:.56rem;color:var(--text3);text-transform:uppercase;letter-spacing:.12em;margin-bottom:.5rem;padding-bottom:.3rem;border-bottom:1px solid var(--border);}
+.d-box p,.d-box li{font-size:.83rem;color:var(--text2);line-height:1.7;}
+.d-box ul{list-style:none;padding:0;}
+.d-box li{padding:.15rem 0 .15rem 1rem;position:relative;}
+.d-box li::before{content:'›';position:absolute;left:0;color:var(--accent,var(--gold));}
+@media(max-width:700px){.turnings{grid-template-columns:1fr;}.arche-grid{grid-template-columns:1fr 1fr;}.d-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-label">Segundo Cerebro Soberano · Esquema</div>
+  <h1>El Ciclo Saecular — Cuatro Giros</h1>
+  <p>Strauss & Howe — The Fourth Turning (1997)</p>
+  <div class="line"></div>
+</div>
+
+<!-- SAECULUM WHEEL -->
+<div class="wheel-section">
+  <div class="wheel-center-wrap">
+    <svg class="wheel-svg" viewBox="-170 -170 340 340">
+      <!-- Segments -->
+      <g onclick="selectTurning(1)" style="cursor:pointer">
+        <path d="M0,0 L0,-148 A148,148 0 0,1 148,0 Z" fill="#8a6aaa" fill-opacity=".6" stroke="#09080a" stroke-width="2"/>
+        <path d="M0,0 L0,-148 A148,148 0 0,1 148,0 Z" fill="none" stroke="#8a6aaa" stroke-width=".5" opacity=".4"/>
+        <text x="74" y="-74" text-anchor="middle" font-family="Cinzel,serif" font-size="11" fill="rgba(255,255,255,.8)" transform="rotate(-45,74,-74)">PRIMER GIRO</text>
+        <text x="74" y="-61" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(200,180,255,.6)" transform="rotate(-45,74,-61)">High</text>
+      </g>
+      <g onclick="selectTurning(2)" style="cursor:pointer">
+        <path d="M0,0 L148,0 A148,148 0 0,1 0,148 Z" fill="#4a8a7a" fill-opacity=".6" stroke="#09080a" stroke-width="2"/>
+        <text x="74" y="74" text-anchor="middle" font-family="Cinzel,serif" font-size="11" fill="rgba(255,255,255,.8)" transform="rotate(45,74,74)">SEGUNDO GIRO</text>
+        <text x="74" y="87" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(150,220,200,.6)" transform="rotate(45,74,87)">Awakening</text>
+      </g>
+      <g onclick="selectTurning(3)" style="cursor:pointer">
+        <path d="M0,0 L0,148 A148,148 0 0,1 -148,0 Z" fill="#aa8a4a" fill-opacity=".6" stroke="#09080a" stroke-width="2"/>
+        <text x="-74" y="74" text-anchor="middle" font-family="Cinzel,serif" font-size="11" fill="rgba(255,255,255,.8)" transform="rotate(-45,-74,74)">TERCER GIRO</text>
+        <text x="-74" y="61" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(220,180,120,.6)" transform="rotate(-45,-74,61)">Unraveling</text>
+      </g>
+      <g onclick="selectTurning(4)" style="cursor:pointer">
+        <path d="M0,0 L-148,0 A148,148 0 0,1 0,-148 Z" fill="#aa4a4a" fill-opacity=".6" stroke="#09080a" stroke-width="2"/>
+        <text x="-74" y="-74" text-anchor="middle" font-family="Cinzel,serif" font-size="11" fill="rgba(255,255,255,.8)" transform="rotate(45,-74,-74)">CUARTO GIRO</text>
+        <text x="-74" y="-61" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="8" fill="rgba(220,120,120,.6)" transform="rotate(45,-74,-61)">Crisis</text>
+      </g>
+      <!-- Inner circle -->
+      <circle cx="0" cy="0" r="60" fill="#09080a" stroke="#2a2438" stroke-width="1.5"/>
+      <text x="0" y="-6" text-anchor="middle" font-family="Cinzel,serif" font-size="11" fill="#c0a848">SAECULUM</text>
+      <text x="0" y="7" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7.5" fill="#3a2e50">~80 AÑOS</text>
+    </svg>
+  </div>
+</div>
+
+<!-- TURNING CARDS -->
+<div class="turnings">
+  <div class="turning-card" id="tc1" data-id="1" style="--accent:var(--t1)" onclick="selectTurning(1)">
+    <div class="t-num">Primer Giro · High</div>
+    <div class="t-name">La Era de las Instituciones Fuertes</div>
+    <div class="t-archetype">El individuo se subordina a la colectividad reconstruida</div>
+    <div class="t-mood">Optimismo cívico. Las instituciones son respetadas. La conformidad es valorada. La crisis anterior ha creado cohesión.</div>
+    <div class="t-examples">
+      <span class="t-ex">Post-WWII 1946-64</span>
+      <span class="t-ex">Post-Guerra Civil 1865-86</span>
+    </div>
+  </div>
+  <div class="turning-card" id="tc2" data-id="2" style="--accent:var(--t2)" onclick="selectTurning(2)">
+    <div class="t-num">Segundo Giro · Awakening</div>
+    <div class="t-name">El Despertar Espiritual</div>
+    <div class="t-archetype">La generación joven rechaza el orden establecido en busca de significado interior</div>
+    <div class="t-mood">Fermentación cultural y espiritual. Las instituciones son cuestionadas. El individualismo florece. Movimientos sociales intensos.</div>
+    <div class="t-examples">
+      <span class="t-ex">Revolución cultural 1964-84</span>
+      <span class="t-ex">Era Progresista 1886-1908</span>
+    </div>
+  </div>
+  <div class="turning-card" id="tc3" data-id="3" style="--accent:var(--t3)" onclick="selectTurning(3)">
+    <div class="t-num">Tercer Giro · Unraveling</div>
+    <div class="t-name">El Deshilachamiento</div>
+    <div class="t-archetype">Individualismo consumado, instituciones debilitadas, consenso imposible</div>
+    <div class="t-mood">Prosperidad privada, decadencia pública. Polarización creciente. Desconfianza en las instituciones. Cultura del cinismo.</div>
+    <div class="t-examples">
+      <span class="t-ex">Culture Wars 1984-2008</span>
+      <span class="t-ex">Gilded Age 1908-29</span>
+    </div>
+  </div>
+  <div class="turning-card" id="tc4" data-id="4" style="--accent:var(--t4)" onclick="selectTurning(4)">
+    <div class="t-num">Cuarto Giro · Crisis</div>
+    <div class="t-name">La Crisis Regenerativa</div>
+    <div class="t-archetype">El orden viejo se destruye; uno nuevo emerge de la respuesta colectiva</div>
+    <div class="t-mood">Urgencia existencial. Movilización colectiva. Las instituciones se reconstruyen o destruyen. El resultado define el próximo saeculum.</div>
+    <div class="t-examples">
+      <span class="t-ex">2008-202X (en curso)</span>
+      <span class="t-ex">Gran Depresión + WWII</span>
+    </div>
+  </div>
+</div>
+
+<!-- GENERATIONAL ARCHETYPES -->
+<div class="arche-section">
+  <div class="section-title">Los cuatro arquetipos generacionales</div>
+  <div class="arche-grid">
+    <div class="arche-card">
+      <div class="arche-icon">🛡</div>
+      <div class="arche-name">Profeta</div>
+      <div class="arche-trait">Nacidos en el High. Criados con indulgencia. Se convierten en visionarios moralistas en la madurez.</div>
+      <div class="arche-examples">Boomers (1943-60)</div>
+    </div>
+    <div class="arche-card">
+      <div class="arche-icon">🗺</div>
+      <div class="arche-name">Nómada</div>
+      <div class="arche-trait">Nacidos en el Awakening. Criados con poca supervisión. Pragmáticos, duros, adaptables.</div>
+      <div class="arche-examples">Gen X (1961-81)</div>
+    </div>
+    <div class="arche-card">
+      <div class="arche-icon">⚔</div>
+      <div class="arche-name">Héroe</div>
+      <div class="arche-trait">Nacidos en el Unraveling. Criados con sobreprotección. Orientados al equipo, optimistas cívicos.</div>
+      <div class="arche-examples">Millennials (1982-2004)</div>
+    </div>
+    <div class="arche-card">
+      <div class="arche-icon">🎨</div>
+      <div class="arche-name">Artista</div>
+      <div class="arche-trait">Nacidos en la Crisis. Criados en medio del caos. Sensibles, mediadores, orientados al proceso.</div>
+      <div class="arche-examples">Gen Z (2005-presente)</div>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL -->
+<div class="detail" id="detail">
+  <div style="display:flex;align-items:center;gap:.8rem;margin-bottom:.5rem;">
+    <span id="d-badge" style="font-family:'JetBrains Mono',monospace;font-size:.6rem;padding:.2rem .5rem;border-radius:3px;border:1px solid currentColor;letter-spacing:.08em;"></span>
+    <span id="d-title" style="font-family:'Cinzel',serif;font-size:1.1rem;font-weight:600;"></span>
+  </div>
+  <div class="d-grid">
+    <div class="d-box"><h4>Clima social</h4><p id="d-climate"></p></div>
+    <div class="d-box"><h4>Dinámica histórica</h4><ul id="d-dynamics"></ul></div>
+    <div class="d-box"><h4>Implicaciones para el inversor</h4><p id="d-invest"></p></div>
+  </div>
+</div>
+
+<script>
+const TURNINGS={
+  1:{color:'var(--t1)',badge:'PRIMER GIRO · HIGH',title:'Era de Instituciones Fuertes',
+    climate:'Optimismo colectivo tras la crisis. Las instituciones son respetadas y funcionales. La conformidad social es valorada. El individualismo excesivo es mal visto. Crecimiento económico sostenido con alta cohesión social.',
+    dynamics:['Las instituciones reconstruidas en la crisis anterior alcanzan su máximo poder','La generación Profeta domina la política con visión moral','La generación Héroe construye el orden nuevo con energía cívica','El consenso político es posible; la polarización es mínima'],
+    invest:'Mercados alcistas seculares sostenidos. Las acciones y los activos productivos rinden bien. La expansión del crédito es saludable. El riesgo sistémico es bajo. La economía real domina sobre la financiera.'},
+  2:{color:'var(--t2)',badge:'SEGUNDO GIRO · AWAKENING',title:'El Despertar Espiritual',
+    climate:'La prosperidad material del High genera vacío espiritual. La generación joven (Profeta) desafía las instituciones del orden anterior. Fermentación cultural intensa. Los valores individuales superan los colectivos.',
+    dynamics:['Movimientos contraculturales y de derechos civiles','Las instituciones son cuestionadas pero aún funcionales','La economía sigue creciendo pero la cohesión social se fragmenta','Inicio de la polarización cultural que define el siguiente giro'],
+    invest:'Mercados volátiles con correcciones significativas. El oro y los activos tangibles comienzan a rendir. El auge de los movimientos sociales anticipa cambios regulatorios. Diversificación prudente.'},
+  3:{color:'var(--t3)',badge:'TERCER GIRO · UNRAVELING',title:'El Deshilachamiento',
+    climate:'Prosperidad privada máxima con decadencia pública creciente. Las instituciones son disfuncionales y desconfiadas. El individualismo es total. La polarización política hace imposible el consenso. Cultura del cinismo.',
+    dynamics:['Las instituciones pierden autoridad y legitimidad','La generación Nómada prospera en el caos del mercado','La deuda privada y pública se expande sin control','Los extremos políticos crecen; el centro se vacía'],
+    invest:'Mercados financieros en burbuja. La deuda alimenta los activos. Los ciclos son más cortos y volátiles. La ingeniería financiera supera a la economía real. Weinstein: identificar cuándo el Estadio 3 del mercado coincide con el Tercer Giro.'},
+  4:{color:'var(--t4)',badge:'CUARTO GIRO · CRISIS',title:'La Crisis Regenerativa',
+    climate:'Un catalizador (guerra, depresión, pandemia) dispara la respuesta colectiva. Las instituciones se reconstruyen o destruyen. La urgencia existencial elimina el individualismo. El resultado define el próximo saeculum por 80 años.',
+    dynamics:['Movilización colectiva sin precedentes desde el último Cuarto Giro','La generación Héroe lidera la respuesta con energía cívica','La deuda acumulada en el Tercer Giro colapsa o se monetiza','El orden mundial se reconfigura: nuevas instituciones, nuevo poder'],
+    invest:'Volatilidad extrema y oportunidades generacionales. Los activos del orden viejo colapsan. Los activos del nuevo orden (definidos por quién gana la crisis) se multiplican. Taleb: máxima exposición a la antifragi­lidad. Cash y opciones asimétricas.'}
+};
+
+function selectTurning(id){
+  const t=TURNINGS[id];
+  const detail=document.getElementById('detail');
+  document.getElementById('d-badge').textContent=t.badge;
+  document.getElementById('d-badge').style.color=t.color;
+  document.getElementById('d-title').textContent=t.title;
+  document.getElementById('d-title').style.color=t.color;
+  document.getElementById('d-climate').textContent=t.climate;
+  document.getElementById('d-dynamics').innerHTML=t.dynamics.map(d=>`<li>${d}</li>`).join('');
+  document.getElementById('d-invest').textContent=t.invest;
+  detail.style.setProperty('--accent',t.color);
+  detail.classList.remove('visible');void detail.offsetWidth;detail.classList.add('visible');
+  document.querySelectorAll('.turning-card').forEach(c=>c.classList.toggle('active',parseInt(c.dataset.id)===id));
+}
+setTimeout(()=>selectTurning(4),400);
+</script>
+</body>
+</html>

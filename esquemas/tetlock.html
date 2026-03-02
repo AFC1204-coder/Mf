@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tetlock · Superforecasting</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#080a09;--surface:#0e1210;--surface2:#131a15;--border:#1a2218;--border2:#222e22;
+  --text:#c4d4c0;--text2:#688070;--text3:#2a4030;
+  --good:#4aaa6a;--bad:#aa4a4a;--gold:#a8b840;
+  --fox:#7aaa4a;--hedge:#aa7a3a;
+}
+body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;min-height:100vh;padding:2rem 1rem 3rem;display:flex;flex-direction:column;align-items:center;}
+.header{text-align:center;margin-bottom:2rem;}
+.header-label{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.25em;color:var(--text3);text-transform:uppercase;margin-bottom:.4rem;}
+.header h1{font-family:'Cinzel',serif;font-size:clamp(1.3rem,3.5vw,2rem);color:var(--gold);letter-spacing:.06em;margin-bottom:.25rem;}
+.header p{font-size:.9rem;color:var(--text2);font-style:italic;}
+.line{width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:.8rem auto 0;}
+.section-title{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--text3);letter-spacing:.15em;text-transform:uppercase;text-align:center;margin-bottom:.9rem;}
+
+
+
+/* FOX vs HEDGEHOG */
+.fvh-section{width:100%;max-width:900px;margin-bottom:1.5rem;}
+.fvh-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.fvh-card{border-radius:8px;padding:1.4rem;border:1px solid transparent;cursor:pointer;transition:all .3s;}
+.fox-card{background:#0e1808;border-color:#2a3a18;}
+.hedge-card{background:#180e08;border-color:#3a2a10;}
+.fox-card:hover,.fox-card.active{border-color:var(--fox);box-shadow:0 0 24px -6px var(--fox);}
+.hedge-card:hover,.hedge-card.active{border-color:var(--hedge);box-shadow:0 0 24px -6px var(--hedge);}
+.fvh-icon{font-size:2.5rem;margin-bottom:.5rem;}
+.fvh-name{font-family:'Cinzel',serif;font-size:1.1rem;font-weight:600;margin-bottom:.3rem;}
+.fox-card .fvh-name{color:var(--fox);}
+.hedge-card .fvh-name{color:var(--hedge);}
+.fvh-quote{font-style:italic;font-size:.85rem;color:var(--text2);margin-bottom:.8rem;padding-left:.8rem;border-left:2px solid var(--text3);}
+.fvh-traits{list-style:none;padding:0;}
+.fvh-traits li{font-size:.8rem;color:var(--text2);padding:.2rem 0 .2rem 1rem;position:relative;line-height:1.5;}
+.fvh-traits li::before{content:'·';position:absolute;left:0;font-size:1rem;line-height:.9;}
+.fox-card .fvh-traits li::before{color:var(--fox);}
+.hedge-card .fvh-traits li::before{color:var(--hedge);}
+.fvh-accuracy{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.62rem;padding:.2rem .5rem;border-radius:3px;border:1px solid currentColor;margin-top:.6rem;}
+.fox-card .fvh-accuracy{color:var(--fox);}
+.hedge-card .fvh-accuracy{color:var(--hedge);}
+
+/* COMMANDMENTS */
+.cmd-section{width:100%;max-width:900px;margin-bottom:1.5rem;}
+.cmd-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;}
+.cmd-card{background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:.9rem;transition:all .3s;}
+.cmd-card:hover{background:var(--surface2);border-color:var(--border2);}
+.cmd-num{font-family:'JetBrains Mono',monospace;font-size:.55rem;color:var(--good);letter-spacing:.12em;margin-bottom:.3rem;}
+.cmd-name{font-family:'Cinzel',serif;font-size:.82rem;color:var(--text);margin-bottom:.3rem;}
+.cmd-desc{font-size:.76rem;color:var(--text2);line-height:1.55;}
+
+/* BRIER SCORE */
+.brier-section{width:100%;max-width:900px;}
+.brier-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.8rem;}
+.brier-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.2rem;}
+.b-title{font-family:'Cinzel',serif;font-size:.9rem;color:var(--gold);margin-bottom:.5rem;}
+.b-body{font-size:.82rem;color:var(--text2);line-height:1.7;}
+.b-formula{font-family:'JetBrains Mono',monospace;font-size:.75rem;background:var(--bg);border:1px solid var(--border2);border-radius:4px;padding:.5rem .8rem;margin:.5rem 0;color:var(--good);}
+
+@media(max-width:700px){.fvh-grid{grid-template-columns:1fr;}.cmd-grid{grid-template-columns:1fr 1fr;}.brier-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-label">Segundo Cerebro Soberano · Esquema</div>
+  <h1>Superforecasting — La Calibración como Habilidad</h1>
+  <p>Philip Tetlock — Good Judgment Project (2015)</p>
+  <div class="line"></div>
+</div>
+
+<!-- FOX vs HEDGEHOG -->
+<div class="fvh-section">
+  <div class="section-title">El zorro y el erizo — Isaiah Berlin via Tetlock</div>
+  <div class="fvh-grid">
+    <div class="fvh-card fox-card" onclick="this.classList.toggle('active')">
+      <div class="fvh-icon">🦊</div>
+      <div class="fvh-name">El Zorro</div>
+      <div class="fvh-quote">"El zorro sabe muchas cosas pequeñas"</div>
+      <ul class="fvh-traits">
+        <li>Usa múltiples marcos analíticos para cada problema</li>
+        <li>Actualiza sus creencias con nueva evidencia (bayesiano)</li>
+        <li>Expresa la incertidumbre con probabilidades precisas</li>
+        <li>Distingue entre lo que sabe y lo que no sabe</li>
+        <li>Aprende de sus errores analizando sus previsiones pasadas</li>
+        <li>Resistente a la narrativa: busca falsificación</li>
+      </ul>
+      <span class="fvh-accuracy">BRIER SCORE: BAJO (MEJOR)</span>
+    </div>
+    <div class="fvh-card hedge-card" onclick="this.classList.toggle('active')">
+      <div class="fvh-icon">🦔</div>
+      <div class="fvh-name">El Erizo</div>
+      <div class="fvh-quote">"El erizo sabe una Gran Cosa"</div>
+      <ul class="fvh-traits">
+        <li>Tiene una Gran Idea que explica todo</li>
+        <li>Resistente a actualizar creencias (confirma su marco)</li>
+        <li>Expresa alta confianza independientemente de la evidencia</li>
+        <li>Atractivo mediático: las predicciones audaces generan audiencia</li>
+        <li>Racionaliza sus errores como excepciones a la regla</li>
+        <li>Correlación inversa: más notoriedad, peores previsiones</li>
+      </ul>
+      <span class="fvh-accuracy">BRIER SCORE: ALTO (PEOR)</span>
+    </div>
+  </div>
+</div>
+
+<!-- 10 COMMANDMENTS -->
+<div class="cmd-section">
+  <div class="section-title">Los 10 mandamientos del superprevisor</div>
+  <div class="cmd-grid">
+    <div class="cmd-card"><div class="cmd-num">01</div><div class="cmd-name">Descompón el problema</div><div class="cmd-desc">Divide preguntas complejas en subpreguntas tratables. La descomposición reduce el error sistemático.</div></div>
+    <div class="cmd-card"><div class="cmd-num">02</div><div class="cmd-name">Usa tasas base</div><div class="cmd-desc">Empieza con la clase de referencia correcta antes de ajustar por particularidades del caso.</div></div>
+    <div class="cmd-card"><div class="cmd-num">03</div><div class="cmd-name">Equilibra visión interior y exterior</div><div class="cmd-desc">Vista interior: los detalles del caso. Vista exterior: lo que le ocurre a casos similares.</div></div>
+    <div class="cmd-card"><div class="cmd-num">04</div><div class="cmd-name">Actualiza con bayesianismo</div><div class="cmd-desc">Cada nueva evidencia debe actualizar la probabilidad. Ni demasiado rápido ni demasiado lento.</div></div>
+    <div class="cmd-card"><div class="cmd-num">05</div><div class="cmd-name">Calibra la confianza</div><div class="cmd-desc">El 70% de confianza debe acertar el 70% de las veces. El exceso de confianza es el error más común.</div></div>
+    <div class="cmd-card"><div class="cmd-num">06</div><div class="cmd-name">Distingue señal de ruido</div><div class="cmd-desc">No toda nueva información merece actualización. Saber cuándo ignorar es tan valioso como saber cuándo actualizar.</div></div>
+    <div class="cmd-card"><div class="cmd-num">07</div><div class="cmd-name">Aprende de los errores</div><div class="cmd-desc">Registra tus previsiones con timestamps y probabilidades. Analiza sistemáticamente los fallos.</div></div>
+    <div class="cmd-card"><div class="cmd-num">08</div><div class="cmd-name">Busca falsificación</div><div class="cmd-desc">Activamente busca evidencia que contradiga tu previsión. El cerebro busca confirmación; resiste ese sesgo.</div></div>
+    <div class="cmd-card"><div class="cmd-num">09</div><div class="cmd-name">Acepta la incertidumbre</div><div class="cmd-desc">"No sé" con probabilidad calibrada es mejor que certeza falsa. La incertidumbre honesta informa mejor.</div></div>
+    <div class="cmd-card"><div class="cmd-num">10</div><div class="cmd-name">Humildad epistémica</div><div class="cmd-desc">Las mejores mentes del siglo XX fallaron sistemáticamente en previsiones a 10 años. La humildad no es debilidad: es precisión.</div></div>
+  </div>
+</div>
+
+<!-- BRIER SCORE -->
+<div class="brier-section">
+  <div class="section-title">El Brier Score — midiendo la calibración</div>
+  <div class="brier-grid">
+    <div class="brier-card">
+      <div class="b-title">Qué mide</div>
+      <div class="b-formula">BS = (1/N) × Σ(p - o)²</div>
+      <div class="b-body">La media del cuadrado de la diferencia entre la probabilidad asignada (p) y el resultado real (o=1 si ocurrió, o=0 si no). Cuanto más bajo, mejor. El score perfectamente calibrado a largo plazo se acerca a 0. El score de predicción aleatoria es 0.25.</div>
+    </div>
+    <div class="brier-card">
+      <div class="b-title">Benchmarks del GJP</div>
+      <div class="b-body">Los superprevisores del Good Judgment Project superaron consistentemente a analistas de la CIA con acceso a información clasificada. El zorro mediano supera al erizo experto. La clave no es el acceso a información sino el proceso de razonamiento. El track record importa más que el título o la notoriedad.</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

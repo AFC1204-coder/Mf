@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kahneman · Sistema 1 vs Sistema 2</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08080d;--surface:#0f0f18;--surface2:#14141f;--border:#1a1a2e;--border2:#22223a;
+  --text:#ccc8d8;--text2:#7a7a9e;--text3:#3a3a5a;
+  --s1:#e8a030;--s1bg:#1a1208;--s1border:#3a2a10;
+  --s2:#4a90d8;--s2bg:#08101a;--s2border:#102030;
+  --gold:#c8a040;
+}
+body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',serif;min-height:100vh;padding:2rem 1rem 3rem;display:flex;flex-direction:column;align-items:center;}
+.header{text-align:center;margin-bottom:2rem;}
+.header-label{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.25em;color:var(--text3);text-transform:uppercase;margin-bottom:.4rem;}
+.header h1{font-family:'Cinzel',serif;font-size:clamp(1.3rem,3.5vw,2rem);color:var(--gold);letter-spacing:.06em;margin-bottom:.25rem;}
+.header p{font-size:.9rem;color:var(--text2);font-style:italic;}
+.line{width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:.8rem auto 0;}
+
+/* MAIN SPLIT */
+.split{display:grid;grid-template-columns:1fr 80px 1fr;gap:0;width:100%;max-width:960px;align-items:start;}
+.system-col{padding:1.5rem;border-radius:8px;transition:all .3s;}
+.sys1-col{background:var(--s1bg);border:1px solid var(--s1border);}
+.sys2-col{background:var(--s2bg);border:1px solid var(--s2border);}
+
+/* System headers */
+.sys-header{text-align:center;margin-bottom:1.5rem;}
+.sys-num{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;margin-bottom:.3rem;}
+.sys1-col .sys-num{color:var(--s1);}
+.sys2-col .sys-num{color:var(--s2);}
+.sys-name{font-family:'Cinzel',serif;font-size:1.4rem;font-weight:700;margin-bottom:.2rem;}
+.sys1-col .sys-name{color:var(--s1);}
+.sys2-col .sys-name{color:var(--s2);}
+.sys-tagline{font-size:.85rem;font-style:italic;color:var(--text2);}
+
+/* Properties */
+.prop-list{list-style:none;margin-bottom:1.2rem;}
+.prop-item{display:flex;align-items:flex-start;gap:.6rem;padding:.5rem 0;border-bottom:1px solid var(--border);}
+.prop-item:last-child{border-bottom:none;}
+.prop-icon{font-size:1rem;flex-shrink:0;margin-top:.1rem;}
+.prop-text strong{font-family:'JetBrains Mono',monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:.1rem;}
+.sys1-col .prop-text strong{color:var(--s1);}
+.sys2-col .prop-text strong{color:var(--s2);}
+.prop-text span{font-size:.82rem;color:var(--text2);line-height:1.5;}
+
+/* Examples section */
+.examples-title{font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--text3);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.6rem;}
+.example-tags{display:flex;flex-wrap:wrap;gap:.35rem;}
+.ex-tag{font-size:.72rem;background:var(--surface2);border:1px solid var(--border2);border-radius:3px;padding:.2rem .45rem;color:var(--text2);cursor:pointer;transition:all .2s;}
+.ex-tag:hover{border-color:var(--accent,var(--gold));color:var(--text);}
+
+/* Center divider */
+.center-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:3rem;gap:.5rem;}
+.vs-circle{width:50px;height:50px;border-radius:50%;background:var(--surface);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:.7rem;color:var(--gold);letter-spacing:.05em;}
+.arrow-down{font-size:1.2rem;color:var(--text3);}
+.interaction-label{font-family:'JetBrains Mono',monospace;font-size:.5rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;writing-mode:vertical-rl;margin-top:.5rem;}
+
+/* Battle scenarios */
+.scenarios{width:100%;max-width:960px;margin-top:1.5rem;}
+.scenarios-title{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--text3);letter-spacing:.15em;text-transform:uppercase;text-align:center;margin-bottom:1rem;}
+.scenario-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;}
+.scenario{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1rem;cursor:pointer;transition:all .3s;}
+.scenario:hover{background:var(--surface2);border-color:var(--border2);}
+.sc-title{font-family:'Cinzel',serif;font-size:.82rem;color:var(--text);margin-bottom:.4rem;}
+.sc-s1{font-size:.75rem;color:var(--s1);margin-bottom:.2rem;}
+.sc-s2{font-size:.75rem;color:var(--s2);margin-bottom:.2rem;}
+.sc-winner{font-family:'JetBrains Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;margin-top:.5rem;padding:.2rem .4rem;border-radius:2px;}
+.winner-s1{color:var(--s1);border:1px solid var(--s1);display:inline-block;}
+.winner-s2{color:var(--s2);border:1px solid var(--s2);display:inline-block;}
+
+/* Bias panel */
+.bias-section{width:100%;max-width:960px;margin-top:1.5rem;}
+.bias-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem;margin-top:.8rem;}
+.bias-card{background:var(--s1bg);border:1px solid var(--s1border);border-radius:5px;padding:.8rem;transition:all .3s;}
+.bias-card:hover{border-color:var(--s1);background:var(--surface2);}
+.bias-name{font-family:'Cinzel',serif;font-size:.78rem;color:var(--s1);margin-bottom:.3rem;}
+.bias-desc{font-size:.72rem;color:var(--text2);line-height:1.5;}
+
+@media(max-width:700px){
+  .split{grid-template-columns:1fr;}.center-col{flex-direction:row;justify-content:center;padding-top:0;padding:1rem 0;}.interaction-label{writing-mode:horizontal-tb;margin-top:0;margin-left:.5rem;}
+  .scenario-grid{grid-template-columns:1fr 1fr;}.bias-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-label">Segundo Cerebro Soberano · Esquema</div>
+  <h1>Sistema 1 vs Sistema 2</h1>
+  <p>Daniel Kahneman — Pensar Rápido, Pensar Despacio (2011)</p>
+  <div class="line"></div>
+</div>
+
+<div class="split">
+  <!-- SISTEMA 1 -->
+  <div class="system-col sys1-col">
+    <div class="sys-header">
+      <div class="sys-num">Sistema 01</div>
+      <div class="sys-name">Rápido</div>
+      <div class="sys-tagline">"Piensa" sin esfuerzo, automáticamente</div>
+    </div>
+    <ul class="prop-list">
+      <li class="prop-item"><span class="prop-icon">⚡</span><div class="prop-text"><strong>Velocidad</strong><span>Milisegundos. Opera continuamente sin ser invocado.</span></div></li>
+      <li class="prop-item"><span class="prop-icon">🔋</span><div class="prop-text"><strong>Esfuerzo</strong><span>Ninguno. No consume glucosa ni genera fatiga cognitiva.</span></div></li>
+      <li class="prop-item"><span class="prop-icon">🧠</span><div class="prop-text"><strong>Mecanismo</strong><span>Asociación, reconocimiento de patrones, heurísticas.</span></div></li>
+      <li class="prop-item"><span class="prop-icon">🎭</span><div class="prop-text"><strong>Emoción</strong><span>Integra respuestas afectivas en la evaluación sin separación.</span></div></li>
+      <li class="prop-item"><span class="prop-icon">📖</span><div class="prop-text"><strong>Memoria</strong><span>Memoria asociativa. Activa redes de conceptos relacionados.</span></div></li>
+      <li class="prop-item"><span class="prop-icon">🌊</span><div class="prop-text"><strong>Control</strong><span>No puede desactivarse voluntariamente. Siempre activo.</span></div></li>
+    </ul>
+    <div class="examples-title">Activado por</div>
+    <div class="example-tags">
+      <span class="ex-tag">2 + 2 = ?</span>
+      <span class="ex-tag">Leer texto simple</span>
+      <span class="ex-tag">Cara enfadada</span>
+      <span class="ex-tag">Conducir en autopista</span>
+      <span class="ex-tag">Completar "pan y..."</span>
+      <span class="ex-tag">Reconocer voz</span>
+      <span class="ex-tag">Priming</span>
+      <span class="ex-tag">Heurística disponibilidad</span>
+    </div>
+  </div>
+
+  <!-- CENTER -->
+  <div class="center-col">
+    <div class="vs-circle">VS</div>
+    <div class="arrow-down">↕</div>
+    <div class="interaction-label">Interacción dinámica</div>
+  </div>
+
+  <!-- SISTEMA 2 -->
+  <div class="system-col sys2-col">
+    <div class="sys-header">
+      <div class="sys-num">Sistema 02</div>
+      <div class="sys-name">Lento</div>
+      <div class="sys-tagline">Razonamiento deliberado y controlado</div>
+    </div>
+    <ul class="prop-list">
+      <li class="prop-item"><span class="prop-icon">🐢</span><div class="prop-text"><strong>Velocidad</strong><span>Segundos a minutos. Requiere tiempo de activación.</span></div></li>
+      <li class="prop-item"><span class="prop-icon">🔋</span><div class="prop-text"><strong>Esfuerzo</strong><span>Alto. Consume glucosa. Se agota (ego depletion).</span></div></li>
+      <li class="prop-item"><span class="prop-icon">🧮</span><div class="prop-text"><strong>Mecanismo</strong><span>Lógica, reglas, cómputo serial paso a paso.</span></div></li>
+      <li class="prop-item"><span class="prop-icon">🎭</span><div class="prop-text"><strong>Emoción</strong><span>Puede modular respuestas afectivas, pero con esfuerzo.</span></div></li>
+      <li class="prop-item"><span class="prop-icon">📖</span><div class="prop-text"><strong>Memoria</strong><span>Memoria de trabajo (limitada a ~7 elementos).</span></div></li>
+      <li class="prop-item"><span class="prop-icon">🌊</span><div class="prop-text"><strong>Control</strong><span>Perezoso. Solo interviene cuando hay señal de dificultad.</span></div></li>
+    </ul>
+    <div class="examples-title">Activado por</div>
+    <div class="example-tags">
+      <span class="ex-tag">17 × 24 = ?</span>
+      <span class="ex-tag">Texto en fuente difícil</span>
+      <span class="ex-tag">Detectar error lógico</span>
+      <span class="ex-tag">Aparcar en paralelo</span>
+      <span class="ex-tag">Comparar precios</span>
+      <span class="ex-tag">Redactar argumento</span>
+      <span class="ex-tag">Ignorar distracción</span>
+      <span class="ex-tag">Evaluar probabilidad</span>
+    </div>
+  </div>
+</div>
+
+<!-- BATTLE SCENARIOS -->
+<div class="scenarios">
+  <div class="scenarios-title">Escenarios de conflicto — ¿quién gana?</div>
+  <div class="scenario-grid">
+    <div class="scenario">
+      <div class="sc-title">Decisión de inversión</div>
+      <div class="sc-s1">S1: "Esta acción subió, seguirá subiendo"</div>
+      <div class="sc-s2">S2: "Necesito analizar fundamentales y valoración"</div>
+      <div class="sc-winner winner-s1">S1 gana bajo presión y euforia</div>
+    </div>
+    <div class="scenario">
+      <div class="sc-title">Leer un contrato</div>
+      <div class="sc-s1">S1: "Parece bien, firmo"</div>
+      <div class="sc-s2">S2: "Debo leer cada cláusula con atención"</div>
+      <div class="sc-winner winner-s1">S1 gana por fatiga de atención</div>
+    </div>
+    <div class="scenario">
+      <div class="sc-title">Respuesta a noticia</div>
+      <div class="sc-s1">S1: Reacción emocional inmediata</div>
+      <div class="sc-s2">S2: "¿Qué implica esto realmente?"</div>
+      <div class="sc-winner winner-s1">S1 gana en los primeros segundos</div>
+    </div>
+    <div class="scenario">
+      <div class="sc-title">Juego de ajedrez</div>
+      <div class="sc-s1">S1: Reconoce patrones de experto</div>
+      <div class="sc-s2">S2: Calcula variantes explícitamente</div>
+      <div class="sc-winner winner-s2">S2 + S1 integrados en expertos</div>
+    </div>
+    <div class="scenario">
+      <div class="sc-title">Stop-loss en pérdidas</div>
+      <div class="sc-s1">S1: "Aguanta, recuperará"</div>
+      <div class="sc-s2">S2: "El stop predefinido es 7%"</div>
+      <div class="sc-winner winner-s2">S2 gana si la regla existe antes</div>
+    </div>
+    <div class="scenario">
+      <div class="sc-title">Evaluación de un experto</div>
+      <div class="sc-s1">S1: Halo de autoridad, deferencia</div>
+      <div class="sc-s2">S2: "¿Es experto en este dominio?"</div>
+      <div class="sc-winner winner-s1">S1 gana sin entrenamiento previo</div>
+    </div>
+  </div>
+</div>
+
+<!-- BIASES FROM S1 -->
+<div class="bias-section">
+  <div class="scenarios-title">Sesgos principales generados por el Sistema 1</div>
+  <div class="bias-grid">
+    <div class="bias-card"><div class="bias-name">Heurística de disponibilidad</div><div class="bias-desc">Infiere frecuencia por facilidad de recuerdo. Amplifica eventos dramáticos y mediáticos.</div></div>
+    <div class="bias-card"><div class="bias-name">Heurística de representatividad</div><div class="bias-desc">Juzga probabilidad por similitud con el prototipo. Ignora tasas base y tamaño de muestra.</div></div>
+    <div class="bias-card"><div class="bias-name">Efecto de anclaje</div><div class="bias-desc">El primer número presentado contamina todas las estimaciones posteriores.</div></div>
+    <div class="bias-card"><div class="bias-name">Aversión a la pérdida</div><div class="bias-desc">Las pérdidas pesan ~2x más que las ganancias equivalentes. Prospect Theory.</div></div>
+    <div class="bias-card"><div class="bias-name">Efecto de encuadre</div><div class="bias-desc">"200 vidas salvadas" vs "400 muertos": decisiones opuestas ante información idéntica.</div></div>
+    <div class="bias-card"><div class="bias-name">Efecto halo</div><div class="bias-desc">Una característica positiva contamina la evaluación de todas las demás.</div></div>
+    <div class="bias-card"><div class="bias-name">Sesgo de confirmación</div><div class="bias-desc">El S1 busca confirmación; el S2 debería falsificar. Pero S2 es perezoso.</div></div>
+    <div class="bias-card"><div class="bias-name">Ilusión de validez</div><div class="bias-desc">Alta confianza en predicciones con alta coherencia narrativa aunque la evidencia sea débil.</div></div>
+  </div>
+</div>
+
+</body>
+</html>
