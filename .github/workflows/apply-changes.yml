@@ -1,1 +1,25 @@
+name: Apply SCS Changes
 
+on:
+  push:
+    paths:
+      - 'changes.json'
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply changes from changes.json
+        run: python3 .github/scripts/apply_changes.py
+
+      - name: Commit and push
+        run: |
+          git config user.name "SCS Bot"
+          git config user.email "scs-bot@github.com"
+          git add -A
+          git diff --staged --quiet || git commit -m "auto: apply changes from changes.json"
+          git push
