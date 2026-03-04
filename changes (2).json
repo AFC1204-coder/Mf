@@ -1,0 +1,26 @@
+[
+  {
+    "operation": "replace",
+    "file": "index.html",
+    "old": "    <div class=\"nav-brand-icon\">SC</div>",
+    "new": "    <div class=\"nav-brand-icon\" id=\"admin-trigger\">SC</div>"
+  },
+  {
+    "operation": "replace",
+    "file": "index.html",
+    "old": "let libros=[], lecs=[], preg=[], prog=[];\nlet libroActual=null, lecActual=null;\nlet ejeActivo=null, searchQ='', lecFilter='all';",
+    "new": "let libros=[], lecs=[], preg=[], prog=[];\nlet libroActual=null, lecActual=null;\nlet ejeActivo=null, searchQ='', lecFilter='all';\n\n/* ═══════════════════════════════════════════\n   ADMIN MODE\n═══════════════════════════════════════════ */\nlet adminMode = false;\nlet adminClickCount = 0;\nlet adminClickTimer = null;\n\nfunction initAdminTrigger() {\n  const trigger = document.getElementById('admin-trigger');\n  if (!trigger) return;\n  trigger.addEventListener('click', () => {\n    adminClickCount++;\n    clearTimeout(adminClickTimer);\n    adminClickTimer = setTimeout(() => { adminClickCount = 0; }, 600);\n    if (adminClickCount >= 3) {\n      adminClickCount = 0;\n      clearTimeout(adminClickTimer);\n      if (adminMode) {\n        adminMode = false;\n        trigger.style.background = '';\n        reloadLibros();\n      } else {\n        const pwd = prompt('');\n        if (pwd === 'CLPR1V4T3B00Ksc') {\n          adminMode = true;\n          trigger.style.background = 'var(--accent2, #e5c07b)';\n          reloadLibros();\n        }\n      }\n    }\n  });\n}\n\nasync function reloadLibros() {\n  const query = adminMode\n    ? 'libros?select=*&order=fecha_creacion.asc'\n    : 'libros?select=*&publico=eq.true&order=fecha_creacion.asc';\n  libros = await sb(query);\n  libros = libros.map(l => ({...l, eje: normalizeEje(l.eje)}));\n  renderStats(); renderEjes(); renderLibros(); renderContinua(); renderUltimosLibros();\n}"
+  },
+  {
+    "operation": "replace",
+    "file": "index.html",
+    "old": "      sb('libros?select=*&order=fecha_creacion.asc'),",
+    "new": "      adminMode ? sb('libros?select=*&order=fecha_creacion.asc') : sb('libros?select=*&publico=eq.true&order=fecha_creacion.asc'),"
+  },
+  {
+    "operation": "replace",
+    "file": "index.html",
+    "old": "    renderStats(); renderEjes(); renderLibros(); renderContinua(); renderUltimosLibros(); renderEsquemas();",
+    "new": "    renderStats(); renderEjes(); renderLibros(); renderContinua(); renderUltimosLibros(); renderEsquemas();\n    initAdminTrigger();"
+  }
+]
