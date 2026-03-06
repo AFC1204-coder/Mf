@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kahneman — Sistema 1 vs Sistema 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080808;--surface:#111;--surface2:#161616;--border:#222;--border2:#2e2e2e;--accent:#c9a84c;--text:#ede8df;--text2:#a8a094;--text3:#5c5650;--s1:#e74c3c;--s2:#3498db;--font-display:'Playfair Display',serif;--font-body:'Source Serif 4',serif;--font-mono:'IBM Plex Mono',monospace;}
+*{box-sizing:border-box;margin:0;padding:0;}body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh;}
+.back-btn{position:fixed;top:1rem;left:1rem;z-index:100;background:var(--surface);border:1px solid var(--border2);color:var(--accent);padding:0.5rem 1rem;border-radius:6px;cursor:pointer;font-family:var(--font-mono);font-size:0.72rem;text-decoration:none;transition:all 0.2s;}.back-btn:hover{background:var(--accent);color:#000;}
+.container{max-width:1000px;margin:0 auto;padding:3rem 1.5rem 4rem;}
+h1{font-family:var(--font-display);font-size:2.2rem;color:var(--accent);text-align:center;margin-bottom:0.3rem;}
+.subtitle{text-align:center;font-family:var(--font-mono);font-size:0.72rem;color:var(--text3);letter-spacing:0.1em;margin-bottom:3rem;}
+.dual{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:2.5rem;}
+.system{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2rem;position:relative;overflow:hidden;transition:all 0.3s;}.system:hover{transform:translateY(-3px);box-shadow:0 12px 40px #00000060;}
+.system::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}.system.s1::before{background:var(--s1);}.system.s2::before{background:var(--s2);}
+.sys-icon{font-size:2.5rem;margin-bottom:1rem;}.sys-name{font-family:var(--font-display);font-size:1.5rem;font-weight:700;margin-bottom:0.3rem;}.system.s1 .sys-name{color:var(--s1);}.system.s2 .sys-name{color:var(--s2);}
+.sys-tag{font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.1em;margin-bottom:1.2rem;text-transform:uppercase;}.system.s1 .sys-tag{color:#e74c3c88;}.system.s2 .sys-tag{color:#3498db88;}
+.sys-traits{list-style:none;}.sys-traits li{padding:0.5rem 0;border-bottom:1px solid var(--border);font-size:0.85rem;color:var(--text2);line-height:1.6;display:flex;align-items:flex-start;gap:0.6rem;}.sys-traits li:last-child{border:none;}
+.td{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:0.5rem;}.system.s1 .td{background:var(--s1);}.system.s2 .td{background:var(--s2);}
+.biases-title{font-family:var(--font-display);font-size:1.3rem;color:var(--accent);margin-bottom:0.3rem;}
+.biases-sub{font-family:var(--font-mono);font-size:0.65rem;color:var(--text3);margin-bottom:1.5rem;}
+.bg{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-bottom:2.5rem;}
+.bc{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.2rem;cursor:pointer;transition:all 0.25s;}.bc:hover{border-color:var(--s1);transform:translateY(-2px);}.bc.ex{border-color:var(--accent);}
+.bn{font-family:var(--font-display);font-size:0.92rem;font-weight:600;color:var(--s1);margin-bottom:0.3rem;}
+.bs{font-size:0.8rem;color:var(--text2);line-height:1.6;}
+.bd{display:none;margin-top:0.8rem;padding-top:0.8rem;border-top:1px solid var(--border);}.bc.ex .bd{display:block;}
+.be{font-size:0.78rem;color:var(--text3);line-height:1.65;margin-bottom:0.5rem;}
+.bf{font-size:0.78rem;color:#2ecc71aa;line-height:1.65;}
+.cs{background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:2rem;}
+.ct{font-family:var(--font-display);font-size:1.2rem;color:var(--accent);margin-bottom:1rem;}
+.ci{padding:0.8rem 0;border-bottom:1px solid var(--border);font-size:0.85rem;line-height:1.75;color:var(--text2);}.ci:last-child{border:none;}
+.ca{color:var(--accent);font-weight:600;}
+@media(max-width:700px){.dual{grid-template-columns:1fr;}.bg{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<a class="back-btn" onclick="window.close();history.back();">← Volver a la app</a>
+<div class="container">
+<h1>Sistema 1 vs Sistema 2</h1>
+<p class="subtitle">DANIEL KAHNEMAN — THINKING, FAST AND SLOW</p>
+<div class="dual">
+<div class="system s1"><div class="sys-icon">⚡</div><div class="sys-name">Sistema 1</div><div class="sys-tag">Rápido · Automático · Intuitivo</div>
+<ul class="sys-traits">
+<li><span class="td"></span>Opera sin esfuerzo consciente ni control voluntario</li>
+<li><span class="td"></span>Genera impresiones y sentimientos que alimentan las creencias del S2</li>
+<li><span class="td"></span>Detecta patrones instantáneamente — incluyendo los que no existen</li>
+<li><span class="td"></span>No puede apagarse: siempre está procesando</li>
+<li><span class="td"></span>Usa heurísticas eficientes que producen sesgos sistemáticos</li>
+<li><span class="td"></span>Excelente en entornos estables. Peligroso en entornos nuevos o complejos</li>
+</ul></div>
+<div class="system s2"><div class="sys-icon">🔬</div><div class="sys-name">Sistema 2</div><div class="sys-tag">Lento · Deliberado · Analítico</div>
+<ul class="sys-traits">
+<li><span class="td"></span>Requiere atención y esfuerzo consciente. Se agota con el uso</li>
+<li><span class="td"></span>Puede seguir reglas, comparar atributos, hacer elecciones deliberadas</li>
+<li><span class="td"></span>Se activa cuando S1 detecta algo que viola su modelo del mundo</li>
+<li><span class="td"></span>Perezoso por diseño: acepta sugerencias de S1 a menos que haya señal de error</li>
+<li><span class="td"></span>Capacidad limitada: no puede procesar múltiples tareas demandantes a la vez</li>
+<li><span class="td"></span>Cree que él es el protagonista — pero S1 hace la mayoría del trabajo real</li>
+</ul></div>
+</div>
+<div class="biases-title">Sesgos cognitivos principales</div>
+<div class="biases-sub">HEURÍSTICAS DEL S1 QUE PRODUCEN ERRORES SISTEMÁTICOS — CLICK PARA EXPANDIR</div>
+<div class="bg" id="bg"></div>
+<div class="cs">
+<div class="ct">Conexiones cruzadas con el corpus</div>
+<div class="ci"><span class="ca">McGilchrist:</span> S1 no es el hemisferio derecho ni S2 el izquierdo — pero la ilusión del S2 de que controla al S1 es análoga a la usurpación del emisario.</div>
+<div class="ci"><span class="ca">Buzsáki:</span> Las oscilaciones gamma rápidas son el sustrato neurológico del binding automático del S1 — procesamiento en paralelo que genera percepciones integradas sin esfuerzo.</div>
+<div class="ci"><span class="ca">Taleb:</span> Los cisnes negros explotan disponibilidad y representatividad del S1. La antifragilidad requiere diseñar sistemas que no dependan de la predicción — porque el S1 siempre cree poder predecir.</div>
+<div class="ci"><span class="ca">Mises:</span> La praxeología asume racionalidad — Kahneman demuestra que es la excepción. La preferencia temporal tiene base biológica en la competencia entre S1 (gratificación inmediata) y S2 (planificación).</div>
+<div class="ci"><span class="ca">Sapolsky:</span> La amígdala es el hardware del S1 emocional. La corteza prefrontal es el hardware del S2. El agotamiento del S2 tiene correlato biológico real: depleción de glucosa prefrontal.</div>
+</div>
+</div>
+<script>
+const B=[
+{n:'Anclaje',s:'El primer número que ves sesga todas las estimaciones posteriores.',e:'Si preguntas "¿Gandhi tenía más o menos de 114 años?" la estimación sube vs si el ancla es 35.',f:'Genera tu propia cifra base desde primeros principios antes de mirar datos externos.'},
+{n:'Disponibilidad',s:'Juzgas probabilidad por la facilidad con que recuerdas ejemplos.',e:'Después de un accidente de avión, la gente sobreestima el riesgo de volar durante semanas.',f:'Busca tasas base estadísticas antes de estimar. Facilidad de recordar ≠ frecuencia real.'},
+{n:'Representatividad',s:'Juzgas por similitud con estereotipos, ignorando probabilidades base.',e:'Linda es activista. ¿Cajera o cajera feminista? La mayoría dice "cajera feminista" — violando lógica conjuntiva.',f:'Pregunta siempre: ¿cuál es la tasa base? La similitud narrativa no es evidencia estadística.'},
+{n:'Aversión a la pérdida',s:'Las pérdidas duelen ~2x más que las ganancias equivalentes satisfacen.',e:'Rechazas +150€ vs -100€ al 50% porque la pérdida potencial pesa más, aunque EV es positivo.',f:'Evalúa decisiones en portfolio, no aisladas. 100 apuestas +EV son rentables aunque cada una duela.'},
+{n:'Efecto de encuadre',s:'La misma información produce decisiones opuestas según cómo se presenta.',e:'"90% supervivencia" vs "10% mortalidad" — misma cirugía, diferentes decisiones.',f:'Reformula en términos opuestos. Si la decisión cambia, el encuadre te está manipulando.'},
+{n:'Exceso de confianza',s:'Crees saber más de lo que sabes. Tus intervalos de confianza son demasiado estrechos.',e:'Cuando dicen estar 98% seguros, aciertan solo ~80%. La calibración real es consistentemente peor.',f:'Amplía intervalos sistemáticamente. Tetlock: calibración mejora con práctica y feedback.'},
+{n:'WYSIATI',s:'What You See Is All There Is — S1 construye la mejor historia con la info disponible.',e:'Un juicio basado en una sola versión se siente tan convincente como uno basado en evidencia completa.',f:'Pregunta: ¿qué me falta? ¿Qué diría la otra parte? Coherencia ≠ verdad.'},
+{n:'Sustitución',s:'Cuando una pregunta es difícil, S1 la sustituye por una más fácil sin que lo notes.',e:'¿Buena inversión? → ¿Me gusta la empresa? S1 sustituye análisis por afecto.',f:'Si la respuesta llega demasiado rápido para una pregunta compleja, S1 ha hecho sustitución.'}
+];
+document.getElementById('bg').innerHTML=B.map(b=>`<div class="bc" onclick="this.classList.toggle('ex')"><div class="bn">${b.n}</div><div class="bs">${b.s}</div><div class="bd"><div class="be">📌 ${b.e}</div><div class="bf">✅ ${b.f}</div></div></div>`).join('');
+</script>
+</body></html>
