@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weinstein — Los 4 Estadios del Mercado</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080808;--surface:#111;--surface2:#161616;--border:#222;--border2:#2e2e2e;--accent:#c9a84c;--text:#ede8df;--text2:#a8a094;--text3:#5c5650;--font-display:'Playfair Display',serif;--font-body:'Source Serif 4',serif;--font-mono:'IBM Plex Mono',monospace;}
+*{box-sizing:border-box;margin:0;padding:0;}body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh;}
+.back-btn{position:fixed;top:1rem;left:1rem;z-index:100;background:var(--surface);border:1px solid var(--border2);color:var(--accent);padding:0.5rem 1rem;border-radius:6px;cursor:pointer;font-family:var(--font-mono);font-size:0.72rem;text-decoration:none;transition:all 0.2s;}.back-btn:hover{background:var(--accent);color:#000;}
+.container{max-width:1100px;margin:0 auto;padding:3rem 1.5rem 4rem;}
+h1{font-family:var(--font-display);font-size:2.2rem;color:var(--accent);text-align:center;margin-bottom:0.3rem;}
+.subtitle{text-align:center;font-family:var(--font-mono);font-size:0.72rem;color:var(--text3);letter-spacing:0.1em;margin-bottom:2rem;}
+.chart-wrap{margin:0 auto 2.5rem;max-width:800px;}
+.chart-wrap svg{width:100%;height:auto;}
+.cycle{display:flex;flex-wrap:wrap;gap:1.2rem;justify-content:center;margin-bottom:2rem;}
+.stage{flex:1;min-width:220px;max-width:260px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden;}.stage:hover{transform:translateY(-4px);box-shadow:0 12px 40px #00000060;}.stage.active{border-color:var(--accent);box-shadow:0 0 30px #c9a84c15;}
+.stage::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;transition:background 0.3s;}
+.stage:nth-child(1)::before{background:#3498db;}.stage:nth-child(2)::before{background:#2ecc71;}.stage:nth-child(3)::before{background:#e67e22;}.stage:nth-child(4)::before{background:#e74c3c;}
+.stage-num{font-family:var(--font-mono);font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.15em;margin-bottom:0.5rem;}
+.stage-name{font-family:var(--font-display);font-size:1.1rem;font-weight:700;margin-bottom:0.3rem;}
+.stage:nth-child(1) .stage-name{color:#3498db;}.stage:nth-child(2) .stage-name{color:#2ecc71;}.stage:nth-child(3) .stage-name{color:#e67e22;}.stage:nth-child(4) .stage-name{color:#e74c3c;}
+.stage-tag{font-family:var(--font-mono);font-size:0.6rem;padding:0.15rem 0.5rem;border-radius:3px;display:inline-block;margin-bottom:0.7rem;}
+.stage:nth-child(1) .stage-tag{background:#3498db15;color:#3498db;border:1px solid #3498db30;}.stage:nth-child(2) .stage-tag{background:#2ecc7115;color:#2ecc71;border:1px solid #2ecc7130;}.stage:nth-child(3) .stage-tag{background:#e67e2215;color:#e67e22;border:1px solid #e67e2230;}.stage:nth-child(4) .stage-tag{background:#e74c3c15;color:#e74c3c;border:1px solid #e74c3c30;}
+.stage-desc{font-size:0.82rem;color:var(--text2);line-height:1.7;}
+.detail-panel{background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:2rem;display:none;animation:fadeIn 0.3s;}
+.detail-panel.show{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.detail-title{font-family:var(--font-display);font-size:1.3rem;margin-bottom:1rem;}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+.detail-section{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:1.1rem;}
+.detail-label{font-family:var(--font-mono);font-size:0.58rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--accent);margin-bottom:0.5rem;}
+.detail-text{font-size:0.85rem;color:var(--text2);line-height:1.75;}
+@media(max-width:700px){.detail-grid{grid-template-columns:1fr;}.stage{min-width:100%;max-width:100%;}}
+</style>
+</head>
+<body>
+<a class="back-btn" onclick="window.close();history.back();">← Volver a la app</a>
+<div class="container">
+<h1>Los 4 Estadios del Mercado</h1>
+<p class="subtitle">STAN WEINSTEIN — SECRETOS PARA GANAR EN MERCADOS ALCISTAS Y BAJISTAS</p>
+<div class="chart-wrap">
+<svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="800" height="200" fill="#0a0a0a" rx="8"/>
+<path d="M 40,150 C 80,150 100,148 140,145 C 180,142 200,130 240,100 C 280,70 320,50 380,45 C 420,42 460,45 500,50 C 540,55 560,70 600,100 C 640,130 680,150 740,160" fill="none" stroke="#c9a84c" stroke-width="2.5" stroke-linecap="round" opacity="0.7"/>
+<line x1="200" y1="10" x2="200" y2="190" stroke="#ffffff10" stroke-dasharray="4,4"/>
+<line x1="400" y1="10" x2="400" y2="190" stroke="#ffffff10" stroke-dasharray="4,4"/>
+<line x1="600" y1="10" x2="600" y2="190" stroke="#ffffff10" stroke-dasharray="4,4"/>
+<text x="100" y="188" fill="#3498db" font-family="IBM Plex Mono,monospace" font-size="10" text-anchor="middle">E1 · Base</text>
+<text x="300" y="28" fill="#2ecc71" font-family="IBM Plex Mono,monospace" font-size="10" text-anchor="middle">E2 · Avance</text>
+<text x="500" y="28" fill="#e67e22" font-family="IBM Plex Mono,monospace" font-size="10" text-anchor="middle">E3 · Techo</text>
+<text x="700" y="188" fill="#e74c3c" font-family="IBM Plex Mono,monospace" font-size="10" text-anchor="middle">E4 · Declive</text>
+<text x="770" y="166" fill="#ffffff20" font-family="IBM Plex Mono,monospace" font-size="8">MA30w</text>
+</svg>
+</div>
+<div class="cycle" id="cycle"></div>
+<div class="detail-panel" id="detail"></div>
+</div>
+<script>
+const S=[
+{n:1,name:'Base (Acumulación)',tag:'NO COMPRAR',desc:'Precio lateral tras caída. MA30 semanas plana. Volumen bajo y decreciente.',señales:'Precio oscila en rango estrecho. MA30 se aplana tras tendencia bajista. Volumen se contrae progresivamente. Resistencia superior clara.',accion:'NO operar. Monitorizar para detectar el breakout del Estadio 2. Crear watchlist de candidatos en base larga.',error:'Comprar demasiado pronto pensando que el suelo ya se formó. Sin breakout confirmado con volumen, no hay operación válida.',conexion:'Equivale a la fase de acumulación de Wyckoff. Taleb: la opción está barata porque nadie la quiere — es el momento de posicionar opcionalidad asimétrica.'},
+{n:2,name:'Avance (Tendencia alcista)',tag:'COMPRAR',desc:'Breakout por encima de resistencia con volumen. MA30 girando al alza. La fase más rentable del ciclo.',señales:'Precio rompe resistencia con expansión de volumen (≥50% sobre media). MA30 gira al alza. Precio se mantiene encima de MA30 en pullbacks.',accion:'Comprar en breakout o en primer pullback a MA30. Stop bajo el mínimo de la base. Mantener mientras MA30 suba y precio esté encima.',error:'No entrar por miedo a que ya subió demasiado. Weinstein: el mejor momento para comprar es cuando parece caro respecto a la base anterior.',conexion:'Minervini refina con SEPA: busca aceleración de beneficios además de estructura técnica. Kahneman: el sesgo de anclaje al precio anterior impide comprar breakouts.'},
+{n:3,name:'Techo (Distribución)',tag:'VENDER',desc:'Precio lateral en zona alta. MA30 se aplana. Volumen errático. Manos fuertes distribuyendo a manos débiles.',señales:'MA30 deja de subir y se aplana. Precio oscila alrededor de MA30 con alta volatilidad. Volumen alto en bajadas, bajo en subidas.',accion:'Vender posiciones o ajustar stops agresivamente. No iniciar nuevas posiciones largas. Proteger beneficios acumulados en E2.',error:'Mantener pensando que es solo una pausa antes de más subida. Cuando MA30 se aplana en zona alta, la probabilidad favorece distribución.',conexion:'Soros: punto donde la tendencia reflexiva se agota y el sesgo prevaleciente pierde fuerza. Cialdini: el compromiso y la consistencia te hacen mantener posiciones perdedoras.'},
+{n:4,name:'Declive (Tendencia bajista)',tag:'CORTOS / FUERA',desc:'Precio rompe soporte con volumen. MA30 girando a la baja. Caída acelerada y persistente.',señales:'Precio rompe por debajo de MA30 y del soporte de E3 con volumen. MA30 gira a la baja. Los rallies de alivio fallan bajo MA30.',accion:'Vender si aún no lo hiciste. Oportunidad de cortos para traders experimentados. Nunca comprar caídas en E4.',error:'Promediar a la baja comprando más barato. Weinstein: las acciones en Estadio 4 caen mucho más de lo que parece posible.',conexion:'Taleb: las caídas en E4 son cisnes negros para quien no respetó stops. Mises: la liquidación de malinversión es dolorosa pero necesaria para restaurar señales de precio honestas.'}
+];
+const c=document.getElementById('cycle'),d=document.getElementById('detail');let ai=-1;
+c.innerHTML=S.map((s,i)=>`<div class="stage" onclick="show(${i})"><div class="stage-num">Estadio ${s.n}</div><div class="stage-name">${s.name}</div><div class="stage-tag">${s.tag}</div><div class="stage-desc">${s.desc}</div></div>`).join('');
+function show(i){if(ai===i){d.classList.remove('show');ai=-1;document.querySelectorAll('.stage').forEach(s=>s.classList.remove('active'));return;}ai=i;const s=S[i];document.querySelectorAll('.stage').forEach((e,j)=>e.classList.toggle('active',j===i));d.innerHTML=`<div class="detail-title">${s.name}</div><div class="detail-grid"><div class="detail-section"><div class="detail-label">Señales de identificación</div><div class="detail-text">${s.señales}</div></div><div class="detail-section"><div class="detail-label">Acción operativa</div><div class="detail-text">${s.accion}</div></div><div class="detail-section"><div class="detail-label">Error más común</div><div class="detail-text">${s.error}</div></div><div class="detail-section"><div class="detail-label">Conexión cruzada</div><div class="detail-text">${s.conexion}</div></div></div>`;d.classList.add('show');d.scrollIntoView({behavior:'smooth',block:'nearest'});}
+</script>
+</body></html>
