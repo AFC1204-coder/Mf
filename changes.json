@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "type": "create_file",
+      "path": "esquemas/observatorio.html",
+      "source": "observatorio.html",
+      "description": "Observatorio de Transiciones Civilizacionales — esquema interactivo conectado a Supabase"
+    }
+  ]
+}
