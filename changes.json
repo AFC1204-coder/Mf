@@ -1,10 +1,10 @@
 {
   "changes": [
     {
-      "type": "find_and_replace",
-      "path": "index.html",
-      "find": "onclick=\"openSchema('autores')\"",
-      "replace": "onclick=\"openSchema('autores')\""
+      "action": "replace",
+      "file": "index.html",
+      "find": "  {\n    key: 'tetlock',\n    titulo: 'Superforecasting Framework',\n    autor: 'Philip Tetlock',\n    eje: 'Epistemológico',\n    icon: '🎯',\n    file: 'esquemas/tetlock.html',\n    disponible: true\n  }\n];",
+      "replace": "  {\n    key: 'observatorio',\n    titulo: 'Observatorio de Transiciones',\n    autor: 'Strauss & Howe · Taleb · Mises · McGilchrist',\n    eje: 'Civilizacional',\n    icon: '🌍',\n    file: 'esquemas/observatorio.html',\n    disponible: true\n  },\n  {\n    key: 'tetlock',\n    titulo: 'Superforecasting Framework',\n    autor: 'Philip Tetlock',\n    eje: 'Epistemológico',\n    icon: '🎯',\n    file: 'esquemas/tetlock.html',\n    disponible: true\n  }\n];"
     }
   ]
 }
