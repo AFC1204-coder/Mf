@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SCS — Observatorio de Transiciones Civilizacionales</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --bg-deep: #0a0b0f;
+  --bg-card: #12131a;
+  --bg-card-hover: #1a1b24;
+  --bg-surface: #181920;
+  --border: #2a2b35;
+  --border-glow: #3d3e4a;
+  --text-primary: #e8e6e1;
+  --text-secondary: #9a9890;
+  --text-muted: #6b6a62;
+  --accent-gold: #c9a84c;
+  --accent-gold-dim: #8a7535;
+  --accent-blue: #4a7fb5;
+  --accent-green: #4a9e6f;
+  --accent-red: #b54a4a;
+  --accent-purple: #7b5ea7;
+  --accent-orange: #b57a3a;
+  --apoya: #2d6b45;
+  --contradice: #6b2d2d;
+  --matiza: #5a5a2d;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Subtle grain texture */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.back-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--accent-gold);
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  cursor: pointer;
+  z-index: 100;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.back-btn:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--accent-gold-dim);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 24px 60px;
+}
+
+/* HEADER */
+.header {
+  text-align: center;
+  margin-bottom: 60px;
+  animation: fadeIn 0.8s ease;
+}
+.header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.02em;
+  margin-bottom: 8px;
+}
+.header .subtitle {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--accent-gold);
+  margin-bottom: 24px;
+}
+.header .stats {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+.stat {
+  text-align: center;
+}
+.stat .num {
+  font-family: var(--font-mono);
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: var(--accent-gold);
+}
+.stat .label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* NAVIGATION TABS */
+.nav-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 40px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0;
+  overflow-x: auto;
+}
+.nav-tab {
+  padding: 12px 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  font-family: var(--font-body);
+}
+.nav-tab:hover { color: var(--text-secondary); }
+.nav-tab.active {
+  color: var(--accent-gold);
+  border-bottom-color: var(--accent-gold);
+}
+
+/* VECTORS GRID */
+.vectors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.vector-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.vector-card:hover {
+  border-color: var(--accent-gold-dim);
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+}
+.vector-card .order {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.vector-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+.vector-card .authors {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.vector-card .scenario-count {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: var(--accent-gold-dim);
+  color: var(--bg-deep);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+/* SCENARIOS LIST */
+.scenarios-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.scenario-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.25s;
+  cursor: pointer;
+}
+.scenario-card:hover {
+  border-color: var(--border-glow);
+}
+.scenario-card.expanded {
+  border-color: var(--accent-gold-dim);
+}
+.scenario-header {
+  padding: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+.prob-ring {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  position: relative;
+}
+.prob-ring svg { transform: rotate(-90deg); }
+.prob-ring .bg { stroke: var(--border); }
+.prob-ring .fill { transition: stroke-dashoffset 1s ease; }
+.prob-text {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--accent-gold);
+}
+.scenario-info { flex: 1; }
+.scenario-info h3 {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.scenario-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.meta-tag {
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  padding: 3px 10px;
+  border-radius: 4px;
+  background: var(--bg-surface);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+.scenario-tesis {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.scenario-card.expanded .scenario-tesis {
+  -webkit-line-clamp: unset;
+}
+.expand-icon {
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  align-self: center;
+  transition: transform 0.3s;
+}
+.scenario-card.expanded .expand-icon { transform: rotate(180deg); }
+
+/* EXPANDED CONTENT */
+.scenario-detail {
+  display: none;
+  padding: 0 24px 24px;
+  border-top: 1px solid var(--border);
+}
+.scenario-card.expanded .scenario-detail { display: block; }
+
+.detail-section {
+  margin-top: 24px;
+}
+.detail-section h4 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--accent-gold);
+  margin-bottom: 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Analysis cards */
+.analysis-list { display: flex; flex-direction: column; gap: 12px; }
+.analysis-card {
+  background: var(--bg-surface);
+  border-radius: 8px;
+  padding: 16px;
+  border-left: 3px solid var(--text-muted);
+}
+.analysis-card.apoya { border-left-color: var(--accent-green); }
+.analysis-card.contradice { border-left-color: var(--accent-red); }
+.analysis-card.matiza { border-left-color: var(--accent-orange); }
+
+.analysis-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.analysis-author {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+.position-badge {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+.position-badge.apoya { background: var(--apoya); color: #8fd4a8; }
+.position-badge.contradice { background: var(--contradice); color: #d48f8f; }
+.position-badge.matiza { background: var(--matiza); color: #d4d48f; }
+
+.analysis-pred {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+.analysis-mech {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+  padding-left: 12px;
+  border-left: 1px solid var(--border);
+}
+.confidence {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+/* Tensions */
+.tension-card {
+  background: var(--bg-surface);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  border: 1px solid var(--border);
+}
+.tension-vs {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--accent-purple);
+  margin-bottom: 8px;
+}
+.tension-text, .tension-impl {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+.tension-resolution {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+  padding: 10px;
+  background: rgba(123,94,167,0.08);
+  border-radius: 6px;
+  border-left: 2px solid var(--accent-purple);
+}
+
+/* Applications */
+.app-card {
+  background: var(--bg-surface);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 10px;
+}
+.app-domain {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent-blue);
+  margin-bottom: 6px;
+}
+.app-action {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.app-robustez {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+  font-style: italic;
+}
+
+/* Signals */
+.signals-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 700px) { .signals-grid { grid-template-columns: 1fr; } }
+.signals-col h5 {
+  font-size: 0.78rem;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+.signals-col.confirm h5 { color: var(--accent-green); }
+.signals-col.disconfirm h5 { color: var(--accent-red); }
+.signals-col p {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  white-space: pre-line;
+}
+
+/* Zones */
+.zones-box {
+  background: rgba(181,74,74,0.06);
+  border: 1px solid rgba(181,74,74,0.15);
+  border-radius: 8px;
+  padding: 16px;
+}
+.zones-box h5 {
+  font-size: 0.78rem;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-red);
+  margin-bottom: 8px;
+}
+.zones-box p {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
+/* Loading */
+.loading {
+  text-align: center;
+  padding: 60px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+.loading::after {
+  content: '';
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent-gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-left: 12px;
+  vertical-align: middle;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 60px;
+  color: var(--text-muted);
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Toggle details */
+.toggle-details {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all 0.2s;
+}
+.toggle-details:hover {
+  border-color: var(--accent-gold-dim);
+  color: var(--text-secondary);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<a href="javascript:void(0)" class="back-btn" onclick="window.close(); window.location.href='https://afc1204-coder.github.io/Mf/';">← Volver a la app</a>
+
+<div class="container">
+  <div class="header">
+    <h1>Observatorio de Transiciones</h1>
+    <div class="subtitle">Análisis multi-marco de transiciones civilizacionales</div>
+    <div class="stats" id="stats">
+      <div class="stat"><div class="num" id="stat-vectors">—</div><div class="label">Vectores</div></div>
+      <div class="stat"><div class="num" id="stat-scenarios">—</div><div class="label">Escenarios</div></div>
+      <div class="stat"><div class="num" id="stat-analyses">—</div><div class="label">Análisis</div></div>
+      <div class="stat"><div class="num" id="stat-tensions">—</div><div class="label">Tensiones</div></div>
+    </div>
+  </div>
+
+  <div class="nav-tabs" id="nav-tabs">
+    <button class="nav-tab active" data-view="vectors">Vectores</button>
+    <button class="nav-tab" data-view="scenarios">Escenarios</button>
+  </div>
+
+  <div id="content">
+    <div class="loading">Conectando con Supabase</div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://aduizdiiacrvpoavjmab.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkdWl6ZGlpYWNydnBvYXZqbWFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzc3NTc0MDQsImV4cCI6MjA1MzMzMzQwNH0.BUAfdmaSFewOI1qDi5MdUVJxKPSY0kbBbDJ4AAGRiXs';
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let DATA = { vectors: [], scenarios: [], analyses: [], tensions: [], applications: [] };
+let currentView = 'vectors';
+let filterVector = null;
+
+async function loadAll() {
+  try {
+    const [vRes, sRes, aRes, tRes, apRes] = await Promise.all([
+      sb.from('vectores_cambio').select('*').order('orden'),
+      sb.from('escenarios').select('*').order('created_at'),
+      sb.from('analisis_escenario').select('*'),
+      sb.from('tensiones_escenario').select('*'),
+      sb.from('aplicaciones_escenario').select('*')
+    ]);
+    DATA.vectors = vRes.data || [];
+    DATA.scenarios = sRes.data || [];
+    DATA.analyses = aRes.data || [];
+    DATA.tensions = tRes.data || [];
+    DATA.applications = apRes.data || [];
+
+    document.getElementById('stat-vectors').textContent = DATA.vectors.length;
+    document.getElementById('stat-scenarios').textContent = DATA.scenarios.length;
+    document.getElementById('stat-analyses').textContent = DATA.analyses.length;
+    document.getElementById('stat-tensions').textContent = DATA.tensions.length;
+
+    render();
+  } catch (e) {
+    document.getElementById('content').innerHTML = '<div class="empty-state">Error al conectar con Supabase: ' + e.message + '</div>';
+  }
+}
+
+function render() {
+  if (currentView === 'vectors') renderVectors();
+  else renderScenarios();
+}
+
+function renderVectors() {
+  const el = document.getElementById('content');
+  if (!DATA.vectors.length) { el.innerHTML = '<div class="empty-state">No hay vectores cargados</div>'; return; }
+
+  const scenariosByVector = {};
+  DATA.scenarios.forEach(s => {
+    if (!scenariosByVector[s.vector_id]) scenariosByVector[s.vector_id] = [];
+    scenariosByVector[s.vector_id].push(s);
+  });
+
+  el.innerHTML = '<div class="vectors-grid">' + DATA.vectors.map(v => {
+    const count = (scenariosByVector[v.id] || []).length;
+    const authors = (v.autores_principales || []).slice(0, 5).join(', ');
+    const extra = (v.autores_principales || []).length > 5 ? ` +${v.autores_principales.length - 5}` : '';
+    return `<div class="vector-card" onclick="filterByVector('${v.id}')">
+      <div class="order">Vector ${v.orden}</div>
+      ${count > 0 ? `<div class="scenario-count">${count} escenario${count > 1 ? 's' : ''}</div>` : ''}
+      <h3>${v.nombre}</h3>
+      <div class="authors">${authors}${extra}</div>
+    </div>`;
+  }).join('') + '</div>';
+}
+
+function renderScenarios(vectorFilter) {
+  const el = document.getElementById('content');
+  let scenarios = DATA.scenarios;
+  if (vectorFilter) {
+    scenarios = scenarios.filter(s => s.vector_id === vectorFilter ||
+      (s.vectores_secundarios && s.vectores_secundarios.includes(vectorFilter)));
+  }
+  if (!scenarios.length) {
+    el.innerHTML = '<div class="empty-state">No hay escenarios' + (vectorFilter ? ' para este vector' : '') + '</div>';
+    return;
+  }
+
+  el.innerHTML = '<div class="scenarios-list">' + scenarios.map(s => {
+    const analyses = DATA.analyses.filter(a => a.escenario_id === s.id);
+    const tensions = DATA.tensions.filter(t => t.escenario_id === s.id);
+    const apps = DATA.applications.filter(a => a.escenario_id === s.id);
+    const vector = DATA.vectors.find(v => v.id === s.vector_id);
+    const prob = s.probabilidad_subjetiva || 0;
+    const circumference = 2 * Math.PI * 26;
+    const offset = circumference - (prob * circumference);
+    const probColor = prob >= 0.7 ? 'var(--accent-red)' : prob >= 0.4 ? 'var(--accent-orange)' : 'var(--accent-green)';
+
+    const apoya = analyses.filter(a => a.posicion === 'apoya');
+    const contradice = analyses.filter(a => a.posicion === 'contradice');
+    const matiza = analyses.filter(a => a.posicion === 'matiza');
+
+    return `<div class="scenario-card" id="sc-${s.id}">
+      <div class="scenario-header" onclick="toggleScenario('${s.id}')">
+        <div class="prob-ring">
+          <svg width="64" height="64" viewBox="0 0 64 64">
+            <circle class="bg" cx="32" cy="32" r="26" fill="none" stroke-width="4"/>
+            <circle class="fill" cx="32" cy="32" r="26" fill="none" stroke="${probColor}" stroke-width="4"
+              stroke-dasharray="${circumference}" stroke-dashoffset="${offset}" stroke-linecap="round"/>
+          </svg>
+          <div class="prob-text">${Math.round(prob * 100)}%</div>
+        </div>
+        <div class="scenario-info">
+          <h3>${s.titulo}</h3>
+          <div class="scenario-meta">
+            ${vector ? `<span class="meta-tag">${vector.nombre}</span>` : ''}
+            <span class="meta-tag">${s.horizonte || '—'}</span>
+            <span class="meta-tag">${apoya.length}↑ ${contradice.length}↓ ${matiza.length}↔</span>
+          </div>
+          <div class="scenario-tesis">${s.tesis || ''}</div>
+        </div>
+        <span class="expand-icon">▾</span>
+      </div>
+
+      <div class="scenario-detail">
+        ${s.descripcion ? `<div class="detail-section"><h4>Descomposición Tetlock</h4><p style="font-size:0.82rem;color:var(--text-secondary);line-height:1.65;white-space:pre-line;">${s.descripcion}</p></div>` : ''}
+
+        ${analyses.length ? `<div class="detail-section">
+          <h4>Análisis por Marco (${analyses.length})</h4>
+          <div class="analysis-list">
+            ${[...apoya, ...contradice, ...matiza].map(a => `
+              <div class="analysis-card ${a.posicion}">
+                <div class="analysis-top">
+                  <span class="analysis-author">${a.autor}</span>
+                  <span class="position-badge ${a.posicion}">${a.posicion}</span>
+                </div>
+                <div class="analysis-pred">${a.prediccion}</div>
+                <button class="toggle-details" onclick="event.stopPropagation();this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent==='+ mecanismo'?'− mecanismo':'+ mecanismo'">+ mecanismo</button>
+                <div class="analysis-mech" style="display:none;margin-top:8px;">${a.mecanismo}</div>
+                <div class="confidence">Confianza del marco: ${a.confianza_marco}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>` : ''}
+
+        ${tensions.length ? `<div class="detail-section">
+          <h4>Tensiones entre Marcos (${tensions.length})</h4>
+          ${tensions.map(t => `
+            <div class="tension-card">
+              <div class="tension-vs">${t.autor_a} ⟷ ${t.autor_b}</div>
+              <div class="tension-text">${t.tension}</div>
+              <div class="tension-impl"><strong style="color:var(--text-primary);font-size:0.78rem;">Implicación:</strong> ${t.implicacion}</div>
+              ${t.resolucion_posible ? `<div class="tension-resolution"><strong>Resolución posible:</strong> ${t.resolucion_posible}</div>` : ''}
+            </div>
+          `).join('')}
+        </div>` : ''}
+
+        ${apps.length ? `<div class="detail-section">
+          <h4>Aplicaciones Personales (${apps.length})</h4>
+          ${apps.map(a => `
+            <div class="app-card">
+              <div class="app-domain">${a.dominio}</div>
+              <div class="app-action">${a.accion}</div>
+              ${a.robustez ? `<div class="app-robustez">Robustez: ${a.robustez}</div>` : ''}
+            </div>
+          `).join('')}
+        </div>` : ''}
+
+        <div class="detail-section">
+          <div class="signals-grid">
+            <div class="signals-col confirm">
+              <h5>✓ Señales Confirmatorias</h5>
+              <p>${s.senales_confirmatorias || '—'}</p>
+            </div>
+            <div class="signals-col disconfirm">
+              <h5>✗ Señales Desconfirmatorias</h5>
+              <p>${s.senales_desconfirmatorias || '—'}</p>
+            </div>
+          </div>
+        </div>
+
+        ${s.zonas_ciegas ? `<div class="detail-section">
+          <div class="zones-box">
+            <h5>⚠ Zonas Ciegas</h5>
+            <p>${s.zonas_ciegas}</p>
+          </div>
+        </div>` : ''}
+      </div>
+    </div>`;
+  }).join('') + '</div>';
+}
+
+function toggleScenario(id) {
+  const card = document.getElementById('sc-' + id);
+  card.classList.toggle('expanded');
+}
+
+function filterByVector(vectorId) {
+  currentView = 'scenarios';
+  filterVector = vectorId;
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector('[data-view="scenarios"]').classList.add('active');
+  renderScenarios(vectorId);
+}
+
+// Nav tabs
+document.querySelectorAll('.nav-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    currentView = tab.dataset.view;
+    filterVector = null;
+    render();
+  });
+});
+
+loadAll();
+</script>
+</body>
+</html>
