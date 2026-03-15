@@ -1,0 +1,32 @@
+[
+  {
+    "action": "replace",
+    "file": "index.html",
+    "find": "history.pushState(state,'',`#${name}`);",
+    "replace": "let hash=`#${name}`;\n    if(name==='leccion'&&lecActual) hash=`#leccion/${lecActual.libro_id}/${lecActual.id}`;\n    if(name==='lecciones'&&libroActual) hash=`#lecciones/${libroActual.id}`;\n    history.pushState(state,'',hash);"
+  },
+  {
+    "action": "replace",
+    "file": "index.html",
+    "find": "function restoreFromURL(){\n  // Soporta tanto hash (#leccion/UUID) como params (?vista=leccion&leccion=UUID)\n  const params=new URLSearchParams(window.location.search);\n  const hash=window.location.hash.slice(1); // quita el #\n\n  // Formato ?vista=leccion&libro=UUID&leccion=UUID (compartir directo)\n  const vista=params.get('vista');\n  if(vista){\n    const libroId=params.get('libro');\n    const lecId=params.get('leccion');\n    if(libroId) libroActual=libros.find(l=>l.id===libroId)||null;\n    if(lecId)   lecActual=lecs.find(l=>l.id===lecId)||null;\n    if(vista==='leccion'&&lecActual){ verLeccion(lecActual.id); return; }\n    if(vista==='lecciones'&&libroActual){ verLibro(libroActual.id); return; }\n    showView(vista,true); return;\n  }\n\n  // Formato hash estándar de la app (#home, #lecciones, etc.)\n  // El state de pushState ya tiene libroId y lecId\n  const state=history.state;\n  if(hash&&hash!=='home'){\n    if(state){\n      if(state.libroId) libroActual=libros.find(l=>l.id===state.libroId)||libroActual;\n      if(state.lecId)   lecActual=lecs.find(l=>l.id===state.lecId)||lecActual;\n    }\n    if(hash==='lecciones'&&libroActual){ renderLibroHero();renderLecs(lecs.filter(l=>l.libro_id===libroActual.id));showView('lecciones',true);return; }\n    if(hash==='leccion'&&lecActual){ verLeccion(lecActual.id);return; }\n    showView(hash,true);\n  }\n}",
+    "replace": "function restoreFromURL(){\n  const params=new URLSearchParams(window.location.search);\n  const hash=window.location.hash.slice(1);\n\n  // Formato query params legacy: ?vista=leccion&libro=UUID&leccion=UUID\n  const vista=params.get('vista');\n  if(vista){\n    const libroId=params.get('libro');\n    const lecId=params.get('leccion');\n    if(libroId) libroActual=libros.find(l=>l.id===libroId)||null;\n    if(lecId)   lecActual=lecs.find(l=>l.id===lecId)||null;\n    if(vista==='leccion'&&lecActual){ verLeccion(lecActual.id); return; }\n    if(vista==='lecciones'&&libroActual){ verLibro(libroActual.id); return; }\n    showView(vista,true); return;\n  }\n\n  if(!hash||hash==='home') return;\n\n  // Formato: #leccion/LIBRO_ID/LEC_ID\n  if(hash.startsWith('leccion/')){\n    const parts=hash.split('/');\n    const libroId=parts[1]; const lecId=parts[2];\n    if(libroId) libroActual=libros.find(l=>l.id===libroId)||null;\n    if(lecId){\n      lecActual=lecs.find(l=>l.id===lecId)||null;\n      if(lecActual){ verLeccion(lecActual.id); return; }\n    }\n  }\n\n  // Formato: #lecciones/LIBRO_ID\n  if(hash.startsWith('lecciones/')){\n    const libroId=hash.split('/')[1];\n    if(libroId){\n      libroActual=libros.find(l=>l.id===libroId)||null;\n      if(libroActual){ verLibro(libroActual.id); return; }\n    }\n  }\n\n  // Formato simple: #quotes, #favoritos, #esquemas\n  const viewName=hash.split('/')[0];\n  const validViews=['home','favoritos','quotes','esquemas','repaso','test'];\n  if(validViews.includes(viewName)) showView(viewName,true);\n}"
+  },
+  {
+    "action": "replace",
+    "file": "index.html",
+    "find": "function compartirLeccion(){\n  if(!lecActual) return;\n  const base=window.location.origin+window.location.pathname;\n  const url=`${base}?vista=leccion&libro=${lecActual.libro_id}&leccion=${lecActual.id}`;",
+    "replace": "function compartirLeccion(){\n  if(!lecActual) return;\n  const base=window.location.origin+window.location.pathname;\n  const url=`${base}#leccion/${lecActual.libro_id}/${lecActual.id}`;"
+  },
+  {
+    "action": "replace",
+    "file": "index.html",
+    "find": "function compartirLibro(){\n  if(!libroActual) return;\n  const base=window.location.origin+window.location.pathname;\n  const url=`${base}?vista=lecciones&libro=${libroActual.id}`;",
+    "replace": "function compartirLibro(){\n  if(!libroActual) return;\n  const base=window.location.origin+window.location.pathname;\n  const url=`${base}#lecciones/${libroActual.id}`;"
+  },
+  {
+    "action": "replace",
+    "file": "index.html",
+    "find": "window.addEventListener('popstate', e => {\n  const state = e.state;\n  if(!state){ showView('home', true); return; }\n  const {view, libroId, lecId} = state;",
+    "replace": "window.addEventListener('popstate', e => {\n  const state = e.state;\n  const hash = window.location.hash.slice(1);\n  if(!state && !hash){ showView('home', true); return; }\n  if(!state && hash){ restoreFromURL(); return; }\n  const {view, libroId, lecId} = state;"
+  }
+]

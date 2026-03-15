@@ -2359,7 +2359,10 @@ function showView(name, skipPush=false){
   window.scrollTo(0,0);
   if(!skipPush){
     const state={view:name,libroId:libroActual?.id||null,lecId:lecActual?.id||null};
-    history.pushState(state,'',`#${name}`);
+    let hash=`#${name}`;
+    if(name==='leccion'&&lecActual) hash=`#leccion/${lecActual.libro_id}/${lecActual.id}`;
+    if(name==='lecciones'&&libroActual) hash=`#lecciones/${libroActual.id}`;
+    history.pushState(state,'',hash);
   }
   if(name==='home'){paginaActual=1;document.getElementById('search-results-lecs').style.display='none';renderStats();renderLibros();renderContinua();renderUltimosLibros();}
   if(name==='favoritos')renderFavoritos();
@@ -2764,7 +2767,9 @@ function renderSRSFin() {
 
 window.addEventListener('popstate', e => {
   const state = e.state;
-  if(!state){ showView('home', true); return; }
+  const hash = window.location.hash.slice(1);
+  if(!state && !hash){ showView('home', true); return; }
+  if(!state && hash){ restoreFromURL(); return; }
   const {view, libroId, lecId} = state;
   if(libroId) libroActual = libros.find(l=>l.id===libroId)||libroActual;
   if(lecId)   lecActual   = lecs.find(l=>l.id===lecId)||lecActual;
@@ -2787,11 +2792,10 @@ function toast(msg){
    URL — RESTAURACIÓN Y COMPARTIR
 ═══════════════════════════════════════════ */
 function restoreFromURL(){
-  // Soporta tanto hash (#leccion/UUID) como params (?vista=leccion&leccion=UUID)
   const params=new URLSearchParams(window.location.search);
-  const hash=window.location.hash.slice(1); // quita el #
+  const hash=window.location.hash.slice(1);
 
-  // Formato ?vista=leccion&libro=UUID&leccion=UUID (compartir directo)
+  // Formato query params legacy: ?vista=leccion&libro=UUID&leccion=UUID
   const vista=params.get('vista');
   if(vista){
     const libroId=params.get('libro');
@@ -2803,24 +2807,38 @@ function restoreFromURL(){
     showView(vista,true); return;
   }
 
-  // Formato hash estándar de la app (#home, #lecciones, etc.)
-  // El state de pushState ya tiene libroId y lecId
-  const state=history.state;
-  if(hash&&hash!=='home'){
-    if(state){
-      if(state.libroId) libroActual=libros.find(l=>l.id===state.libroId)||libroActual;
-      if(state.lecId)   lecActual=lecs.find(l=>l.id===state.lecId)||lecActual;
+  if(!hash||hash==='home') return;
+
+  // Formato: #leccion/LIBRO_ID/LEC_ID
+  if(hash.startsWith('leccion/')){
+    const parts=hash.split('/');
+    const libroId=parts[1]; const lecId=parts[2];
+    if(libroId) libroActual=libros.find(l=>l.id===libroId)||null;
+    if(lecId){
+      lecActual=lecs.find(l=>l.id===lecId)||null;
+      if(lecActual){ verLeccion(lecActual.id); return; }
     }
-    if(hash==='lecciones'&&libroActual){ renderLibroHero();renderLecs(lecs.filter(l=>l.libro_id===libroActual.id));showView('lecciones',true);return; }
-    if(hash==='leccion'&&lecActual){ verLeccion(lecActual.id);return; }
-    showView(hash,true);
   }
+
+  // Formato: #lecciones/LIBRO_ID
+  if(hash.startsWith('lecciones/')){
+    const libroId=hash.split('/')[1];
+    if(libroId){
+      libroActual=libros.find(l=>l.id===libroId)||null;
+      if(libroActual){ verLibro(libroActual.id); return; }
+    }
+  }
+
+  // Formato simple: #quotes, #favoritos, #esquemas
+  const viewName=hash.split('/')[0];
+  const validViews=['home','favoritos','quotes','esquemas','repaso','test'];
+  if(validViews.includes(viewName)) showView(viewName,true);
 }
 
 function compartirLeccion(){
   if(!lecActual) return;
   const base=window.location.origin+window.location.pathname;
-  const url=`${base}?vista=leccion&libro=${lecActual.libro_id}&leccion=${lecActual.id}`;
+  const url=`${base}#leccion/${lecActual.libro_id}/${lecActual.id}`;
   if(navigator.clipboard){
     navigator.clipboard.writeText(url).then(()=>toast('🔗 Enlace copiado'));
   } else {
@@ -2835,7 +2853,7 @@ function compartirLeccion(){
 function compartirLibro(){
   if(!libroActual) return;
   const base=window.location.origin+window.location.pathname;
-  const url=`${base}?vista=lecciones&libro=${libroActual.id}`;
+  const url=`${base}#lecciones/${libroActual.id}`;
   if(navigator.clipboard){
     navigator.clipboard.writeText(url).then(()=>toast('🔗 Enlace copiado'));
   } else {
