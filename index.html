@@ -1,0 +1,3759 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Segundo Cerebro Soberano</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c9a84c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SCS">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="scs_auth_subrayados.js"></script>
+<style>
+:root {
+  --bg:#080808;--bg2:#0d0d0d;--surface:#111111;--surface2:#161616;--surface3:#1c1c1c;
+  --border:#222222;--border2:#2e2e2e;
+  --accent:#c9a84c;--accent2:#e8c56a;--accent-dim:#7a5f28;--accent-bg:#c9a84c0d;
+  --text:#ede8df;--text2:#a8a094;--text3:#5c5650;
+  --danger:#c0392b;--success:#2ecc71;--info:#3498db;--hl:#f1c40f;
+  --eco:#c9a84c;--psi:#9b59b6;--fil:#5dade2;--neu:#1abc9c;--des:#e67e22;--his:#e74c3c;--cie:#00bcd4;
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'Source Serif 4',Georgia,serif;
+  --font-mono:'IBM Plex Mono',monospace;
+  --radius:6px;--radius2:12px;--shadow:0 8px 40px #00000080;--trans:all 0.18s ease;
+  --nav-h:54px;--bnav-h:64px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:17px;min-height:100vh;line-height:1.65;-webkit-font-smoothing:antialiased;}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}::-webkit-scrollbar-thumb:hover{background:var(--accent-dim);}
+
+/* TEST CONFIG MODAL */
+.tconfig-overlay{position:fixed;inset:0;background:#000000cc;z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem;animation:fadeIn 0.15s ease;}
+.tconfig-overlay.hidden{display:none;}
+.tconfig-box{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius2);padding:2rem 1.8rem;width:100%;max-width:420px;box-shadow:var(--shadow);}
+.tconfig-title{font-family:var(--font-display);font-size:1.4rem;color:var(--accent);margin-bottom:0.3rem;font-weight:700;}
+.tconfig-sub{font-size:0.72rem;color:var(--text3);font-family:var(--font-mono);margin-bottom:1.8rem;letter-spacing:0.04em;}
+.tconfig-label{font-size:0.6rem;text-transform:uppercase;letter-spacing:0.13em;color:var(--text3);font-family:var(--font-mono);margin-bottom:0.6rem;display:block;}
+.tconfig-pills{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1.4rem;}
+.tconfig-pill{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:0.38rem 0.8rem;cursor:pointer;font-size:0.8rem;color:var(--text2);transition:var(--trans);font-family:var(--font-body);}
+.tconfig-pill:hover{border-color:var(--accent-dim);color:var(--text);}
+.tconfig-pill.active{background:var(--accent-bg);border-color:var(--accent);color:var(--accent);font-weight:600;}
+.tconfig-num-row{display:flex;gap:0.4rem;margin-bottom:1.8rem;}
+.tconfig-num{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:0.42rem 0;cursor:pointer;font-size:0.85rem;color:var(--text2);transition:var(--trans);font-family:var(--font-mono);flex:1;text-align:center;}
+.tconfig-num:hover{border-color:var(--accent-dim);color:var(--text);}
+.tconfig-num.active{background:var(--accent-bg);border-color:var(--accent);color:var(--accent);font-weight:700;}
+.tconfig-info{font-size:0.72rem;color:var(--text3);font-family:var(--font-mono);margin-bottom:1.4rem;min-height:1.2em;}
+.tconfig-footer{display:flex;gap:0.6rem;justify-content:flex-end;}
+
+/* LOADER */
+#loader-screen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;gap:2rem;transition:opacity 0.5s ease;}
+#loader-screen.hidden{opacity:0;pointer-events:none;}
+.loader-logo{font-family:var(--font-display);font-size:2rem;color:var(--accent);font-style:italic;}
+.loader-ring{width:40px;height:40px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.9s linear infinite;}
+.loader-msg{font-size:0.72rem;color:var(--text3);font-family:var(--font-mono);letter-spacing:0.07em;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* NAV */
+nav{background:rgba(8,8,8,0.94);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;height:var(--nav-h);backdrop-filter:blur(14px);}
+.nav-brand{font-family:var(--font-mono);font-size:0.67rem;color:var(--accent);letter-spacing:0.18em;text-transform:uppercase;cursor:pointer;user-select:none;transition:var(--trans);display:flex;align-items:center;gap:0.7rem;}
+.nav-brand:hover{opacity:0.7;}
+.nav-brand-icon{width:28px;height:28px;background:var(--accent);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:#000;font-weight:700;flex-shrink:0;letter-spacing:0;}
+.nav-brand-text{display:flex;flex-direction:column;line-height:1.1;}
+.nav-brand-sub{font-size:0.5rem;color:var(--text3);letter-spacing:0.12em;}
+.nav-links{display:flex;gap:0.15rem;align-items:center;}
+.nav-btn{background:none;border:none;color:var(--text3);padding:0.4rem 0.7rem;border-radius:var(--radius);cursor:pointer;font-size:0.77rem;font-family:var(--font-body);transition:var(--trans);display:flex;align-items:center;gap:0.3rem;white-space:nowrap;}
+.nav-btn:hover{color:var(--text);background:var(--surface);}
+.nav-btn.active{color:var(--accent);background:var(--accent-bg);}
+.nav-btn .lbl{font-size:0.72rem;}
+.nav-btn.cta{background:var(--accent);color:#000;font-weight:700;margin-left:0.5rem;font-family:var(--font-mono);font-size:0.67rem;letter-spacing:0.06em;text-transform:uppercase;padding:0.42rem 0.9rem;}
+.nav-btn.cta:hover{background:var(--accent2);}
+
+/* BOTTOM NAV MOBILE */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:var(--bnav-h);background:rgba(8,8,8,0.97);border-top:1px solid var(--border);backdrop-filter:blur(16px);z-index:100;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.bottom-nav::-webkit-scrollbar{display:none;}
+.bottom-nav-inner{display:flex;height:100%;min-width:max-content;}
+.bnav-btn{background:none;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.25rem;cursor:pointer;color:var(--text3);transition:var(--trans);padding:0 0.9rem;min-height:44px;min-width:64px;flex-shrink:0;}
+.bnav-btn.active{color:var(--accent);}
+.bnav-btn:hover{color:var(--text2);}
+.bnav-btn.bnav-cta{color:#000;background:var(--accent);border-radius:var(--radius);margin:auto 0.5rem;padding:0 0.9rem;height:38px;}
+.bnav-icon{font-size:1.25rem;line-height:1;}
+.bnav-label{font-size:0.57rem;font-family:var(--font-mono);letter-spacing:0.06em;text-transform:uppercase;}
+
+/* MAIN */
+main{max-width:960px;margin:0 auto;padding:2.2rem 1.4rem 4rem;}
+.view{display:none;}
+.view.active{display:block;animation:fadeIn 0.22s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+/* SKELETON */
+.skeleton{background:linear-gradient(90deg,var(--surface) 25%,var(--surface2) 50%,var(--surface) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:var(--radius);}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+.sk-card{height:280px;border-radius:var(--radius2);border:1px solid var(--border);}
+.sk-line{height:11px;margin-bottom:10px;}.sk-line.short{width:45%;}
+
+/* TYPOGRAPHY */
+.page-title{font-family:var(--font-display);font-size:2.1rem;color:var(--text);margin-bottom:0.3rem;font-weight:700;letter-spacing:-0.01em;line-height:1.2;}
+.page-sub{font-size:0.77rem;color:var(--text3);font-family:var(--font-mono);margin-bottom:2rem;letter-spacing:0.04em;}
+.sec-label{font-size:0.59rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--text3);font-family:var(--font-mono);margin-bottom:0.9rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:0.7rem;margin-bottom:2rem;}
+.stat-card{background:var(--surface);border:1px solid var(--border);padding:1rem 0.8rem;border-radius:var(--radius2);text-align:center;transition:var(--trans);position:relative;overflow:hidden;}
+.stat-card:hover{border-color:var(--border2);transform:translateY(-2px);}
+.stat-num{font-family:var(--font-display);font-size:1.8rem;color:var(--accent);font-weight:700;line-height:1;margin-bottom:0.35rem;}
+.stat-label{font-size:0.57rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.12em;font-family:var(--font-mono);}
+.stat-card.streak .stat-num{color:var(--success);}
+.stat-card.pct .stat-num{color:var(--info);}
+
+/* Últimos libros */
+.ultimos-row{display:flex;gap:0.7rem;overflow-x:auto;padding-bottom:0.4rem;margin-bottom:1.8rem;scrollbar-width:none;}
+.ultimos-row::-webkit-scrollbar{display:none;}
+.ultimo-chip{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:0.55rem 0.9rem;cursor:pointer;transition:var(--trans);display:flex;align-items:center;gap:0.6rem;white-space:nowrap;flex-shrink:0;}
+.ultimo-chip:hover{border-color:var(--accent);background:var(--surface2);}
+.ultimo-chip-cover{width:28px;height:36px;border-radius:3px;object-fit:cover;background:var(--surface3);flex-shrink:0;font-size:1rem;display:flex;align-items:center;justify-content:center;}
+.ultimo-chip img{width:28px;height:36px;border-radius:3px;object-fit:cover;}
+.ultimo-chip-info{min-width:0;}
+.ultimo-chip-title{font-family:var(--font-display);font-size:0.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px;}
+.ultimo-chip-autor{font-size:0.63rem;color:var(--text2);font-style:italic;}
+.ultimo-chip-pct{font-size:0.58rem;color:var(--text3);font-family:var(--font-mono);}
+
+/* CONTINUA BANNER */
+.continua-banner{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--accent);border-radius:var(--radius2);padding:1rem 1.3rem;margin-bottom:1.8rem;display:flex;align-items:center;gap:1rem;cursor:pointer;transition:var(--trans);}
+.continua-banner:hover{background:var(--surface2);border-color:var(--accent);}
+.continua-ico{font-size:1.5rem;flex-shrink:0;}
+.continua-info{flex:1;min-width:0;}
+.continua-label{font-size:0.59rem;color:var(--accent);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.2rem;}
+.continua-titulo{font-family:var(--font-display);font-size:0.97rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.continua-libro{font-size:0.72rem;color:var(--text2);font-style:italic;}
+.continua-arrow{color:var(--accent);font-size:1.1rem;flex-shrink:0;}
+
+/* QUICK ROW */
+.quick-row{display:flex;gap:0.6rem;margin-bottom:2rem;flex-wrap:wrap;}
+.q-btn{background:var(--surface);border:1px solid var(--border);color:var(--text2);padding:0.6rem 1.1rem;border-radius:var(--radius);cursor:pointer;font-size:0.77rem;font-family:var(--font-body);transition:var(--trans);display:flex;align-items:center;gap:0.4rem;min-height:44px;}
+.q-btn:hover{border-color:var(--border2);color:var(--text);background:var(--surface2);}
+.q-btn.primary{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700;}
+.q-btn.primary:hover{background:var(--accent2);}
+
+/* EJE FILTERS */
+.eje-filters{display:flex;gap:0.4rem;flex-wrap:wrap;margin-bottom:0.5rem;}
+.eje-filters-sub{display:flex;gap:0.3rem;flex-wrap:wrap;margin-bottom:1rem;min-height:1.6rem;}
+.eje-pill.sub{font-size:0.63rem;padding:0.2rem 0.65rem;border-radius:12px;}
+.eje-pill.sub.active{font-weight:600;}
+.pag-row{display:flex;align-items:center;justify-content:center;gap:0.4rem;margin-top:1.6rem;flex-wrap:wrap;}
+.pag-btn{background:var(--surface);border:1px solid var(--border);color:var(--text2);padding:0.35rem 0.75rem;border-radius:var(--radius);cursor:pointer;font-size:0.73rem;font-family:var(--font-mono);transition:var(--trans);min-width:36px;text-align:center;}
+.pag-btn:hover{border-color:var(--border2);color:var(--text);}
+.pag-btn.active{background:var(--accent-bg);border-color:var(--accent);color:var(--accent);font-weight:700;}
+.pag-btn:disabled{opacity:0.35;cursor:default;}
+.pag-info{font-size:0.65rem;color:var(--text3);font-family:var(--font-mono);padding:0 0.4rem;}
+.search-results-lecs{margin-top:0.5rem;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);overflow:hidden;}
+.search-lec-item{padding:0.7rem 1rem;border-bottom:1px solid var(--border);cursor:pointer;transition:var(--trans);}
+.search-lec-item:last-child{border-bottom:none;}
+.search-lec-item:hover{background:var(--surface2);}
+.search-lec-title{font-size:0.82rem;color:var(--text);font-weight:500;}
+.search-lec-book{font-size:0.68rem;color:var(--text3);font-family:var(--font-mono);margin-top:0.2rem;}
+.search-lec-snippet{font-size:0.72rem;color:var(--text2);margin-top:0.3rem;line-height:1.4;}
+.eje-pill{background:none;border:1px solid var(--border);color:var(--text2);padding:0.28rem 0.8rem;border-radius:20px;cursor:pointer;font-size:0.69rem;font-family:var(--font-mono);transition:var(--trans);display:flex;align-items:center;gap:0.3rem;}
+.eje-pill:hover{border-color:var(--border2);color:var(--text);}
+.eje-pill.active{background:var(--accent-bg);border-color:var(--accent);color:var(--accent);}
+
+/* SEARCH */
+.search-wrap{position:relative;margin-bottom:1.4rem;}
+.search-input{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:0.75rem 2.5rem 0.75rem 2.6rem;border-radius:var(--radius);font-size:0.88rem;font-family:var(--font-body);outline:none;transition:var(--trans);}
+.search-input:focus{border-color:var(--accent-dim);background:var(--surface2);}
+.search-input::placeholder{color:var(--text3);}
+.si{position:absolute;left:0.9rem;top:50%;transform:translateY(-50%);color:var(--text3);font-size:0.88rem;pointer-events:none;}
+.sc{position:absolute;right:0.9rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text3);cursor:pointer;font-size:0.9rem;display:none;transition:var(--trans);}
+.sc:hover{color:var(--text);}.sc.vis{display:block;}
+mark.hl{background:var(--hl);color:#000;border-radius:2px;padding:0 1px;}
+
+/* LIBROS GRID */
+.libros-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.1rem;}
+.libro-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden;cursor:pointer;transition:var(--trans);display:flex;flex-direction:column;position:relative;}
+.libro-card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:var(--shadow);}
+.libro-cover-wrap{overflow:hidden;height:170px;flex-shrink:0;}
+.libro-cover{width:100%;height:170px;object-fit:cover;object-position:top;display:block;background:var(--surface2);filter:grayscale(15%) brightness(0.82);transition:filter 0.3s,transform 0.35s;}
+.libro-card:hover .libro-cover{filter:grayscale(0%) brightness(0.95);transform:scale(1.04);}
+.libro-cover-placeholder{width:100%;height:170px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:0.5rem;background:var(--surface2);border-bottom:1px solid var(--border);position:relative;overflow:hidden;}
+.libro-cover-placeholder::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(-45deg,transparent,transparent 10px,rgba(255,255,255,0.015) 10px,rgba(255,255,255,0.015) 20px);}
+.ph-icon{font-size:2.8rem;line-height:1;}
+.ph-eje{font-size:0.57rem;color:var(--text3);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.1em;}
+.libro-body{padding:1rem 1.1rem 1.1rem;flex:1;display:flex;flex-direction:column;gap:0.4rem;}
+.libro-title{font-family:var(--font-display);font-size:0.97rem;font-weight:600;line-height:1.35;color:var(--text);}
+.libro-autor{font-size:0.72rem;color:var(--text2);font-style:italic;}
+.libro-footer{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:0.6rem;}
+.libro-prog-wrap{flex:1;margin-right:0.8rem;}
+.libro-prog-bar{height:2px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:0.3rem;}
+.libro-prog-fill{height:100%;background:linear-gradient(90deg,var(--accent-dim),var(--accent));border-radius:2px;transition:width 0.5s ease;}
+.libro-prog-text{font-size:0.59rem;color:var(--text3);font-family:var(--font-mono);}
+.libro-actions{display:flex;align-items:center;gap:0.3rem;}
+.fav-btn{background:none;border:none;cursor:pointer;font-size:1rem;color:var(--text3);transition:var(--trans);padding:0.2rem;line-height:1;}
+.fav-btn:hover{color:var(--accent);transform:scale(1.2);}
+.fav-btn.on{color:var(--accent);}
+.eje-tag{font-size:0.55rem;text-transform:uppercase;letter-spacing:0.07em;padding:0.16rem 0.5rem;border-radius:3px;border:1px solid;font-family:var(--font-mono);white-space:nowrap;}
+.eje-Economía{color:var(--eco);border-color:#c9a84c30;background:#c9a84c0a;}
+.eje-Psicología{color:var(--psi);border-color:#9b59b630;background:#9b59b60a;}
+.eje-Filosofía{color:var(--fil);border-color:#5dade230;background:#5dade20a;}
+.eje-Neurociencia{color:var(--neu);border-color:#1abc9c30;background:#1abc9c0a;}
+.eje-Desarrollo\ Personal{color:var(--des);border-color:#e67e2230;background:#e67e220a;}
+.eje-Historia{color:var(--his);border-color:#e74c3c30;background:#e74c3c0a;}
+.eje-Ciencias{color:var(--cie);border-color:#00bcd430;background:#00bcd40a;}
+.eje-Individual{color:var(--des);border-color:#e67e2230;background:#e67e220a;}
+.eje-Civilizacional{color:var(--his);border-color:#e74c3c30;background:#e74c3c0a;}
+.eje-Epistemológico{color:var(--fil);border-color:#5dade230;background:#5dade20a;}
+.eje-Neurológico-Biológico{color:var(--neu);border-color:#1abc9c30;background:#1abc9c0a;}
+.eje-Financiero{color:var(--eco);border-color:#c9a84c30;background:#c9a84c0a;}
+
+/* LIBRO HERO */
+.back-btn{background:none;border:none;color:var(--text2);cursor:pointer;font-size:0.73rem;font-family:var(--font-mono);padding:0 0 1.3rem;display:flex;align-items:center;gap:0.4rem;transition:var(--trans);letter-spacing:0.04em;min-height:44px;}
+.back-btn:hover{color:var(--accent);}
+.libro-hero{display:flex;gap:1.8rem;margin-bottom:2.2rem;padding-bottom:1.8rem;border-bottom:1px solid var(--border);align-items:flex-start;}
+.libro-hero-cover{width:110px;height:155px;object-fit:cover;object-position:top;border-radius:var(--radius);border:1px solid var(--border);flex-shrink:0;filter:brightness(0.9);}
+.libro-hero-cover-ph{width:110px;height:155px;background:var(--surface2);border-radius:var(--radius);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:2.5rem;flex-shrink:0;}
+.libro-hero-info{flex:1;min-width:0;}
+.libro-hero-title{font-family:var(--font-display);font-size:1.5rem;font-weight:700;line-height:1.25;margin-bottom:0.3rem;}
+.libro-hero-autor{font-size:0.85rem;color:var(--text2);font-style:italic;margin-bottom:1rem;}
+.libro-hero-desc{font-size:0.85rem;color:var(--text2);line-height:1.75;margin-bottom:1rem;font-style:italic;}
+.libro-hero-stats{display:flex;gap:1.2rem;margin-bottom:1rem;}
+.libro-hero-stat{font-size:0.68rem;color:var(--text3);font-family:var(--font-mono);}
+.libro-hero-stat span{color:var(--accent);}
+
+/* LEC LIST */
+.lec-tabs{display:flex;gap:0.4rem;margin-bottom:1rem;}
+.lec-tab{background:none;border:1px solid var(--border);color:var(--text2);padding:0.3rem 0.85rem;border-radius:20px;cursor:pointer;font-size:0.69rem;font-family:var(--font-mono);transition:var(--trans);}
+.lec-tab:hover{border-color:var(--border2);color:var(--text);}
+.lec-tab.active{background:var(--accent-bg);border-color:var(--accent);color:var(--accent);}
+.lec-item{background:var(--surface);border:1px solid var(--border);padding:0.95rem 1.1rem;border-radius:var(--radius);cursor:pointer;margin-bottom:0.55rem;transition:var(--trans);display:flex;align-items:center;justify-content:space-between;gap:0.8rem;min-height:44px;}
+.lec-item:hover{border-color:var(--border2);background:var(--surface2);}
+.lec-item.done{border-left:3px solid var(--success);}
+.lec-left{flex:1;min-width:0;}
+.lec-title{font-size:0.92rem;margin-bottom:0.3rem;font-family:var(--font-display);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.lec-meta{display:flex;gap:0.7rem;align-items:center;}
+.lec-num{font-size:0.62rem;color:var(--text3);font-family:var(--font-mono);}
+.lec-authors{font-size:0.59rem;color:var(--text2);background:var(--surface2);padding:0.1rem 0.45rem;border-radius:3px;border:1px solid var(--border);}
+.lec-right{display:flex;align-items:center;gap:0.4rem;flex-shrink:0;}
+.lec-status{font-size:0.75rem;}
+.lec-status.ok{color:var(--success);}
+.lec-status.no{color:var(--text3);}
+
+/* ═══════════════════════════════════════
+   LECCION DETAIL — TIPOGRAFÍA MEJORADA
+═══════════════════════════════════════ */
+.lec-img-wrap{margin-bottom:2rem;border-radius:var(--radius2);overflow:hidden;border:1px solid var(--border);}
+.lec-img-wrap img{width:100%;max-height:380px;object-fit:cover;display:block;filter:grayscale(8%) brightness(0.85);transition:filter 0.4s;}
+.lec-img-wrap img:hover{filter:none;}
+.lec-img-cap{background:var(--surface);padding:0.6rem 1rem;font-size:0.65rem;color:var(--text3);font-style:italic;border-top:1px solid var(--border);}
+.lec-titulo{font-family:var(--font-display);font-size:1.8rem;font-weight:700;color:var(--text);line-height:1.22;margin-bottom:0.4rem;letter-spacing:-0.01em;}
+.lec-meta-header{display:flex;align-items:center;gap:0.7rem;margin-bottom:2rem;padding-bottom:1.2rem;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.lec-meta-libro{font-size:0.7rem;color:var(--text3);font-family:var(--font-mono);font-style:italic;}
+
+/* FMT — TEXTO ENRIQUECIDO */
+.fmt{line-height:1.95;font-size:1rem;color:var(--text);font-family:var(--font-body);}
+.fmt p{margin-bottom:1.3rem;}
+.fmt p:last-child{margin-bottom:0;}
+
+/* Drop cap */
+.lec-body.fmt>p:first-child::first-letter{
+  font-family:var(--font-display);font-size:3.8rem;font-weight:700;
+  color:var(--accent);float:left;line-height:0.75;
+  margin-right:0.12em;margin-top:0.1em;
+}
+.lec-body.fmt>p:first-child::first-line{
+  font-variant:small-caps;letter-spacing:0.04em;
+}
+
+.fmt h2{font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:var(--accent);margin:2.2rem 0 0.9rem;padding-bottom:0.4rem;border-bottom:1px solid var(--border);line-height:1.3;}
+.fmt h3{font-family:var(--font-display);font-size:1.05rem;font-weight:600;color:var(--accent2);margin:1.7rem 0 0.7rem;line-height:1.3;}
+.fmt h4{font-size:0.77rem;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.1em;margin:1.4rem 0 0.6rem;font-family:var(--font-mono);}
+
+/* LISTAS ORDENADAS — numeración elegante con contador */
+.fmt ol{
+  margin:1.1rem 0 1.5rem;
+  padding:0;
+  counter-reset:item;
+  list-style:none;
+  border-left:2px solid var(--border);
+  padding-left:0;
+}
+.fmt ol li{
+  display:flex;
+  gap:1rem;
+  margin-bottom:0.85rem;
+  line-height:1.85;
+  counter-increment:item;
+  padding:0.55rem 1rem 0.55rem 1.1rem;
+  background:var(--surface2);
+  border-radius:0 var(--radius) var(--radius) 0;
+  border-left:none;
+  position:relative;
+  transition:background 0.15s;
+}
+.fmt ol li:hover{background:var(--surface3);}
+.fmt ol li::before{
+  content:counter(item);
+  color:#000;
+  background:var(--accent);
+  font-weight:700;
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  min-width:1.6rem;
+  height:1.6rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:4px;
+  flex-shrink:0;
+  margin-top:0.18rem;
+  letter-spacing:0;
+}
+.fmt ol li:nth-child(n+10)::before{font-size:0.62rem;}
+
+/* LISTAS NO ORDENADAS */
+.fmt ul{margin:1.1rem 0 1.5rem;list-style:none;padding:0;}
+.fmt ul li{
+  padding:0.45rem 0.9rem 0.45rem 2rem;
+  position:relative;
+  margin-bottom:0.5rem;
+  line-height:1.85;
+  background:var(--surface2);
+  border-radius:var(--radius);
+  transition:background 0.15s;
+}
+.fmt ul li:hover{background:var(--surface3);}
+.fmt ul li::before{
+  content:'';
+  position:absolute;
+  left:0.85rem;
+  top:0.85rem;
+  width:5px;
+  height:5px;
+  background:var(--accent);
+  border-radius:50%;
+}
+
+/* LISTAS ANIDADAS */
+.fmt ol ol,.fmt ul ul,.fmt ol ul,.fmt ul ol{
+  margin:0.6rem 0 0.3rem;
+  border-left:none;
+}
+.fmt ol ol li,.fmt ul ul li{
+  background:transparent;
+  border:1px solid var(--border);
+}
+.fmt ol ol li::before{
+  background:var(--accent-dim);
+  font-size:0.62rem;
+}
+
+.fmt strong{color:var(--accent2);font-weight:700;}
+.fmt em{font-style:italic;color:var(--text2);}
+.fmt code{font-family:var(--font-mono);font-size:0.82rem;background:var(--surface3);border:1px solid var(--border2);padding:0.1rem 0.45rem;border-radius:3px;color:var(--accent2);}
+.fmt hr{border:none;border-top:1px solid var(--border2);margin:2.2rem 0;}
+.fmt blockquote{
+  border-left:3px solid var(--accent);
+  margin:1.8rem 0;
+  padding:1.3rem 1.6rem 1.3rem 1.8rem;
+  background:linear-gradient(135deg,var(--surface2),var(--surface3));
+  border-radius:0 var(--radius2) var(--radius2) 0;
+  font-style:italic;
+  color:var(--text2);
+  font-size:1.06rem;
+  font-family:var(--font-display);
+  line-height:1.8;
+  position:relative;
+}
+.fmt blockquote::before{
+  content:'\201C';
+  position:absolute;
+  top:-0.3rem;left:1rem;
+  font-size:3.2rem;color:var(--accent-dim);
+  font-family:var(--font-display);line-height:1;pointer-events:none;
+}
+.fmt table{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.85rem;font-family:var(--font-body);border-radius:var(--radius);overflow:hidden;border:1px solid var(--border2);}
+.fmt thead{background:var(--surface3);}
+.fmt th{padding:0.7rem 1rem;text-align:left;font-family:var(--font-mono);font-size:0.67rem;text-transform:uppercase;letter-spacing:0.09em;color:var(--accent);font-weight:600;border-bottom:1px solid var(--border2);}
+.fmt td{padding:0.65rem 1rem;border-bottom:1px solid var(--border);color:var(--text);line-height:1.65;vertical-align:top;}
+.fmt tr:last-child td{border-bottom:none;}
+.fmt tr:nth-child(even) td{background:#ffffff04;}
+.fmt tr:hover td{background:var(--surface3);}
+
+/* CAJAS */
+.det-grid{display:grid;gap:1rem;margin-bottom:2rem;}
+.det-card{background:var(--surface2);border:1px solid var(--border);padding:1.2rem 1.4rem;border-radius:var(--radius);}
+.det-card-title{font-size:0.67rem;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.9rem;padding-bottom:0.5rem;border-bottom:1px solid var(--border);font-family:var(--font-mono);font-weight:500;}
+.aplic-box{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--success);padding:1.2rem 1.4rem;border-radius:var(--radius);margin-bottom:1.2rem;}
+.aplic-label{font-size:0.59rem;text-transform:uppercase;color:var(--success);margin-bottom:0.7rem;letter-spacing:0.12em;font-family:var(--font-mono);display:flex;align-items:center;gap:0.4rem;}
+.con-box{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent-dim);padding:1.2rem 1.4rem;border-radius:var(--radius);margin-bottom:1rem;}
+.con-label{font-size:0.59rem;text-transform:uppercase;color:var(--accent-dim);margin-bottom:0.7rem;letter-spacing:0.12em;font-family:var(--font-mono);display:flex;align-items:center;gap:0.4rem;}
+.auto-box{background:var(--surface);border:1px solid var(--border);border-left:3px solid #5dade255;padding:1.2rem 1.4rem;border-radius:var(--radius);margin-bottom:1rem;}
+.auto-label{font-size:0.59rem;text-transform:uppercase;color:#5dade288;margin-bottom:0.7rem;letter-spacing:0.12em;font-family:var(--font-mono);display:flex;align-items:center;gap:0.4rem;}
+.lec-body{margin-bottom:2.5rem;}
+.autores-rel{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.8rem;}
+.autor-tag{background:var(--surface2);border:1px solid var(--border);color:var(--text2);padding:0.28rem 0.7rem;border-radius:3px;font-size:0.7rem;cursor:pointer;transition:var(--trans);font-family:var(--font-mono);}
+.autor-tag:hover{border-color:var(--accent);color:var(--accent);}
+.notas-section{margin-bottom:1.8rem;border-top:1px solid var(--border);padding-top:1.4rem;}
+.notas-label{font-size:0.61rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text3);font-family:var(--font-mono);margin-bottom:0.6rem;}
+.notas-area{width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:0.9rem 1.1rem;border-radius:var(--radius);font-size:0.88rem;font-family:var(--font-body);line-height:1.75;resize:vertical;min-height:100px;outline:none;transition:var(--trans);}
+.notas-area:focus{border-color:var(--accent-dim);}
+.notas-area::placeholder{color:var(--text3);}
+.notas-save{background:none;border:1px solid var(--border);color:var(--text2);padding:0.38rem 0.9rem;border-radius:var(--radius);cursor:pointer;font-size:0.7rem;font-family:var(--font-mono);margin-top:0.6rem;transition:var(--trans);}
+.notas-save:hover{border-color:var(--accent);color:var(--accent);}
+.lec-actions{display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:1.8rem;padding-top:1.5rem;border-top:1px solid var(--border);}
+.act-btn{padding:0.6rem 1.2rem;border-radius:var(--radius);cursor:pointer;font-size:0.78rem;border:1px solid;transition:var(--trans);font-family:var(--font-body);display:flex;align-items:center;gap:0.35rem;min-height:44px;}
+.act-btn.primary{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700;}
+.act-btn.primary:hover{background:var(--accent2);}
+.act-btn.secondary{background:none;color:var(--text2);border-color:var(--border);}
+.act-btn.secondary:hover{border-color:var(--border2);color:var(--text);}
+.act-btn.done-mark{background:none;color:var(--success);border-color:#2ecc7130;}
+
+/* CITAS */
+.quotes-loading{display:flex;flex-direction:column;align-items:center;gap:1rem;padding:3rem;color:var(--text3);font-family:var(--font-mono);font-size:0.78rem;}
+.quotes-loading-ring{width:28px;height:28px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.9s linear infinite;}
+.quote-card{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);padding:1.6rem 1.8rem;border-radius:0 var(--radius) var(--radius) 0;margin-bottom:1rem;position:relative;transition:var(--trans);}
+.quote-card:hover{background:var(--surface3);border-color:var(--border2);}
+.quote-text{font-family:var(--font-display);font-size:1.1rem;font-style:italic;line-height:1.8;color:var(--text);margin-bottom:0.9rem;}
+.quote-text::before{content:'\201C';color:var(--accent);font-size:1.8rem;line-height:0;vertical-align:-0.4rem;margin-right:0.2rem;}
+.quote-text::after{content:'\201D';color:var(--accent);font-size:1.8rem;line-height:0;vertical-align:-0.4rem;margin-left:0.2rem;}
+.quote-attr{font-size:0.72rem;color:var(--text3);font-family:var(--font-mono);display:flex;flex-direction:column;gap:0.18rem;}
+.quote-attr-lec{color:var(--text2);}
+.quote-attr-autor{color:var(--accent-dim);font-style:italic;}
+.quote-fav-btn{position:absolute;top:1rem;right:1rem;background:none;border:none;cursor:pointer;font-size:1rem;color:var(--text3);transition:var(--trans);}
+.quote-fav-btn:hover{color:var(--accent);transform:scale(1.2);}
+.quote-fav-btn.on{color:var(--accent);}
+.quotes-meta{font-size:0.68rem;color:var(--text3);font-family:var(--font-mono);margin-bottom:1.4rem;padding-bottom:0.8rem;border-bottom:1px solid var(--border);}
+.quotes-empty{text-align:center;padding:3rem 2rem;color:var(--text3);font-family:var(--font-mono);font-size:0.78rem;border:1px dashed var(--border);border-radius:var(--radius2);}
+.quotes-empty-ico{font-size:2.2rem;display:block;margin-bottom:0.8rem;}
+
+/* TEST */
+.test-hdr{margin-bottom:1.8rem;}
+.test-prog-bar{height:3px;background:var(--border);border-radius:2px;margin-bottom:0.7rem;}
+.test-prog-fill{height:100%;background:linear-gradient(90deg,var(--accent-dim),var(--accent));border-radius:2px;transition:width 0.35s;}
+.test-info{display:flex;justify-content:space-between;align-items:center;}
+.test-counter{font-size:0.7rem;color:var(--text3);font-family:var(--font-mono);}
+.test-score{font-size:0.7rem;color:var(--text3);font-family:var(--font-mono);}
+.preg-card{background:var(--surface);border:1px solid var(--border);padding:2rem 1.6rem;border-radius:var(--radius2);margin-bottom:1rem;}
+.preg-libro{font-size:0.64rem;color:var(--text3);font-family:var(--font-mono);margin-bottom:0.5rem;}
+.preg-dif{display:inline-flex;align-items:center;gap:0.3rem;font-size:0.59rem;font-family:var(--font-mono);text-transform:uppercase;padding:0.14rem 0.5rem;border-radius:3px;border:1px solid;margin-bottom:1.4rem;}
+.preg-dif.d1{color:var(--success);border-color:#2ecc7130;background:#2ecc710a;}
+.preg-dif.d2{color:var(--eco);border-color:#c9a84c30;background:#c9a84c0a;}
+.preg-dif.d3{color:var(--his);border-color:#e74c3c30;background:#e74c3c0a;}
+.preg-txt{font-family:var(--font-display);font-size:1.15rem;line-height:1.6;margin-bottom:2rem;color:var(--text);}
+.opts-grid{display:grid;gap:0.6rem;}
+.opt-btn{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:0.95rem 1.2rem;border-radius:var(--radius);cursor:pointer;font-size:0.88rem;text-align:left;transition:var(--trans);line-height:1.5;font-family:var(--font-body);display:flex;align-items:flex-start;gap:0.8rem;}
+.opt-btn:hover:not(:disabled){border-color:var(--accent-dim);background:var(--surface3);}
+.opt-btn:disabled{cursor:default;}
+.opt-btn.ok{border-color:var(--success);background:#2ecc7112;color:var(--success);}
+.opt-btn.err{border-color:var(--danger);background:#c0392b12;color:#e07070;}
+.opt-letter{width:24px;height:24px;background:var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:0.67rem;font-family:var(--font-mono);flex-shrink:0;margin-top:2px;transition:var(--trans);}
+.opt-btn.ok .opt-letter{background:var(--success);color:#000;}
+.opt-btn.err .opt-letter{background:var(--danger);color:#fff;}
+.feedback{margin-top:1.2rem;padding:1rem 1.2rem;border-radius:var(--radius);font-size:0.88rem;line-height:1.7;}
+.feedback.ok{background:#2ecc7110;border:1px solid #2ecc7140;color:#6de8a0;}
+.feedback.err{background:#c0392b10;border:1px solid #c0392b40;color:#e07070;}
+.feedback-head{font-weight:700;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.4rem;}
+.test-nav{display:flex;justify-content:space-between;align-items:center;margin-top:1rem;}
+.res-card{background:var(--surface);border:1px solid var(--border);padding:2.5rem 2rem;border-radius:var(--radius2);text-align:center;}
+.res-pct{font-family:var(--font-display);font-size:5rem;font-weight:700;color:var(--accent);line-height:1;margin:0.8rem 0;}
+.res-sub{font-size:0.85rem;color:var(--text2);margin-bottom:2rem;}
+.res-bars{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem;}
+.res-bar-card{background:var(--surface2);border:1px solid var(--border);padding:1rem;border-radius:var(--radius);}
+.res-bar-num{font-family:var(--font-display);font-size:1.6rem;}
+.res-bar-label{font-size:0.59rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.09em;font-family:var(--font-mono);}
+.fallos-list{text-align:left;margin-top:1.5rem;}
+.fallo-item{background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--danger);padding:0.75rem 1rem;border-radius:0 var(--radius) var(--radius) 0;margin-bottom:0.4rem;font-size:0.8rem;line-height:1.55;color:var(--text2);}
+
+/* REPASO */
+.repaso-hdr{margin-bottom:1.8rem;}
+.repaso-title{font-family:var(--font-display);font-size:1.3rem;margin-bottom:0.4rem;}
+.repaso-prog{display:flex;gap:0.4rem;margin-bottom:1rem;}
+.repaso-dot{width:32px;height:4px;background:var(--border);border-radius:2px;transition:background 0.3s;}
+.repaso-dot.cur{background:var(--accent);}
+.repaso-dot.done{background:var(--success);}
+.fav-empty{text-align:center;padding:2.5rem;color:var(--text3);font-size:0.82rem;border:1px dashed var(--border);border-radius:var(--radius2);font-family:var(--font-mono);}
+.fav-empty-ico{font-size:2rem;margin-bottom:0.6rem;display:block;}
+.autor-hdr{margin-bottom:2rem;}
+.autor-name{font-family:var(--font-display);font-size:1.5rem;margin-bottom:0.3rem;}
+.autor-count{font-size:0.74rem;color:var(--text3);font-family:var(--font-mono);}
+.modal-overlay{position:fixed;inset:0;background:#000000cc;display:flex;align-items:center;justify-content:center;z-index:200;padding:1rem;backdrop-filter:blur(6px);}
+.modal-overlay.hidden{display:none;}
+.modal-box{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius2);padding:1.8rem;max-width:500px;width:100%;box-shadow:var(--shadow);}
+.modal-title{font-family:var(--font-display);font-size:1.15rem;color:var(--accent);margin-bottom:1rem;}
+.modal-actions{display:flex;gap:0.7rem;justify-content:flex-end;margin-top:1.5rem;}
+.empty{text-align:center;padding:3rem;color:var(--text3);font-family:var(--font-mono);font-size:0.78rem;}
+#toast{position:fixed;bottom:calc(var(--bnav-h) + 1rem);right:1.5rem;background:var(--surface2);border:1px solid var(--accent-dim);color:var(--text);padding:0.75rem 1.3rem;border-radius:var(--radius);font-size:0.78rem;font-family:var(--font-mono);z-index:300;opacity:0;transform:translateY(8px);transition:all 0.22s ease;pointer-events:none;max-width:280px;}
+#toast.show{opacity:1;transform:translateY(0);}
+
+/* ENSAYOS */
+.ensayo-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius2);padding:1.4rem 1.6rem;cursor:pointer;transition:var(--trans);display:flex;flex-direction:column;gap:1rem;}
+.ensayo-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:var(--shadow);}
+.ensayo-card-titulo{font-family:var(--font-display);font-size:1.05rem;font-weight:700;line-height:1.35;margin-bottom:0.3rem;}
+.ensayo-card-pregunta{font-size:0.8rem;color:var(--text2);font-style:italic;line-height:1.5;}
+.ensayo-card-footer{display:flex;align-items:flex-start;justify-content:space-between;gap:0.8rem;flex-wrap:wrap;}
+.ensayo-autores{display:flex;flex-wrap:wrap;gap:0.3rem;}
+.ensayo-autor-badge{background:var(--accent-bg);border:1px solid var(--accent-dim);color:var(--accent);font-size:0.62rem;font-family:var(--font-mono);padding:0.18rem 0.55rem;border-radius:20px;white-space:nowrap;}
+.ensayo-autor-badge.clickable{cursor:pointer;transition:var(--trans);}
+.ensayo-autor-badge.clickable:hover{background:var(--accent);color:#000;}
+.ensayo-meta{font-size:0.6rem;color:var(--text3);font-family:var(--font-mono);white-space:nowrap;flex-shrink:0;}
+.ensayo-detail{display:flex;flex-direction:column;gap:1rem;}
+.ensayo-pregunta-hero{background:var(--surface);border:1px solid var(--border2);border-left:3px solid var(--accent);border-radius:var(--radius2);padding:1.5rem 1.8rem;margin-bottom:0.5rem;}
+.ensayo-pregunta-label{font-size:0.58rem;text-transform:uppercase;letter-spacing:0.15em;color:var(--accent);font-family:var(--font-mono);display:block;margin-bottom:0.5rem;}
+.ensayo-detail-titulo{font-family:var(--font-display);font-size:1.5rem;font-weight:700;line-height:1.25;margin-bottom:0.5rem;}
+.ensayo-detail-pregunta{font-size:0.95rem;color:var(--text2);font-style:italic;line-height:1.6;}
+.ensayo-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius2);overflow:hidden;}
+.ensayo-section.ensayo-sintesis{border-color:#c9a84c50;}
+.ensayo-section-header{display:flex;align-items:center;justify-content:space-between;padding:0.9rem 1.2rem;cursor:pointer;font-size:0.85rem;font-weight:600;color:var(--text2);transition:var(--trans);user-select:none;}
+.ensayo-section-header:hover{color:var(--text);background:var(--surface2);}
+.ensayo-section.ensayo-sintesis .ensayo-section-header{color:var(--accent);}
+.ensayo-section.expanded .ensayo-section-header{border-bottom:1px solid var(--border);}
+.ensayo-toggle{font-size:0.7rem;color:var(--text3);}
+.ensayo-section-body{padding:1.2rem 1.4rem;}
+.ensayo-body-text{font-size:0.88rem;line-height:1.8;color:var(--text2);}
+.ensayo-sintesis-nota{font-size:0.65rem;color:var(--accent-dim);font-family:var(--font-mono);margin-bottom:0.8rem;padding:0.4rem 0.7rem;background:var(--accent-bg);border-radius:var(--radius);border:1px solid var(--accent-dim);}
+
+/* BÚSQUEDA CORPUS */
+.corpus-result-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius2);padding:1rem 1.2rem;margin-bottom:0.6rem;cursor:pointer;transition:var(--trans);}
+.corpus-result-item:hover{border-color:var(--border2);background:var(--surface2);transform:translateX(2px);}
+.corpus-result-header{display:flex;align-items:flex-start;justify-content:space-between;gap:0.5rem;margin-bottom:0.25rem;}
+.corpus-result-titulo{font-size:0.88rem;font-weight:600;color:var(--text);font-family:var(--font-display);line-height:1.3;}
+.corpus-result-libro{font-size:0.65rem;color:var(--text3);font-family:var(--font-mono);margin-bottom:0.5rem;}
+.corpus-result-fragmento{font-size:0.78rem;color:var(--text2);line-height:1.6;}
+.corpus-result-fragmento mark.hl{background:var(--hl);color:#000;border-radius:2px;padding:0 2px;}
+
+/* SRS */
+.srs-stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.7rem;margin-bottom:1.8rem;}
+.srs-stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius2);padding:1rem;text-align:center;}
+.srs-stat-num{font-family:var(--font-display);font-size:1.7rem;font-weight:700;color:var(--text);line-height:1;margin-bottom:0.3rem;}
+.srs-stat-lbl{font-size:0.56rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;font-family:var(--font-mono);}
+.srs-niveles{margin-bottom:1.8rem;}
+.srs-nivel-row{display:flex;align-items:center;gap:0.7rem;margin-bottom:0.5rem;}
+.srs-nivel-lbl{font-size:0.67rem;font-family:var(--font-mono);color:var(--text3);width:50px;flex-shrink:0;}
+.srs-nivel-bar{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
+.srs-nivel-fill{height:100%;border-radius:3px;transition:width 0.5s ease;}
+.srs-nivel-count{font-size:0.65rem;font-family:var(--font-mono);color:var(--text3);width:28px;text-align:right;flex-shrink:0;}
+.srs-modo-section{margin-bottom:1.4rem;}
+.srs-modo-row{display:grid;grid-template-columns:repeat(3,1fr);gap:0.6rem;}
+.srs-modo-btn{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius2);padding:0.8rem 0.5rem;cursor:pointer;font-size:0.78rem;color:var(--text2);transition:var(--trans);font-family:var(--font-body);text-align:center;line-height:1.4;}
+.srs-modo-btn small{font-size:0.62rem;color:var(--text3);font-family:var(--font-mono);display:block;margin-top:0.2rem;}
+.srs-modo-btn:hover{border-color:var(--border2);color:var(--text);}
+.srs-modo-btn.active{background:var(--accent-bg);border-color:var(--accent);color:var(--accent);}
+.srs-activar-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius2);padding:0.9rem 1.1rem;margin-bottom:0.5rem;flex-wrap:wrap;}
+.srs-activar-titulo{font-size:0.88rem;font-weight:600;font-family:var(--font-display);margin-bottom:0.15rem;}
+.srs-activar-autor{font-size:0.68rem;color:var(--text2);font-style:italic;}
+.srs-modo-tag{display:inline-flex;align-items:center;gap:0.4rem;font-size:0.65rem;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.08em;padding:0.25rem 0.7rem;border-radius:20px;margin-bottom:0.7rem;}
+.srs-modo-tag.quiz{background:#3498db15;border:1px solid #3498db40;color:var(--info);}
+.srs-modo-tag.reflexion{background:#9b59b615;border:1px solid #9b59b640;color:var(--psi);}
+.srs-contexto{font-size:0.72rem;color:var(--text3);font-family:var(--font-mono);margin-bottom:1rem;font-style:italic;}
+.srs-eval-btn{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius2);padding:0.9rem 0.5rem;cursor:pointer;font-size:0.8rem;color:var(--text2);transition:var(--trans);font-family:var(--font-body);text-align:center;line-height:1.5;}
+.srs-eval-btn small{font-size:0.6rem;color:var(--text3);font-family:var(--font-mono);display:block;margin-top:0.2rem;}
+.srs-eval-btn:hover:not(:disabled){transform:translateY(-1px);}
+.srs-eval-btn.pendiente:hover:not(:disabled){border-color:var(--text3);color:var(--text);}
+.srs-eval-btn.en-proceso:hover:not(:disabled){border-color:var(--des);background:#e67e2215;color:var(--des);}
+.srs-eval-btn.integrado:hover:not(:disabled){border-color:var(--success);background:#2ecc7115;color:var(--success);}
+.srs-eval-btn:disabled{opacity:0.5;cursor:default;}
+
+/* PDF modal */
+.pdf-opt-grid{display:grid;gap:0.7rem;margin-top:0.8rem;}
+.pdf-opt{background:var(--surface2);border:1px solid var(--border);padding:1rem 1.2rem;border-radius:var(--radius);cursor:pointer;transition:var(--trans);display:flex;align-items:center;gap:1rem;}
+.pdf-opt:hover{border-color:var(--accent);background:var(--surface3);}
+.pdf-opt-icon{font-size:1.6rem;}
+.pdf-opt-title{font-family:var(--font-display);font-size:0.92rem;font-weight:600;}
+.pdf-opt-sub{font-size:0.68rem;color:var(--text2);margin-top:0.15rem;}
+
+/* ═══════════════════════════════════════
+   ESQUEMAS
+═══════════════════════════════════════ */
+.esquemas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.1rem;margin-top:1.4rem;}
+.esquema-card{
+  border-radius:var(--radius2);
+  overflow:hidden;
+  cursor:pointer;
+  transition:var(--trans);
+  border:1px solid var(--border);
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+.esquema-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);}
+.esquema-card.proximamente{cursor:default;opacity:0.65;}
+.esquema-card.proximamente:hover{transform:none;box-shadow:none;}
+.esquema-thumb{
+  height:110px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:hidden;
+  flex-shrink:0;
+}
+.esquema-thumb::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:repeating-linear-gradient(-45deg,transparent,transparent 12px,rgba(255,255,255,0.03) 12px,rgba(255,255,255,0.03) 24px);
+}
+.esquema-thumb-icon{font-size:2.8rem;position:relative;z-index:1;filter:drop-shadow(0 2px 8px #00000060);}
+.esquema-body{padding:1rem 1.2rem 1.1rem;background:var(--surface);flex:1;display:flex;flex-direction:column;gap:0.35rem;}
+.esquema-title{font-family:var(--font-display);font-size:0.97rem;font-weight:600;line-height:1.3;color:var(--text);}
+.esquema-autor{font-size:0.7rem;color:var(--text2);font-style:italic;}
+.esquema-footer{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:0.6rem;}
+.esquema-eje-tag{font-size:0.55rem;text-transform:uppercase;letter-spacing:0.07em;padding:0.16rem 0.5rem;border-radius:3px;border:1px solid;font-family:var(--font-mono);}
+.esquema-badge{font-size:0.6rem;font-family:var(--font-mono);padding:0.15rem 0.5rem;border-radius:3px;}
+.esquema-badge.disponible{background:#2ecc7115;color:var(--success);border:1px solid #2ecc7130;}
+.esquema-badge.pronto{background:var(--surface3);color:var(--text3);border:1px solid var(--border);}
+.esquema-card:not(.proximamente):hover .esquema-badge.disponible{background:#2ecc7125;}
+
+/* Viewer iframe */
+.esquema-viewer-wrap{
+  border-radius:var(--radius2);
+  overflow:hidden;
+  border:1px solid var(--border);
+  margin-top:0.5rem;
+  background:var(--surface);
+}
+.esquema-viewer-wrap iframe{
+  width:100%;
+  height:78vh;
+  border:none;
+  display:block;
+}
+.esquema-viewer-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0.7rem 1rem;
+  background:var(--surface2);
+  border-bottom:1px solid var(--border);
+}
+.esquema-viewer-title{font-family:var(--font-mono);font-size:0.7rem;color:var(--text2);letter-spacing:0.06em;}
+.fullscreen-btn{background:none;border:1px solid var(--border);color:var(--text3);padding:0.3rem 0.7rem;border-radius:var(--radius);cursor:pointer;font-size:0.65rem;font-family:var(--font-mono);transition:var(--trans);}
+.fullscreen-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+/* RESPONSIVE */
+@media(max-width:720px){
+  .bottom-nav{display:block;}
+  .nav-links{display:none;}
+  nav{padding:0 1rem;}
+  main{padding:1.4rem 1rem calc(var(--bnav-h)+2rem);}
+  #toast{bottom:calc(var(--bnav-h)+1.2rem);}
+  .stats-row{grid-template-columns:repeat(2,1fr);}
+  .libros-grid{grid-template-columns:1fr 1fr;}
+  .libro-hero{flex-direction:column;gap:1.2rem;}
+  .libro-hero-cover,.libro-hero-cover-ph{width:100%;height:200px;}
+  .preg-txt{font-size:1rem;}
+  .fmt table{display:block;overflow-x:auto;}
+  .fmt th,.fmt td{padding:0.5rem 0.7rem;}
+  .page-title{font-size:1.7rem;}
+  .lec-titulo{font-size:1.4rem;}
+  .lec-body.fmt>p:first-child::first-letter{font-size:2.8rem;}
+  .esquemas-grid{grid-template-columns:1fr;}
+  /* SRS responsive */
+  .srs-stats-grid{grid-template-columns:repeat(3,1fr);gap:0.5rem;}
+  .srs-stat-num{font-size:1.3rem;}
+  .srs-modo-row{grid-template-columns:repeat(3,1fr);gap:0.4rem;}
+  .srs-modo-btn{font-size:0.72rem;padding:0.65rem 0.3rem;}
+  .srs-activar-row{flex-direction:column;align-items:flex-start;gap:0.6rem;}
+  /* Ensayos responsive */
+  .ensayo-pregunta-hero{padding:1.1rem 1.2rem;}
+  .ensayo-detail-titulo{font-size:1.25rem;}
+}
+@media(max-width:480px){
+  .libros-grid{grid-template-columns:1fr;}
+  .quick-row{gap:0.4rem;}
+  .q-btn{padding:0.5rem 0.8rem;font-size:0.74rem;}
+  .lec-actions{gap:0.4rem;}
+  .act-btn{padding:0.5rem 0.9rem;font-size:0.74rem;}
+  /* SRS pantallas pequeñas */
+  .srs-stats-grid{grid-template-columns:repeat(3,1fr);gap:0.4rem;}
+  .srs-stat{padding:0.7rem 0.4rem;}
+  .srs-stat-num{font-size:1.1rem;}
+  .srs-stat-lbl{font-size:0.5rem;}
+  .srs-modo-row{grid-template-columns:1fr;gap:0.4rem;}
+  .srs-modo-btn{text-align:left;padding:0.7rem 0.9rem;}
+  /* Ensayos pantallas pequeñas */
+  .ensayo-detail-titulo{font-size:1.1rem;}
+  .ensayo-pregunta-hero{padding:1rem;}
+  .ensayo-section-header{font-size:0.8rem;padding:0.75rem 1rem;}
+  .ensayo-section-body{padding:1rem;}
+}
+</style>
+</head>
+<body>
+
+<div id="loader-screen">
+  <div class="loader-logo">Segundo Cerebro</div>
+  <div class="loader-ring"></div>
+  <div class="loader-msg" id="loader-msg">cargando biblioteca...</div>
+</div>
+
+<nav>
+  <div class="nav-brand">
+    <div class="nav-brand-icon" id="admin-trigger">SC</div>
+    <div class="nav-brand-text" onclick="showView('home')" style="cursor:pointer">
+      <span>Segundo Cerebro</span>
+      <span class="nav-brand-sub">Soberano</span>
+    </div>
+  </div>
+  <div class="nav-links">
+    <button class="nav-btn active" onclick="showView('home')" id="nav-home" title="Biblioteca">📚 <span class="lbl">Biblioteca</span></button>
+    <button class="nav-btn" onclick="showView('favoritos')" id="nav-favoritos" title="Favoritos">★ <span class="lbl">Favoritos</span></button>
+    <button class="nav-btn" onclick="iniciarTest()" id="nav-test" title="Test">🧠 <span class="lbl">Test</span></button>
+    <button class="nav-btn" onclick="showView('busqueda')" id="nav-busqueda" title="Búsqueda">🔍 <span class="lbl">Buscar</span></button>
+    <button class="nav-btn" onclick="showView('esquemas')" id="nav-esquemas" title="Esquemas">🗺 <span class="lbl">Esquemas</span></button>
+    <button class="nav-btn" onclick="showView('ensayos')" id="nav-ensayos" title="Ensayos">✍ <span class="lbl">Ensayos</span></button>
+    <button class="nav-btn" onclick="showView('repaso-srs')" id="nav-repaso-srs" title="Repaso Espaciado">🔁 <span class="lbl">Repaso</span></button>
+    <button class="nav-btn cta" onclick="comenzarRepasoRapido()">⚡ Quick</button>
+    <button class="nav-btn notif-bell" id="notif-bell" onclick="toggleNotifPanel()" title="Notificaciones">🔔<span class="notif-badge" id="notif-badge" style="display:none">0</span></button>
+  </div>
+</nav>
+
+<!-- BOTTOM NAV MOBILE -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-inner">
+    <button class="bnav-btn active" id="bnav-home" onclick="showView('home')">
+      <span class="bnav-icon">📚</span><span class="bnav-label">Biblioteca</span>
+    </button>
+    <button class="bnav-btn" id="bnav-favoritos" onclick="showView('favoritos')">
+      <span class="bnav-icon">★</span><span class="bnav-label">Favoritos</span>
+    </button>
+    <button class="bnav-btn" id="bnav-test" onclick="iniciarTest()">
+      <span class="bnav-icon">🧠</span><span class="bnav-label">Test</span>
+    </button>
+    <button class="bnav-btn" id="bnav-busqueda" onclick="showView('busqueda')">
+      <span class="bnav-icon">🔍</span><span class="bnav-label">Buscar</span>
+    </button>
+    <button class="bnav-btn" id="bnav-esquemas" onclick="showView('esquemas')">
+      <span class="bnav-icon">🗺</span><span class="bnav-label">Esquemas</span>
+    </button>
+    <button class="bnav-btn" id="bnav-ensayos" onclick="showView('ensayos')">
+      <span class="bnav-icon">✍</span><span class="bnav-label">Ensayos</span>
+    </button>
+    <button class="bnav-btn" id="bnav-repaso-srs" onclick="showView('repaso-srs')">
+      <span class="bnav-icon">🔁</span><span class="bnav-label">Repaso</span>
+    </button>
+    <button class="bnav-btn bnav-cta" onclick="comenzarRepasoRapido()">
+      <span class="bnav-icon">⚡</span><span class="bnav-label">Quick</span>
+    </button>
+    <button class="bnav-btn" id="bnav-notif" onclick="toggleNotifPanel()" style="position:relative">
+      <span class="bnav-icon">🔔</span><span class="bnav-label">Alertas</span>
+      <span class="notif-badge notif-badge-mobile" id="notif-badge-mobile" style="display:none;position:absolute;top:2px;right:8px">0</span>
+    </button>
+  </div>
+</nav>
+
+<main>
+
+  <!-- HOME -->
+  <div class="view active" id="view-home">
+    <div style="margin-bottom:1.4rem;display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap">
+      <h1 class="page-title" style="font-size:1.55rem;margin-bottom:0">Biblioteca</h1>
+      <p class="page-sub" id="home-sub" style="margin-bottom:0;font-size:0.7rem">cargando...</p>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-num" id="s-libros">—</div><div class="stat-label">Libros</div></div>
+      <div class="stat-card"><div class="stat-num" id="s-comp">—</div><div class="stat-label">Lec. completadas</div></div>
+      <div class="stat-card pct"><div class="stat-num" id="s-pct">—</div><div class="stat-label">Progreso</div></div>
+      <div class="stat-card streak"><div class="stat-num" id="s-racha">—</div><div class="stat-label">Racha 🔥</div></div>
+    </div>
+    <div id="continua-banner" style="display:none"></div>
+    <div id="ultimos-libros-section" style="display:none">
+      <p class="sec-label">Últimos visitados</p>
+      <div id="ultimos-libros-cont" class="ultimos-row"></div>
+    </div>
+    <div class="quick-row">
+      <button class="q-btn primary" onclick="iniciarTest()">▶ Test adaptativo</button>
+      <button class="q-btn" onclick="leccionAleatoria()">🎲 Sorpréndeme</button>
+      <button class="q-btn" onclick="comenzarRepasoRapido()">⚡ Repaso</button>
+      <button class="q-btn" onclick="verQuotes()">💬 Citas</button>
+    </div>
+    <p class="sec-label">Explorar por eje</p>
+    <div class="eje-filters" id="eje-filters"></div>
+    <div class="eje-filters-sub" id="eje-filters-sub"></div>
+    <div class="search-wrap">
+      <span class="si">🔍</span>
+      <input class="search-input" id="search-input" type="text" placeholder="Buscar libros, lecciones, conceptos..." oninput="onSearch(this.value)">
+      <button class="sc" id="search-clear" onclick="clearSearch()">✕</button>
+    </div>
+    <div id="search-results-lecs" class="search-results-lecs" style="display:none"></div>
+    <p class="sec-label" id="libros-count-label">Todos los libros</p>
+    <div class="libros-grid" id="libros-container">
+      <div class="skeleton sk-card"></div>
+      <div class="skeleton sk-card"></div>
+      <div class="skeleton sk-card"></div>
+      <div class="skeleton sk-card"></div>
+    </div>
+  </div>
+
+  <!-- FAVORITOS -->
+  <div class="view" id="view-favoritos">
+    <h1 class="page-title">★ Favoritos</h1>
+    <p class="page-sub" style="margin-bottom:1.8rem">Libros y lecciones guardados</p>
+    <p class="sec-label" id="fav-libros-lbl">Libros</p>
+    <div id="fav-libros-cont"></div>
+    <p class="sec-label" style="margin-top:2rem" id="fav-lecs-lbl">Lecciones</p>
+    <div id="fav-lecs-cont"></div>
+  </div>
+
+  <!-- CITAS -->
+  <div class="view" id="view-quotes">
+    <button class="back-btn" onclick="showView('home')">← Inicio</button>
+    <h1 class="page-title">💬 Citas memorables</h1>
+    <p class="page-sub" style="margin-bottom:1.4rem">Fragmentos destacados del corpus</p>
+    <div id="quotes-container"></div>
+  </div>
+
+  <!-- LECCIONES -->
+  <div class="view" id="view-lecciones">
+    <button class="back-btn" onclick="showView('home')">← Biblioteca</button>
+    <div id="libro-hero-cont"></div>
+    <div class="search-wrap">
+      <span class="si">🔍</span>
+      <input class="search-input" id="search-lecs" type="text" placeholder="Buscar lección..." oninput="onSearchLecs(this.value)">
+    </div>
+    <div class="lec-tabs">
+      <button class="lec-tab active" onclick="filtrarLecs('all',this)">Todas</button>
+      <button class="lec-tab" onclick="filtrarLecs('pending',this)">Pendientes</button>
+      <button class="lec-tab" onclick="filtrarLecs('done',this)">Completadas</button>
+    </div>
+    <div id="lecciones-container"></div>
+  </div>
+
+  <!-- LECCION DETAIL -->
+  <div class="view" id="view-leccion">
+    <button class="back-btn" id="back-lec-btn" onclick="volverDeLeccion()">← Lecciones</button>
+    <div id="leccion-contenido"></div>
+  </div>
+
+  <!-- TEST CONFIG MODAL -->
+  <div class="tconfig-overlay hidden" id="tconfig-overlay">
+    <div class="tconfig-box">
+      <div class="tconfig-title">🧠 Configurar test</div>
+      <div class="tconfig-sub" id="tconfig-sub">Todas las preguntas disponibles</div>
+      <span class="tconfig-label">Eje temático</span>
+      <div class="tconfig-pills" id="tconfig-ejes"></div>
+      <span class="tconfig-label">Número de preguntas</span>
+      <div class="tconfig-num-row">
+        <div class="tconfig-num active" data-n="5" onclick="tcSelectN(this)">5</div>
+        <div class="tconfig-num" data-n="10" onclick="tcSelectN(this)">10</div>
+        <div class="tconfig-num" data-n="20" onclick="tcSelectN(this)">20</div>
+        <div class="tconfig-num" data-n="999" onclick="tcSelectN(this)">Todas</div>
+      </div>
+      <div class="tconfig-info" id="tconfig-info"></div>
+      <div class="tconfig-footer">
+        <button class="act-btn secondary" onclick="closeTconfig()">Cancelar</button>
+        <button class="act-btn primary" onclick="lanzarTest()">▶ Iniciar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEST -->
+  <div class="view" id="view-test">
+    <div class="test-hdr">
+      <div class="test-prog-bar"><div class="test-prog-fill" id="test-prog" style="width:0%"></div></div>
+      <div class="test-info">
+        <span class="test-counter" id="test-counter">Pregunta 1 de 10</span>
+        <span class="test-score" id="test-live-score">✓ 0 · ✗ 0</span>
+      </div>
+    </div>
+    <div id="preg-cont"></div>
+    <div class="test-nav">
+      <button class="act-btn secondary" onclick="showView('home')">← Salir</button>
+      <button class="act-btn primary" id="btn-sig" onclick="siguientePregunta()" style="display:none">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- RESULTADOS -->
+  <div class="view" id="view-resultados"><div id="res-cont"></div></div>
+
+  <!-- REPASO -->
+  <div class="view" id="view-repaso">
+    <button class="back-btn" onclick="showView('home')">← Inicio</button>
+    <div class="repaso-hdr">
+      <h2 class="repaso-title">⚡ Repaso Rápido</h2>
+      <div class="repaso-prog" id="repaso-dots"></div>
+      <span style="font-size:0.7rem;color:var(--text3);font-family:var(--font-mono)" id="repaso-counter">Lección 1 de 5</span>
+    </div>
+    <div id="repaso-cont"></div>
+    <div style="display:flex;gap:0.7rem;margin-top:1.5rem;padding-top:1rem;border-top:1px solid var(--border)">
+      <button class="act-btn secondary" onclick="repasoAnterior()" id="rp-prev">← Anterior</button>
+      <button class="act-btn primary" onclick="repasoSiguiente()" id="rp-next">Siguiente →</button>
+    </div>
+  </div>
+
+  <!-- AUTOR -->
+  <div class="view" id="view-autor">
+    <button class="back-btn" id="back-autor-btn">← Volver</button>
+    <div class="autor-hdr">
+      <h2 class="autor-name" id="autor-name">—</h2>
+      <p class="autor-count" id="autor-count">—</p>
+    </div>
+    <div id="autor-lecs-cont"></div>
+  </div>
+
+  <!-- BÚSQUEDA FULL-TEXT -->
+  <div class="view" id="view-busqueda">
+    <h1 class="page-title">🔍 Búsqueda en el Corpus</h1>
+    <p class="page-sub" style="margin-bottom:1.4rem">Búsqueda semántica en todas las lecciones</p>
+    <div class="search-wrap" style="margin-bottom:0.5rem">
+      <span class="si">🔍</span>
+      <input class="search-input" id="corpus-search-input" type="text"
+        placeholder="Busca un concepto, idea o término en las lecciones del corpus..."
+        oninput="onCorpusSearch(this.value)">
+      <button class="sc" id="corpus-search-clear" onclick="clearCorpusSearch()">✕</button>
+    </div>
+    <div id="corpus-search-estado" style="font-size:0.7rem;color:var(--text3);font-family:var(--font-mono);margin-bottom:1rem;min-height:1.2em">Escribe un término para buscar en el corpus</div>
+    <div id="corpus-search-results"></div>
+  </div>
+
+  <!-- ENSAYOS DE SÍNTESIS -->
+  <div class="view" id="view-ensayos">
+    <h1 class="page-title">✍ Ensayos de Síntesis</h1>
+    <p class="page-sub" style="margin-bottom:1.8rem">Diálogos entre autores del corpus — convergencias, tensiones y síntesis originales</p>
+    <div id="ensayos-grid" style="display:grid;gap:1.1rem;"></div>
+  </div>
+
+  <!-- ENSAYO DETALLE -->
+  <div class="view" id="view-ensayo-detalle">
+    <button class="back-btn" onclick="showView('ensayos')">← Ensayos</button>
+    <div id="ensayo-contenido"></div>
+  </div>
+
+  <!-- REPASO ESPACIADO (SRS) -->
+  <div class="view" id="view-repaso-srs">
+    <div id="srs-root"></div>
+  </div>
+
+  <!-- ESQUEMAS -->
+  <div class="view" id="view-esquemas">
+    <h1 class="page-title">🗺 Esquemas</h1>
+    <p class="page-sub" style="margin-bottom:0.5rem">Mapas visuales interactivos del corpus</p>
+    <div class="esquemas-grid" id="esquemas-grid"></div>
+  </div>
+
+  <!-- ESQUEMA VIEWER -->
+  <div class="view" id="view-esquema-viewer">
+    <button class="back-btn" onclick="showView('esquemas')">← Esquemas</button>
+    <div class="esquema-viewer-wrap">
+      <div class="esquema-viewer-header">
+        <span class="esquema-viewer-title" id="esquema-viewer-title">—</span>
+        <button class="fullscreen-btn" onclick="esquemaFullscreen()">⛶ Pantalla completa</button>
+      </div>
+      <iframe id="esquema-iframe" src="" title="Esquema interactivo"></iframe>
+    </div>
+  </div>
+
+</main>
+
+<!-- PDF MODAL -->
+<div class="modal-overlay hidden" id="pdf-modal">
+  <div class="modal-box">
+    <div class="modal-title">⬇ Exportar PDF</div>
+    <p style="font-size:0.82rem;color:var(--text2);margin-bottom:0.5rem">¿Qué quieres exportar?</p>
+    <div class="pdf-opt-grid">
+      <div class="pdf-opt" onclick="exportarPDFLeccion(); closePdfModal()">
+        <span class="pdf-opt-icon">📄</span>
+        <div>
+          <div class="pdf-opt-title">Esta lección</div>
+          <div class="pdf-opt-sub">Contenido completo con notas y conexiones</div>
+        </div>
+      </div>
+      <div class="pdf-opt" onclick="exportarPDFLibro(); closePdfModal()">
+        <span class="pdf-opt-icon">📚</span>
+        <div>
+          <div class="pdf-opt-title">Libro completo</div>
+          <div class="pdf-opt-sub" id="pdf-libro-sub">Todas las lecciones del libro</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="act-btn secondary" onclick="closePdfModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ═══════════════════════════════════════════
+   CONFIG
+═══════════════════════════════════════════ */
+const SB_URL = 'https://aduizdiiacrvpoavjmab.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkdWl6ZGlpYWNydnBvYXZqbWFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1OTg5MDEsImV4cCI6MjA4NzE3NDkwMX0.US2sEhlSBJbcwg93txuL-9AdPKo2LLmdVX5dur7i5GQ';
+
+async function sb(path, opts={}) {
+  const r = await fetch(`${SB_URL}/rest/v1/${path}`, {
+    headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Content-Type':'application/json','Prefer':'return=representation',...opts.headers},
+    ...opts
+  });
+  if (!r.ok) { const e = await r.text(); throw new Error(e); }
+  const t = await r.text(); return t ? JSON.parse(t) : null;
+}
+async function sbAll(path, opts={}) {
+  const PAGE=1000; let all=[], offset=0;
+  while(true){
+    const sep=path.includes('?')?'&':'?';
+    const r=await fetch(`${SB_URL}/rest/v1/${path}${sep}limit=${PAGE}&offset=${offset}`,{
+      headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Content-Type':'application/json','Prefer':'return=representation',...opts.headers},
+      ...opts
+    });
+    if(!r.ok){const e=await r.text();throw new Error(e);}
+    const t=await r.text(); const batch=t?JSON.parse(t):[];
+    all=all.concat(batch);
+    if(batch.length<PAGE)break;
+    offset+=PAGE;
+  }
+  return all;
+}
+
+/* ═══════════════════════════════════════════
+   LOADER
+═══════════════════════════════════════════ */
+const MSGS = ['cargando biblioteca...','preparando el corpus...','organizando el conocimiento...','sincronizando datos...','casi listo...'];
+let msgI = 0;
+const msgTimer = setInterval(() => {
+  const el = document.getElementById('loader-msg');
+  if (el) el.textContent = MSGS[msgI++ % MSGS.length];
+}, 950);
+
+/* ═══════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════ */
+let libros=[], lecs=[], preg=[], prog=[];
+let libroActual=null, lecActual=null;
+let ejeActivo=null, subEjeActivo=null, searchQ='', lecFilter='all';
+let testPregs=[], testIdx=0, testResp=[], testCorr=0, testErr=0;
+let repasoLecs=[], repasoIdx=0;
+const PAGE_SIZE=24;
+let paginaActual=1;
+
+/* ═══════════════════════════════════════════
+   ADMIN MODE
+═══════════════════════════════════════════ */
+let adminMode = false;
+let adminClickCount = 0;
+let adminClickTimer = null;
+const ADMIN_PWD = 'CLPR1V4T3B00Ksc';
+
+function initAdminTrigger() {
+  const el = document.getElementById('admin-trigger');
+  if (!el) return;
+  el.addEventListener('click', function(e) {
+    e.stopPropagation();
+    adminClickCount++;
+    clearTimeout(adminClickTimer);
+    adminClickTimer = setTimeout(() => { adminClickCount = 0; }, 600);
+    if (adminClickCount >= 3) {
+      adminClickCount = 0;
+      clearTimeout(adminClickTimer);
+      if (adminMode) {
+        adminMode = false;
+        el.style.background = '';
+        reloadLibros();
+        toast('Modo admin desactivado');
+      } else {
+        const pwd = prompt('');
+        if (pwd === ADMIN_PWD) {
+          adminMode = true;
+          el.style.background = 'var(--accent2)';
+          reloadLibros();
+          toast('\u2605 Modo admin activado');
+        }
+      }
+    }
+  });
+}
+
+async function reloadLibros() {
+  try {
+    const query = adminMode
+      ? 'libros?select=*&order=fecha_creacion.asc'
+      : 'libros?select=*&publico=eq.true&order=fecha_creacion.asc';
+    libros = await sb(query);
+    libros = libros.map(l => ({...l, eje: normalizeEje(l.eje)}));
+    renderStats(); renderEjes(); renderLibros(); renderContinua(); renderUltimosLibros();
+  } catch(e) { toast('Error recargando: ' + e.message); }
+}
+
+/* ═══════════════════════════════════════════
+   LOCAL STORAGE (legacy fallback)
+═══════════════════════════════════════════ */
+const LS = {
+  get:(k,def)=>{ try{return JSON.parse(localStorage.getItem(k))??def;}catch{return def;} },
+  set:(k,v)=>localStorage.setItem(k,JSON.stringify(v)),
+};
+const FAV_LIB='scs2_fav_lib', FAV_LEC='scs2_fav_lec', FAV_QUO='scs2_fav_quo';
+const NOTAS_K='scs2_notas', ULTIMA_K='scs2_ultima_lec';
+
+/* ═══════════════════════════════════════════
+   FAVORITOS — Supabase-backed
+═══════════════════════════════════════════ */
+let favCache = { libro: [], leccion: [], cita: [] };
+let notasCache = {};
+const USUARIO_ID = 'default';
+
+async function loadFavoritosFromDB() {
+  try {
+    const rows = await sb(`favoritos_usuario?select=tipo,item_id&usuario_id=eq.${USUARIO_ID}`);
+    favCache = { libro: [], leccion: [], cita: [] };
+    (rows||[]).forEach(r => {
+      if (favCache[r.tipo]) favCache[r.tipo].push(r.item_id);
+    });
+  } catch(e) {
+    console.warn('Fallback to localStorage for favs:', e.message);
+    favCache.libro = LS.get(FAV_LIB, []);
+    favCache.leccion = LS.get(FAV_LEC, []);
+    favCache.cita = LS.get(FAV_QUO, []);
+  }
+}
+
+async function loadNotasFromDB() {
+  try {
+    const rows = await sb(`notas?select=leccion_id,texto&usuario_id=eq.${USUARIO_ID}`);
+    notasCache = {};
+    (rows||[]).forEach(r => { notasCache[r.leccion_id] = r.texto; });
+  } catch(e) {
+    console.warn('Fallback to localStorage for notas:', e.message);
+    notasCache = LS.get(NOTAS_K, {});
+  }
+}
+
+const favLibros  = () => favCache.libro;
+const favLecs    = () => favCache.leccion;
+const favQuotes  = () => favCache.cita;
+const getNotas   = id => notasCache[id] || '';
+
+async function saveNota(id, txt) {
+  notasCache[id] = txt;
+  // Also persist to localStorage as backup
+  const n = LS.get(NOTAS_K, {}); n[id] = txt; LS.set(NOTAS_K, n);
+  try {
+    await sb('notas', {
+      method: 'POST',
+      headers: { 'Prefer': 'return=representation,resolution=merge-duplicates' },
+      body: JSON.stringify({ usuario_id: USUARIO_ID, leccion_id: id, texto: txt, updated_at: new Date().toISOString() })
+    });
+  } catch(e) { console.warn('Nota save to DB failed:', e.message); }
+}
+
+async function toggleFavDB(tipo, itemId) {
+  const arr = favCache[tipo];
+  const on = arr.includes(itemId);
+  if (on) {
+    favCache[tipo] = arr.filter(x => x !== itemId);
+    try { await sb(`favoritos_usuario?usuario_id=eq.${USUARIO_ID}&tipo=eq.${tipo}&item_id=eq.${itemId}`, { method: 'DELETE' }); } catch(e) { console.warn(e); }
+  } else {
+    favCache[tipo].push(itemId);
+    try { await sb('favoritos_usuario', { method: 'POST', body: JSON.stringify({ usuario_id: USUARIO_ID, tipo, item_id: itemId }) }); } catch(e) { console.warn(e); }
+  }
+  // Sync to localStorage backup
+  LS.set(FAV_LIB, favCache.libro);
+  LS.set(FAV_LEC, favCache.leccion);
+  LS.set(FAV_QUO, favCache.cita);
+  return !on;
+}
+
+function toggleFavLib(id, btn) {
+  toggleFavDB('libro', id).then(on => {
+    btn.textContent = on ? '★' : '☆';
+    btn.classList.toggle('on', on);
+    toast(on ? '★ Guardado en favoritos' : 'Eliminado de favoritos');
+  });
+}
+function toggleFavLec(id, btn) {
+  toggleFavDB('leccion', id).then(on => {
+    btn.textContent = on ? '★' : '☆';
+    btn.classList.toggle('on', on);
+    toast(on ? '★ Lección guardada' : 'Lección eliminada');
+  });
+}
+function toggleFavQuote(key, btn) {
+  toggleFavDB('cita', key).then(on => {
+    btn.textContent = on ? '★' : '☆';
+    btn.classList.toggle('on', on);
+  });
+}
+
+async function migrateLocalStorageToDB() {
+  // One-time migration: move localStorage favorites/notas to Supabase
+  const migrated = LS.get('scs2_migrated_v1', false);
+  if (migrated) return;
+  try {
+    // Migrate favoritos
+    const oldLibs = LS.get(FAV_LIB, []);
+    const oldLecs = LS.get(FAV_LEC, []);
+    const oldQuo = LS.get(FAV_QUO, []);
+    const favRows = [];
+    oldLibs.forEach(id => favRows.push({ usuario_id: USUARIO_ID, tipo: 'libro', item_id: id }));
+    oldLecs.forEach(id => favRows.push({ usuario_id: USUARIO_ID, tipo: 'leccion', item_id: id }));
+    oldQuo.forEach(id => favRows.push({ usuario_id: USUARIO_ID, tipo: 'cita', item_id: id }));
+    if (favRows.length) {
+      await sb('favoritos_usuario', {
+        method: 'POST',
+        headers: { 'Prefer': 'return=representation,resolution=ignore-duplicates' },
+        body: JSON.stringify(favRows)
+      });
+    }
+    // Migrate notas
+    const oldNotas = LS.get(NOTAS_K, {});
+    const notaRows = Object.entries(oldNotas).filter(([,v]) => v).map(([id, texto]) => ({
+      usuario_id: USUARIO_ID, leccion_id: id, texto, updated_at: new Date().toISOString()
+    }));
+    if (notaRows.length) {
+      for (const row of notaRows) {
+        try {
+          await sb('notas', {
+            method: 'POST',
+            headers: { 'Prefer': 'return=representation,resolution=merge-duplicates' },
+            body: JSON.stringify(row)
+          });
+        } catch(e) { console.warn('Nota migration failed for', row.leccion_id, e); }
+      }
+    }
+    LS.set('scs2_migrated_v1', true);
+    console.log('Migration complete:', favRows.length, 'favs,', notaRows.length, 'notas');
+  } catch(e) { console.warn('Migration failed, will retry next load:', e.message); }
+}
+
+const setUltima  = (lecId,libId) => LS.set(ULTIMA_K,{lecId,libId,ts:Date.now()});
+const getUltima  = () => LS.get(ULTIMA_K,null);
+
+/* ═══════════════════════════════════════════
+   RACHA
+═══════════════════════════════════════════ */
+function calcStreak() {
+  const dias=[...new Set(prog.map(p=>p.fecha?.slice(0,10)).filter(Boolean))].sort();
+  if(!dias.length) return 0;
+  const hoy=new Date().toISOString().slice(0,10);
+  let streak=0, cur=hoy;
+  for(let i=dias.length-1;i>=0;i--) {
+    if(dias[i]===cur){streak++;const d=new Date(cur);d.setDate(d.getDate()-1);cur=d.toISOString().slice(0,10);}
+    else if(dias[i]<cur) break;
+  }
+  return streak;
+}
+
+/* ═══════════════════════════════════════════
+   PORTADAS
+═══════════════════════════════════════════ */
+const coverCache = {};
+async function getCover(autor, titulo) {
+  const key = `${autor}___${titulo}`;
+  if (coverCache[key] !== undefined) return coverCache[key];
+  try {
+    const q = encodeURIComponent(`${titulo} ${autor}`);
+    const r = await fetch(`https://openlibrary.org/search.json?q=${q}&limit=1&fields=cover_i`);
+    const d = await r.json();
+    const coverId = d?.docs?.[0]?.cover_i;
+    const url = coverId ? `https://covers.openlibrary.org/b/id/${coverId}-L.jpg` : null;
+    coverCache[key] = url;
+    return url;
+  } catch { coverCache[key] = null; return null; }
+}
+
+/* ═══════════════════════════════════════════
+   FORMAT TEXT — markdown mejorado
+═══════════════════════════════════════════ */
+function fmt(raw) {
+  if (!raw) return '';
+  const esc  = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const inline = s => s
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/`(.+?)`/g,'<code>$1</code>');
+  const lines = raw.split('\n');
+  const out=[]; let inUl=false,inOl=false,para=[],inTable=false,tableRows=[];
+  const flushP=()=>{ if(!para.length)return; const j=para.join(' ').trim(); if(j)out.push(`<p>${inline(esc(j))}</p>`); para=[]; };
+  const closeL=()=>{ if(inUl){out.push('</ul>');inUl=false;} if(inOl){out.push('</ol>');inOl=false;} };
+  const flushTable=()=>{
+    if(!tableRows.length)return;
+    const header=tableRows[0]; const dataRows=tableRows.slice(2);
+    let html='<table><thead><tr>';
+    header.forEach(c=>{html+=`<th>${inline(esc(c.trim()))}</th>`;});
+    html+='</tr></thead><tbody>';
+    dataRows.forEach(row=>{html+='<tr>';row.forEach(c=>{html+=`<td>${inline(esc(c.trim()))}</td>`;});html+='</tr>';});
+    html+='</tbody></table>'; out.push(html); tableRows=[]; inTable=false;
+  };
+  for(const raw_line of lines) {
+    const line=raw_line.trimEnd(); const t=line.trim();
+    if(t.startsWith('|')&&t.endsWith('|')){
+      flushP();closeL();
+      const cells=t.slice(1,-1).split('|');
+      const isSep=cells.every(c=>/^[-:| ]+$/.test(c));
+      if(isSep&&inTable){tableRows.push(null);continue;}
+      if(!inTable)inTable=true;
+      tableRows.push(cells); continue;
+    } else if(inTable){tableRows=tableRows.filter(r=>r!==null);flushTable();}
+    if(!t){flushP();closeL();continue;}
+    if(/^[-*_]{3,}$/.test(t)){flushP();closeL();out.push('<hr>');continue;}
+    const h4m=t.match(/^####\s+(.+)/); if(h4m){flushP();closeL();out.push(`<h4>${inline(esc(h4m[1]))}</h4>`);continue;}
+    const h3m=t.match(/^###\s+(.+)/);  if(h3m){flushP();closeL();out.push(`<h3>${inline(esc(h3m[1]))}</h3>`);continue;}
+    const h2m=t.match(/^##\s+(.+)/);   if(h2m){flushP();closeL();out.push(`<h2>${inline(esc(h2m[1]))}</h2>`);continue;}
+    const bqm=t.match(/^>\s*(.*)/);    if(bqm){flushP();closeL();out.push(`<blockquote>${inline(esc(bqm[1]))}</blockquote>`);continue;}
+    const olm=t.match(/^(\d+)[.)]\s+(.+)/); if(olm){flushP();if(!inOl){closeL();out.push('<ol>');inOl=true;}out.push(`<li>${inline(esc(olm[2]))}</li>`);continue;}
+    const ulm=t.match(/^[-*•]\s+(.+)/); if(ulm){flushP();if(!inUl){closeL();out.push('<ul>');inUl=true;}out.push(`<li>${inline(esc(ulm[1]))}</li>`);continue;}
+    closeL(); para.push(t);
+  }
+  if(inTable){tableRows=tableRows.filter(r=>r!==null);flushTable();}
+  flushP();closeL();
+  return out.join('\n');
+}
+
+/* ═══════════════════════════════════════════
+   EJE CONFIG
+═══════════════════════════════════════════ */
+const EJES_CONFIG={
+  'Neurociencia y Biología':{icon:'🔬',color:'#1abc9c',sub:{'Neurociencia':'🧬','Biología y Longevidad':'💊'}},
+  'Psicología y Conducta':{icon:'🧠',color:'#9b59b6',sub:{'Cognitiva':'💭','Social':'👥','Interpersonal':'🤝','Influencia':'⚡'}},
+  'Pensamiento y Civilización':{icon:'⚖️',color:'#5dade2',sub:{'Epistemología':'🔭','Filosofía':'🏛️','Historia':'📜'}},
+  'Economía y Mercados':{icon:'📈',color:'#c9a84c',sub:{'Economía':'💰'}},
+  'Desarrollo Humano':{icon:'🌱',color:'#e67e22',sub:{'Mentalidad':'🎯','Crecimiento Personal':'✨'}}
+};
+function ejeIcon(e){
+  if(!e)return'📖';
+  for(const[p,cfg]of Object.entries(EJES_CONFIG)){if(e===p)return cfg.icon;if(cfg.sub[e])return cfg.sub[e];}
+  return'📖';
+}
+function ejeColor(e){
+  if(!e)return'#5c5650';
+  for(const[p,cfg]of Object.entries(EJES_CONFIG)){if(e===p||cfg.sub[e])return cfg.color;}
+  return'#5c5650';
+}
+function ejeClass(e){return'eje-'+(e||'').replace(/[^a-zA-Z0-9]/g,'_');}
+function getEjePrincipal(l){return l.eje_principal||l.eje||'';}
+function getSubEje(l){return l.sub_eje||l.eje||'';}
+function normalizeEje(e){
+  if(!e)return e;
+  const map={'economico':'Economía','económico':'Economía','economía':'Economía','economia':'Economía',
+    'económico y empresarial':'Economía','psicologia':'Psicología','psicología':'Psicología',
+    'filosofia':'Filosofía','filosofía':'Filosofía','neurociencia':'Neurociencia',
+    'desarrollo personal':'Desarrollo Personal','individual':'Individual','civilizacional':'Civilizacional',
+    'epistemológico':'Epistemológico','epistemologico':'Epistemológico',
+    'neurológico-biológico':'Neurológico-Biológico','financiero':'Financiero',
+    'historia':'Historia','ciencias':'Ciencias'};
+  return map[e.toLowerCase()]||e;
+}
+
+/* ═══════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════ */
+async function init() {
+  try {
+    [libros, lecs, preg, prog] = await Promise.all([
+      sb('libros?select=*&publico=eq.true&order=fecha_creacion.asc'),
+      sbAll('lecciones?select=*&activa=eq.true&order=orden.asc'),
+      sbAll('preguntas?select=*&activa=eq.true'),
+      sbAll('progreso?select=*&order=fecha.asc')
+    ]);
+    libros = libros.map(l=>({...l, eje:normalizeEje(l.eje)}));
+    // Load favoritos and notas from Supabase
+    await Promise.all([loadFavoritosFromDB(), loadNotasFromDB()]);
+    // One-time migration from localStorage
+    migrateLocalStorageToDB();
+    clearInterval(msgTimer);
+    setTimeout(()=>{
+      document.getElementById('loader-screen').classList.add('hidden');
+      setTimeout(()=>document.getElementById('loader-screen').style.display='none',500);
+    },300);
+    renderStats(); renderEjes(); renderLibros(); renderContinua(); renderUltimosLibros(); renderEsquemas(); initAdminTrigger();
+    // Restaurar estado desde URL hash (para enlaces compartidos y marcadores)
+    restoreFromURL();
+  } catch(e) {
+    clearInterval(msgTimer);
+    document.getElementById('loader-msg').textContent = 'Error al cargar: '+e.message;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   STATS
+═══════════════════════════════════════════ */
+function completadasSet(){
+  return new Set(prog.filter(p=>p.tipo==='leccion'&&p.resultado==='correcta').map(p=>p.item_id));
+}
+function renderStats(){
+  const comp=completadasSet();
+  const pct=lecs.length?Math.round(comp.size/lecs.length*100):0;
+  document.getElementById('s-libros').textContent=libros.length;
+  document.getElementById('s-comp').textContent=comp.size;
+  document.getElementById('s-pct').textContent=pct+'%';
+  document.getElementById('s-racha').textContent=calcStreak();
+  document.getElementById('home-sub').textContent=`${libros.length} libros · ${lecs.length} lecciones · ${preg.length} preguntas`;
+}
+
+const ULTIMOS_K='scs2_ultimos';
+function addUltimo(libroId){
+  let arr=LS.get(ULTIMOS_K,[]);
+  arr=arr.filter(id=>id!==libroId);
+  arr.unshift(libroId);
+  LS.set(ULTIMOS_K,arr.slice(0,6));
+}
+function renderUltimosLibros(){
+  const arr=LS.get(ULTIMOS_K,[]);
+  const sec=document.getElementById('ultimos-libros-section');
+  const cont=document.getElementById('ultimos-libros-cont');
+  const validos=arr.map(id=>libros.find(l=>l.id===id)).filter(Boolean);
+  if(!validos.length){sec.style.display='none';return;}
+  sec.style.display='block';
+  const comp=completadasSet();
+  cont.innerHTML=validos.map(l=>{
+    const lecsL=lecs.filter(x=>x.libro_id===l.id);
+    const done=lecsL.filter(x=>comp.has(x.id)).length;
+    const pct=lecsL.length?Math.round(done/lecsL.length*100):0;
+    const coverEl=l.portada_url
+      ?`<img src="${l.portada_url}" alt="" onerror="this.style.display='none'">`
+      :`<span>${ejeIcon(l.eje)}</span>`;
+    return `<div class="ultimo-chip" onclick="verLibro('${l.id}')">
+      <div class="ultimo-chip-cover">${coverEl}</div>
+      <div class="ultimo-chip-info">
+        <div class="ultimo-chip-title">${l.titulo}</div>
+        <div class="ultimo-chip-autor">${l.autor}</div>
+        <div class="ultimo-chip-pct">${pct}% completado</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ═══════════════════════════════════════════
+   CONTINUA
+═══════════════════════════════════════════ */
+function renderContinua(){
+  const ultima = getUltima();
+  if (!ultima) return;
+  const lec = lecs.find(l=>l.id===ultima.lecId);
+  const libro = libros.find(l=>l.id===ultima.libId);
+  if (!lec || !libro) return;
+  const banner = document.getElementById('continua-banner');
+  banner.style.display = 'flex';
+  banner.innerHTML = `
+    <div class="continua-ico">📖</div>
+    <div class="continua-info">
+      <div class="continua-label">Continúa donde lo dejaste</div>
+      <div class="continua-titulo">${lec.titulo}</div>
+      <div class="continua-libro">${libro.titulo} — ${libro.autor}</div>
+    </div>
+    <div class="continua-arrow">→</div>`;
+  banner.onclick = () => { libroActual = libro; verLeccion(ultima.lecId); };
+}
+
+/* ═══════════════════════════════════════════
+   EJES
+═══════════════════════════════════════════ */
+function renderEjes(){
+  const cont=document.getElementById('eje-filters');
+  cont.innerHTML=`<button class="eje-pill active" onclick="filtrarEjePrincipal('',this)">Todos</button>`+
+    Object.entries(EJES_CONFIG).map(([n,cfg])=>`<button class="eje-pill" onclick="filtrarEjePrincipal('${n}',this)">${cfg.icon} ${n}</button>`).join('');
+  document.getElementById('eje-filters-sub').innerHTML='';
+}
+function filtrarEjePrincipal(eje,btn){
+  ejeActivo=eje||null;subEjeActivo=null;paginaActual=1;
+  document.querySelectorAll('#eje-filters .eje-pill').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const subCont=document.getElementById('eje-filters-sub');
+  if(eje&&EJES_CONFIG[eje]){
+    subCont.innerHTML=Object.entries(EJES_CONFIG[eje].sub).map(([n,ic])=>`<button class="eje-pill sub" onclick="filtrarSubEje('${n}',this)">${ic} ${n}</button>`).join('');
+  }else{subCont.innerHTML='';}
+  renderLibros();
+}
+function filtrarSubEje(sub,btn){
+  subEjeActivo=subEjeActivo===sub?null:sub;paginaActual=1;
+  document.querySelectorAll('#eje-filters-sub .eje-pill').forEach(b=>b.classList.remove('active'));
+  if(subEjeActivo)btn.classList.add('active');
+  renderLibros();
+}
+function filtrarEje(eje,btn){filtrarEjePrincipal(eje,btn);}
+
+/* ═══════════════════════════════════════════
+   SEARCH
+═══════════════════════════════════════════ */
+function onSearch(v){
+  searchQ=v.trim().toLowerCase();
+  paginaActual=1;
+  document.getElementById('search-clear').classList.toggle('vis',!!v);
+  renderLibros();
+  buscarEnLecciones(searchQ);
+}
+function clearSearch(){
+  document.getElementById('search-input').value='';
+  document.getElementById('search-results-lecs').style.display='none';
+  onSearch('');
+}
+function buscarEnLecciones(q){
+  const cont=document.getElementById('search-results-lecs');
+  if(!q||q.length<2){cont.style.display='none';return;}
+  const ql=q.toLowerCase();
+  const resultados=lecs.filter(l=>
+    l.titulo?.toLowerCase().includes(ql)||
+    l.cuerpo?.toLowerCase().includes(ql)||
+    l.aplicacion_practica?.toLowerCase().includes(ql)
+  ).slice(0,8);
+  if(!resultados.length){cont.style.display='none';return;}
+  const libroMap={};
+  libros.forEach(l=>libroMap[l.id]=l);
+  cont.innerHTML=resultados.map(l=>{
+    const libro=libroMap[l.libro_id];
+    const textoBase=l.cuerpo||l.aplicacion_practica||'';
+    const idx=textoBase.toLowerCase().indexOf(ql);
+    const snippet=idx>=0?'...'+textoBase.slice(Math.max(0,idx-40),idx+80).replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi'),'<mark class="hl">$1</mark>')+'...':'';
+    return `<div class="search-lec-item" onclick="verLeccion('${l.libro_id}','${l.id}')">
+      <div class="search-lec-title">${hl(l.titulo,q)}</div>
+      <div class="search-lec-book">${libro?libro.titulo:''} ${libro?'· '+libro.autor:''}</div>
+      ${snippet?`<div class="search-lec-snippet">${snippet}</div>`:''}
+    </div>`;
+  }).join('');
+  cont.style.display='block';
+}
+function hl(text,q){
+  if(!q||!text)return text||'';
+  return text.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi'),'<mark class="hl">$1</mark>');
+}
+
+/* ═══════════════════════════════════════════
+   LIBROS
+═══════════════════════════════════════════ */
+function filtrarLibrosActivos(){
+  let f=libros;
+  if(ejeActivo)f=f.filter(l=>getEjePrincipal(l)===ejeActivo);
+  if(subEjeActivo)f=f.filter(l=>getSubEje(l)===subEjeActivo);
+  if(searchQ)f=f.filter(l=>l.titulo?.toLowerCase().includes(searchQ)||l.autor?.toLowerCase().includes(searchQ)||getEjePrincipal(l)?.toLowerCase().includes(searchQ));
+  return f;
+}
+function renderPaginacion(total,pag,totalPags){
+  const old=document.getElementById('paginacion-row');if(old)old.remove();
+  if(totalPags<=1)return;
+  const cont=document.getElementById('libros-container');
+  const div=document.createElement('div');div.id='paginacion-row';div.className='pag-row';div.style.gridColumn='1 / -1';
+  let html=`<button class="pag-btn" onclick="irPagina(${pag-1})" ${pag===1?'disabled':''}>←</button>`;
+  const rango=[];for(let i=1;i<=totalPags;i++){if(i===1||i===totalPags||(i>=pag-2&&i<=pag+2))rango.push(i);else if(rango[rango.length-1]!=='…')rango.push('…');}
+  rango.forEach(p=>{if(p==='…')html+=`<span class="pag-info">…</span>`;else html+=`<button class="pag-btn ${p===pag?'active':''}" onclick="irPagina(${p})">${p}</button>`;});
+  html+=`<button class="pag-btn" onclick="irPagina(${pag+1})" ${pag===totalPags?'disabled':''}>→</button>`;
+  html+=`<span class="pag-info">${(pag-1)*PAGE_SIZE+1}–${Math.min(pag*PAGE_SIZE,total)} de ${total}</span>`;
+  div.innerHTML=html;cont.appendChild(div);
+}
+function irPagina(p){
+  const tp=Math.ceil(filtrarLibrosActivos().length/PAGE_SIZE);
+  if(p<1||p>tp)return;
+  paginaActual=p;renderLibros();window.scrollTo(0,0);
+}
+function renderLibros(){
+  const f=filtrarLibrosActivos();
+  const total=f.length;
+  const totalPags=Math.max(1,Math.ceil(total/PAGE_SIZE));
+  if(paginaActual>totalPags)paginaActual=1;
+  const pagina=f.slice((paginaActual-1)*PAGE_SIZE,paginaActual*PAGE_SIZE);
+  const cont=document.getElementById('libros-container');
+  const lbl=document.getElementById('libros-count-label');
+  const ejeLabel=subEjeActivo?`${ejeIcon(subEjeActivo)} ${subEjeActivo}`:ejeActivo?`${ejeIcon(ejeActivo)} ${ejeActivo}`:'Todos los libros';
+  lbl.textContent=`${ejeLabel} (${total})`;
+  if(!total){cont.innerHTML=`<div class="empty">Sin resultados</div>`;renderPaginacion(0,1,1);return;}
+  const comp=completadasSet();
+  cont.innerHTML=pagina.map(libro=>{
+    const lecsL=lecs.filter(l=>l.libro_id===libro.id);
+    const done=lecsL.filter(l=>comp.has(l.id)).length;
+    const pct=lecsL.length?Math.round(done/lecsL.length*100):0;
+    const fav=favLibros().includes(libro.id);
+    const tHL=hl(libro.titulo,searchQ);
+    const aHL=hl(libro.autor,searchQ);
+    const subE=getSubEje(libro);
+    const coverHTML=libro.portada_url
+      ?`<div class="libro-cover-wrap"><img class="libro-cover" src="${libro.portada_url}" alt="${libro.titulo}" loading="lazy" onerror="this.parentElement.innerHTML=makePlaceholder('${ejeIcon(subE)}','${(subE||'').replace(/'/g,'')}')"></div>`
+      :`<div class="libro-cover-wrap" id="cover-${libro.id}">${makePlaceholder(ejeIcon(subE),subE||'')}</div>`;
+    return `<div class="libro-card" onclick="verLibro('${libro.id}')">
+      ${coverHTML}
+      <div class="libro-body">
+        <div class="libro-title">${tHL}</div>
+        <div class="libro-autor">${aHL}</div>
+        <div class="libro-footer">
+          <div class="libro-prog-wrap">
+            <div class="libro-prog-bar"><div class="libro-prog-fill" style="width:${pct}%"></div></div>
+            <div class="libro-prog-text">${done}/${lecsL.length} lec · ${pct}%</div>
+          </div>
+          <div class="libro-actions">
+            <span class="eje-tag" style="color:${ejeColor(subE)};border-color:${ejeColor(subE)}30;background:${ejeColor(subE)}0a;font-size:0.55rem;text-transform:uppercase;letter-spacing:0.07em;padding:0.16rem 0.5rem;border-radius:3px;border:1px solid;font-family:var(--font-mono)">${subE||'—'}</span>
+            <button class="fav-btn ${fav?'on':''}" onclick="event.stopPropagation();toggleFavLib('${libro.id}',this)">${fav?'★':'☆'}</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  renderPaginacion(total,paginaActual,totalPags);
+  pagina.filter(libro=>!libro.portada_url).forEach(libro=>{
+    getCover(libro.autor,libro.titulo).then(url=>{
+      if(!url)return;
+      const subE=getSubEje(libro);
+      const wrap=document.getElementById(`cover-${libro.id}`);
+      if(wrap)wrap.innerHTML=`<img class="libro-cover" src="${url}" alt="${libro.titulo}" loading="lazy" onerror="this.parentElement.innerHTML=makePlaceholder('${ejeIcon(subE)}','${(subE||'').replace(/'/g,'')}')">`;
+      libro.portada_url=url;
+    });
+  });
+}
+
+function makePlaceholder(icon, eje){
+  return `<div class="libro-cover-placeholder"><span class="ph-icon">${icon}</span><span class="ph-eje">${eje}</span></div>`;
+}
+
+/* ═══════════════════════════════════════════
+   ESQUEMAS
+═══════════════════════════════════════════ */
+const ESQUEMAS_DATA = [
+  {
+    key: 'cialdini',
+    titulo: 'Los 6 Principios de Influencia',
+    autor: 'Robert Cialdini',
+    eje: 'Psicología',
+    icon: '⚙',
+    file: 'esquemas/cialdini.html',
+    disponible: true
+  },
+  {
+    key: 'weinstein',
+    titulo: 'Los 4 Estadios del Mercado',
+    autor: 'Stan Weinstein',
+    eje: 'Financiero',
+    icon: '📊',
+    file: 'esquemas/weinstein.html',
+    disponible: true
+  },
+  {
+    key: 'kahneman',
+    titulo: 'Sistema 1 vs Sistema 2',
+    autor: 'Daniel Kahneman',
+    eje: 'Psicología',
+    icon: '🧠',
+    file: 'esquemas/kahneman.html',
+    disponible: true
+  },
+  {
+    key: 'autores',
+    titulo: 'Mapa de Conexiones del Corpus',
+    autor: 'Todos los autores',
+    eje: 'Epistemológico',
+    icon: '🕸',
+    file: 'esquemas/autores.html',
+    disponible: true
+  },
+  {
+    key: 'mcgilchrist',
+    titulo: 'El Maestro y su Emisario',
+    autor: 'Iain McGilchrist',
+    eje: 'Neurociencia',
+    icon: '🧩',
+    file: 'esquemas/mcgilchrist.html',
+    disponible: true
+  },
+  {
+    key: 'fourth-turning',
+    titulo: 'Los Ciclos Generacionales',
+    autor: 'Strauss & Howe',
+    eje: 'Civilizacional',
+    icon: '🔄',
+    file: 'esquemas/fourth_turning.html',
+    disponible: true
+  },
+  {
+    key: 'taleb',
+    titulo: 'Antifrágil — Mapa del Riesgo',
+    autor: 'Nassim N. Taleb',
+    eje: 'Epistemológico',
+    icon: '⚡',
+    file: 'esquemas/taleb.html',
+    disponible: true
+  },
+  {
+    key: 'observatorio',
+    titulo: 'Observatorio de Transiciones',
+    autor: 'Strauss & Howe · Taleb · Mises · McGilchrist',
+    eje: 'Civilizacional',
+    icon: '🌍',
+    file: 'esquemas/observatorio.html',
+    disponible: true
+  },
+  {
+    key: 'tetlock',
+    titulo: 'Superforecasting Framework',
+    autor: 'Philip Tetlock',
+    eje: 'Epistemológico',
+    icon: '🎯',
+    file: 'esquemas/tetlock.html',
+    disponible: true
+  }
+];
+
+function renderEsquemas(){
+  const grid = document.getElementById('esquemas-grid');
+  if(!grid) return;
+  grid.innerHTML = ESQUEMAS_DATA.map(e => {
+    const color = ejeColor(e.eje);
+    const ejeTagClass = ejeClass(e.eje);
+    return `<div class="esquema-card ${e.disponible?'':'proximamente'}"
+      onclick="${e.disponible?`abrirEsquema('${e.key}')`:''}"
+      title="${e.disponible?'Abrir esquema interactivo':'Próximamente'}">
+      <div class="esquema-thumb" style="background:linear-gradient(135deg,${color}18,${color}08);">
+        <span class="esquema-thumb-icon" style="text-shadow:0 0 20px ${color}60">${e.icon}</span>
+      </div>
+      <div class="esquema-body">
+        <div class="esquema-title">${e.titulo}</div>
+        <div class="esquema-autor">${e.autor}</div>
+        <div class="esquema-footer">
+          <span class="esquema-eje-tag ${ejeTagClass}">${ejeIcon(e.eje)} ${e.eje}</span>
+          <span class="esquema-badge ${e.disponible?'disponible':'pronto'}">${e.disponible?'● Disponible':'Próximamente'}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function abrirEsquema(key){
+  const e = ESQUEMAS_DATA.find(x=>x.key===key);
+  if(!e||!e.disponible){ toast('Esquema próximamente'); return; }
+  const basePath = window.location.pathname.endsWith('/')
+    ? window.location.pathname
+    : window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+  const url = window.location.origin + basePath + e.file;
+  window.open(url, '_blank');
+}
+
+function esquemaFullscreen(){}
+
+/* ═══════════════════════════════════════════
+   VER LIBRO
+═══════════════════════════════════════════ */
+function verLibro(id){
+  libroActual=libros.find(l=>l.id===id);
+  if(!libroActual)return;
+  addUltimo(id);
+  lecFilter='all';
+  document.querySelector('.lec-tab.active')?.classList.remove('active');
+  document.querySelectorAll('.lec-tab')[0]?.classList.add('active');
+  document.getElementById('search-lecs').value='';
+  renderLibroHero(); renderLecs(lecs.filter(l=>l.libro_id===id)); showView('lecciones');
+}
+
+function renderLibroHero(){
+  const l=libroActual;
+  const comp=completadasSet();
+  const lecsL=lecs.filter(x=>x.libro_id===l.id);
+  const done=lecsL.filter(x=>comp.has(x.id)).length;
+  const pct=lecsL.length?Math.round(done/lecsL.length*100):0;
+  const coverHTML = l.portada_url
+    ? `<img class="libro-hero-cover" src="${l.portada_url}" alt="${l.titulo}" loading="lazy">`
+    : `<div class="libro-hero-cover-ph" id="hero-cover-ph">${ejeIcon(l.eje)}</div>`;
+  document.getElementById('libro-hero-cont').innerHTML=`
+    <div class="libro-hero">
+      ${coverHTML}
+      <div class="libro-hero-info">
+        <div class="libro-hero-title">${l.titulo}</div>
+        <div class="libro-hero-autor">${l.autor}</div>
+        ${l.descripcion_breve?`<div class="libro-hero-desc">${l.descripcion_breve}</div>`:''}
+        <div class="libro-hero-stats">
+          <span class="libro-hero-stat"><span>${lecsL.length}</span> lecciones</span>
+          <span class="libro-hero-stat"><span>${done}</span> completadas</span>
+          <span class="libro-hero-stat"><span>${pct}%</span> progreso</span>
+        </div>
+        <div style="margin-top:0.8rem;display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap">
+          <span class="eje-tag ${ejeClass(l.eje)}">${ejeIcon(l.eje)} ${l.eje||'—'}</span>
+          <button class="act-btn secondary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="testDelLibro('${l.id}')">🧠 Test</button>
+          <button class="act-btn secondary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="abrirPdfModal()">⬇ PDF</button>
+          <button class="act-btn secondary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="compartirLibro()">🔗 Compartir</button>
+        </div>
+      </div>
+    </div>`;
+  if(!l.portada_url){
+    getCover(l.autor, l.titulo).then(url=>{
+      if(!url) return;
+      l.portada_url=url;
+      const ph=document.getElementById('hero-cover-ph');
+      if(ph) ph.outerHTML=`<img class="libro-hero-cover" src="${url}" alt="${l.titulo}" loading="lazy">`;
+    });
+  }
+}
+
+function onSearchLecs(v){
+  const q=v.trim().toLowerCase();
+  const pool=lecs.filter(l=>l.libro_id===libroActual?.id);
+  const f=q?pool.filter(l=>l.titulo?.toLowerCase().includes(q)||l.cuerpo?.toLowerCase().includes(q)):pool;
+  renderLecs(f,q);
+}
+
+function filtrarLecs(tipo,btn){
+  lecFilter=tipo;
+  document.querySelectorAll('.lec-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const comp=completadasSet();
+  let pool=lecs.filter(l=>l.libro_id===libroActual?.id);
+  if(tipo==='pending') pool=pool.filter(l=>!comp.has(l.id));
+  if(tipo==='done')    pool=pool.filter(l=>comp.has(l.id));
+  renderLecs(pool);
+}
+
+function renderLecs(list,q=''){
+  const comp=completadasSet();
+  const cont=document.getElementById('lecciones-container');
+  if(!list.length){cont.innerHTML=`<div class="empty">Sin lecciones</div>`;return;}
+  cont.innerHTML=list.map(l=>{
+    const done=comp.has(l.id);
+    const nA=l.autores_relacionados?.length||0;
+    const tHL=hl(l.titulo,q);
+    const fav=favLecs().includes(l.id);
+    return `<div class="lec-item ${done?'done':''}" onclick="verLeccion('${l.id}')">
+      <div class="lec-left">
+        <div class="lec-title">${tHL}</div>
+        <div class="lec-meta">
+          <span class="lec-num">${l.orden?`#${l.orden}`:''}</span>
+          ${nA?`<span class="lec-authors">🔗 ${nA} autor${nA>1?'es':''}</span>`:''}
+        </div>
+      </div>
+      <div class="lec-right">
+        <button class="fav-btn ${fav?'on':''}" onclick="event.stopPropagation();toggleFavLec('${l.id}',this)">${fav?'★':'☆'}</button>
+        <span class="lec-status ${done?'ok':'no'}">${done?'✓':'○'}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ═══════════════════════════════════════════
+   VER LECCION
+═══════════════════════════════════════════ */
+function verLeccion(id, from=null){
+  lecActual=lecs.find(l=>l.id===id);
+  if(!lecActual)return;
+  const libId=lecActual.libro_id;
+  if(!libroActual) libroActual=libros.find(l=>l.id===libId);
+  setUltima(id, libId);
+  const backBtn=document.getElementById('back-lec-btn');
+  if(from==='repaso'){backBtn.onclick=()=>showView('repaso');backBtn.textContent='← Repaso';}
+  else if(from==='autor'){backBtn.onclick=()=>showView('autor');backBtn.textContent='← Autor';}
+  else if(from==='favoritos'){backBtn.onclick=()=>showView('favoritos');backBtn.textContent='← Favoritos';}
+  else{backBtn.onclick=()=>volverDeLeccion();backBtn.textContent='← Lecciones';}
+
+  const comp=completadasSet();
+  const done=comp.has(id);
+  const fav=favLecs().includes(id);
+  const libro=libros.find(l=>l.id===lecActual.libro_id);
+  let html='';
+
+  if(lecActual.imagen_principal){
+    html+=`<div class="lec-img-wrap">
+      <img src="${lecActual.imagen_principal}" alt="${lecActual.titulo}" loading="lazy" referrerpolicy="no-referrer"
+        onerror="this.style.display='none'">
+      ${lecActual.imagen_caption?`<div class="lec-img-cap">${lecActual.imagen_caption}</div>`:''}
+    </div>`;
+  }
+
+  html+=`<h2 class="lec-titulo">${lecActual.titulo}</h2>`;
+  html+=`<div class="lec-meta-header">
+    ${libro?`<span class="lec-meta-libro">${libro.titulo} — ${libro.autor}</span>`:''}
+    ${lecActual.orden?`<span style="font-size:0.6rem;color:var(--text3);font-family:var(--font-mono)">Lección ${lecActual.orden}</span>`:''}
+    ${done?`<span style="font-size:0.7rem;color:var(--success);font-family:var(--font-mono)">✓ Completada</span>`:''}
+  </div>`;
+
+  html+=`<div class="lec-body fmt">${fmt(lecActual.cuerpo)}</div>`;
+
+  if(lecActual.detalles?.length){
+    html+=`<div class="det-grid">`+
+      lecActual.detalles.map(d=>`
+        <div class="det-card">
+          <div class="det-card-title">${d.subtitulo||d.titulo||''}</div>
+          <div class="fmt">${fmt(d.cuerpo||d.contenido||'')}</div>
+        </div>`).join('')+`</div>`;
+  }
+
+  if(lecActual.aplicacion_practica){
+    const bodyTxt = (lecActual.cuerpo||'').toLowerCase();
+    const aplTxt  = lecActual.aplicacion_practica.slice(0,60).toLowerCase();
+    const yaEnCuerpo = aplTxt.length > 10 && bodyTxt.includes(aplTxt);
+    if(!yaEnCuerpo){
+      html+=`<div class="aplic-box">
+        <div class="aplic-label">⚡ Aplicación práctica — acción para mañana</div>
+        <div class="fmt">${fmt(lecActual.aplicacion_practica)}</div>
+      </div>`;
+    }
+  }
+
+  if(lecActual.conexion_cruzada){
+    html+=`<div class="con-box">
+      <div class="con-label">⟳ Conexión cruzada</div>
+      <div class="fmt">${fmt(lecActual.conexion_cruzada)}</div>
+    </div>`;
+  }
+
+  if(lecActual.autocorreccion){
+    html+=`<div class="auto-box">
+      <div class="auto-label">⚠ Autocorrección metodológica</div>
+      <div class="fmt">${fmt(lecActual.autocorreccion)}</div>
+    </div>`;
+  }
+
+  if(lecActual.autores_relacionados?.length){
+    html+=`<div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.12em;font-family:var(--font-mono);margin-bottom:0.5rem">Autores relacionados</div>`;
+    html+=`<div class="autores-rel">`+
+      lecActual.autores_relacionados.map(a=>`<span class="autor-tag" onclick="verAutor('${encodeURIComponent(a)}')">${a}</span>`).join('')+`</div>`;
+  }
+
+  const notaGuardada=getNotas(id);
+  html+=`<div class="notas-section">
+    <div class="notas-label">📝 Mis notas</div>
+    <textarea class="notas-area" id="nota-${id}" placeholder="Escribe tus reflexiones sobre esta lección...">${notaGuardada}</textarea>
+    <button class="notas-save" onclick="guardarNota('${id}')">Guardar nota</button>
+  </div>`;
+
+  const lecsL=lecs.filter(l=>l.libro_id===lecActual.libro_id).sort((a,b)=>a.orden-b.orden);
+  const idx=lecsL.findIndex(l=>l.id===id);
+  const prev=idx>0?lecsL[idx-1]:null;
+  const sig=idx>=0&&idx<lecsL.length-1?lecsL[idx+1]:null;
+
+  html+=`<div class="lec-actions">
+    ${!done
+      ?`<button class="act-btn primary" onclick="marcarCompletada('${id}')">✓ Marcar completada</button>`
+      :`<button class="act-btn done-mark" disabled>✓ Completada</button>`}
+    <button class="act-btn secondary" id="btn-fav-lec" onclick="toggleFavLecDetalle('${id}',this)">${fav?'★ Favorita':'☆ Favoritos'}</button>
+    <button class="act-btn secondary" onclick="compartirLeccion()">🔗 Compartir</button>
+    <button class="act-btn secondary" onclick="abrirPdfModal()">⬇ PDF</button>
+    <button class="act-btn secondary" onclick="testDelLibro('${lecActual.libro_id}')">🧠 Test</button>
+    ${prev?`<button class="act-btn secondary" onclick="verLeccion('${prev.id}');window.scrollTo(0,0)">← Anterior</button>`:''}
+    ${sig?`<button class="act-btn primary" onclick="verLeccion('${sig.id}');window.scrollTo(0,0)">Siguiente →</button>`:''}
+  </div>`;
+
+  document.getElementById('leccion-contenido').innerHTML=html;
+  showView('leccion');
+  // Inicializar subrayados si el módulo está disponible
+  if(typeof SCSSubrayados !== 'undefined' && SCSSubrayados.init) {
+    SCSSubrayados.init(lecActual.id);
+  }
+}
+
+function guardarNota(id){const ta=document.getElementById(`nota-${id}`);if(ta){saveNota(id,ta.value).then(()=>toast('📝 Nota guardada'));}}
+function toggleFavLecDetalle(id,btn){toggleFavLec(id,btn);btn.textContent=favLecs().includes(id)?'★ Favorita':'☆ Favoritos';}
+function volverDeLeccion(){if(libroActual)showView('lecciones');else showView('home');}
+
+/* ═══════════════════════════════════════════
+   MARCAR COMPLETADA
+═══════════════════════════════════════════ */
+async function marcarCompletada(id){
+  try{
+    await sb('progreso',{method:'POST',body:JSON.stringify({tipo:'leccion',item_id:id,resultado:'correcta',fecha:new Date().toISOString()})});
+    prog.push({tipo:'leccion',item_id:id,resultado:'correcta',fecha:new Date().toISOString()});
+    toast('✓ Lección completada'); verLeccion(id); renderStats();
+  }catch(e){toast('Error: '+e.message);}
+}
+
+/* ═══════════════════════════════════════════
+   PDF
+═══════════════════════════════════════════ */
+function abrirPdfModal(){
+  const sub=document.getElementById('pdf-libro-sub');
+  if(sub&&libroActual){
+    const n=lecs.filter(l=>l.libro_id===libroActual.id).length;
+    sub.textContent=`${libroActual.titulo} — ${n} lecciones`;
+  }
+  document.getElementById('pdf-modal').classList.remove('hidden');
+}
+function closePdfModal(){document.getElementById('pdf-modal').classList.add('hidden');}
+
+function pdfAddText(doc,text,size,color,bold,M,W,y){
+  doc.setFontSize(size);doc.setTextColor(...color);doc.setFont(undefined,bold?'bold':'normal');
+  const clean=String(text||'').replace(/\*\*(.+?)\*\*/g,'$1').replace(/\*(.+?)\*/g,'$1').replace(/`(.+?)`/g,'$1');
+  doc.splitTextToSize(clean,W).forEach(line=>{
+    if(y>270){doc.addPage();y=M;}
+    doc.text(line,M,y);y+=size*0.45;
+  });
+  y+=3; return y;
+}
+
+function buildPdfFromLec(doc,lec,libro,M,W,y){
+  y=pdfAddText(doc,lec.titulo,14,[201,168,76],true,M,W,y); y+=2;
+  y=pdfAddText(doc,lec.cuerpo,10,[220,218,212],false,M,W,y); y+=3;
+  if(lec.aplicacion_practica){
+    y=pdfAddText(doc,'APLICACIÓN PRÁCTICA',8,[100,160,100],true,M,W,y);
+    y=pdfAddText(doc,lec.aplicacion_practica,10,[180,210,180],false,M,W,y); y+=2;
+  }
+  if(lec.conexion_cruzada){
+    y=pdfAddText(doc,'CONEXIÓN CRUZADA',8,[150,130,70],true,M,W,y);
+    y=pdfAddText(doc,lec.conexion_cruzada,10,[200,185,140],false,M,W,y); y+=2;
+  }
+  if(lec.autocorreccion){
+    y=pdfAddText(doc,'AUTOCORRECCIÓN',8,[100,140,180],true,M,W,y);
+    y=pdfAddText(doc,lec.autocorreccion,10,[160,185,210],false,M,W,y); y+=2;
+  }
+  const nota=getNotas(lec.id);
+  if(nota){y+=2;y=pdfAddText(doc,'MIS NOTAS',8,[100,160,100],true,M,W,y);y=pdfAddText(doc,nota,10,[170,210,170],false,M,W,y);}
+  return y;
+}
+
+function exportarPDFLeccion(){
+  const lec=lecActual; if(!lec)return;
+  try{
+    const{jsPDF}=window.jspdf;
+    const doc=new jsPDF({unit:'mm',format:'a4'});
+    doc.setFillColor(8,8,8); doc.rect(0,0,210,297,'F');
+    const M=18,W=174; let y=20;
+    y=pdfAddText(doc,'SEGUNDO CEREBRO SOBERANO',8,[100,80,40],true,M,W,y);
+    if(libroActual) y=pdfAddText(doc,`${libroActual.titulo} — ${libroActual.autor}`,8,[120,100,50],false,M,W,y);
+    y+=6;
+    y=buildPdfFromLec(doc,lec,libroActual,M,W,y);
+    doc.save(`${lec.titulo.replace(/[^a-zA-Z0-9áéíóúñ]/g,'_')}.pdf`);
+    toast('PDF generado');
+  }catch(e){toast('Error PDF: '+e.message);}
+}
+
+function exportarPDFLibro(){
+  if(!libroActual){toast('Sin libro activo');return;}
+  const lecsLib=lecs.filter(l=>l.libro_id===libroActual.id).sort((a,b)=>a.orden-b.orden);
+  if(!lecsLib.length){toast('Sin lecciones');return;}
+  try{
+    const{jsPDF}=window.jspdf;
+    const doc=new jsPDF({unit:'mm',format:'a4'});
+    doc.setFillColor(8,8,8); doc.rect(0,0,210,297,'F');
+    const M=18,W=174; let y=20;
+    y=pdfAddText(doc,'SEGUNDO CEREBRO SOBERANO',9,[100,80,40],true,M,W,y); y+=4;
+    y=pdfAddText(doc,libroActual.titulo,18,[201,168,76],true,M,W,y);
+    y=pdfAddText(doc,libroActual.autor,11,[160,150,130],false,M,W,y); y+=4;
+    y=pdfAddText(doc,`${lecsLib.length} lecciones`,9,[80,80,80],false,M,W,y); y+=10;
+    lecsLib.forEach((lec,i)=>{
+      if(i>0){doc.addPage();doc.setFillColor(8,8,8);doc.rect(0,0,210,297,'F');y=M;}
+      y=buildPdfFromLec(doc,lec,libroActual,M,W,y);
+    });
+    doc.save(`${libroActual.titulo.replace(/[^a-zA-Z0-9áéíóúñ]/g,'_')}_completo.pdf`);
+    toast(`PDF completo generado (${lecsLib.length} lecciones)`);
+  }catch(e){toast('Error PDF: '+e.message);}
+}
+
+/* ═══════════════════════════════════════════
+   CITAS
+═══════════════════════════════════════════ */
+async function verQuotes(){
+  showView('quotes');
+  const cont=document.getElementById('quotes-container');
+  cont.innerHTML=`<div class="quotes-loading"><div class="quotes-loading-ring"></div><span>Cargando citas...</span></div>`;
+  try{
+    const citasData=await sb('lecciones?select=id,titulo,libro_id,cita_memorable&cita_memorable=not.is.null&cita_memorable=neq.&activa=eq.true&order=libro_id.asc');
+    if(!citasData||!citasData.length){
+      cont.innerHTML=`<div class="quotes-empty"><span class="quotes-empty-ico">💬</span><p>Aún no hay citas memorables en la base de datos.</p></div>`;
+      return;
+    }
+    const favQ=favQuotes();
+    const libroMap={};
+    libros.forEach(l=>{libroMap[l.id]=l;});
+    cont.innerHTML=`<div class="quotes-meta">${citasData.length} cita${citasData.length!==1?'s':''} en el corpus</div>`+
+      citasData.map(lec=>{
+        const libro=libroMap[lec.libro_id];
+        const key=`cita-${lec.id}`;
+        const on=favQ.includes(key);
+        return `<div class="quote-card">
+          <div class="quote-text">${lec.cita_memorable}</div>
+          <div class="quote-attr">
+            ${lec.titulo?`<span class="quote-attr-lec">${lec.titulo}</span>`:''}
+            ${libro?`<span class="quote-attr-autor">${libro.autor} — ${libro.titulo}</span>`:''}
+          </div>
+          <button class="quote-fav-btn ${on?'on':''}" onclick="toggleFavQuote('${key}',this)">${on?'★':'☆'}</button>
+        </div>`;
+      }).join('');
+  }catch(e){
+    cont.innerHTML=`<div class="quotes-empty"><span class="quotes-empty-ico">⚠️</span><p>Error: ${e.message}</p></div>`;
+  }
+}
+
+/* ═══════════════════════════════════════════
+   FAVORITOS
+═══════════════════════════════════════════ */
+function renderFavoritos(){
+  const fLib=favLibros(); const fLec=favLecs();
+  const comp=completadasSet();
+  const lCont=document.getElementById('fav-libros-cont');
+  const lLbl=document.getElementById('fav-libros-lbl');
+  lLbl.textContent=`Libros (${fLib.length})`;
+  lCont.innerHTML=fLib.length
+    ?fLib.map(id=>{
+        const l=libros.find(x=>x.id===id);if(!l)return'';
+        const lecsL=lecs.filter(x=>x.libro_id===id);
+        const done=lecsL.filter(x=>comp.has(x.id)).length;
+        const pct=lecsL.length?Math.round(done/lecsL.length*100):0;
+        return `<div class="lec-item" onclick="verLibro('${id}')">
+          <div class="lec-left"><div class="lec-title">${l.titulo}</div>
+          <div class="lec-meta"><span class="lec-num">${l.autor}</span></div></div>
+          <div class="lec-right">
+            <span class="eje-tag ${ejeClass(l.eje)}">${l.eje||'—'}</span>
+            <span style="font-size:0.63rem;color:var(--text3);font-family:var(--font-mono)">${pct}%</span>
+            <button class="fav-btn on" onclick="event.stopPropagation();toggleFavLib('${id}',this);renderFavoritos()">★</button>
+          </div>
+        </div>`;
+      }).join('')
+    :`<div class="fav-empty"><span class="fav-empty-ico">📚</span>Sin libros favoritos</div>`;
+  const eCont=document.getElementById('fav-lecs-cont');
+  const eLbl=document.getElementById('fav-lecs-lbl');
+  eLbl.textContent=`Lecciones (${fLec.length})`;
+  eCont.innerHTML=fLec.length
+    ?fLec.map(id=>{
+        const l=lecs.find(x=>x.id===id);if(!l)return'';
+        const libro=libros.find(x=>x.id===l.libro_id);
+        const done=comp.has(l.id);
+        return `<div class="lec-item ${done?'done':''}" onclick="verLeccion('${id}','favoritos')">
+          <div class="lec-left"><div class="lec-title">${l.titulo}</div>
+          <div class="lec-meta"><span class="lec-num">${libro?.titulo||'—'}</span></div></div>
+          <div class="lec-right">
+            <button class="fav-btn on" onclick="event.stopPropagation();toggleFavLec('${id}',this);renderFavoritos()">★</button>
+            <span class="lec-status ${done?'ok':'no'}">${done?'✓':'○'}</span>
+          </div>
+        </div>`;
+      }).join('')
+    :`<div class="fav-empty"><span class="fav-empty-ico">📖</span>Sin lecciones favoritas</div>`;
+}
+
+/* ═══════════════════════════════════════════
+   TEST CONFIG MODAL
+═══════════════════════════════════════════ */
+let tcLibroId=null, tcEjeActivo=null, tcN=5;
+
+function abrirTest(libroId=null){
+  tcLibroId=libroId; tcEjeActivo=null; tcN=5;
+  // Rellenar pills de eje
+  const ejesDisp=[...new Set(preg.map(p=>{
+    const l=libros.find(x=>x.id===p.libro_id); return l?.eje||null;
+  }).filter(Boolean))].sort();
+  const cont=document.getElementById('tconfig-ejes');
+  cont.innerHTML=`<div class="tconfig-pill active" data-eje="" onclick="tcSelectEje(this)">Todos</div>`+
+    ejesDisp.map(e=>`<div class="tconfig-pill" data-eje="${e}" onclick="tcSelectEje(this)">${ejeIcon(e)} ${e}</div>`).join('');
+  // Reset num pills
+  document.querySelectorAll('.tconfig-num').forEach(el=>el.classList.toggle('active',el.dataset.n==='5'));
+  // Sub y info
+  const sub=document.getElementById('tconfig-sub');
+  if(libroId){
+    const libro=libros.find(l=>l.id===libroId);
+    sub.textContent=libro?`${libro.titulo} — ${libro.autor}`:'Libro seleccionado';
+    // Si es test de libro, ocultar filtro de eje
+    cont.parentElement.style.display='none';
+    document.querySelector('[data-eje=""]').closest('.tconfig-pills').parentElement.style.display='none';
+  } else {
+    sub.textContent='Todas las preguntas disponibles';
+    cont.closest('.tconfig-box').querySelector('.tconfig-pills').parentElement.style.display='';
+  }
+  tcUpdateInfo();
+  document.getElementById('tconfig-overlay').classList.remove('hidden');
+}
+
+function closeTconfig(){document.getElementById('tconfig-overlay').classList.add('hidden');}
+
+function tcSelectEje(el){
+  document.querySelectorAll('.tconfig-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  tcEjeActivo=el.dataset.eje||null;
+  tcUpdateInfo();
+}
+
+function tcSelectN(el){
+  document.querySelectorAll('.tconfig-num').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  tcN=parseInt(el.dataset.n);
+  tcUpdateInfo();
+}
+
+function tcGetPool(){
+  let pool=tcLibroId?preg.filter(p=>p.libro_id===tcLibroId):[...preg];
+  if(tcEjeActivo) pool=pool.filter(p=>{
+    const l=libros.find(x=>x.id===p.libro_id); return l?.eje===tcEjeActivo;
+  });
+  return pool;
+}
+
+function tcUpdateInfo(){
+  const pool=tcGetPool();
+  // contar cuántas son "malas" (falladas)
+  const mal=new Set(prog.filter(p=>p.tipo==='pregunta'&&p.resultado==='incorrecta').map(p=>p.item_id));
+  const nMalas=pool.filter(p=>mal.has(p.id)).length;
+  const nFinal=Math.min(tcN===999?pool.length:tcN, pool.length);
+  const info=document.getElementById('tconfig-info');
+  if(!pool.length){info.textContent='⚠ Sin preguntas para esta selección';return;}
+  info.textContent=`${pool.length} preguntas disponibles · ${nMalas} con fallos previos · Se usarán ${nFinal}`;
+}
+
+function lanzarTest(){
+  const pool=tcGetPool();
+  if(!pool.length){toast('Sin preguntas disponibles');return;}
+  closeTconfig();
+  const mal=new Set(prog.filter(p=>p.tipo==='pregunta'&&p.resultado==='incorrecta').map(p=>p.item_id));
+  const malas=pool.filter(p=>mal.has(p.id)).sort(()=>Math.random()-0.5);
+  const resto=pool.filter(p=>!mal.has(p.id)).sort(()=>Math.random()-0.5);
+  const n=tcN===999?pool.length:tcN;
+  testPregs=[...malas,...resto].slice(0,Math.min(n,pool.length));
+  testIdx=0;testResp=[];testCorr=0;testErr=0;
+  showView('test');renderPregunta();
+}
+
+/* ═══════════════════════════════════════════
+   TEST (entrada pública — abre modal)
+═══════════════════════════════════════════ */
+function iniciarTest(libroId=null){ abrirTest(libroId); }
+function testDelLibro(id){ abrirTest(id); }
+
+const LETRAS=['A','B','C','D'];
+function difLabel(d){
+  const map={1:'Básica',2:'Media',3:'Difícil'};
+  const cls={1:'d1',2:'d2',3:'d3'};
+  return `<span class="preg-dif ${cls[d]||'d1'}">${map[d]||'Básica'}</span>`;
+}
+
+function renderPregunta(){
+  const p=testPregs[testIdx];
+  const total=testPregs.length;
+  document.getElementById('test-prog').style.width=`${(testIdx/total)*100}%`;
+  document.getElementById('test-counter').textContent=`Pregunta ${testIdx+1} de ${total}`;
+  document.getElementById('test-live-score').textContent=`✓ ${testCorr} · ✗ ${testErr}`;
+  document.getElementById('btn-sig').style.display='none';
+  const libro=libros.find(l=>l.id===p.libro_id);
+  document.getElementById('preg-cont').innerHTML=`
+    <div class="preg-card">
+      <div class="preg-libro">${libro?`${libro.titulo} — ${libro.autor}`:p.eje||''}</div>
+      ${difLabel(p.dificultad)}
+      <div class="preg-txt">${p.texto}</div>
+      <div class="opts-grid">
+        ${(p.opciones||[]).map((op,i)=>`
+          <button class="opt-btn" onclick="responder(${i})" data-idx="${i}">
+            <span class="opt-letter">${LETRAS[i]||i}</span><span>${op}</span>
+          </button>`).join('')}
+      </div>
+      <div id="feedback-p"></div>
+    </div>`;
+}
+
+async function responder(idx){
+  const p=testPregs[testIdx];
+  const ok=idx===p.correcta;
+  if(ok)testCorr++;else testErr++;
+  document.getElementById('test-live-score').textContent=`✓ ${testCorr} · ✗ ${testErr}`;
+  document.querySelectorAll('.opt-btn').forEach((btn,i)=>{
+    btn.disabled=true;
+    if(i===p.correcta)btn.classList.add('ok');
+    else if(i===idx&&!ok)btn.classList.add('err');
+  });
+  document.getElementById('feedback-p').innerHTML=`
+    <div class="feedback ${ok?'ok':'err'}">
+      <div class="feedback-head">${ok?'✓ Correcto':'✗ Incorrecto'}</div>
+      <div>${p.explicacion||''}</div>
+    </div>`;
+  testResp.push({p,resp:idx,ok});
+  document.getElementById('btn-sig').style.display='block';
+  try{
+    await sb('progreso',{method:'POST',body:JSON.stringify({tipo:'pregunta',item_id:p.id,resultado:ok?'correcta':'incorrecta',fecha:new Date().toISOString()})});
+    prog.push({tipo:'pregunta',item_id:p.id,resultado:ok?'correcta':'incorrecta',fecha:new Date().toISOString()});
+  }catch(e){console.error(e);}
+}
+
+async function siguientePregunta(){
+  testIdx++;
+  if(testIdx>=testPregs.length)await finalizarTest();
+  else renderPregunta();
+}
+
+async function finalizarTest(){
+  const total=testResp.length;
+  const ok=testResp.filter(r=>r.ok).length;
+  const pct=total?Math.round(ok/total*100):0;
+  try{await sb('sesiones',{method:'POST',body:JSON.stringify({total,correctas:ok,porcentaje:pct,fecha:new Date().toISOString()})});}catch{}
+  const fallos=testResp.filter(r=>!r.ok);
+  document.getElementById('res-cont').innerHTML=`
+    <div class="res-card">
+      <div style="font-size:0.73rem;color:var(--text3);font-family:var(--font-mono)">Resultado del test</div>
+      <div class="res-pct">${pct}%</div>
+      <div class="res-sub">${ok} de ${total} correctas</div>
+      <div class="res-bars">
+        <div class="res-bar-card"><div class="res-bar-num" style="color:var(--success)">${ok}</div><div class="res-bar-label">Correctas</div></div>
+        <div class="res-bar-card"><div class="res-bar-num" style="color:var(--danger)">${total-ok}</div><div class="res-bar-label">Incorrectas</div></div>
+        <div class="res-bar-card"><div class="res-bar-num">${total}</div><div class="res-bar-label">Total</div></div>
+      </div>
+      ${fallos.length?`<div class="fallos-list"><p class="sec-label">Para repasar (${fallos.length}):</p>${fallos.map(r=>`<div class="fallo-item">${r.p.texto}</div>`).join('')}</div>`:'<p style="color:var(--success);margin-top:1rem">🏆 ¡Test perfecto!</p>'}
+      <div style="display:flex;gap:0.7rem;justify-content:center;margin-top:2rem">
+        <button class="act-btn primary" onclick="iniciarTest()">Nuevo test</button>
+        <button class="act-btn secondary" onclick="showView('home')">Inicio</button>
+      </div>
+    </div>`;
+  showView('resultados');
+}
+
+/* ═══════════════════════════════════════════
+   REPASO RÁPIDO
+═══════════════════════════════════════════ */
+async function comenzarRepasoRapido(){
+  const comp=completadasSet();
+  const fechas={};
+  prog.filter(p=>p.tipo==='leccion').forEach(p=>{
+    if(!fechas[p.item_id]||p.fecha>fechas[p.item_id])fechas[p.item_id]=p.fecha;
+  });
+  const arr=[...comp].sort((a,b)=>(fechas[a]||'')<(fechas[b]||'')?-1:1);
+  repasoLecs=arr.slice(0,5).map(id=>lecs.find(l=>l.id===id)).filter(Boolean);
+  if(repasoLecs.length<5){
+    const rest=lecs.filter(l=>!comp.has(l.id)).slice(0,5-repasoLecs.length);
+    repasoLecs=[...repasoLecs,...rest];
+  }
+  if(!repasoLecs.length){toast('Sin lecciones para repasar');return;}
+  repasoIdx=0;showView('repaso');renderRepaso();
+}
+
+function renderRepaso(){
+  const l=repasoLecs[repasoIdx];if(!l)return;
+  const total=repasoLecs.length;
+  document.getElementById('repaso-counter').textContent=`Lección ${repasoIdx+1} de ${total}`;
+  document.getElementById('repaso-dots').innerHTML=Array.from({length:total},(_,i)=>
+    `<div class="repaso-dot ${i<repasoIdx?'done':i===repasoIdx?'cur':''}"></div>`).join('');
+  const comp=completadasSet();
+  const done=comp.has(l.id);
+  const libro=libros.find(x=>x.id===l.libro_id);
+  let html='';
+  if(libro)html+=`<div style="font-size:0.7rem;color:var(--text3);font-family:var(--font-mono);margin-bottom:0.6rem">${libro.autor} — ${libro.titulo}</div>`;
+  if(l.imagen_principal)html+=`<div class="lec-img-wrap"><img src="${l.imagen_principal}" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>`;
+  html+=`<h2 class="lec-titulo">${l.titulo}</h2>`;
+  html+=`<div class="lec-body fmt">${fmt(l.cuerpo)}</div>`;
+  if(l.detalles?.length)html+=`<div class="det-grid">`+l.detalles.map(d=>`<div class="det-card"><div class="det-card-title">${d.subtitulo||d.titulo||''}</div><div class="fmt">${fmt(d.cuerpo||d.contenido||'')}</div></div>`).join('')+`</div>`;
+  html+=`<div style="margin-top:1rem">
+    ${!done?`<button class="act-btn primary" onclick="marcarCompletadaRepaso('${l.id}')">✓ Marcar completada</button>`:`<button class="act-btn done-mark" disabled>✓ Completada</button>`}
+    <button class="act-btn secondary" style="margin-left:0.5rem" onclick="verLeccion('${l.id}','repaso')">Ver completa →</button>
+  </div>`;
+  document.getElementById('repaso-cont').innerHTML=html;
+  document.getElementById('rp-prev').style.visibility=repasoIdx>0?'visible':'hidden';
+  document.getElementById('rp-next').textContent=repasoIdx<repasoLecs.length-1?'Siguiente →':'Finalizar';
+}
+
+function repasoSiguiente(){if(repasoIdx<repasoLecs.length-1){repasoIdx++;renderRepaso();window.scrollTo(0,0);}else{toast('✓ Repaso completado');showView('home');}}
+function repasoAnterior(){if(repasoIdx>0){repasoIdx--;renderRepaso();}}
+async function marcarCompletadaRepaso(id){await marcarCompletada(id);renderRepaso();}
+
+/* ═══════════════════════════════════════════
+   LECCIÓN ALEATORIA
+═══════════════════════════════════════════ */
+function leccionAleatoria(){
+  const comp=completadasSet();
+  const pool=lecs.filter(l=>!comp.has(l.id));
+  const src=pool.length?pool:lecs;
+  if(!src.length){toast('Sin lecciones');return;}
+  const l=src[Math.floor(Math.random()*src.length)];
+  libroActual=libros.find(x=>x.id===l.libro_id);
+  verLeccion(l.id);
+}
+
+/* ═══════════════════════════════════════════
+   VISTA AUTOR
+═══════════════════════════════════════════ */
+function verAutor(enc){
+  const autor=decodeURIComponent(enc);
+  const list=lecs.filter(l=>l.autores_relacionados?.includes(autor));
+  document.getElementById('autor-name').textContent=autor;
+  document.getElementById('autor-count').textContent=`${list.length} lecciones relacionadas`;
+  document.getElementById('back-autor-btn').onclick=()=>window.history.back();
+  const comp=completadasSet();
+  document.getElementById('autor-lecs-cont').innerHTML=list.length
+    ?list.map(l=>{
+        const libro=libros.find(x=>x.id===l.libro_id);
+        const done=comp.has(l.id);
+        return `<div class="lec-item ${done?'done':''}" onclick="verLeccion('${l.id}','autor')">
+          <div class="lec-left"><div class="lec-title">${l.titulo}</div>
+          <div class="lec-meta"><span class="lec-num">${libro?.titulo||'—'}</span></div></div>
+          <span class="lec-status ${done?'ok':'no'}">${done?'✓':'○'}</span>
+        </div>`;
+      }).join('')
+    :`<div class="empty">Sin lecciones para este autor</div>`;
+  showView('autor');
+}
+
+/* ═══════════════════════════════════════════
+   NAVIGATION
+═══════════════════════════════════════════ */
+function showView(name, skipPush=false){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById(`view-${name}`)?.classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const topMap={home:'nav-home',favoritos:'nav-favoritos',test:'nav-test',resultados:'nav-test',esquemas:'nav-esquemas','esquema-viewer':'nav-esquemas',busqueda:'nav-busqueda',ensayos:'nav-ensayos','ensayo-detalle':'nav-ensayos','repaso-srs':'nav-repaso-srs'};
+  if(topMap[name])document.getElementById(topMap[name])?.classList.add('active');
+  document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('active'));
+  const botMap={home:'bnav-home',favoritos:'bnav-favoritos',test:'bnav-test',resultados:'bnav-test',esquemas:'bnav-esquemas','esquema-viewer':'bnav-esquemas',busqueda:'bnav-busqueda',ensayos:'bnav-ensayos','ensayo-detalle':'bnav-ensayos','repaso-srs':'bnav-repaso-srs'};
+  if(botMap[name])document.getElementById(botMap[name])?.classList.add('active');
+  window.scrollTo(0,0);
+  if(!skipPush){
+    const state={view:name,libroId:libroActual?.id||null,lecId:lecActual?.id||null};
+    let hash=`#${name}`;
+    if(name==='leccion'&&lecActual) hash=`#leccion/${lecActual.libro_id}/${lecActual.id}`;
+    if(name==='lecciones'&&libroActual) hash=`#lecciones/${libroActual.id}`;
+    history.pushState(state,'',hash);
+  }
+  if(name==='home'){paginaActual=1;document.getElementById('search-results-lecs').style.display='none';renderStats();renderLibros();renderContinua();renderUltimosLibros();}
+  if(name==='favoritos')renderFavoritos();
+  if(name==='ensayos')renderEnsayos();
+  if(name==='busqueda'){ setTimeout(()=>{ const i=document.getElementById('corpus-search-input'); if(i)i.focus(); },100); }
+  if(name==='repaso-srs')initSRS();
+}
+
+/* ═══════════════════════════════════════════
+   BÚSQUEDA FULL-TEXT (RPC buscar_corpus)
+═══════════════════════════════════════════ */
+let corpusSearchTimer = null;
+
+function onCorpusSearch(val) {
+  const clr = document.getElementById('corpus-search-clear');
+  if (clr) clr.classList.toggle('vis', val.length > 0);
+  clearTimeout(corpusSearchTimer);
+  if (!val.trim()) {
+    document.getElementById('corpus-search-estado').textContent = 'Escribe un término para buscar en el corpus';
+    document.getElementById('corpus-search-results').innerHTML = '';
+    return;
+  }
+  document.getElementById('corpus-search-estado').textContent = 'Buscando...';
+  corpusSearchTimer = setTimeout(() => ejecutarCorpusSearch(val.trim()), 400);
+}
+
+async function ejecutarCorpusSearch(termino) {
+  const estado = document.getElementById('corpus-search-estado');
+  const cont = document.getElementById('corpus-search-results');
+  try {
+    const r = await fetch(`${SB_URL}/rest/v1/rpc/buscar_corpus`, {
+      method: 'POST',
+      headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ termino, limite: 15 })
+    });
+    const data = await r.json();
+    if (!data || !data.length) {
+      estado.textContent = `Sin resultados para "${termino}"`;
+      cont.innerHTML = '<div class="empty">No se encontraron lecciones con ese término.</div>';
+      return;
+    }
+    estado.textContent = `${data.length} resultado${data.length !== 1 ? 's' : ''} para "${termino}"`;
+    cont.innerHTML = data.map(item => {
+      const fragmento = (item.fragmento||'').replace(/\*\*([^*]+)\*\*/g, '<mark class="hl">$1</mark>');
+      return `
+        <div class="corpus-result-item" onclick="irALeccionDesdeCorpus('${item.leccion_id}')">
+          <div class="corpus-result-header">
+            <span class="corpus-result-titulo">${item.leccion_titulo}</span>
+          </div>
+          <div class="corpus-result-libro">${item.libro_titulo} — <em>${item.libro_autor}</em></div>
+          <div class="corpus-result-fragmento">${fragmento}</div>
+        </div>
+      `;
+    }).join('');
+  } catch(e) {
+    estado.textContent = 'Error en la búsqueda';
+    cont.innerHTML = '';
+    console.error(e);
+  }
+}
+
+function clearCorpusSearch() {
+  const i = document.getElementById('corpus-search-input');
+  if (i) { i.value = ''; onCorpusSearch(''); }
+}
+
+function irALeccionDesdeCorpus(leccionId) {
+  const lec = lecs.find(l => l.id === leccionId);
+  if (!lec) { toast('Lección no encontrada en caché'); return; }
+  verLeccion(lec.id);
+}
+
+/* ═══════════════════════════════════════════
+   ENSAYOS DE SÍNTESIS
+═══════════════════════════════════════════ */
+let ensayosCache = [];
+
+async function renderEnsayos() {
+  const grid = document.getElementById('ensayos-grid');
+  if (!grid) return;
+  grid.innerHTML = '<div class="skeleton sk-card"></div><div class="skeleton sk-card"></div>';
+  try {
+    if (!ensayosCache.length) {
+      const r = await fetch(`${SB_URL}/rest/v1/articulos?select=*&order=created_at.desc`, {
+        headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` }
+      });
+      ensayosCache = await r.json();
+    }
+    if (!ensayosCache.length) {
+      grid.innerHTML = '<div class="empty">No hay ensayos disponibles todavía.</div>';
+      return;
+    }
+    grid.innerHTML = ensayosCache.map(a => `
+      <div class="ensayo-card" onclick="verEnsayo('${a.id}')">
+        <div class="ensayo-card-header">
+          <h2 class="ensayo-card-titulo">${a.titulo}</h2>
+          <p class="ensayo-card-pregunta">${a.pregunta_generadora}</p>
+        </div>
+        <div class="ensayo-card-footer">
+          <div class="ensayo-autores">
+            ${(a.autores_convocados||[]).map(au=>`<span class="ensayo-autor-badge">${au}</span>`).join('')}
+          </div>
+          <span class="ensayo-meta">${(a.autores_convocados||[]).length} autores</span>
+        </div>
+      </div>
+    `).join('');
+  } catch(e) {
+    grid.innerHTML = '<div class="empty">Error cargando ensayos.</div>';
+    console.error(e);
+  }
+}
+
+function nl2br(s){ return (s||'').split('\n').join('<br>'); }
+
+function verEnsayo(id) {
+  const a = ensayosCache.find(x => x.id === id);
+  if (!a) return;
+  const cont = document.getElementById('ensayo-contenido');
+  cont.innerHTML = `
+    <div class="ensayo-detail">
+      <div class="ensayo-pregunta-hero">
+        <span class="ensayo-pregunta-label">Pregunta generadora</span>
+        <h1 class="ensayo-detail-titulo">${a.titulo}</h1>
+        <p class="ensayo-detail-pregunta">${a.pregunta_generadora}</p>
+        <div class="ensayo-autores" style="margin-top:1rem">
+          ${(a.autores_convocados||[]).map(au=>`<span class="ensayo-autor-badge clickable" onclick="filtrarPorAutorDesdeEnsayo('${au}')" title="Ver libros de ${au}">${au}</span>`).join('')}
+        </div>
+      </div>
+      <div class="ensayo-section expanded">
+        <div class="ensayo-section-header" onclick="toggleEnsayoSection(this)">
+          <span>📖 Ensayo</span><span class="ensayo-toggle">▲</span>
+        </div>
+        <div class="ensayo-section-body">
+          <div class="ensayo-body-text">${(a.cuerpo||'').replace(/\n/g,'<br>')}</div>
+        </div>
+      </div>
+      <div class="ensayo-section">
+        <div class="ensayo-section-header" onclick="toggleEnsayoSection(this)">
+          <span>🤝 Convergencias</span><span class="ensayo-toggle">▼</span>
+        </div>
+        <div class="ensayo-section-body" style="display:none">
+          <div class="ensayo-body-text">${(a.convergencias||'—').replace(/\n/g,'<br>')}</div>
+        </div>
+      </div>
+      <div class="ensayo-section">
+        <div class="ensayo-section-header" onclick="toggleEnsayoSection(this)">
+          <span>⚡ Divergencias</span><span class="ensayo-toggle">▼</span>
+        </div>
+        <div class="ensayo-section-body" style="display:none">
+          <div class="ensayo-body-text">${(a.divergencias||'—').replace(/\n/g,'<br>')}</div>
+        </div>
+      </div>
+      <div class="ensayo-section ensayo-sintesis">
+        <div class="ensayo-section-header" onclick="toggleEnsayoSection(this)">
+          <span>💎 Síntesis Original</span><span class="ensayo-toggle">▼</span>
+        </div>
+        <div class="ensayo-section-body" style="display:none">
+          <div class="ensayo-sintesis-nota">Esta síntesis es tu elaboración personal — no la de los autores</div>
+          <div class="ensayo-body-text">${(a.sintesis_original||'—').replace(/\n/g,'<br>')}</div>
+        </div>
+      </div>
+      <div class="ensayo-section">
+        <div class="ensayo-section-header" onclick="toggleEnsayoSection(this)">
+          <span>🎯 Aplicación Práctica</span><span class="ensayo-toggle">▼</span>
+        </div>
+        <div class="ensayo-section-body" style="display:none">
+          <div class="ensayo-body-text">${(a.aplicacion||'—').replace(/\n/g,'<br>')}</div>
+        </div>
+      </div>
+    </div>
+  `;
+  showView('ensayo-detalle');
+}
+
+function toggleEnsayoSection(hdr) {
+  const section = hdr.closest('.ensayo-section');
+  const body = section.querySelector('.ensayo-section-body');
+  const toggle = hdr.querySelector('.ensayo-toggle');
+  const open = body.style.display !== 'none';
+  body.style.display = open ? 'none' : 'block';
+  toggle.textContent = open ? '▼' : '▲';
+  section.classList.toggle('expanded', !open);
+}
+
+function filtrarPorAutorDesdeEnsayo(autor) {
+  ejeActivo = null; subEjeActivo = null; searchQ = '';
+  const input = document.getElementById('search-input');
+  if (input) { input.value = autor; }
+  showView('home');
+  setTimeout(() => onSearch(autor), 100);
+  toast(`Filtrando libros de ${autor}`);
+}
+
+/* ═══════════════════════════════════════════
+   SPACED REPETITION SYSTEM (SRS)
+═══════════════════════════════════════════ */
+const SRS_USER = 'default';
+let srsEstado = null;
+let srsCola = [];
+let srsIdx = 0;
+let srsModo = 'mixto';
+let srsResumen = { correcto:0, fallo:0, pendiente:0, en_proceso:0, integrado:0 };
+
+async function srsRPC(fn, body) {
+  const r = await fetch(`${SB_URL}/rest/v1/rpc/${fn}`, {
+    method: 'POST',
+    headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+async function initSRS() {
+  renderSRSDashboard();
+  try {
+    srsEstado = await srsRPC('estado_repaso', { p_usuario: SRS_USER });
+    renderSRSDashboard();
+  } catch(e) { console.error('SRS estado error:', e); }
+}
+
+function renderSRSDashboard() {
+  const root = document.getElementById('srs-root');
+  if (!root) return;
+  const e = srsEstado;
+  const pendHoy = e ? (e[0]?.pendientes_hoy ?? '—') : '...';
+  const totalItems = e ? (e[0]?.total_items ?? '—') : '...';
+  const librosActivos = e ? (e[0]?.libros_activos ?? '—') : '...';
+  const n1 = e ? (e[0]?.nivel_1 ?? 0) : 0;
+  const n2 = e ? (e[0]?.nivel_2 ?? 0) : 0;
+  const n3 = e ? (e[0]?.nivel_3 ?? 0) : 0;
+  const n4 = e ? (e[0]?.nivel_4 ?? 0) : 0;
+  const total = n1+n2+n3+n4 || 1;
+  root.innerHTML = `
+    <h1 class="page-title" style="margin-bottom:0.3rem">🔁 Repaso Espaciado</h1>
+    <p class="page-sub" style="margin-bottom:1.8rem">Retrieval practice + reflexión personal</p>
+    <div class="srs-stats-grid">
+      <div class="srs-stat"><div class="srs-stat-num" style="color:var(--accent)">${pendHoy}</div><div class="srs-stat-lbl">Pendientes hoy</div></div>
+      <div class="srs-stat"><div class="srs-stat-num">${totalItems}</div><div class="srs-stat-lbl">Total en cola</div></div>
+      <div class="srs-stat"><div class="srs-stat-num" style="color:var(--success)">${librosActivos}</div><div class="srs-stat-lbl">Libros activos</div></div>
+    </div>
+    <div class="srs-niveles">
+      <p class="sec-label" style="margin-bottom:0.8rem">Distribución por nivel</p>
+      <div class="srs-nivel-row"><span class="srs-nivel-lbl">Nivel 1</span><div class="srs-nivel-bar"><div class="srs-nivel-fill" style="width:${Math.round(n1/total*100)}%;background:#e74c3c"></div></div><span class="srs-nivel-count">${n1}</span></div>
+      <div class="srs-nivel-row"><span class="srs-nivel-lbl">Nivel 2</span><div class="srs-nivel-bar"><div class="srs-nivel-fill" style="width:${Math.round(n2/total*100)}%;background:#e67e22"></div></div><span class="srs-nivel-count">${n2}</span></div>
+      <div class="srs-nivel-row"><span class="srs-nivel-lbl">Nivel 3</span><div class="srs-nivel-bar"><div class="srs-nivel-fill" style="width:${Math.round(n3/total*100)}%;background:#f1c40f"></div></div><span class="srs-nivel-count">${n3}</span></div>
+      <div class="srs-nivel-row"><span class="srs-nivel-lbl">Nivel 4</span><div class="srs-nivel-bar"><div class="srs-nivel-fill" style="width:${Math.round(n4/total*100)}%;background:#2ecc71"></div></div><span class="srs-nivel-count">${n4}</span></div>
+    </div>
+    <div class="srs-modo-section">
+      <p class="sec-label" style="margin-bottom:0.8rem">Modo de sesión</p>
+      <div class="srs-modo-row">
+        <button class="srs-modo-btn ${srsModo==='quiz'?'active':''}" onclick="srsSetModo('quiz')">🧠 Quiz<br><small>Retrieval practice</small></button>
+        <button class="srs-modo-btn ${srsModo==='reflexion'?'active':''}" onclick="srsSetModo('reflexion')">💭 Reflexión<br><small>Honor system</small></button>
+        <button class="srs-modo-btn ${srsModo==='mixto'?'active':''}" onclick="srsSetModo('mixto')">🔀 Mixto<br><small>Ambos modos</small></button>
+      </div>
+    </div>
+    <div style="display:flex;gap:0.7rem;margin-bottom:2rem;flex-wrap:wrap">
+      <button class="act-btn primary" onclick="iniciarSesionSRS()">▶ Iniciar sesión</button>
+      <button class="act-btn secondary" onclick="renderSRSActivacion()">📚 Activar libros</button>
+    </div>
+  `;
+}
+
+function srsSetModo(m) { srsModo = m; renderSRSDashboard(); }
+
+async function renderSRSActivacion() {
+  const root = document.getElementById('srs-root');
+  root.innerHTML = `
+    <button class="back-btn" onclick="renderSRSDashboard()">← Dashboard</button>
+    <h2 style="font-family:var(--font-display);font-size:1.3rem;margin-bottom:0.5rem">📚 Activar libros para repaso</h2>
+    <p style="font-size:0.78rem;color:var(--text2);margin-bottom:1.4rem">Activa un libro para añadir sus preguntas y lecciones a tu cola de repaso.</p>
+    <div id="srs-activacion-lista"></div>
+  `;
+  document.getElementById('srs-activacion-lista').innerHTML = libros.map(l => `
+    <div class="srs-activar-row">
+      <div><div class="srs-activar-titulo">${l.titulo}</div><div class="srs-activar-autor">${l.autor}</div></div>
+      <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap">
+        <label style="font-size:0.65rem;color:var(--text3);font-family:var(--font-mono);display:flex;align-items:center;gap:0.3rem">
+          <input type="checkbox" id="srs-quiz-${l.id}" checked style="accent-color:var(--accent)"> Quiz
+        </label>
+        <label style="font-size:0.65rem;color:var(--text3);font-family:var(--font-mono);display:flex;align-items:center;gap:0.3rem">
+          <input type="checkbox" id="srs-ref-${l.id}" checked style="accent-color:var(--accent)"> Reflexión
+        </label>
+        <button class="act-btn primary" style="font-size:0.7rem;padding:0.35rem 0.8rem" onclick="activarLibroSRS('${l.id}','${l.titulo.replace(/'/g,"\'")}',this)">Activar</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function activarLibroSRS(libroId, titulo, btn) {
+  btn.disabled = true; btn.textContent = '⏳';
+  try {
+    const incQuiz = document.getElementById(`srs-quiz-${libroId}`)?.checked ?? true;
+    const incRef = document.getElementById(`srs-ref-${libroId}`)?.checked ?? true;
+    const res = await srsRPC('activar_libro_repaso', { p_libro_id: libroId, p_usuario: SRS_USER, p_incluir_quiz: incQuiz, p_incluir_reflexion: incRef });
+    btn.textContent = '✓'; btn.style.background = 'var(--success)';
+    toast(`✓ ${titulo}: +${res[0]?.quiz_añadidas||0} quiz, +${res[0]?.reflexiones_añadidas||0} reflexiones`);
+  } catch(e) { btn.disabled = false; btn.textContent = 'Activar'; toast('Error: ' + e.message); }
+}
+
+async function iniciarSesionSRS() {
+  const root = document.getElementById('srs-root');
+  root.innerHTML = '<div class="empty">Cargando cola...</div>';
+  try {
+    srsCola = await srsRPC('obtener_cola_repaso', { p_usuario: SRS_USER, p_modo: srsModo, p_limite: 20 });
+    if (!srsCola || !srsCola.length) {
+      root.innerHTML = `<button class="back-btn" onclick="renderSRSDashboard()">← Dashboard</button>
+        <div class="empty" style="margin-top:2rem"><span style="font-size:2rem;display:block;margin-bottom:0.8rem">🎉</span>
+        No hay items pendientes hoy en modo <strong>${srsModo}</strong>.<br><br>
+        <button class="act-btn secondary" onclick="renderSRSActivacion()">Activar más libros</button></div>`;
+      return;
+    }
+    srsIdx = 0;
+    srsResumen = { correcto:0, fallo:0, pendiente:0, en_proceso:0, integrado:0 };
+    renderSRSItem();
+  } catch(e) { root.innerHTML = `<div class="empty">Error: ${e.message}</div>`; }
+}
+
+function renderSRSItem() {
+  const root = document.getElementById('srs-root');
+  if (srsIdx >= srsCola.length) { renderSRSFin(); return; }
+  const item = srsCola[srsIdx];
+  const pct = Math.round((srsIdx / srsCola.length) * 100);
+  const bar = `<div style="height:3px;background:var(--border);border-radius:2px;margin-bottom:0.6rem">
+    <div style="height:100%;width:${pct}%;background:linear-gradient(90deg,var(--accent-dim),var(--accent));border-radius:2px;transition:width 0.3s"></div></div>
+    <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--text3);font-family:var(--font-mono);margin-bottom:1.2rem">
+      <span>${srsIdx+1} de ${srsCola.length}</span><span>${pct}% completado</span></div>`;
+  if (item.modo === 'quiz') {
+    const opts = item.opciones || [];
+    root.innerHTML = `<button class="back-btn" onclick="renderSRSDashboard()">← Salir</button>${bar}
+      <div class="srs-modo-tag quiz">🧠 Quiz — Nivel ${item.nivel||0}</div>
+      <div class="srs-contexto">${item.libro_titulo} · <em>${item.libro_autor}</em></div>
+      <div class="preg-card">
+        <div class="preg-txt">${item.pregunta_texto}</div>
+        <div class="opts-grid" id="srs-opts">
+          ${opts.map((o,i)=>`<button class="opt-btn" onclick="srsResponderQuiz(${i},${item.correcta},'${item.repaso_id}')"><span class="opt-letter">${['A','B','C','D'][i]}</span>${o}</button>`).join('')}
+        </div>
+      </div>
+      <div id="srs-feedback" style="display:none"></div>
+      <div style="margin-top:1rem;display:none" id="srs-sig-btn"><button class="act-btn primary" onclick="srsIdx++;renderSRSItem()">Siguiente →</button></div>`;
+  } else {
+    root.innerHTML = `<button class="back-btn" onclick="renderSRSDashboard()">← Salir</button>${bar}
+      <div class="srs-modo-tag reflexion">💭 Reflexión — Nivel ${item.nivel||0}</div>
+      <div class="srs-contexto">${item.libro_titulo} · <em>${item.libro_autor}</em></div>
+      <div class="preg-card">
+        <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;margin-bottom:1rem">${item.leccion_titulo}</div>
+        <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text3);font-family:var(--font-mono);margin-bottom:0.5rem">Aplicación práctica</div>
+        <div style="font-size:0.92rem;line-height:1.75;color:var(--text2);margin-bottom:1.2rem">${item.aplicacion_practica||''}</div>
+        ${item.autocorreccion?`<details style="margin-top:0.5rem"><summary style="font-size:0.72rem;color:var(--text3);cursor:pointer;font-family:var(--font-mono)">↕ Ver matiz / contrapunto</summary>
+        <div style="font-size:0.82rem;color:var(--text3);line-height:1.7;padding:0.8rem;background:var(--surface2);border-radius:var(--radius);border:1px solid var(--border);margin-top:0.5rem">${item.autocorreccion}</div></details>`:''}
+      </div>
+      <p style="font-size:0.68rem;color:var(--text3);font-family:var(--font-mono);margin-bottom:0.8rem;line-height:1.5">Evalúa si has pensado seriamente sobre esto y formado tu propio criterio — no si sigues al autor.</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.6rem">
+        <button class="srs-eval-btn pendiente" onclick="srsResponderReflexion('${item.repaso_id}','pendiente')">⬜ Pendiente<br><small>No he reflexionado</small></button>
+        <button class="srs-eval-btn en-proceso" onclick="srsResponderReflexion('${item.repaso_id}','en_proceso')">🟠 En proceso<br><small>Entiendo, no aplico</small></button>
+        <button class="srs-eval-btn integrado" onclick="srsResponderReflexion('${item.repaso_id}','integrado')">✅ Integrado<br><small>Tengo mi posición</small></button>
+      </div>`;
+  }
+}
+
+async function srsResponderQuiz(idx, correcta, repasoId) {
+  const btns = document.querySelectorAll('#srs-opts .opt-btn');
+  btns.forEach(b => b.disabled = true);
+  const ok = idx === correcta;
+  btns[idx].classList.add(ok ? 'ok' : 'err');
+  if (!ok) btns[correcta].classList.add('ok');
+  if (ok) srsResumen.correcto++; else srsResumen.fallo++;
+  const item = srsCola[srsIdx];
+  const fb = document.getElementById('srs-feedback');
+  fb.style.display = 'block';
+  fb.className = `feedback ${ok?'ok':'err'}`;
+  fb.innerHTML = `<div class="feedback-head">${ok?'✓ Correcto':'✗ Incorrecto'}</div>${item.explicacion||''}`;
+  document.getElementById('srs-sig-btn').style.display = 'block';
+  try { await srsRPC('registrar_repaso', { p_repaso_id: repasoId, p_evaluacion: ok?'correcto':'fallo' }); } catch(e){}
+}
+
+async function srsResponderReflexion(repasoId, evaluacion) {
+  document.querySelectorAll('.srs-eval-btn').forEach(b => b.disabled = true);
+  srsResumen[evaluacion] = (srsResumen[evaluacion]||0) + 1;
+  try { await srsRPC('registrar_repaso', { p_repaso_id: repasoId, p_evaluacion: evaluacion }); } catch(e){}
+  setTimeout(() => { srsIdx++; renderSRSItem(); }, 300);
+}
+
+function renderSRSFin() {
+  const root = document.getElementById('srs-root');
+  const r = srsResumen; const total = srsCola.length;
+  root.innerHTML = `<div style="text-align:center;padding:2rem 1rem">
+    <div style="font-size:3rem;margin-bottom:1rem">🎉</div>
+    <h2 style="font-family:var(--font-display);font-size:1.6rem;margin-bottom:0.4rem">Sesión completada</h2>
+    <p style="font-size:0.82rem;color:var(--text2);margin-bottom:2rem">Has revisado ${total} item${total!==1?'s':''} hoy</p>
+    <div class="srs-stats-grid" style="margin-bottom:2rem">
+      ${r.correcto?`<div class="srs-stat"><div class="srs-stat-num" style="color:var(--success)">${r.correcto}</div><div class="srs-stat-lbl">Correctas</div></div>`:''}
+      ${r.fallo?`<div class="srs-stat"><div class="srs-stat-num" style="color:var(--danger)">${r.fallo}</div><div class="srs-stat-lbl">Falladas</div></div>`:''}
+      ${r.integrado?`<div class="srs-stat"><div class="srs-stat-num" style="color:var(--success)">${r.integrado}</div><div class="srs-stat-lbl">Integradas</div></div>`:''}
+      ${r.en_proceso?`<div class="srs-stat"><div class="srs-stat-num" style="color:var(--des)">${r.en_proceso}</div><div class="srs-stat-lbl">En proceso</div></div>`:''}
+      ${r.pendiente?`<div class="srs-stat"><div class="srs-stat-num" style="color:var(--text3)">${r.pendiente}</div><div class="srs-stat-lbl">Pendientes</div></div>`:''}
+    </div>
+    <p style="font-size:0.7rem;color:var(--text3);font-family:var(--font-mono);margin-bottom:1.5rem">Próxima revisión: mañana</p>
+    <button class="act-btn primary" onclick="renderSRSDashboard()">← Volver al dashboard</button>
+  </div>`;
+}
+
+window.addEventListener('popstate', e => {
+  const state = e.state;
+  const hash = window.location.hash.slice(1);
+  if(!state && !hash){ showView('home', true); return; }
+  if(!state && hash){ restoreFromURL(); return; }
+  const {view, libroId, lecId} = state;
+  if(libroId) libroActual = libros.find(l=>l.id===libroId)||libroActual;
+  if(lecId)   lecActual   = lecs.find(l=>l.id===lecId)||lecActual;
+  if(view==='lecciones' && libroActual){ renderLibroHero(); renderLecs(lecs.filter(l=>l.libro_id===libroActual.id)); showView(view, true); return; }
+  if(view==='leccion'   && lecActual)  { verLeccion(lecActual.id, null); return; }
+  showView(view, true);
+});
+
+/* ═══════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════ */
+let toastT;
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('show');
+  clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('show'),2800);
+}
+
+/* ═══════════════════════════════════════════
+   URL — RESTAURACIÓN Y COMPARTIR
+═══════════════════════════════════════════ */
+function restoreFromURL(){
+  const params=new URLSearchParams(window.location.search);
+  const hash=window.location.hash.slice(1);
+
+  // Formato query params legacy: ?vista=leccion&libro=UUID&leccion=UUID
+  const vista=params.get('vista');
+  if(vista){
+    const libroId=params.get('libro');
+    const lecId=params.get('leccion');
+    if(libroId) libroActual=libros.find(l=>l.id===libroId)||null;
+    if(lecId)   lecActual=lecs.find(l=>l.id===lecId)||null;
+    if(vista==='leccion'&&lecActual){ verLeccion(lecActual.id); return; }
+    if(vista==='lecciones'&&libroActual){ verLibro(libroActual.id); return; }
+    showView(vista,true); return;
+  }
+
+  if(!hash||hash==='home') return;
+
+  // Formato: #leccion/LIBRO_ID/LEC_ID
+  if(hash.startsWith('leccion/')){
+    const parts=hash.split('/');
+    const libroId=parts[1]; const lecId=parts[2];
+    if(libroId) libroActual=libros.find(l=>l.id===libroId)||null;
+    if(lecId){
+      lecActual=lecs.find(l=>l.id===lecId)||null;
+      if(lecActual){ verLeccion(lecActual.id); return; }
+    }
+  }
+
+  // Formato: #lecciones/LIBRO_ID
+  if(hash.startsWith('lecciones/')){
+    const libroId=hash.split('/')[1];
+    if(libroId){
+      libroActual=libros.find(l=>l.id===libroId)||null;
+      if(libroActual){ verLibro(libroActual.id); return; }
+    }
+  }
+
+  // Formato simple: #quotes, #favoritos, #esquemas
+  const viewName=hash.split('/')[0];
+  const validViews=['home','favoritos','quotes','esquemas','repaso','test'];
+  if(validViews.includes(viewName)) showView(viewName,true);
+}
+
+function compartirLeccion(){
+  if(!lecActual) return;
+  const base=window.location.origin+window.location.pathname;
+  const url=`${base}#leccion/${lecActual.libro_id}/${lecActual.id}`;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(()=>toast('🔗 Enlace copiado'));
+  } else {
+    // fallback para navegadores sin clipboard API
+    const ta=document.createElement('textarea');
+    ta.value=url; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    toast('🔗 Enlace copiado');
+  }
+}
+
+function compartirLibro(){
+  if(!libroActual) return;
+  const base=window.location.origin+window.location.pathname;
+  const url=`${base}#lecciones/${libroActual.id}`;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(()=>toast('🔗 Enlace copiado'));
+  } else {
+    const ta=document.createElement('textarea');
+    ta.value=url; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    toast('🔗 Enlace copiado');
+  }
+}
+
+/* START */
+init();
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     NOTIFICATION SYSTEM v2 — Redesigned March 2026
+     Features: Centro funcional, Push reales, Filtros, Service Worker
+═══════════════════════════════════════════════════════════════ -->
+<style>
+/* ── NOTIFICATION BELL ── */
+.notif-bell{position:relative;font-size:1.1rem;padding:0.4rem 0.55rem !important;background:transparent !important;border:none !important;transition:transform 0.2s ease;}
+.notif-bell:hover{background:var(--surface2) !important;transform:scale(1.1);}
+.notif-badge{position:absolute;top:0;right:-2px;background:linear-gradient(135deg,#ff4757,#ff6b81);color:#fff;font-size:0.55rem;font-weight:800;min-width:17px;height:17px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px;font-family:var(--font-mono);box-shadow:0 2px 8px rgba(255,71,87,0.4);animation:notifPulse 2.5s ease-in-out infinite;}
+@keyframes notifPulse{0%,100%{transform:scale(1);box-shadow:0 2px 8px rgba(255,71,87,0.4)}50%{transform:scale(1.12);box-shadow:0 2px 14px rgba(255,71,87,0.6)}}
+.notif-bell.ring{animation:bellRing 0.6s ease;}
+@keyframes bellRing{0%{transform:rotate(0)}15%{transform:rotate(14deg)}30%{transform:rotate(-12deg)}45%{transform:rotate(8deg)}60%{transform:rotate(-5deg)}75%{transform:rotate(2deg)}100%{transform:rotate(0)}}
+
+/* ── OVERLAY ── */
+.notif-overlay{position:fixed;inset:0;background:rgba(0,0,0,0);z-index:9998;visibility:hidden;transition:all 0.35s ease;backdrop-filter:blur(0);}
+.notif-overlay.open{background:rgba(0,0,0,0.55);visibility:visible;backdrop-filter:blur(4px);}
+
+/* ── PANEL ── */
+.notif-panel{position:fixed;top:0;right:0;width:420px;max-width:100vw;height:100vh;z-index:9999;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.35s cubic-bezier(0.22,1,0.36,1);background:linear-gradient(180deg, var(--bg) 0%, #0a0a0a 100%);border-left:1px solid var(--border);}
+.notif-panel.open{transform:translateX(0);}
+
+/* Panel Header */
+.notif-header{padding:1.3rem 1.5rem 1rem;border-bottom:1px solid var(--border);background:linear-gradient(180deg, var(--surface) 0%, transparent 100%);}
+.notif-header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.9rem;}
+.notif-header h3{margin:0;font-size:1.15rem;font-weight:700;color:var(--text);font-family:var(--font-display);letter-spacing:-0.01em;}
+.notif-header-actions{display:flex;gap:0.6rem;align-items:center;}
+.notif-mark-read{font-size:0.65rem;color:var(--accent);cursor:pointer;background:none;border:1px solid var(--accent-dim);border-radius:var(--radius);padding:0.3rem 0.65rem;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.06em;transition:var(--trans);}
+.notif-mark-read:hover{background:var(--accent-bg);border-color:var(--accent);}
+.notif-close{font-size:1.1rem;cursor:pointer;background:var(--surface2);border:1px solid var(--border);color:var(--text3);padding:0.3rem 0.5rem;border-radius:var(--radius);line-height:1;transition:var(--trans);}
+.notif-close:hover{color:var(--text);border-color:var(--border2);background:var(--surface3);}
+
+/* Filter Tabs */
+.notif-filters{display:flex;gap:0.35rem;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;}
+.notif-filters::-webkit-scrollbar{display:none;}
+.notif-filter-btn{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:0.3rem 0.75rem;font-size:0.68rem;color:var(--text3);cursor:pointer;white-space:nowrap;font-family:var(--font-mono);transition:var(--trans);letter-spacing:0.02em;}
+.notif-filter-btn:hover{color:var(--text2);border-color:var(--border2);}
+.notif-filter-btn.active{background:var(--accent-bg);border-color:var(--accent);color:var(--accent);font-weight:600;}
+.notif-filter-count{font-size:0.58rem;opacity:0.7;margin-left:3px;}
+
+/* Notification List */
+.notif-list{flex:1;overflow-y:auto;padding:0.5rem 0.6rem;scrollbar-width:thin;scrollbar-color:var(--border2) transparent;}
+.notif-list::-webkit-scrollbar{width:3px;}
+.notif-list::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+.notif-empty{text-align:center;padding:4rem 1.5rem;color:var(--text3);}
+.notif-empty-icon{font-size:2.5rem;margin-bottom:1rem;opacity:0.5;}
+.notif-empty-title{font-family:var(--font-display);font-size:1rem;color:var(--text2);margin-bottom:0.4rem;}
+.notif-empty-sub{font-size:0.75rem;line-height:1.5;}
+
+/* Date Separator */
+.notif-date-sep{font-size:0.6rem;color:var(--text3);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.1em;padding:0.8rem 0.85rem 0.35rem;margin-top:0.3rem;}
+
+/* Notification Item */
+.notif-item{display:flex;gap:0.8rem;padding:0.9rem;border-radius:10px;margin-bottom:0.3rem;cursor:pointer;transition:all 0.2s ease;position:relative;border:1px solid transparent;}
+.notif-item:hover{background:var(--surface);border-color:var(--border);}
+.notif-item.unread{background:rgba(201,168,76,0.04);border-color:rgba(201,168,76,0.12);}
+.notif-item.unread .notif-icon-wrap{box-shadow:0 0 12px rgba(201,168,76,0.15);}
+.notif-dot{position:absolute;left:4px;top:50%;transform:translateY(-50%);width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 6px var(--accent-dim);transition:opacity 0.3s;}
+.notif-item:not(.unread) .notif-dot{opacity:0;}
+
+/* Icon Types */
+.notif-icon-wrap{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.3rem;transition:var(--trans);}
+.notif-icon-wrap.tipo-logro{background:linear-gradient(135deg,rgba(201,168,76,0.15),rgba(201,168,76,0.05));border:1px solid rgba(201,168,76,0.2);}
+.notif-icon-wrap.tipo-racha{background:linear-gradient(135deg,rgba(231,76,60,0.15),rgba(231,76,60,0.05));border:1px solid rgba(231,76,60,0.2);}
+.notif-icon-wrap.tipo-repaso{background:linear-gradient(135deg,rgba(52,152,219,0.15),rgba(52,152,219,0.05));border:1px solid rgba(52,152,219,0.2);}
+.notif-icon-wrap.tipo-sistema{background:linear-gradient(135deg,rgba(46,204,113,0.15),rgba(46,204,113,0.05));border:1px solid rgba(46,204,113,0.2);}
+.notif-icon-wrap.tipo-quiz{background:linear-gradient(135deg,rgba(155,89,182,0.15),rgba(155,89,182,0.05));border:1px solid rgba(155,89,182,0.2);}
+
+.notif-content{flex:1;min-width:0;}
+.notif-title{font-size:0.82rem;font-weight:600;color:var(--text);margin-bottom:3px;line-height:1.3;}
+.notif-msg{font-size:0.73rem;color:var(--text2);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.notif-meta{display:flex;align-items:center;gap:0.5rem;margin-top:5px;}
+.notif-time{font-size:0.6rem;color:var(--text3);font-family:var(--font-mono);}
+.notif-tipo-tag{font-size:0.55rem;color:var(--accent-dim);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.06em;background:var(--accent-bg);padding:1px 6px;border-radius:3px;}
+.notif-dismiss{opacity:0;position:absolute;top:8px;right:8px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;color:var(--text3);cursor:pointer;font-size:0.7rem;padding:1px 5px;transition:var(--trans);}
+.notif-item:hover .notif-dismiss{opacity:1;}
+.notif-dismiss:hover{color:var(--danger);border-color:var(--danger);}
+
+/* ── ACHIEVEMENT TOAST ── */
+.achievement-toast{position:fixed;top:76px;right:24px;background:linear-gradient(135deg,var(--surface),var(--bg));border:1px solid var(--accent);border-radius:14px;padding:1rem 1.4rem;display:flex;gap:0.9rem;align-items:center;z-index:10001;box-shadow:0 16px 48px rgba(0,0,0,0.5),0 0 24px rgba(201,168,76,0.1),inset 0 1px 0 rgba(255,255,255,0.03);transform:translateX(calc(100% + 40px));transition:transform 0.45s cubic-bezier(0.22,1,0.36,1);max-width:380px;}
+.achievement-toast.show{transform:translateX(0);}
+.achievement-toast .ach-icon{font-size:2.2rem;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3));}
+.achievement-toast .ach-body{flex:1;}
+.achievement-toast .ach-title{font-size:0.72rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.08em;font-family:var(--font-mono);}
+.achievement-toast .ach-msg{font-size:0.78rem;color:var(--text2);margin-top:3px;line-height:1.4;}
+.achievement-toast .ach-progress{margin-top:6px;height:3px;background:var(--border);border-radius:2px;overflow:hidden;}
+.achievement-toast .ach-progress-bar{height:100%;background:var(--accent);border-radius:2px;transition:width 5s linear;}
+.ach-particles{position:absolute;inset:0;pointer-events:none;overflow:hidden;border-radius:14px;}
+
+/* ── PUSH PERMISSION BANNER ── */
+.push-banner{background:linear-gradient(135deg,rgba(201,168,76,0.06),var(--surface));border:1px solid rgba(201,168,76,0.15);border-radius:10px;padding:0.9rem 1.1rem;margin:0.6rem;display:flex;gap:0.8rem;align-items:center;animation:pushBannerIn 0.4s ease;}
+@keyframes pushBannerIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.push-banner-icon{font-size:1.4rem;}
+.push-banner-text{flex:1;font-size:0.75rem;color:var(--text2);line-height:1.45;}
+.push-banner-text strong{color:var(--text);font-weight:600;}
+.push-banner-btn{background:var(--accent);color:var(--bg);border:none;border-radius:var(--radius);padding:0.45rem 0.9rem;font-size:0.68rem;font-weight:700;cursor:pointer;white-space:nowrap;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.05em;transition:var(--trans);}
+.push-banner-btn:hover{filter:brightness(1.15);transform:scale(1.02);}
+.push-banner-dismiss{background:none;border:none;color:var(--text3);cursor:pointer;font-size:0.9rem;padding:0.2rem;transition:var(--trans);}
+.push-banner-dismiss:hover{color:var(--text);}
+
+/* ── STATS FOOTER ── */
+.notif-footer{padding:0.8rem 1.2rem;border-top:1px solid var(--border);background:var(--surface);}
+.notif-stats{display:flex;gap:1rem;justify-content:center;}
+.notif-stat{text-align:center;}
+.notif-stat-num{font-family:var(--font-mono);font-size:1rem;font-weight:700;color:var(--accent);}
+.notif-stat-label{font-size:0.58rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;font-family:var(--font-mono);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:700px){
+  .notif-panel{width:100%;right:0;transform:translateX(100%);}
+  .notif-panel.open{transform:translateX(0);}
+  .achievement-toast{right:12px;left:12px;max-width:none;top:auto;bottom:80px;}
+}
+
+/* ── SETTINGS PANEL ── */
+.notif-settings{display:none;padding:1rem 1.3rem;border-bottom:1px solid var(--border);background:linear-gradient(180deg, rgba(201,168,76,0.03) 0%, transparent 100%);overflow-y:auto;max-height:0;transition:max-height 0.35s ease, padding 0.35s ease;padding:0 1.3rem;}
+.notif-settings.open{display:block;max-height:600px;padding:1rem 1.3rem;}
+.notif-settings-title{font-family:var(--font-display);font-size:0.95rem;color:var(--accent);margin-bottom:1rem;font-weight:600;}
+.notif-settings-section{font-size:0.6rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text3);font-family:var(--font-mono);margin-bottom:0.6rem;margin-top:0.3rem;}
+
+/* Toggle rows */
+.notif-toggle-row{display:flex;flex-wrap:wrap;align-items:center;padding:0.55rem 0;border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer;position:relative;gap:0;}
+.notif-toggle-label{flex:1;font-size:0.8rem;color:var(--text);font-weight:500;min-width:150px;}
+.notif-toggle-sub{width:100%;font-size:0.65rem;color:var(--text3);margin-top:1px;order:3;}
+.notif-toggle-row input[type="checkbox"]{display:none;}
+.notif-toggle-slider{width:36px;height:20px;background:var(--border2);border-radius:10px;position:relative;transition:var(--trans);flex-shrink:0;}
+.notif-toggle-slider::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;background:var(--text3);border-radius:50%;transition:var(--trans);}
+.notif-toggle-row input:checked + .notif-toggle-slider{background:var(--accent);}
+.notif-toggle-row input:checked + .notif-toggle-slider::after{transform:translateX(16px);background:var(--bg);}
+
+/* Reminder time */
+.notif-reminder-time{display:none;align-items:center;gap:0.7rem;padding:0.5rem 0 0.7rem;flex-wrap:wrap;}
+.notif-reminder-time.visible{display:flex;}
+.notif-time-label{font-size:0.72rem;color:var(--text2);font-family:var(--font-mono);}
+.notif-time-input{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);color:var(--accent);font-family:var(--font-mono);font-size:0.8rem;padding:0.35rem 0.6rem;width:110px;outline:none;transition:var(--trans);}
+.notif-time-input:focus{border-color:var(--accent);box-shadow:0 0 8px rgba(201,168,76,0.15);}
+.notif-time-hint{font-size:0.6rem;color:var(--text3);width:100%;}
+
+/* Danger button */
+.notif-danger-btn{background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.25);border-radius:var(--radius);color:var(--danger);font-size:0.72rem;font-family:var(--font-mono);padding:0.45rem 0.9rem;cursor:pointer;transition:var(--trans);width:100%;text-align:center;margin-top:0.3rem;}
+.notif-danger-btn:hover{background:rgba(192,57,43,0.2);border-color:var(--danger);}
+</style>
+
+<!-- Panel Overlay -->
+<div class="notif-overlay" id="notif-overlay" onclick="toggleNotifPanel()"></div>
+
+<!-- Notification Panel -->
+<div class="notif-panel" id="notif-panel">
+  <div class="notif-header">
+    <div class="notif-header-top">
+      <h3>🔔 Notificaciones</h3>
+      <div class="notif-header-actions">
+        <button class="notif-mark-read" onclick="markAllRead()">✓ Marcar todas</button>
+        <button class="notif-mark-read" onclick="toggleNotifSettings()" id="notif-settings-btn" title="Configuración">⚙ Config</button>
+        <button class="notif-close" onclick="toggleNotifPanel()">✕</button>
+      </div>
+    </div>
+    <!-- SETTINGS PANEL (hidden by default) -->
+    <div class="notif-settings" id="notif-settings">
+      <div class="notif-settings-title">Configuración de notificaciones</div>
+
+      <div class="notif-settings-section">Tipos de alerta</div>
+      <label class="notif-toggle-row">
+        <span class="notif-toggle-label">🔥 Alertas de racha</span>
+        <span class="notif-toggle-sub">Aviso cuando pierdes días sin estudiar</span>
+        <input type="checkbox" id="ncfg-racha" checked onchange="saveNotifConfig()">
+        <span class="notif-toggle-slider"></span>
+      </label>
+      <label class="notif-toggle-row">
+        <span class="notif-toggle-label">📋 Repasos pendientes</span>
+        <span class="notif-toggle-sub">Recordatorio de tarjetas por repasar (Leitner)</span>
+        <input type="checkbox" id="ncfg-repaso" checked onchange="saveNotifConfig()">
+        <span class="notif-toggle-slider"></span>
+      </label>
+      <label class="notif-toggle-row">
+        <span class="notif-toggle-label">🏆 Logros</span>
+        <span class="notif-toggle-sub">Milestones de progreso y nuevas marcas</span>
+        <input type="checkbox" id="ncfg-logro" checked onchange="saveNotifConfig()">
+        <span class="notif-toggle-slider"></span>
+      </label>
+      <label class="notif-toggle-row">
+        <span class="notif-toggle-label">🧠 Quiz</span>
+        <span class="notif-toggle-sub">Resultados y récords en tests</span>
+        <input type="checkbox" id="ncfg-quiz" checked onchange="saveNotifConfig()">
+        <span class="notif-toggle-slider"></span>
+      </label>
+      <label class="notif-toggle-row">
+        <span class="notif-toggle-label">⚙ Sistema</span>
+        <span class="notif-toggle-sub">Actualizaciones del corpus y mantenimiento</span>
+        <input type="checkbox" id="ncfg-sistema" checked onchange="saveNotifConfig()">
+        <span class="notif-toggle-slider"></span>
+      </label>
+
+      <div class="notif-settings-section" style="margin-top:1.2rem;">Recordatorio diario</div>
+      <label class="notif-toggle-row">
+        <span class="notif-toggle-label">⏰ Recordatorio programado</span>
+        <span class="notif-toggle-sub">Notificación push a la hora elegida</span>
+        <input type="checkbox" id="ncfg-reminder-on" onchange="saveNotifConfig()">
+        <span class="notif-toggle-slider"></span>
+      </label>
+      <div class="notif-reminder-time" id="notif-reminder-time-row">
+        <label class="notif-time-label">Hora:</label>
+        <input type="time" id="ncfg-reminder-time" value="09:00" onchange="saveNotifConfig()" class="notif-time-input">
+        <span class="notif-time-hint">Se enviará una push si no has estudiado hoy</span>
+      </div>
+
+      <div class="notif-settings-section" style="margin-top:1.2rem;">Sonido y vibración</div>
+      <label class="notif-toggle-row">
+        <span class="notif-toggle-label">🔊 Sonido en toasts</span>
+        <span class="notif-toggle-sub">Sonido sutil al recibir un logro</span>
+        <input type="checkbox" id="ncfg-sound" onchange="saveNotifConfig()">
+        <span class="notif-toggle-slider"></span>
+      </label>
+
+      <div class="notif-settings-section" style="margin-top:1.2rem;">Datos</div>
+      <button class="notif-danger-btn" onclick="clearAllNotifications()">🗑 Borrar todas las notificaciones</button>
+    </div>
+    <div class="notif-filters" id="notif-filters">
+      <button class="notif-filter-btn active" data-filter="all" onclick="filterNotifs('all',this)">Todas</button>
+      <button class="notif-filter-btn" data-filter="logro" onclick="filterNotifs('logro',this)">🏆 Logros</button>
+      <button class="notif-filter-btn" data-filter="racha" onclick="filterNotifs('racha',this)">🔥 Racha</button>
+      <button class="notif-filter-btn" data-filter="repaso" onclick="filterNotifs('repaso',this)">📋 Repaso</button>
+      <button class="notif-filter-btn" data-filter="quiz" onclick="filterNotifs('quiz',this)">🧠 Quiz</button>
+      <button class="notif-filter-btn" data-filter="sistema" onclick="filterNotifs('sistema',this)">⚙ Sistema</button>
+    </div>
+  </div>
+  <div id="push-banner-area"></div>
+  <div class="notif-list" id="notif-list">
+    <div class="notif-empty">
+      <div class="notif-empty-icon">🔔</div>
+      <div class="notif-empty-title">Sin notificaciones</div>
+      <div class="notif-empty-sub">Completa lecciones, tests y repasos<br>para desbloquear logros.</div>
+    </div>
+  </div>
+  <div class="notif-footer">
+    <div class="notif-stats">
+      <div class="notif-stat"><div class="notif-stat-num" id="notif-stat-total">0</div><div class="notif-stat-label">Total</div></div>
+      <div class="notif-stat"><div class="notif-stat-num" id="notif-stat-unread">0</div><div class="notif-stat-label">Sin leer</div></div>
+      <div class="notif-stat"><div class="notif-stat-num" id="notif-stat-logros">0</div><div class="notif-stat-label">Logros</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Achievement Toast -->
+<div class="achievement-toast" id="achievement-toast">
+  <div class="ach-particles" id="ach-particles"></div>
+  <div class="ach-icon" id="ach-icon">🏆</div>
+  <div class="ach-body">
+    <div class="ach-title" id="ach-title">Logro</div>
+    <div class="ach-msg" id="ach-msg"></div>
+    <div class="ach-progress"><div class="ach-progress-bar" id="ach-progress-bar"></div></div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════
+   NOTIFICATION SYSTEM v2
+   - Fixed: uses SB_URL/SB_KEY (not SUPABASE_URL/SUPABASE_KEY)
+   - Centro funcional con filtros y fecha agrupada
+   - Push notifications reales con Notification API
+   - Achievement toasts con animaciones y partículas
+   - Polling inteligente con visibility API
+═══════════════════════════════════════════ */
+
+let notifCache = [];
+let notifPanelOpen = false;
+let lastNotifCheck = 0;
+let currentFilter = 'all';
+let notifAchievementQueue = [];
+let isShowingAchievement = false;
+
+/* ── PANEL TOGGLE ── */
+function toggleNotifPanel() {
+  notifPanelOpen = !notifPanelOpen;
+  document.getElementById('notif-panel').classList.toggle('open', notifPanelOpen);
+  document.getElementById('notif-overlay').classList.toggle('open', notifPanelOpen);
+  if (notifPanelOpen) {
+    loadNotifications();
+    checkPushPermission();
+  }
+  // Prevent body scroll when panel is open
+  document.body.style.overflow = notifPanelOpen ? 'hidden' : '';
+}
+
+/* ── LOAD FROM SUPABASE ── */
+async function loadNotifications() {
+  try {
+    const d = await sb('notificaciones?usuario_id=eq.default&order=fecha.desc&limit=80');
+    notifCache = d || [];
+    renderNotifList();
+    updateBadge();
+    updateNotifStats();
+  } catch (e) {
+    console.error('Notif load:', e);
+    // Fallback: show empty state gracefully
+    notifCache = [];
+    renderNotifList();
+  }
+}
+
+/* ── RENDER LIST WITH FILTERS AND DATE GROUPS ── */
+function renderNotifList() {
+  const list = document.getElementById('notif-list');
+  const filtered = currentFilter === 'all'
+    ? notifCache
+    : notifCache.filter(n => n.tipo === currentFilter);
+
+  // Update filter counts
+  updateFilterCounts();
+
+  if (!filtered.length) {
+    const filterLabel = currentFilter === 'all' ? '' : ' de este tipo';
+    list.innerHTML = '<div class="notif-empty">' +
+      '<div class="notif-empty-icon">' + (currentFilter === 'all' ? '🔔' : getFilterIcon(currentFilter)) + '</div>' +
+      '<div class="notif-empty-title">Sin notificaciones' + filterLabel + '</div>' +
+      '<div class="notif-empty-sub">Completa lecciones, tests y repasos<br>para desbloquear logros.</div></div>';
+    return;
+  }
+
+  // Group by date
+  let html = '';
+  let lastDateLabel = '';
+
+  filtered.forEach(n => {
+    const dateLabel = getDateLabel(n.fecha);
+    if (dateLabel !== lastDateLabel) {
+      html += '<div class="notif-date-sep">' + dateLabel + '</div>';
+      lastDateLabel = dateLabel;
+    }
+
+    const cls = n.leida ? '' : ' unread';
+    const tipoClass = 'tipo-' + (n.tipo || 'sistema');
+    const ico = n.icono || '🔔';
+    const tipoTag = n.tipo ? '<span class="notif-tipo-tag">' + (n.tipo || '') + '</span>' : '';
+
+    html += '<div class="notif-item' + cls + '" data-id="' + n.id + '" onclick="markNotifRead(\x27' + n.id + '\x27,this)">' +
+      '<span class="notif-dot"></span>' +
+      '<div class="notif-icon-wrap ' + tipoClass + '">' + escH(ico) + '</div>' +
+      '<div class="notif-content">' +
+        '<div class="notif-title">' + escH(n.titulo) + '</div>' +
+        '<div class="notif-msg">' + escH(n.mensaje) + '</div>' +
+        '<div class="notif-meta">' +
+          '<span class="notif-time">' + timeAgo(n.fecha) + '</span>' +
+          tipoTag +
+        '</div>' +
+      '</div>' +
+      '<button class="notif-dismiss" onclick="event.stopPropagation();dismissNotif(\x27' + n.id + '\x27,this)" title="Eliminar">✕</button>' +
+    '</div>';
+  });
+
+  list.innerHTML = html;
+}
+
+/* ── FILTER SYSTEM ── */
+function filterNotifs(tipo, btn) {
+  currentFilter = tipo;
+  document.querySelectorAll('.notif-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderNotifList();
+}
+
+function updateFilterCounts() {
+  const counts = { all: notifCache.length, logro: 0, racha: 0, repaso: 0, quiz: 0, sistema: 0 };
+  notifCache.forEach(n => {
+    const t = n.tipo || 'sistema';
+    if (counts[t] !== undefined) counts[t]++;
+  });
+  document.querySelectorAll('.notif-filter-btn').forEach(btn => {
+    const f = btn.dataset.filter;
+    const existing = btn.querySelector('.notif-filter-count');
+    if (existing) existing.remove();
+    if (counts[f] > 0) {
+      const span = document.createElement('span');
+      span.className = 'notif-filter-count';
+      span.textContent = counts[f];
+      btn.appendChild(span);
+    }
+  });
+}
+
+function getFilterIcon(tipo) {
+  const icons = { logro: '🏆', racha: '🔥', repaso: '📋', quiz: '🧠', sistema: '⚙' };
+  return icons[tipo] || '🔔';
+}
+
+/* ── DATE LABELS ── */
+function getDateLabel(dateStr) {
+  const d = new Date(dateStr);
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const itemDate = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const diff = Math.floor((today - itemDate) / 86400000);
+
+  if (diff === 0) return 'Hoy';
+  if (diff === 1) return 'Ayer';
+  if (diff < 7) return 'Esta semana';
+  if (diff < 30) return 'Este mes';
+  return d.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+}
+
+/* ── BADGE & STATS ── */
+function updateBadge() {
+  const unread = notifCache.filter(n => !n.leida).length;
+  ['notif-badge', 'notif-badge-mobile'].forEach(id => {
+    const b = document.getElementById(id);
+    if (b) {
+      b.style.display = unread > 0 ? 'flex' : 'none';
+      b.textContent = unread > 99 ? '99+' : unread;
+    }
+  });
+  // Ring the bell on new notifications
+  if (unread > 0) {
+    const bell = document.getElementById('notif-bell');
+    if (bell && !bell.classList.contains('ring')) {
+      bell.classList.add('ring');
+      setTimeout(() => bell.classList.remove('ring'), 700);
+    }
+  }
+}
+
+function updateNotifStats() {
+  const total = notifCache.length;
+  const unread = notifCache.filter(n => !n.leida).length;
+  const logros = notifCache.filter(n => n.tipo === 'logro').length;
+  const el = id => document.getElementById(id);
+  if (el('notif-stat-total')) el('notif-stat-total').textContent = total;
+  if (el('notif-stat-unread')) el('notif-stat-unread').textContent = unread;
+  if (el('notif-stat-logros')) el('notif-stat-logros').textContent = logros;
+}
+
+/* ── UTILS ── */
+function escH(s) {
+  if (!s) return '';
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function timeAgo(ds) {
+  const d = new Date(ds), now = new Date(), s = Math.floor((now - d) / 1000);
+  if (s < 60) return 'ahora';
+  if (s < 3600) return Math.floor(s / 60) + ' min';
+  if (s < 86400) return Math.floor(s / 3600) + 'h';
+  if (s < 172800) return 'ayer';
+  if (s < 604800) return Math.floor(s / 86400) + 'd';
+  return d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+}
+
+/* ── MARK READ ── */
+async function markNotifRead(id, el) {
+  if (el) {
+    el.classList.remove('unread');
+    // Smooth dot fade
+    const dot = el.querySelector('.notif-dot');
+    if (dot) dot.style.opacity = '0';
+  }
+  const n = notifCache.find(x => x.id === id);
+  if (n) n.leida = true;
+  updateBadge();
+  updateNotifStats();
+  try {
+    await fetch(SB_URL + '/rest/v1/notificaciones?id=eq.' + id, {
+      method: 'PATCH',
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ leida: true })
+    });
+  } catch (e) { /* silent */ }
+}
+
+async function markAllRead() {
+  notifCache.forEach(n => { n.leida = true; });
+  renderNotifList();
+  updateBadge();
+  updateNotifStats();
+  try {
+    await fetch(SB_URL + '/rest/v1/notificaciones?usuario_id=eq.default&leida=eq.false', {
+      method: 'PATCH',
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ leida: true })
+    });
+  } catch (e) { /* silent */ }
+}
+
+/* ── DISMISS (DELETE) NOTIFICATION ── */
+async function dismissNotif(id, btn) {
+  const item = btn.closest('.notif-item');
+  if (item) {
+    item.style.transition = 'all 0.3s ease';
+    item.style.transform = 'translateX(100%)';
+    item.style.opacity = '0';
+    setTimeout(() => item.remove(), 300);
+  }
+  notifCache = notifCache.filter(n => n.id !== id);
+  updateBadge();
+  updateNotifStats();
+  updateFilterCounts();
+  try {
+    await fetch(SB_URL + '/rest/v1/notificaciones?id=eq.' + id, {
+      method: 'DELETE',
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Prefer': 'return=minimal' }
+    });
+  } catch (e) { /* silent */ }
+}
+
+/* ── ACHIEVEMENT TOAST WITH QUEUE ── */
+function showAchievement(icon, title, msg) {
+  notifAchievementQueue.push({ icon, title, msg });
+  if (!isShowingAchievement) processAchievementQueue();
+}
+
+function processAchievementQueue() {
+  if (!notifAchievementQueue.length) {
+    isShowingAchievement = false;
+    return;
+  }
+  isShowingAchievement = true;
+  const { icon, title, msg } = notifAchievementQueue.shift();
+
+  const t = document.getElementById('achievement-toast');
+  const progBar = document.getElementById('ach-progress-bar');
+  document.getElementById('ach-icon').textContent = icon;
+  document.getElementById('ach-title').textContent = title;
+  document.getElementById('ach-msg').textContent = msg;
+
+  // Reset and animate progress bar
+  progBar.style.transition = 'none';
+  progBar.style.width = '100%';
+
+  // Spawn particles for logro-type
+  spawnAchievementParticles();
+
+  t.classList.add('show');
+
+  requestAnimationFrame(() => {
+    progBar.style.transition = 'width 5s linear';
+    progBar.style.width = '0%';
+  });
+
+  // Send browser push notification too
+  sendPushNotif(title, msg, icon);
+
+  setTimeout(() => {
+    t.classList.remove('show');
+    setTimeout(processAchievementQueue, 400);
+  }, 5200);
+}
+
+function spawnAchievementParticles() {
+  const container = document.getElementById('ach-particles');
+  if (!container) return;
+  container.innerHTML = '';
+  const chars = ['✦', '★', '◆', '●'];
+  for (let i = 0; i < 6; i++) {
+    const p = document.createElement('span');
+    p.textContent = chars[Math.floor(Math.random() * chars.length)];
+    p.style.cssText = 'position:absolute;font-size:' + (8 + Math.random() * 6) + 'px;color:var(--accent);opacity:0;' +
+      'left:' + (Math.random() * 100) + '%;top:' + (Math.random() * 100) + '%;' +
+      'animation:particleFade ' + (0.8 + Math.random() * 0.6) + 's ease ' + (Math.random() * 0.3) + 's forwards;';
+    container.appendChild(p);
+  }
+}
+
+// Particle animation (injected once)
+if (!document.getElementById('notif-particle-style')) {
+  const ps = document.createElement('style');
+  ps.id = 'notif-particle-style';
+  ps.textContent = '@keyframes particleFade{0%{opacity:0;transform:scale(0) translateY(0)}40%{opacity:0.7;transform:scale(1.2) translateY(-10px)}100%{opacity:0;transform:scale(0.5) translateY(-25px)}}';
+  document.head.appendChild(ps);
+}
+
+/* ── POLLING: CHECK FOR NEW NOTIFICATIONS ── */
+async function checkForNewNotifications() {
+  const now = Date.now();
+  if (now - lastNotifCheck < 15000) return; // min 15s between checks
+  lastNotifCheck = now;
+  try {
+    const d = await sb('notificaciones?usuario_id=eq.default&leida=eq.false&order=fecha.desc&limit=10');
+    if (d && d.length) {
+      const newOnes = d.filter(n => !notifCache.find(c => c.id === n.id));
+      newOnes.forEach(n => {
+        showAchievement(n.icono || '🔔', n.titulo, n.mensaje);
+        notifCache.unshift(n);
+      });
+      if (newOnes.length) {
+        updateBadge();
+        updateNotifStats();
+      }
+    }
+  } catch (e) { /* silent */ }
+}
+
+/* ── STREAK & REPASO CHECK ── */
+async function checkStreakAndRepasos() {
+  try {
+    const [rachaRes, repasoRes] = await Promise.all([
+      fetch(SB_URL + '/rest/v1/rpc/check_racha', {
+        method: 'POST',
+        headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ p_usuario_id: 'default' })
+      }),
+      fetch(SB_URL + '/rest/v1/rpc/check_repaso_pendiente', {
+        method: 'POST',
+        headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ p_usuario_id: 'default' })
+      })
+    ]);
+
+    const racha = await rachaRes.json();
+    const repaso = await repasoRes.json();
+
+    await loadNotifications();
+
+    if (racha && racha.alerta) {
+      setTimeout(() => {
+        const dias = racha.dias_sin_actividad;
+        const ico = dias >= 7 ? '💀' : dias >= 3 ? '⚠️' : '🔥';
+        showAchievement(ico,
+          dias >= 7 ? 'Racha perdida' : 'Racha en riesgo',
+          'Llevas ' + dias + ' días sin estudiar. El spacing effect necesita consistencia.'
+        );
+      }, 2000);
+    }
+
+    if (repaso && repaso.pendientes > 0) {
+      setTimeout(() => {
+        showAchievement('📋',
+          repaso.pendientes + ' repasos pendientes',
+          'El spacing effect maximiza la retención. Cada repaso refuerza tus conexiones neuronales.'
+        );
+      }, racha && racha.alerta ? 7500 : 2000);
+    }
+  } catch (e) {
+    console.error('Streak/repaso check:', e);
+  }
+}
+
+/* ── PUSH NOTIFICATIONS (Browser Notification API) ── */
+function checkPushPermission() {
+  const area = document.getElementById('push-banner-area');
+  if (!area) return;
+
+  if (!('Notification' in window)) {
+    area.innerHTML = '';
+    return;
+  }
+
+  if (Notification.permission === 'granted') {
+    area.innerHTML = '<div style="padding:0.6rem 1.1rem;font-size:0.68rem;color:var(--success);font-family:var(--font-mono);display:flex;align-items:center;gap:0.4rem;">✓ Push activas</div>';
+    return;
+  }
+
+  if (Notification.permission === 'denied') {
+    area.innerHTML = '<div style="padding:0.6rem 1.1rem;font-size:0.68rem;color:var(--text3);font-family:var(--font-mono);">Push bloqueadas — actívalas desde la config del navegador</div>';
+    return;
+  }
+
+  // permission === 'default' — show banner
+  area.innerHTML = '<div class="push-banner">' +
+    '<div class="push-banner-icon">🔔</div>' +
+    '<div class="push-banner-text"><strong>Notificaciones push</strong><br>Recibe alertas de racha, repasos pendientes y logros incluso con la pestaña en segundo plano.</div>' +
+    '<button class="push-banner-btn" onclick="reqPushPerm()">Activar</button>' +
+    '<button class="push-banner-dismiss" onclick="this.parentElement.remove()">✕</button>' +
+  '</div>';
+}
+
+async function reqPushPerm() {
+  try {
+    const p = await Notification.requestPermission();
+    if (p === 'granted') {
+      toast('Notificaciones push activadas ✓');
+      checkPushPermission(); // refresh banner
+      sendPushNotif('🔔 Notificaciones activas', 'Recibirás alertas de racha, repasos y logros del Segundo Cerebro Soberano.');
+    } else {
+      checkPushPermission();
+    }
+  } catch (e) {
+    console.error('Push permission error:', e);
+  }
+}
+
+function sendPushNotif(title, body) {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  try {
+    // Use Service Worker for persistent notifications (works even in background on Android)
+    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({
+        type: 'SHOW_NOTIFICATION',
+        title: title,
+        body: body,
+        tag: 'scs-' + Date.now()
+      });
+    } else {
+      // Fallback to basic Notification API
+      new Notification(title, {
+        body: body,
+        icon: 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="%23080808"/><text x="32" y="42" text-anchor="middle" font-size="28" fill="%23c9a84c">§</text></svg>'),
+        tag: 'scs-' + Date.now()
+      });
+    }
+  } catch (e) { /* silent */ }
+}
+
+/* ── SERVICE WORKER REGISTRATION ── */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').then(reg => {
+    console.log('SCS Service Worker registered:', reg.scope);
+  }).catch(err => {
+    console.warn('SW registration failed:', err);
+  });
+}
+
+/* ── NOTIFICATION SETTINGS ── */
+const NOTIF_CONFIG_KEY = 'scs_notif_config';
+let notifConfig = {
+  racha: true,
+  repaso: true,
+  logro: true,
+  quiz: true,
+  sistema: true,
+  reminderOn: false,
+  reminderTime: '09:00',
+  sound: false
+};
+
+function loadNotifConfig() {
+  try {
+    const saved = localStorage.getItem(NOTIF_CONFIG_KEY);
+    if (saved) notifConfig = { ...notifConfig, ...JSON.parse(saved) };
+  } catch (e) {}
+  // Apply to UI
+  const el = id => document.getElementById(id);
+  if (el('ncfg-racha')) el('ncfg-racha').checked = notifConfig.racha;
+  if (el('ncfg-repaso')) el('ncfg-repaso').checked = notifConfig.repaso;
+  if (el('ncfg-logro')) el('ncfg-logro').checked = notifConfig.logro;
+  if (el('ncfg-quiz')) el('ncfg-quiz').checked = notifConfig.quiz;
+  if (el('ncfg-sistema')) el('ncfg-sistema').checked = notifConfig.sistema;
+  if (el('ncfg-reminder-on')) el('ncfg-reminder-on').checked = notifConfig.reminderOn;
+  if (el('ncfg-reminder-time')) el('ncfg-reminder-time').value = notifConfig.reminderTime;
+  if (el('ncfg-sound')) el('ncfg-sound').checked = notifConfig.sound;
+  updateReminderTimeVisibility();
+}
+
+function saveNotifConfig() {
+  const el = id => document.getElementById(id);
+  notifConfig.racha = el('ncfg-racha')?.checked ?? true;
+  notifConfig.repaso = el('ncfg-repaso')?.checked ?? true;
+  notifConfig.logro = el('ncfg-logro')?.checked ?? true;
+  notifConfig.quiz = el('ncfg-quiz')?.checked ?? true;
+  notifConfig.sistema = el('ncfg-sistema')?.checked ?? true;
+  notifConfig.reminderOn = el('ncfg-reminder-on')?.checked ?? false;
+  notifConfig.reminderTime = el('ncfg-reminder-time')?.value || '09:00';
+  notifConfig.sound = el('ncfg-sound')?.checked ?? false;
+  localStorage.setItem(NOTIF_CONFIG_KEY, JSON.stringify(notifConfig));
+  updateReminderTimeVisibility();
+  scheduleReminder();
+}
+
+function updateReminderTimeVisibility() {
+  const row = document.getElementById('notif-reminder-time-row');
+  if (row) row.classList.toggle('visible', notifConfig.reminderOn);
+}
+
+function toggleNotifSettings() {
+  const panel = document.getElementById('notif-settings');
+  const btn = document.getElementById('notif-settings-btn');
+  const isOpen = panel.classList.toggle('open');
+  btn.textContent = isOpen ? '⚙ Cerrar' : '⚙ Config';
+  if (isOpen) loadNotifConfig();
+}
+
+/* ── FILTER showAchievement BY CONFIG ── */
+const _originalShowAchievement = showAchievement;
+showAchievement = function(icon, title, msg, tipo) {
+  // Determine tipo from icon/title if not passed
+  if (!tipo) {
+    if (title.includes('racha') || title.includes('Racha')) tipo = 'racha';
+    else if (title.includes('repaso') || title.includes('Repaso')) tipo = 'repaso';
+    else if (title.includes('quiz') || title.includes('Quiz') || title.includes('test')) tipo = 'quiz';
+    else if (icon === '🏆' || title.includes('logro') || title.includes('Logro')) tipo = 'logro';
+    else tipo = 'sistema';
+  }
+  // Check if this type is enabled
+  if (notifConfig[tipo] === false) return;
+  // Play sound if enabled
+  if (notifConfig.sound) playNotifSound();
+  _originalShowAchievement(icon, title, msg);
+};
+
+/* ── NOTIFICATION SOUND ── */
+function playNotifSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(1320, ctx.currentTime + 0.08);
+    osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.15);
+    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.4);
+  } catch (e) {}
+}
+
+/* ── DAILY REMINDER SCHEDULER ── */
+let reminderTimer = null;
+
+function scheduleReminder() {
+  if (reminderTimer) clearTimeout(reminderTimer);
+  if (!notifConfig.reminderOn) return;
+
+  const [h, m] = notifConfig.reminderTime.split(':').map(Number);
+  const now = new Date();
+  const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0);
+
+  // If time already passed today, schedule for tomorrow
+  if (target <= now) target.setDate(target.getDate() + 1);
+
+  const ms = target - now;
+  console.log('SCS reminder scheduled in', Math.round(ms / 60000), 'min');
+
+  reminderTimer = setTimeout(() => {
+    // Only fire if user hasn't studied today
+    const lastStudy = localStorage.getItem('scs_last_study_date');
+    const today = new Date().toISOString().slice(0, 10);
+    if (lastStudy !== today) {
+      showAchievement('⏰', 'Hora de estudiar', 'Tu recordatorio diario del Segundo Cerebro Soberano. Mantén la racha viva.', 'racha');
+    }
+    // Reschedule for next day
+    scheduleReminder();
+  }, ms);
+}
+
+/* ── CLEAR ALL NOTIFICATIONS ── */
+async function clearAllNotifications() {
+  if (!confirm('¿Borrar TODAS las notificaciones? Esta acción no se puede deshacer.')) return;
+  notifCache = [];
+  renderNotifList();
+  updateBadge();
+  updateNotifStats();
+  try {
+    await fetch(SB_URL + '/rest/v1/notificaciones?usuario_id=eq.default', {
+      method: 'DELETE',
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Prefer': 'return=minimal' }
+    });
+    toast('Notificaciones eliminadas');
+  } catch (e) { toast('Error al eliminar'); }
+}
+
+// Load config on startup
+loadNotifConfig();
+scheduleReminder();
+
+/* ── SMART POLLING ── */
+// Initial check after page load
+setTimeout(checkStreakAndRepasos, 2500);
+
+// Poll every 45s when visible, pause when hidden
+let notifPollInterval = setInterval(() => {
+  if (!document.hidden) checkForNewNotifications();
+}, 45000);
+
+// Restart polling when tab becomes visible
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) {
+    checkForNewNotifications();
+  }
+});
+
+// Keyboard shortcut: Escape to close panel
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && notifPanelOpen) toggleNotifPanel();
+});
+</script>
+
+</body>
+</html>
