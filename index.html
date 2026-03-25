@@ -56,7 +56,7 @@
 
 <nav>
   <div class="nav-brand" onclick="showView('home')" style="cursor:pointer" id="admin-trigger">
-    <img src="logo_nuevo.png" alt="Segundo Cerebro Soberano" style="height: 85px; width: auto; object-fit: contain; filter: drop-shadow(0 2px 8px rgba(201,168,76,0.3));">
+    <img src="logo_nuevo.png" alt="Segundo Cerebro Soberano" style="height: 48px; width: auto; max-width: 100%; object-fit: contain; filter: drop-shadow(0 2px 8px rgba(201,168,76,0.3));">
   </div>
   <div class="nav-links">
     <button class="nav-btn active" onclick="showView('home')" id="nav-home" title="Biblioteca"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg> <span class="lbl">Biblioteca</span></button>
@@ -64,7 +64,7 @@
     <button class="nav-btn" onclick="iniciarTest()" id="nav-test" title="Test"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg> <span class="lbl">Test</span></button>
     <button class="nav-btn" onclick="showView('busqueda')" id="nav-busqueda" title="Búsqueda"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg> <span class="lbl">Buscar</span></button>
     <button class="nav-btn" onclick="showView('esquemas')" id="nav-esquemas" title="Esquemas"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" x2="9" y1="3" y2="18"/><line x1="15" x2="15" y1="6" y2="21"/></svg> <span class="lbl">Esquemas</span></button>
-    <button class="nav-btn" onclick="showView('ensayos')" id="nav-ensayos" title="Ensayos">✍ <span class="lbl">Ensayos</span></button>
+    <button class="nav-btn" onclick="showView('ensayos')" id="nav-ensayos" title="Ensayos"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> <span class="lbl">Ensayos</span></button>
     <button class="nav-btn" onclick="showView('repaso-srs')" id="nav-repaso-srs" title="Repaso Espaciado"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg> <span class="lbl">Repaso</span></button>
     <button class="nav-btn cta" onclick="comenzarRepasoRapido()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Quick</button>
     <button class="nav-btn notif-bell" id="notif-bell" onclick="toggleNotifPanel()" title="Notificaciones">🔔<span class="notif-badge" id="notif-badge" style="display:none">0</span></button>
@@ -90,7 +90,7 @@
       <span class="bnav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" x2="9" y1="3" y2="18"/><line x1="15" x2="15" y1="6" y2="21"/></svg></span><span class="bnav-label">Esquemas</span>
     </button>
     <button class="bnav-btn" id="bnav-ensayos" onclick="showView('ensayos')">
-      <span class="bnav-icon">✍</span><span class="bnav-label">Ensayos</span>
+      <span class="bnav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span><span class="bnav-label">Ensayos</span>
     </button>
     <button class="bnav-btn" id="bnav-repaso-srs" onclick="showView('repaso-srs')">
       <span class="bnav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></span><span class="bnav-label">Repaso</span>
@@ -271,7 +271,7 @@
 
   <!-- ENSAYOS DE SÍNTESIS -->
   <div class="view" id="view-ensayos">
-    <h1 class="page-title">✍ Ensayos de Síntesis</h1>
+    <h1 class="page-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> Ensayos de Síntesis</h1>
     <p class="page-sub" style="margin-bottom:1.8rem">Diálogos entre autores del corpus — convergencias, tensiones y síntesis originales</p>
     <div id="ensayos-grid" style="display:grid;gap:1.1rem;"></div>
   </div>
