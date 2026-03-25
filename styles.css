@@ -1350,9 +1350,7 @@ svg {
   .libro-cover-wrap {
     height: 110px !important;
   }
-}
-
-  /* Fix Background Watermark Logo tearing and bugging on narrow portrait mobile screens */
+  /* Fix Background Watermark Logo tearing on narrow portrait mobile screens */
   body::before {
     top: 50% !important;
     left: 50% !important;
@@ -1360,6 +1358,7 @@ svg {
     height: 50vh !important;
     transform: translate(-50%, -50%) !important;
     background-size: contain !important;
-    filter: blur(10px) grayscale(60%) !important;
-    opacity: 0.1 !important;
+    filter: blur(8px) grayscale(60%) !important;
+    opacity: 0.12 !important;
   }
+}
