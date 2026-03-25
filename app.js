@@ -1,6 +1,21 @@
 /* ═══════════════════════════════════════════
    CONFIG
 ═══════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════
+   IMAGE ERROR HANDLERS (Evita Syntax Errors de SVG en atributos)
+═══════════════════════════════════════════ */
+window.handleCoverError = function(imgEl, ejeStr) {
+  if (imgEl && imgEl.parentElement) {
+    imgEl.parentElement.innerHTML = makePlaceholder(ejeIcon(ejeStr), ejeStr || '');
+  }
+};
+window.handleUltimosError = function(imgEl, ejeStr) {
+  if (imgEl) {
+    imgEl.outerHTML = '<span>' + ejeIcon(ejeStr) + '</span>';
+  }
+};
+
 const SB_URL = 'https://aduizdiiacrvpoavjmab.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkdWl6ZGlpYWNydnBvYXZqbWFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1OTg5MDEsImV4cCI6MjA4NzE3NDkwMX0.US2sEhlSBJbcwg93txuL-9AdPKo2LLmdVX5dur7i5GQ';
 
@@ -436,7 +451,7 @@ function renderUltimosLibros(){
     // We let CSS style the span as a beautiful dark placeholder if no image exists
     const subE = getEjePrincipal(l) || '';
     const coverEl=l.portada_url
-      ?`<img src="${l.portada_url}" alt="${l.titulo}" onerror="this.outerHTML='<span>${ejeIcon(subE)}</span>'">`
+      ?`<img src="${l.portada_url}" alt="${l.titulo}" onerror="handleUltimosError(this, '${(subE||'').replace(/'/g, "\\'")}')">`
       :`<span>${ejeIcon(subE)}</span>`;
       
     // Netflix-style horizontal poster
@@ -594,7 +609,7 @@ function renderLibros(){
     const aHL=hl(libro.autor,searchQ);
     const subE=getSubEje(libro);
     const coverHTML=libro.portada_url
-      ?`<div class="libro-cover-wrap"><img class="libro-cover" src="${libro.portada_url}" alt="${libro.titulo}" loading="lazy" onerror="this.parentElement.innerHTML=makePlaceholder('${ejeIcon(subE)}','${(subE||'').replace(/'/g,'')}')"></div>`
+      ?`<div class="libro-cover-wrap"><img class="libro-cover" src="${libro.portada_url}" alt="${libro.titulo}" loading="lazy" onerror="handleCoverError(this, '${(subE||'').replace(/'/g, "\\'")}')"></div>`
       :`<div class="libro-cover-wrap" id="cover-${libro.id}">${makePlaceholder(ejeIcon(subE),subE||'')}</div>`;
     const isDone=pct===100&&lecsL.length>0;
     return `<div class="libro-card${isDone?' completado':''}" onclick="verLibro('${libro.id}')">
@@ -622,7 +637,7 @@ function renderLibros(){
       if(!url)return;
       const subE=getSubEje(libro);
       const wrap=document.getElementById(`cover-${libro.id}`);
-      if(wrap)wrap.innerHTML=`<img class="libro-cover" src="${url}" alt="${libro.titulo}" loading="lazy" onerror="this.parentElement.innerHTML=makePlaceholder('${ejeIcon(subE)}','${(subE||'').replace(/'/g,'')}')">`;
+      if(wrap)wrap.innerHTML=`<img class="libro-cover" src="${url}" alt="${libro.titulo}" loading="lazy" onerror="handleCoverError(this, '${(subE||'').replace(/'/g, "\\'")}')">`;
       libro.portada_url=url;
     });
   });
