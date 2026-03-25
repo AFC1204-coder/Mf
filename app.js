@@ -2083,7 +2083,7 @@ function onSpotlightSearch(v) {
       const libro = libroMap[l.libro_id];
       const textoBase = l.cuerpo || '';
       const idx = textoBase.toLowerCase().indexOf(q);
-      const snippet = idx >= 0 ? '...' + textoBase.slice(Math.max(0, idx - 40), idx + 80).replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi'), '<mark class="hl">$1</mark>') + '...' : '';
+      const snippet = idx >= 0 ? '...' + textoBase.slice(Math.max(0, idx - 100), idx + 250).replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi'), '<mark class="hl">$1</mark>') + '...' : '';
       
       return `<div class="sp-result-item" onclick="toggleSpotlight(); verLeccion('${l.id}')">
         <div class="sp-result-title">${hl(l.titulo, q)}</div>
