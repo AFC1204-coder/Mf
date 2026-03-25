@@ -28,7 +28,7 @@
 <style>
 /* CSS INYECTADO DIRECTO PARA EVITAR CACHÉ MÓVIL */
 @media (max-width: 720px) {
-  nav {
+  nav:not(.bottom-nav) {
     position: relative !important;
     height: 60px !important;
     padding-top: 1rem !important;
@@ -36,7 +36,9 @@
   }
   .nav-brand img {
     height: 48px !important;
-    width: 100% !important;
+    width: auto !important;
+    max-width: 100% !important;
+    max-width: auto !important;
     max-width: 100% !important;
     object-fit: contain !important;
     transform: translateX(-10px) !important;

@@ -1355,7 +1355,7 @@ svg {
 /* 12. Fix Top Nav / Logo Bug on Mobile */
 @media (max-width: 720px) {
   /* Release the sticky trap on mobile, letting the logo scroll away to save space */
-  nav {
+  nav:not(.bottom-nav) {
     position: relative !important; /* It won't stay stuck to the top covering text */
     height: 60px !important;
     padding-top: 1rem !important;
