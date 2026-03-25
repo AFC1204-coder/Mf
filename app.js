@@ -431,16 +431,23 @@ function renderUltimosLibros(){
     const lecsL=lecs.filter(x=>x.libro_id===l.id);
     const done=lecsL.filter(x=>comp.has(x.id)).length;
     const pct=lecsL.length?Math.round(done/lecsL.length*100):0;
+    const isDone = pct === 100 && lecsL.length > 0;
+    
+    // We let CSS style the span as a beautiful dark placeholder if no image exists
+    const subE = getEjePrincipal(l) || '';
     const coverEl=l.portada_url
-      ?`<img src="${l.portada_url}" alt="" onerror="this.style.display='none'">`
-      :`<span>${ejeIcon(l.eje)}</span>`;
-    return `<div class="ultimo-chip" onclick="verLibro('${l.id}')">
-      <div class="ultimo-chip-cover">${coverEl}</div>
-      <div class="ultimo-chip-info">
-        <div class="ultimo-chip-title">${l.titulo}</div>
-        <div class="ultimo-chip-autor">${l.autor}</div>
-        <div class="ultimo-chip-pct">${pct}% completado</div>
+      ?`<img src="${l.portada_url}" alt="${l.titulo}" onerror="this.outerHTML='<span>${ejeIcon(subE)}</span>'">`
+      :`<span>${ejeIcon(subE)}</span>`;
+      
+    // Netflix-style horizontal poster
+    return `<div class="rec-poster" onclick="verLibro('${l.id}')">
+      <div class="rec-cover-wrap">
+        ${coverEl}
+        <div class="rec-prog-container">
+          <div class="rec-prog-fill" style="width:${pct}%; background:${isDone ? 'var(--success)' : 'var(--accent)'}; box-shadow: 0 0 8px ${isDone ? 'var(--success)' : 'var(--accent)'}"></div>
+        </div>
       </div>
+      <div class="rec-title">${l.titulo}</div>
     </div>`;
   }).join('');
 }
