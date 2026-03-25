@@ -1351,3 +1351,15 @@ svg {
     height: 110px !important;
   }
 }
+
+  /* Fix Background Watermark Logo tearing and bugging on narrow portrait mobile screens */
+  body::before {
+    top: 50% !important;
+    left: 50% !important;
+    width: 140vw !important;
+    height: 50vh !important;
+    transform: translate(-50%, -50%) !important;
+    background-size: contain !important;
+    filter: blur(10px) grayscale(60%) !important;
+    opacity: 0.1 !important;
+  }
