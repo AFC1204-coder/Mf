@@ -2001,3 +2001,97 @@ function compartirLibro(){
 
 /* START */
 init();
+
+
+
+/* ═══════════════════════════════════════════
+   SPOTLIGHT SEARCH (APPLE STYLE)
+═══════════════════════════════════════════ */
+function toggleSpotlight() {
+  const overlay = document.getElementById('spotlight-overlay');
+  const input = document.getElementById('spotlight-input');
+  if (overlay.classList.contains('hidden')) {
+    overlay.classList.remove('hidden');
+    input.value = '';
+    document.getElementById('spotlight-state').style.display = 'block';
+    document.getElementById('spotlight-results').innerHTML = '';
+    setTimeout(() => input.focus(), 100);
+  } else {
+    overlay.classList.add('hidden');
+    input.blur();
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    toggleSpotlight();
+  }
+  if (e.key === 'Escape') {
+    const sp = document.getElementById('spotlight-overlay');
+    if (sp && !sp.classList.contains('hidden')) toggleSpotlight();
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const sInput = document.getElementById('spotlight-input');
+  if(sInput) {
+    sInput.addEventListener('input', (e) => onSpotlightSearch(e.target.value));
+  }
+});
+
+function onSpotlightSearch(v) {
+  const state = document.getElementById('spotlight-state');
+  const resCont = document.getElementById('spotlight-results');
+  const q = v.trim().toLowerCase();
+  
+  if (!q || q.length < 2) {
+    state.style.display = 'block';
+    state.textContent = q ? 'Escribe más para buscar...' : 'Escribe para explorar el Segundo Cerebro';
+    resCont.innerHTML = '';
+    return;
+  }
+  state.style.display = 'none';
+  
+  // Buscar en libros y lecciones simultáneamente
+  const relLibros = libros.filter(l => l.titulo.toLowerCase().includes(q) || l.autor.toLowerCase().includes(q)).slice(0,3);
+  const relLecs = lecs.filter(l => l.titulo?.toLowerCase().includes(q) || l.cuerpo?.toLowerCase().includes(q)).slice(0, 6);
+  
+  let html = '';
+  if(!relLibros.length && !relLecs.length) {
+    state.style.display = 'block';
+    state.textContent = 'Ningún resultado encontrado en el corpus.';
+    resCont.innerHTML = '';
+    return;
+  }
+  
+  if (relLibros.length > 0) {
+    html += `<div style="padding:0.5rem 1.5rem; font-size:0.65rem; color:var(--accent); text-transform:uppercase; letter-spacing:0.1em; opacity:0.8">Libros Relevantes</div>`;
+    html += relLibros.map(l => {
+      const isDone = false; // logic placeholder
+      return `<div class="sp-result-item" onclick="toggleSpotlight(); verLibro('${l.id}')">
+        <div class="sp-result-title">${hl(l.titulo, q)}</div>
+        <div class="sp-result-meta">${hl(l.autor, q)} · ${l.eje || 'Sin eje'}</div>
+      </div>`;
+    }).join('');
+  }
+  
+  if (relLecs.length > 0) {
+    html += `<div style="padding:0.5rem 1.5rem; font-size:0.65rem; color:var(--accent); text-transform:uppercase; letter-spacing:0.1em; opacity:0.8; margin-top:0.5rem;">Lecciones y Conceptos</div>`;
+    const libroMap = {}; libros.forEach(lx=>libroMap[lx.id]=lx);
+    html += relLecs.map(l => {
+      const libro = libroMap[l.libro_id];
+      const textoBase = l.cuerpo || '';
+      const idx = textoBase.toLowerCase().indexOf(q);
+      const snippet = idx >= 0 ? '...' + textoBase.slice(Math.max(0, idx - 40), idx + 80).replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi'), '<mark class="hl">$1</mark>') + '...' : '';
+      
+      return `<div class="sp-result-item" onclick="toggleSpotlight(); verLeccion('${l.id}')">
+        <div class="sp-result-title">${hl(l.titulo, q)}</div>
+        <div class="sp-result-meta">${libro ? libro.titulo : ''} ${libro ? '· '+libro.autor : ''}</div>
+        ${snippet ? `<div class="sp-result-snippet">${snippet}</div>` : ''}
+      </div>`;
+    }).join('');
+  }
+  
+  resCont.innerHTML = html;
+}
