@@ -489,7 +489,7 @@ function filtrarEjePrincipal(eje,btn){
   btn.classList.add('active');
   const subCont=document.getElementById('eje-filters-sub');
   if(eje&&EJES_CONFIG[eje]){
-    subCont.innerHTML=Object.entries(EJES_CONFIG[eje].sub).map(([n,ic])=>`<button class="eje-pill sub" onclick="filtrarSubEje('${n}',this)">${ic} ${n}</button>`).join('');
+    subCont.innerHTML=Object.entries(EJES_CONFIG[eje].sub).map(([n,ic])=>`<button class="eje-pill sub" onclick="filtrarSubEje('${n}',this)">${ic || EJES_CONFIG[eje].icon} ${n}</button>`).join('');
   }else{subCont.innerHTML='';}
   renderLibros();
 }
@@ -582,7 +582,7 @@ function renderLibros(){
   const cont=document.getElementById('libros-container');
   const lbl=document.getElementById('libros-count-label');
   const ejeLabel=subEjeActivo?`${ejeIcon(subEjeActivo)} ${subEjeActivo}`:ejeActivo?`${ejeIcon(ejeActivo)} ${ejeActivo}`:'Todos los libros';
-  lbl.textContent=`${ejeLabel} (${total})`;
+  lbl.innerHTML=`${ejeLabel} <span style="opacity:0.6;font-size:0.9em">(${total})</span>`;
   if(!total){cont.innerHTML=`<div class="empty">Sin resultados</div>`;renderPaginacion(0,1,1);return;}
   const comp=completadasSet();
   cont.innerHTML=pagina.map(libro=>{
