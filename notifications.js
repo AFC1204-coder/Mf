@@ -447,8 +447,11 @@ function sendPushNotif(title, body) {
 
 /* ── SERVICE WORKER REGISTRATION ── */
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').then(reg => {
+  // Force nuke all old caches on load
+  caches.keys().then(names => names.forEach(n => caches.delete(n)));
+  navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(reg => {
     console.log('SCS Service Worker registered:', reg.scope);
+    reg.update(); // Force immediate check for new SW
   }).catch(err => {
     console.warn('SW registration failed:', err);
   });
