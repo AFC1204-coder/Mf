@@ -1,16 +1,57 @@
 /* ═══════════════════════════════════════════
-   SCS Service Worker — Push Notifications
-   Minimal: only handles push + notification click
-   No caching (GitHub Pages handles that)
+   SCS Service Worker — Push Notifications + Offline PWA Cache
 ═══════════════════════════════════════════ */
 
 const SCS_ICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='36' fill='%23080808'/%3E%3Ctext x='96' y='125' text-anchor='middle' font-family='Georgia,serif' font-size='90' font-weight='700' fill='%23c9a84c'%3E§%3C/text%3E%3C/svg%3E";
+const CACHE_NAME = 'scs-cache-v2';
+const urlsToCache = [
+  '/Mf/',
+  '/Mf/index.html',
+  '/Mf/styles.css',
+  '/Mf/app.js',
+  '/Mf/notifications.js',
+  '/Mf/admin.html',
+  '/Mf/admin.css',
+  '/Mf/admin.js',
+  '/Mf/mapa.html',
+  '/Mf/mapa.css',
+  '/Mf/mapa.js',
+  '/Mf/manifest.json'
+];
 
-// Install — activate immediately
-self.addEventListener('install', () => self.skipWaiting());
-self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
+self.addEventListener('install', (e) => {
+  e.waitUntil(
+    caches.open(CACHE_NAME)
+      .then((cache) => cache.addAll(urlsToCache))
+  );
+  self.skipWaiting();
+});
 
-// Receive push from the page via postMessage
+self.addEventListener('activate', (e) => {
+  e.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    }).then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener('fetch', (e) => {
+  // If it's an API request or external URL (supabase, fonts), skip cache locally or fallback
+  if (e.request.url.includes('supabase.co') || e.request.url.includes('google') || e.request.url.includes('gstatic')) {
+    return;
+  }
+  e.respondWith(
+    caches.match(e.request)
+      .then((response) => response || fetch(e.request))
+  );
+});
+
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SHOW_NOTIFICATION') {
     const { title, body, tag } = event.data;
@@ -21,29 +62,21 @@ self.addEventListener('message', (event) => {
       tag: tag || 'scs-' + Date.now(),
       vibrate: [100, 50, 100],
       requireInteraction: false,
-      actions: [
-        { action: 'open', title: 'Abrir SCS' },
-        { action: 'dismiss', title: 'Cerrar' }
-      ]
+      actions: [{ action: 'open', title: 'Abrir SCS' }, { action: 'dismiss', title: 'Cerrar' }]
     });
   }
 });
 
-// Click on notification — open or focus the app
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-
   if (event.action === 'dismiss') return;
-
   event.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
-      // If app is already open, focus it
       for (const client of clients) {
         if (client.url.includes('/Mf/') && 'focus' in client) {
           return client.focus();
         }
       }
-      // Otherwise open it
       return self.clients.openWindow('/Mf/');
     })
   );

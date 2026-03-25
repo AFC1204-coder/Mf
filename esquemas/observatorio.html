@@ -524,6 +524,11 @@ body::before {
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-deep); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* Auto-injected SVG dark mode fix */
+svg text { fill: #e8e6e1 !important; color: #e8e6e1 !important; }
+svg [stroke="#000000"], svg [stroke="#111111"], svg [stroke="#1f2937"], svg [stroke="#333333"] { stroke: #9a9890 !important; }
+svg [fill="#000000"], svg [fill="#111111"], svg [fill="#1f2937"], svg [fill="#333333"] { fill: #181920 !important; }
 </style>
 </head>
 <body>
