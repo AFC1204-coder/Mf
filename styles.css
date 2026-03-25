@@ -1351,3 +1351,24 @@ svg {
     height: 110px !important;
   }
 }
+
+/* 12. Fix Top Nav / Logo Bug on Mobile */
+@media (max-width: 720px) {
+  /* Release the sticky trap on mobile, letting the logo scroll away to save space */
+  nav {
+    position: relative !important; /* It won't stay stuck to the top covering text */
+    height: 60px !important;
+    padding-top: 1rem !important;
+    background: transparent !important;
+    border-bottom: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  /* Scale the logo way down so it fits perfectly on narrow screens without cutting off */
+  .nav-brand img {
+    height: 48px !important;
+    width: 100% !important;
+    object-fit: contain !important;
+    transform: translateX(-10px); /* Align slightly left if padding is high */
+  }
+}
