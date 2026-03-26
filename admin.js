@@ -1,7 +1,7 @@
 const SUPABASE_URL = 'https://aduizdiiacrvpoavjmab.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkdWl6ZGlpYWNydnBvYXZqbWFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1OTg5MDEsImV4cCI6MjA4NzE3NDkwMX0.US2sEhlSBJbcwg93txuL-9AdPKo2LLmdVX5dur7i5GQ';
-const CLAUDE_API_KEY = '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';
-const ADMIN_PASSWORD = 'scs2024';
+const ADMIN_HASH = '94b371e3f19434d45d7dbd5fe23efd511caa57ccdc84d794c5feaf371d888c54';
+let adminSessionPwd = null;
 
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -11,9 +11,12 @@ let preguntasPendientes = [];
 let libroSeleccionado = null;
 
 // LOGIN
-function checkLogin() {
+async function checkLogin() {
   const pwd = document.getElementById('login-input').value;
-  if (pwd === ADMIN_PASSWORD) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pwd));
+  const hash = [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+  if (hash === ADMIN_HASH) {
+    adminSessionPwd = pwd;
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('admin-screen').classList.add('active');
     cargarLibros();
@@ -159,24 +162,21 @@ Responde SOLO con JSON válido, sin texto adicional, sin markdown:
 [{"texto":"...","opciones":["...","...","...","..."],"correcta":0,"explicacion":"...","dificultad":2}]`;
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/generar-preguntas`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': CLAUDE_API_KEY,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 2000,
-        messages: [{ role: 'user', content: prompt }]
+        admin_password: adminSessionPwd,
+        prompt: prompt
       })
     });
 
     if (!response.ok) {
-      const err = await response.text();
-      log('log-generar', 'Error API: ' + err, 'err');
+      const errData = await response.json().catch(() => ({ error: response.statusText }));
+      log('log-generar', 'Error API: ' + (errData.error || response.statusText), 'err');
       document.getElementById('btn-generar').disabled = false;
       return;
     }
@@ -210,18 +210,19 @@ Responde SOLO con JSON válido, sin texto adicional, sin markdown:
 
 function renderPreguntasGeneradas(preguntas, libro) {
   const letras = ['A', 'B', 'C', 'D'];
+  const e=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const container = document.getElementById('preguntas-generadas-list');
   container.innerHTML = preguntas.map((p, i) => `
     <div class="pregunta-generada">
       <div style="font-family:'IBM Plex Mono',monospace;font-size:0.55rem;letter-spacing:0.1em;color:var(--accent);margin-bottom:0.5rem;">PREGUNTA ${i+1} — DIF ${p.dificultad || 2}</div>
-      <div class="pg-texto">${p.texto}</div>
+      <div class="pg-texto">${e(p.texto)}</div>
       <div class="pg-opciones">
-        ${p.opciones.map((op, j) => `
+        ${(p.opciones||[]).map((op, j) => `
           <div class="pg-opcion ${j === p.correcta ? 'correcta' : ''}">
-            ${letras[j]}. ${op} ${j === p.correcta ? '✓' : ''}
+            ${letras[j]}. ${e(op)} ${j === p.correcta ? '✓' : ''}
           </div>`).join('')}
       </div>
-      <div class="pg-explicacion">${p.explicacion}</div>
+      <div class="pg-explicacion">${e(p.explicacion)}</div>
     </div>`).join('');
 
   document.getElementById('preguntas-generadas-container').style.display = 'block';
@@ -281,16 +282,16 @@ async function renderCorpus() {
     <div style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--text-dim);margin-bottom:1rem;letter-spacing:0.05em;">
       ${libros.length} libros · ${Object.values(leccionCount).reduce((a,b)=>a+b,0)} lecciones · ${Object.values(preguntaCount).reduce((a,b)=>a+b,0)} preguntas
     </div>
-    ${libros.map(l => `
+    ${libros.map(l => { const e=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); return `
       <div class="libro-item">
-        <div class="libro-eje">${l.eje}</div>
+        <div class="libro-eje">${e(l.eje)}</div>
         <div class="libro-info">
-          <div class="libro-titulo">${l.titulo}</div>
-          <div class="libro-autor">${l.autor}</div>
+          <div class="libro-titulo">${e(l.titulo)}</div>
+          <div class="libro-autor">${e(l.autor)}</div>
         </div>
         <div class="libro-counts">
           <div>${leccionCount[l.id] || 0} lec.</div>
           <div>${preguntaCount[l.id] || 0} preg.</div>
         </div>
-      </div>`).join('')}`;
+      </div>`; }).join('')}`;
 }
