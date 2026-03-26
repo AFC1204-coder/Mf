@@ -283,7 +283,7 @@ async function getCover(autor, titulo) {
     const r = await fetch(`https://openlibrary.org/search.json?q=${q}&limit=1&fields=cover_i`);
     const d = await r.json();
     const coverId = d?.docs?.[0]?.cover_i;
-    const url = coverId ? `https://covers.openlibrary.org/b/id/${coverId}-L.jpg` : null;
+    const url = coverId ? `https://covers.openlibrary.org/b/id/${coverId}-L.jpg?default=false` : null;
     coverCache[key] = url;
     return url;
   } catch { coverCache[key] = null; return null; }
