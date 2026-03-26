@@ -609,7 +609,7 @@ function renderLibros(){
     const aHL=hl(libro.autor,searchQ);
     const subE=getSubEje(libro);
     const coverHTML=libro.portada_url
-      ?`<div class="libro-cover-wrap"><img class="libro-cover" src="${libro.portada_url}" alt="${libro.titulo}" loading="lazy" onerror="handleCoverError(this, '${(subE||'').replace(/'/g, "\\'")}')"></div>`
+      ?`<div class="libro-cover-wrap"><img class="libro-cover" src="${libro.portada_url}" alt="${libro.titulo}" loading="lazy" onload="if(this.naturalWidth<=1) handleCoverError(this, '${(subE||\'\').replace(/\'/g, \"\\\\'\")}')" onerror="handleCoverError(this, '${(subE||'').replace(/'/g, "\\'")}')"></div>`
       :`<div class="libro-cover-wrap" id="cover-${libro.id}">${makePlaceholder(ejeIcon(subE),subE||'')}</div>`;
     const isDone=pct===100&&lecsL.length>0;
     return `<div class="libro-card${isDone?' completado':''}" onclick="verLibro('${libro.id}')">
@@ -637,7 +637,7 @@ function renderLibros(){
       if(!url)return;
       const subE=getSubEje(libro);
       const wrap=document.getElementById(`cover-${libro.id}`);
-      if(wrap)wrap.innerHTML=`<img class="libro-cover" src="${url}" alt="${libro.titulo}" loading="lazy" onerror="handleCoverError(this, '${(subE||'').replace(/'/g, "\\'")}')">`;
+      if(wrap)wrap.innerHTML=`<img class="libro-cover" src="${url}" alt="${libro.titulo}" loading="lazy" onload="if(this.naturalWidth<=1) handleCoverError(this, '${(subE||\'\').replace(/\'/g, \"\\\\'\")}')" onerror="handleCoverError(this, '${(subE||'').replace(/'/g, "\\'")}')">`;
       libro.portada_url=url;
     });
   });
