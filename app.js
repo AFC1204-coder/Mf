@@ -451,7 +451,7 @@ function renderUltimosLibros(){
     // We let CSS style the span as a beautiful dark placeholder if no image exists
     const subE = getEjePrincipal(l) || '';
     const coverEl=l.portada_url
-      ?`<img src="${l.portada_url}" alt="${l.titulo}" onerror="handleUltimosError(this, '${(subE||'').replace(/'/g, "\\'")}')">`
+      ?`<img src="${l.portada_url}" alt="${l.titulo}" onload="if(this.naturalWidth<=1) handleUltimosError(this, '${(subE||'').replace(/'/g, "\\'")}')" onerror="handleUltimosError(this, '${(subE||'').replace(/'/g, "\\'")}')">`
       :`<span>${ejeIcon(subE)}</span>`;
       
     // Netflix-style horizontal poster
