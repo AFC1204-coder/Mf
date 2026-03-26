@@ -463,7 +463,7 @@ function renderUltimosLibros(){
       
     // Netflix-style horizontal poster
     return `<div class="rec-poster" onclick="verLibro('${l.id}')">
-      <div class="rec-cover-wrap">
+      <div class="rec-cover-wrap" id="ultcover-${l.id}">
         ${coverEl}
         <div class="rec-prog-container">
           <div class="rec-prog-fill" style="width:${pct}%; background:${isDone ? 'var(--success)' : 'var(--accent)'}; box-shadow: 0 0 8px ${isDone ? 'var(--success)' : 'var(--accent)'}"></div>
@@ -472,6 +472,19 @@ function renderUltimosLibros(){
       <div class="rec-title">${esc(l.titulo)}</div>
     </div>`;
   }).join('');
+  // Buscar portadas en OpenLibrary para los que no tienen
+  validos.filter(l=>!l.portada_url).forEach(l=>{
+    getCover(l.autor,l.titulo).then(url=>{
+      if(!url)return;
+      l.portada_url=url;
+      const wrap=document.getElementById(`ultcover-${l.id}`);
+      if(!wrap)return;
+      const subE=getEjePrincipal(l)||'';
+      const prog=wrap.querySelector('.rec-prog-container');
+      const progHTML=prog?prog.outerHTML:'';
+      wrap.innerHTML=`<img src="${url}" alt="${esc(l.titulo)}" data-eje="${esc(subE)}" onload="if(this.naturalWidth<=1) handleUltimosError(this, this.dataset.eje)" onerror="handleUltimosError(this, this.dataset.eje)">${progHTML}`;
+    });
+  });
 }
 
 /* ═══════════════════════════════════════════
