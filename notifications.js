@@ -424,6 +424,9 @@ async function reqPushPerm() {
 }
 
 function sendPushNotif(title, body) {
+  // ANTI-SPAM PROTECCIÓN: ¡Nunca lanzar un cartel al SO Android si el usuario ya está viendo la app!
+  if (!document.hidden) return;
+
   if (!('Notification' in window) || Notification.permission !== 'granted') return;
   try {
     // Use Service Worker for persistent notifications (works even in background on Android)
