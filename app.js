@@ -282,18 +282,46 @@ function calcStreak() {
    PORTADAS
 ═══════════════════════════════════════════ */
 const coverCache = {};
-async function getCover(autor, titulo) {
+async function getCover(autor, titulo, libroId) {
   const key = `${autor}___${titulo}`;
   if (coverCache[key] !== undefined) return coverCache[key];
+
+  let url = null;
+
+  // 1. Intentar OpenLibrary
   try {
     const q = encodeURIComponent(`${titulo} ${autor}`);
     const r = await fetch(`https://openlibrary.org/search.json?q=${q}&limit=1&fields=cover_i`);
     const d = await r.json();
     const coverId = d?.docs?.[0]?.cover_i;
-    const url = coverId ? `https://covers.openlibrary.org/b/id/${coverId}-L.jpg?default=false` : null;
-    coverCache[key] = url;
-    return url;
-  } catch { coverCache[key] = null; return null; }
+    if (coverId) url = `https://covers.openlibrary.org/b/id/${coverId}-L.jpg?default=false`;
+  } catch {}
+
+  // 2. Fallback: Google Books
+  if (!url) {
+    try {
+      const q = encodeURIComponent(`${titulo} ${autor}`);
+      const r = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${q}&maxResults=1&fields=items(volumeInfo/imageLinks)`);
+      const d = await r.json();
+      const thumb = d?.items?.[0]?.volumeInfo?.imageLinks;
+      if (thumb) url = (thumb.thumbnail || thumb.smallThumbnail || '').replace('http://', 'https://');
+      if (url) url = url.replace('&edge=curl', '').replace('zoom=1', 'zoom=2');
+    } catch {}
+  }
+
+  coverCache[key] = url;
+
+  // 3. Persistir en Supabase para no volver a buscar
+  if (url && libroId) {
+    try {
+      await sb(`libros?id=eq.${libroId}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ portada_url: url })
+      });
+    } catch {}
+  }
+
+  return url;
 }
 
 /* ═══════════════════════════════════════════
@@ -474,7 +502,7 @@ function renderUltimosLibros(){
   }).join('');
   // Buscar portadas en OpenLibrary para los que no tienen
   validos.filter(l=>!l.portada_url).forEach(l=>{
-    getCover(l.autor,l.titulo).then(url=>{
+    getCover(l.autor,l.titulo,l.id).then(url=>{
       if(!url)return;
       l.portada_url=url;
       const wrap=document.getElementById(`ultcover-${l.id}`);
@@ -655,7 +683,7 @@ function renderLibros(){
   }).join('');
   renderPaginacion(total,paginaActual,totalPags);
   pagina.filter(libro=>!libro.portada_url).forEach(libro=>{
-    getCover(libro.autor,libro.titulo).then(url=>{
+    getCover(libro.autor,libro.titulo,libro.id).then(url=>{
       if(!url)return;
       const subE=getSubEje(libro);
       const wrap=document.getElementById(`cover-${libro.id}`);
@@ -836,7 +864,7 @@ function renderLibroHero(){
       </div>
     </div>`;
   if(!l.portada_url){
-    getCover(l.autor, l.titulo).then(url=>{
+    getCover(l.autor, l.titulo, l.id).then(url=>{
       if(!url) return;
       l.portada_url=url;
       const ph=document.getElementById('hero-cover-ph');
