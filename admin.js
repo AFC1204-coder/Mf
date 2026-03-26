@@ -40,7 +40,7 @@ async function cargarLibros() {
     allLibros = data;
     const select = document.getElementById('gen-libro-select');
     select.innerHTML = '<option value="">Selecciona un libro...</option>' +
-      data.map(l => `<option value="${l.id}">${l.autor} — ${l.titulo}</option>`).join('');
+      data.map(l => { const e=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); return `<option value="${l.id}">${e(l.autor)} — ${e(l.titulo)}</option>`; }).join('');
   }
 }
 

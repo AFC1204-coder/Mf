@@ -16,6 +16,7 @@ window.handleUltimosError = function(imgEl, ejeStr) {
   }
 };
 
+const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const SB_URL = 'https://aduizdiiacrvpoavjmab.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkdWl6ZGlpYWNydnBvYXZqbWFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1OTg5MDEsImV4cCI6MjA4NzE3NDkwMX0.US2sEhlSBJbcwg93txuL-9AdPKo2LLmdVX5dur7i5GQ';
 
@@ -71,12 +72,17 @@ let paginaActual=1;
 let adminMode = false;
 let adminClickCount = 0;
 let adminClickTimer = null;
-const ADMIN_PWD = 'CLPR1V4T3B00Ksc';
+const ADMIN_HASH = '3759a11a266d5d0c0230f063336a42145660df50837a885d2d7e6df034383a28';
+async function checkAdminPwd(pwd) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pwd));
+  const hex = [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+  return hex === ADMIN_HASH;
+}
 
 function initAdminTrigger() {
   const el = document.getElementById('admin-trigger');
   if (!el) return;
-  el.addEventListener('click', function(e) {
+  el.addEventListener('click', async function(e) {
     e.stopPropagation();
     adminClickCount++;
     clearTimeout(adminClickTimer);
@@ -91,7 +97,7 @@ function initAdminTrigger() {
         toast('Modo admin desactivado');
       } else {
         const pwd = prompt('');
-        if (pwd === ADMIN_PWD) {
+        if (pwd && await checkAdminPwd(pwd)) {
           adminMode = true;
           el.style.background = 'var(--accent2)';
           reloadLibros();
@@ -260,12 +266,13 @@ const getUltima  = () => LS.get(ULTIMA_K,null);
    RACHA
 ═══════════════════════════════════════════ */
 function calcStreak() {
-  const dias=[...new Set(prog.map(p=>p.fecha?.slice(0,10)).filter(Boolean))].sort();
+  const toLocal=d=>{ const o=new Date(d); return `${o.getFullYear()}-${String(o.getMonth()+1).padStart(2,'0')}-${String(o.getDate()).padStart(2,'0')}`; };
+  const dias=[...new Set(prog.map(p=>p.fecha?toLocal(p.fecha):null).filter(Boolean))].sort();
   if(!dias.length) return 0;
-  const hoy=new Date().toISOString().slice(0,10);
+  const hoy=toLocal(new Date());
   let streak=0, cur=hoy;
   for(let i=dias.length-1;i>=0;i--) {
-    if(dias[i]===cur){streak++;const d=new Date(cur);d.setDate(d.getDate()-1);cur=d.toISOString().slice(0,10);}
+    if(dias[i]===cur){streak++;const d=new Date(cur+'T12:00:00');d.setDate(d.getDate()-1);cur=toLocal(d);}
     else if(dias[i]<cur) break;
   }
   return streak;
@@ -305,7 +312,7 @@ function fmt(raw) {
   const closeL=()=>{ if(inUl){out.push('</ul>');inUl=false;} if(inOl){out.push('</ol>');inOl=false;} };
   const flushTable=()=>{
     if(!tableRows.length)return;
-    const header=tableRows[0]; const dataRows=tableRows.slice(2);
+    const header=tableRows[0]; const dataRows=tableRows.filter(r=>r!==null).slice(1);
     let html='<table><thead><tr>';
     header.forEach(c=>{html+=`<th>${inline(esc(c.trim()))}</th>`;});
     html+='</tr></thead><tbody>';
@@ -354,7 +361,7 @@ function ejeIcon(e){
 }
 function ejeColor(e){
   if(!e)return'#5c5650';
-  for(const[p,cfg]of Object.entries(EJES_CONFIG)){if(e===p||cfg.sub[e])return cfg.color;}
+  for(const[p,cfg]of Object.entries(EJES_CONFIG)){if(e===p||(cfg.sub && cfg.sub[e] !== undefined))return cfg.color;}
   return'#5c5650';
 }
 function ejeClass(e){return'eje-'+(e||'').replace(/[^a-zA-Z0-9]/g,'_');}
@@ -398,7 +405,7 @@ async function init() {
     restoreFromURL();
   } catch(e) {
     clearInterval(msgTimer);
-    document.getElementById('loader-msg').textContent = 'Error al cargar: '+e.message;
+    document.getElementById('loader-msg').textContent = 'Error al cargar: '+(e.message||'desconocido');
   }
 }
 
@@ -451,7 +458,7 @@ function renderUltimosLibros(){
     // We let CSS style the span as a beautiful dark placeholder if no image exists
     const subE = getEjePrincipal(l) || '';
     const coverEl=l.portada_url
-      ?`<img src="${l.portada_url}" alt="${l.titulo}" onload="if(this.naturalWidth<=1) handleUltimosError(this, '${(subE||'').replace(/'/g, "\\'")}')" onerror="handleUltimosError(this, '${(subE||'').replace(/'/g, "\\'")}')">`
+      ?`<img src="${l.portada_url}" alt="${esc(l.titulo)}" data-eje="${esc(subE)}" onload="if(this.naturalWidth<=1) handleUltimosError(this, this.dataset.eje)" onerror="handleUltimosError(this, this.dataset.eje)">`
       :`<span>${ejeIcon(subE)}</span>`;
       
     // Netflix-style horizontal poster
@@ -462,7 +469,7 @@ function renderUltimosLibros(){
           <div class="rec-prog-fill" style="width:${pct}%; background:${isDone ? 'var(--success)' : 'var(--accent)'}; box-shadow: 0 0 8px ${isDone ? 'var(--success)' : 'var(--accent)'}"></div>
         </div>
       </div>
-      <div class="rec-title">${l.titulo}</div>
+      <div class="rec-title">${esc(l.titulo)}</div>
     </div>`;
   }).join('');
 }
@@ -482,8 +489,8 @@ function renderContinua(){
     <div class="continua-ico"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
     <div class="continua-info">
       <div class="continua-label">Continúa donde lo dejaste</div>
-      <div class="continua-titulo">${lec.titulo}</div>
-      <div class="continua-libro">${libro.titulo} — ${libro.autor}</div>
+      <div class="continua-titulo">${esc(lec.titulo)}</div>
+      <div class="continua-libro">${esc(libro.titulo)} — ${esc(libro.autor)}</div>
     </div>
     <div class="continua-arrow" style="color:var(--accent); display:flex; align-items:center;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></div>`;
   banner.onclick = () => { libroActual = libro; verLeccion(ultima.lecId); };
@@ -547,10 +554,11 @@ function buscarEnLecciones(q){
     const libro=libroMap[l.libro_id];
     const textoBase=l.cuerpo||l.aplicacion_practica||'';
     const idx=textoBase.toLowerCase().indexOf(ql);
-    const snippet=idx>=0?'...'+textoBase.slice(Math.max(0,idx-40),idx+80).replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi'),'<mark class="hl">$1</mark>')+'...':'';
+    const raw=idx>=0?textoBase.slice(Math.max(0,idx-40),idx+80):'';
+    const snippet=raw?'...'+esc(raw).replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi'),'<mark class="hl">$1</mark>')+'...':'';
     return `<div class="search-lec-item" onclick="verLeccion('${l.libro_id}','${l.id}')">
       <div class="search-lec-title">${hl(l.titulo,q)}</div>
-      <div class="search-lec-book">${libro?libro.titulo:''} ${libro?'· '+libro.autor:''}</div>
+      <div class="search-lec-book">${libro?esc(libro.titulo):''} ${libro?'· '+esc(libro.autor):''}</div>
       ${snippet?`<div class="search-lec-snippet">${snippet}</div>`:''}
     </div>`;
   }).join('');
@@ -558,7 +566,8 @@ function buscarEnLecciones(q){
 }
 function hl(text,q){
   if(!q||!text)return text||'';
-  return text.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi'),'<mark class="hl">$1</mark>');
+  const safe=text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return safe.replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi'),'<mark class="hl">$1</mark>');
 }
 
 /* ═══════════════════════════════════════════
@@ -609,7 +618,7 @@ function renderLibros(){
     const aHL=hl(libro.autor,searchQ);
     const subE=getSubEje(libro);
     const coverHTML=libro.portada_url
-      ?`<div class="libro-cover-wrap"><img class="libro-cover" src="${libro.portada_url}" alt="${libro.titulo}" loading="lazy" onload="if(this.naturalWidth<=1) handleCoverError(this, '${(subE||\'\').replace(/\'/g, \"\\\\'\")}')" onerror="handleCoverError(this, '${(subE||'').replace(/'/g, "\\'")}')"></div>`
+      ?`<div class="libro-cover-wrap"><img class="libro-cover" src="${libro.portada_url}" alt="${esc(libro.titulo)}" loading="lazy" data-eje="${esc(subE)}" onload="if(this.naturalWidth<=1) handleCoverError(this, this.dataset.eje)" onerror="handleCoverError(this, this.dataset.eje)"></div>`
       :`<div class="libro-cover-wrap" id="cover-${libro.id}">${makePlaceholder(ejeIcon(subE),subE||'')}</div>`;
     const isDone=pct===100&&lecsL.length>0;
     return `<div class="libro-card${isDone?' completado':''}" onclick="verLibro('${libro.id}')">
@@ -624,7 +633,7 @@ function renderLibros(){
             <div class="libro-prog-text">${done}/${lecsL.length} lec · ${pct}%</div>
           </div>
           <div class="libro-actions">
-            <span class="eje-tag" style="color:${ejeColor(subE)};border-color:${ejeColor(subE)}30;background:${ejeColor(subE)}0a">${subE||'—'}</span>
+            <span class="eje-tag" style="color:${ejeColor(subE)};border-color:${ejeColor(subE)}30;background:${ejeColor(subE)}0a">${esc(subE||'—')}</span>
             <button class="fav-btn ${fav?'on':''}" onclick="event.stopPropagation();toggleFavLib('${libro.id}',this)">${fav?'★':'☆'}</button>
           </div>
         </div>
@@ -637,7 +646,7 @@ function renderLibros(){
       if(!url)return;
       const subE=getSubEje(libro);
       const wrap=document.getElementById(`cover-${libro.id}`);
-      if(wrap)wrap.innerHTML=`<img class="libro-cover" src="${url}" alt="${libro.titulo}" loading="lazy" onload="if(this.naturalWidth<=1) handleCoverError(this, '${(subE||\'\').replace(/\'/g, \"\\\\'\")}')" onerror="handleCoverError(this, '${(subE||'').replace(/'/g, "\\'")}')">`;
+      if(wrap)wrap.innerHTML=`<img class="libro-cover" src="${url}" alt="${esc(libro.titulo)}" loading="lazy" data-eje="${esc(subE)}" onload="if(this.naturalWidth<=1) handleCoverError(this, this.dataset.eje)" onerror="handleCoverError(this, this.dataset.eje)">`;
       libro.portada_url=url;
     });
   });
@@ -797,16 +806,16 @@ function renderLibroHero(){
     <div class="libro-hero">
       ${coverHTML}
       <div class="libro-hero-info">
-        <div class="libro-hero-title">${l.titulo}</div>
-        <div class="libro-hero-autor">${l.autor}</div>
-        ${l.descripcion_breve?`<div class="libro-hero-desc">${l.descripcion_breve}</div>`:''}
+        <div class="libro-hero-title">${esc(l.titulo)}</div>
+        <div class="libro-hero-autor">${esc(l.autor)}</div>
+        ${l.descripcion_breve?`<div class="libro-hero-desc">${esc(l.descripcion_breve)}</div>`:''}
         <div class="libro-hero-stats">
           <span class="libro-hero-stat"><span>${lecsL.length}</span> lecciones</span>
           <span class="libro-hero-stat"><span>${done}</span> completadas</span>
           <span class="libro-hero-stat"><span>${pct}%</span> progreso</span>
         </div>
         <div style="margin-top:0.8rem;display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap">
-          <span class="eje-tag ${ejeClass(l.eje)}">${ejeIcon(l.eje)} ${l.eje||'—'}</span>
+          <span class="eje-tag ${ejeClass(l.eje)}">${ejeIcon(l.eje)} ${esc(l.eje||'—')}</span>
           <button class="act-btn secondary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="testDelLibro('${l.id}')"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg> Test</button>
           <button class="act-btn secondary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="abrirPdfModal()">⬇ PDF</button>
           <button class="act-btn secondary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="compartirLibro()">🔗 Compartir</button>
@@ -891,13 +900,13 @@ function verLeccion(id, from=null){
     html+=`<div class="lec-img-wrap">
       <img src="${lecActual.imagen_principal}" alt="${lecActual.titulo}" loading="lazy" referrerpolicy="no-referrer"
         onerror="this.style.display='none'">
-      ${lecActual.imagen_caption?`<div class="lec-img-cap">${lecActual.imagen_caption}</div>`:''}
+      ${lecActual.imagen_caption?`<div class="lec-img-cap">${esc(lecActual.imagen_caption)}</div>`:''}
     </div>`;
   }
 
-  html+=`<h2 class="lec-titulo">${lecActual.titulo}</h2>`;
+  html+=`<h2 class="lec-titulo">${esc(lecActual.titulo)}</h2>`;
   html+=`<div class="lec-meta-header">
-    ${libro?`<span class="lec-meta-libro">${libro.titulo} — ${libro.autor}</span>`:''}
+    ${libro?`<span class="lec-meta-libro">${esc(libro.titulo)} — ${esc(libro.autor)}</span>`:''}
     ${lecActual.orden?`<span style="font-size:0.6rem;color:var(--text3);font-family:var(--font-mono)">Lección ${lecActual.orden}</span>`:''}
     ${done?`<span style="font-size:0.7rem;color:var(--success);font-family:var(--font-mono)">✓ Completada</span>`:''}
   </div>`;
@@ -908,7 +917,7 @@ function verLeccion(id, from=null){
     html+=`<div class="det-grid">`+
       lecActual.detalles.map(d=>`
         <div class="det-card">
-          <div class="det-card-title">${d.subtitulo||d.titulo||''}</div>
+          <div class="det-card-title">${esc(d.subtitulo||d.titulo||'')}</div>
           <div class="fmt">${fmt(d.cuerpo||d.contenido||'')}</div>
         </div>`).join('')+`</div>`;
   }
@@ -945,7 +954,7 @@ function verLeccion(id, from=null){
       lecActual.autores_relacionados.map(a=>`<span class="autor-tag" onclick="verAutor('${encodeURIComponent(a)}')">${a}</span>`).join('')+`</div>`;
   }
 
-  const notaGuardada=getNotas(id);
+  const notaGuardada=(getNotas(id)||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   html+=`<div class="notas-section">
     <div class="notas-label">📝 Mis notas</div>
     <textarea class="notas-area" id="nota-${id}" placeholder="Escribe tus reflexiones sobre esta lección...">${notaGuardada}</textarea>
@@ -1181,16 +1190,16 @@ async function verQuotes(){
         const key=`cita-${lec.id}`;
         const on=favQ.includes(key);
         return `<div class="quote-card">
-          <div class="quote-text">${lec.cita_memorable}</div>
+          <div class="quote-text">${esc(lec.cita_memorable)}</div>
           <div class="quote-attr">
-            ${lec.titulo?`<span class="quote-attr-lec">${lec.titulo}</span>`:''}
-            ${libro?`<span class="quote-attr-autor">${libro.autor} — ${libro.titulo}</span>`:''}
+            ${lec.titulo?`<span class="quote-attr-lec">${esc(lec.titulo)}</span>`:''}
+            ${libro?`<span class="quote-attr-autor">${esc(libro.autor)} — ${esc(libro.titulo)}</span>`:''}
           </div>
           <button class="quote-fav-btn ${on?'on':''}" onclick="toggleFavQuote('${key}',this)">${on?'★':'☆'}</button>
         </div>`;
       }).join('');
   }catch(e){
-    cont.innerHTML=`<div class="quotes-empty"><span class="quotes-empty-ico">⚠️</span><p>Error: ${e.message}</p></div>`;
+    cont.innerHTML=`<div class="quotes-empty"><span class="quotes-empty-ico">⚠️</span><p>Error: ${esc(e.message)}</p></div>`;
   }
 }
 
@@ -1210,10 +1219,10 @@ function renderFavoritos(){
         const done=lecsL.filter(x=>comp.has(x.id)).length;
         const pct=lecsL.length?Math.round(done/lecsL.length*100):0;
         return `<div class="lec-item" onclick="verLibro('${id}')">
-          <div class="lec-left"><div class="lec-title">${l.titulo}</div>
-          <div class="lec-meta"><span class="lec-num">${l.autor}</span></div></div>
+          <div class="lec-left"><div class="lec-title">${esc(l.titulo)}</div>
+          <div class="lec-meta"><span class="lec-num">${esc(l.autor)}</span></div></div>
           <div class="lec-right">
-            <span class="eje-tag ${ejeClass(l.eje)}">${l.eje||'—'}</span>
+            <span class="eje-tag ${ejeClass(l.eje)}">${esc(l.eje||'—')}</span>
             <span style="font-size:0.63rem;color:var(--text3);font-family:var(--font-mono)">${pct}%</span>
             <button class="fav-btn on" onclick="event.stopPropagation();toggleFavLib('${id}',this);renderFavoritos()">★</button>
           </div>
@@ -1229,8 +1238,8 @@ function renderFavoritos(){
         const libro=libros.find(x=>x.id===l.libro_id);
         const done=comp.has(l.id);
         return `<div class="lec-item ${done?'done':''}" onclick="verLeccion('${id}','favoritos')">
-          <div class="lec-left"><div class="lec-title">${l.titulo}</div>
-          <div class="lec-meta"><span class="lec-num">${libro?.titulo||'—'}</span></div></div>
+          <div class="lec-left"><div class="lec-title">${esc(l.titulo)}</div>
+          <div class="lec-meta"><span class="lec-num">${esc(libro?.titulo||'—')}</span></div></div>
           <div class="lec-right">
             <button class="fav-btn on" onclick="event.stopPropagation();toggleFavLec('${id}',this);renderFavoritos()">★</button>
             <span class="lec-status ${done?'ok':'no'}">${done?'✓':'○'}</span>
@@ -1343,13 +1352,13 @@ function renderPregunta(){
   const libro=libros.find(l=>l.id===p.libro_id);
   document.getElementById('preg-cont').innerHTML=`
     <div class="preg-card">
-      <div class="preg-libro">${libro?`${libro.titulo} — ${libro.autor}`:p.eje||''}</div>
+      <div class="preg-libro">${libro?`${esc(libro.titulo)} — ${esc(libro.autor)}`:esc(p.eje||'')}</div>
       ${difLabel(p.dificultad)}
-      <div class="preg-txt">${p.texto}</div>
+      <div class="preg-txt">${esc(p.texto)}</div>
       <div class="opts-grid">
         ${(p.opciones||[]).map((op,i)=>`
           <button class="opt-btn" onclick="responder(${i})" data-idx="${i}">
-            <span class="opt-letter">${LETRAS[i]||i}</span><span>${op}</span>
+            <span class="opt-letter">${LETRAS[i]||i}</span><span>${esc(op)}</span>
           </button>`).join('')}
       </div>
       <div id="feedback-p"></div>
@@ -1358,6 +1367,8 @@ function renderPregunta(){
 
 async function responder(idx){
   const p=testPregs[testIdx];
+  if(idx<0||idx>=(p.opciones||[]).length)return;
+  if(testResp.some(r=>r.p.id===p.id))return;
   const ok=idx===p.correcta;
   if(ok)testCorr++;else testErr++;
   document.getElementById('test-live-score').textContent=`✓ ${testCorr} · ✗ ${testErr}`;
@@ -1369,7 +1380,7 @@ async function responder(idx){
   document.getElementById('feedback-p').innerHTML=`
     <div class="feedback ${ok?'ok':'err'}">
       <div class="feedback-head">${ok?'✓ Correcto':'✗ Incorrecto'}</div>
-      <div>${p.explicacion||''}</div>
+      <div>${esc(p.explicacion||'')}</div>
     </div>`;
   testResp.push({p,resp:idx,ok});
   document.getElementById('btn-sig').style.display='block';
@@ -1401,7 +1412,7 @@ async function finalizarTest(){
         <div class="res-bar-card"><div class="res-bar-num" style="color:var(--danger)">${total-ok}</div><div class="res-bar-label">Incorrectas</div></div>
         <div class="res-bar-card"><div class="res-bar-num">${total}</div><div class="res-bar-label">Total</div></div>
       </div>
-      ${fallos.length?`<div class="fallos-list"><p class="sec-label">Para repasar (${fallos.length}):</p>${fallos.map(r=>`<div class="fallo-item">${r.p.texto}</div>`).join('')}</div>`:'<p style="color:var(--success);margin-top:1rem">🏆 ¡Test perfecto!</p>'}
+      ${fallos.length?`<div class="fallos-list"><p class="sec-label">Para repasar (${fallos.length}):</p>${fallos.map(r=>`<div class="fallo-item">${esc(r.p.texto)}</div>`).join('')}</div>`:'<p style="color:var(--success);margin-top:1rem">🏆 ¡Test perfecto!</p>'}
       <div style="display:flex;gap:0.7rem;justify-content:center;margin-top:2rem">
         <button class="act-btn primary" onclick="iniciarTest()">Nuevo test</button>
         <button class="act-btn secondary" onclick="showView('home')">Inicio</button>
@@ -1439,11 +1450,11 @@ function renderRepaso(){
   const done=comp.has(l.id);
   const libro=libros.find(x=>x.id===l.libro_id);
   let html='';
-  if(libro)html+=`<div style="font-size:0.7rem;color:var(--text3);font-family:var(--font-mono);margin-bottom:0.6rem">${libro.autor} — ${libro.titulo}</div>`;
+  if(libro)html+=`<div style="font-size:0.7rem;color:var(--text3);font-family:var(--font-mono);margin-bottom:0.6rem">${esc(libro.autor)} — ${esc(libro.titulo)}</div>`;
   if(l.imagen_principal)html+=`<div class="lec-img-wrap"><img src="${l.imagen_principal}" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>`;
-  html+=`<h2 class="lec-titulo">${l.titulo}</h2>`;
+  html+=`<h2 class="lec-titulo">${esc(l.titulo)}</h2>`;
   html+=`<div class="lec-body fmt">${fmt(l.cuerpo)}</div>`;
-  if(l.detalles?.length)html+=`<div class="det-grid">`+l.detalles.map(d=>`<div class="det-card"><div class="det-card-title">${d.subtitulo||d.titulo||''}</div><div class="fmt">${fmt(d.cuerpo||d.contenido||'')}</div></div>`).join('')+`</div>`;
+  if(l.detalles?.length)html+=`<div class="det-grid">`+l.detalles.map(d=>`<div class="det-card"><div class="det-card-title">${esc(d.subtitulo||d.titulo||'')}</div><div class="fmt">${fmt(d.cuerpo||d.contenido||'')}</div></div>`).join('')+`</div>`;
   html+=`<div style="margin-top:1rem">
     ${!done?`<button class="act-btn primary" onclick="marcarCompletadaRepaso('${l.id}')">✓ Marcar completada</button>`:`<button class="act-btn done-mark" disabled>✓ Completada</button>`}
     <button class="act-btn secondary" style="margin-left:0.5rem" onclick="verLeccion('${l.id}','repaso')">Ver completa →</button>
@@ -1485,8 +1496,8 @@ function verAutor(enc){
         const libro=libros.find(x=>x.id===l.libro_id);
         const done=comp.has(l.id);
         return `<div class="lec-item ${done?'done':''}" onclick="verLeccion('${l.id}','autor')">
-          <div class="lec-left"><div class="lec-title">${l.titulo}</div>
-          <div class="lec-meta"><span class="lec-num">${libro?.titulo||'—'}</span></div></div>
+          <div class="lec-left"><div class="lec-title">${esc(l.titulo)}</div>
+          <div class="lec-meta"><span class="lec-num">${esc(libro?.titulo||'—')}</span></div></div>
           <span class="lec-status ${done?'ok':'no'}">${done?'✓':'○'}</span>
         </div>`;
       }).join('')
@@ -1556,13 +1567,13 @@ async function ejecutarCorpusSearch(termino) {
     }
     estado.textContent = `${data.length} resultado${data.length !== 1 ? 's' : ''} para "${termino}"`;
     cont.innerHTML = data.map(item => {
-      const fragmento = (item.fragmento||'').replace(/\*\*([^*]+)\*\*/g, '<mark class="hl">$1</mark>');
+      const fragmento = esc(item.fragmento||'').replace(/\*\*([^*]+)\*\*/g, '<mark class="hl">$1</mark>');
       return `
         <div class="corpus-result-item" onclick="irALeccionDesdeCorpus('${item.leccion_id}')">
           <div class="corpus-result-header">
-            <span class="corpus-result-titulo">${item.leccion_titulo}</span>
+            <span class="corpus-result-titulo">${esc(item.leccion_titulo)}</span>
           </div>
-          <div class="corpus-result-libro">${item.libro_titulo} — <em>${item.libro_autor}</em></div>
+          <div class="corpus-result-libro">${esc(item.libro_titulo)} — <em>${esc(item.libro_autor)}</em></div>
           <div class="corpus-result-fragmento">${fragmento}</div>
         </div>
       `;
@@ -1608,12 +1619,12 @@ async function renderEnsayos() {
     grid.innerHTML = ensayosCache.map(a => `
       <div class="ensayo-card" onclick="verEnsayo('${a.id}')">
         <div class="ensayo-card-header">
-          <h2 class="ensayo-card-titulo">${a.titulo}</h2>
-          <p class="ensayo-card-pregunta">${a.pregunta_generadora}</p>
+          <h2 class="ensayo-card-titulo">${esc(a.titulo)}</h2>
+          <p class="ensayo-card-pregunta">${esc(a.pregunta_generadora)}</p>
         </div>
         <div class="ensayo-card-footer">
           <div class="ensayo-autores">
-            ${(a.autores_convocados||[]).map(au=>`<span class="ensayo-autor-badge">${au}</span>`).join('')}
+            ${(a.autores_convocados||[]).map(au=>`<span class="ensayo-autor-badge">${esc(au)}</span>`).join('')}
           </div>
           <span class="ensayo-meta">${(a.autores_convocados||[]).length} autores</span>
         </div>
@@ -1635,10 +1646,10 @@ function verEnsayo(id) {
     <div class="ensayo-detail">
       <div class="ensayo-pregunta-hero">
         <span class="ensayo-pregunta-label">Pregunta generadora</span>
-        <h1 class="ensayo-detail-titulo">${a.titulo}</h1>
-        <p class="ensayo-detail-pregunta">${a.pregunta_generadora}</p>
+        <h1 class="ensayo-detail-titulo">${esc(a.titulo)}</h1>
+        <p class="ensayo-detail-pregunta">${esc(a.pregunta_generadora)}</p>
         <div class="ensayo-autores" style="margin-top:1rem">
-          ${(a.autores_convocados||[]).map(au=>`<span class="ensayo-autor-badge clickable" onclick="filtrarPorAutorDesdeEnsayo('${au}')" title="Ver libros de ${au}">${au}</span>`).join('')}
+          ${(a.autores_convocados||[]).map(au=>`<span class="ensayo-autor-badge clickable" data-autor="${esc(au)}" onclick="filtrarPorAutorDesdeEnsayo(this.dataset.autor)" title="Ver libros de ${esc(au)}">${esc(au)}</span>`).join('')}
         </div>
       </div>
       <div class="ensayo-section expanded">
@@ -1796,7 +1807,7 @@ async function renderSRSActivacion() {
         <label style="font-size:0.65rem;color:var(--text3);font-family:var(--font-mono);display:flex;align-items:center;gap:0.3rem">
           <input type="checkbox" id="srs-ref-${l.id}" checked style="accent-color:var(--accent)"> Reflexión
         </label>
-        <button class="act-btn primary" style="font-size:0.7rem;padding:0.35rem 0.8rem" onclick="activarLibroSRS('${l.id}','${l.titulo.replace(/'/g,"\'")}',this)">Activar</button>
+        <button class="act-btn primary" style="font-size:0.7rem;padding:0.35rem 0.8rem" data-libro-id="${l.id}" data-libro-titulo="${(l.titulo||'').replace(/"/g,'&quot;').replace(/</g,'&lt;')}" onclick="activarLibroSRS(this.dataset.libroId,this.dataset.libroTitulo,this)">Activar</button>
       </div>
     </div>
   `).join('');
@@ -1828,7 +1839,7 @@ async function iniciarSesionSRS() {
     srsIdx = 0;
     srsResumen = { correcto:0, fallo:0, pendiente:0, en_proceso:0, integrado:0 };
     renderSRSItem();
-  } catch(e) { root.innerHTML = `<div class="empty">Error: ${e.message}</div>`; }
+  } catch(e) { root.innerHTML = `<div class="empty">Error: ${esc(e.message)}</div>`; }
 }
 
 function renderSRSItem() {
@@ -1884,7 +1895,7 @@ async function srsResponderQuiz(idx, correcta, repasoId) {
   const fb = document.getElementById('srs-feedback');
   fb.style.display = 'block';
   fb.className = `feedback ${ok?'ok':'err'}`;
-  fb.innerHTML = `<div class="feedback-head">${ok?'✓ Correcto':'✗ Incorrecto'}</div>${item.explicacion||''}`;
+  fb.innerHTML = `<div class="feedback-head">${ok?'✓ Correcto':'✗ Incorrecto'}</div>${esc(item.explicacion||'')}`;
   document.getElementById('srs-sig-btn').style.display = 'block';
   try { await srsRPC('registrar_repaso', { p_repaso_id: repasoId, p_evaluacion: ok?'correcto':'fallo' }); } catch(e){}
 }
@@ -2071,7 +2082,7 @@ function onSpotlightSearch(v) {
   // Buscar en libros y lecciones simultáneamente
   const relLibros = libros.filter(l => l.titulo.toLowerCase().includes(q) || l.autor.toLowerCase().includes(q)).slice(0,3);
   const relLecs = lecs.filter(l => l.titulo?.toLowerCase().includes(q) || l.cuerpo?.toLowerCase().includes(q)).slice(0, 6);
-  
+
   let html = '';
   if(!relLibros.length && !relLecs.length) {
     state.style.display = 'block';
@@ -2079,18 +2090,17 @@ function onSpotlightSearch(v) {
     resCont.innerHTML = '';
     return;
   }
-  
+
   if (relLibros.length > 0) {
     html += `<div style="padding:0.5rem 1.5rem; font-size:0.65rem; color:var(--accent); text-transform:uppercase; letter-spacing:0.1em; opacity:0.8">Libros Relevantes</div>`;
     html += relLibros.map(l => {
-      const isDone = false; // logic placeholder
       return `<div class="sp-result-item" onclick="toggleSpotlight(); verLibro('${l.id}')">
         <div class="sp-result-title">${hl(l.titulo, q)}</div>
-        <div class="sp-result-meta">${hl(l.autor, q)} · ${l.eje || 'Sin eje'}</div>
+        <div class="sp-result-meta">${hl(l.autor, q)} · ${esc(l.eje || 'Sin eje')}</div>
       </div>`;
     }).join('');
   }
-  
+
   if (relLecs.length > 0) {
     html += `<div style="padding:0.5rem 1.5rem; font-size:0.65rem; color:var(--accent); text-transform:uppercase; letter-spacing:0.1em; opacity:0.8; margin-top:0.5rem;">Lecciones y Conceptos</div>`;
     const libroMap = {}; libros.forEach(lx=>libroMap[lx.id]=lx);
@@ -2098,11 +2108,12 @@ function onSpotlightSearch(v) {
       const libro = libroMap[l.libro_id];
       const textoBase = l.cuerpo || '';
       const idx = textoBase.toLowerCase().indexOf(q);
-      const snippet = idx >= 0 ? '...' + textoBase.slice(Math.max(0, idx - 100), idx + 250).replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi'), '<mark class="hl">$1</mark>') + '...' : '';
-      
+      const raw = idx >= 0 ? textoBase.slice(Math.max(0, idx - 100), idx + 250) : '';
+      const snippet = raw ? '...' + esc(raw).replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi'), '<mark class="hl">$1</mark>') + '...' : '';
+
       return `<div class="sp-result-item" onclick="toggleSpotlight(); verLeccion('${l.id}')">
         <div class="sp-result-title">${hl(l.titulo, q)}</div>
-        <div class="sp-result-meta">${libro ? libro.titulo : ''} ${libro ? '· '+libro.autor : ''}</div>
+        <div class="sp-result-meta">${libro ? esc(libro.titulo) : ''} ${libro ? '· '+esc(libro.autor) : ''}</div>
         ${snippet ? `<div class="sp-result-snippet">${snippet}</div>` : ''}
       </div>`;
     }).join('');

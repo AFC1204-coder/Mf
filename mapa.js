@@ -416,9 +416,10 @@ function selectNode(node) {
     const other = NODOS.find(n => n.id === otherId);
     if (!other) return '';
     const otherColor = EJES[other.eje] || '#888';
+    const escM=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     return `<div class="conexion-item" onclick="jumpToNode('${otherId}')">
-      <div class="conexion-autor" style="color:${otherColor}">${other.autor}</div>
-      <div class="conexion-desc">${c.desc}</div>
+      <div class="conexion-autor" style="color:${otherColor}">${escM(other.autor)}</div>
+      <div class="conexion-desc">${escM(c.desc)}</div>
     </div>`;
   }).join('');
 

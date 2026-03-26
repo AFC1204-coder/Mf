@@ -610,7 +610,8 @@ scheduleReminder();
 setTimeout(checkStreakAndRepasos, 2500);
 
 // Poll every 45s when visible, pause when hidden
-let notifPollInterval = setInterval(() => {
+if (window._notifPollInterval) clearInterval(window._notifPollInterval);
+window._notifPollInterval = setInterval(() => {
   if (!document.hidden) checkForNewNotifications();
 }, 45000);
 
