@@ -939,8 +939,8 @@ function verLeccion(id, from=null){
 
   if(lecActual.imagen_principal){
     html+=`<div class="lec-img-wrap">
-      <img src="${lecActual.imagen_principal}" alt="${lecActual.titulo}" loading="lazy" referrerpolicy="no-referrer"
-        onerror="this.style.display='none'">
+      <img src="${lecActual.imagen_principal}" alt="${esc(lecActual.titulo)}" loading="lazy" referrerpolicy="no-referrer"
+        onerror="this.parentElement.style.display='none'">
       ${lecActual.imagen_caption?`<div class="lec-img-cap">${esc(lecActual.imagen_caption)}</div>`:''}
     </div>`;
   }
@@ -1312,11 +1312,14 @@ function abrirTest(libroId=null){
     const libro=libros.find(l=>l.id===libroId);
     sub.textContent=libro?`${libro.titulo} — ${libro.autor}`:'Libro seleccionado';
     // Si es test de libro, ocultar filtro de eje
-    cont.parentElement.style.display='none';
-    document.querySelector('[data-eje=""]').closest('.tconfig-pills').parentElement.style.display='none';
+    if(cont?.parentElement) cont.parentElement.style.display='none';
+    const ejePill=document.querySelector('[data-eje=""]');
+    const pillsParent=ejePill?.closest('.tconfig-pills')?.parentElement;
+    if(pillsParent) pillsParent.style.display='none';
   } else {
     sub.textContent='Todas las preguntas disponibles';
-    cont.closest('.tconfig-box').querySelector('.tconfig-pills').parentElement.style.display='';
+    const pillsParent=cont?.closest('.tconfig-box')?.querySelector('.tconfig-pills')?.parentElement;
+    if(pillsParent) pillsParent.style.display='';
   }
   tcUpdateInfo();
   document.getElementById('tconfig-overlay').classList.remove('hidden');
@@ -2033,7 +2036,7 @@ function restoreFromURL(){
 
   // Formato simple: #quotes, #favoritos, #esquemas
   const viewName=hash.split('/')[0];
-  const validViews=['home','favoritos','quotes','esquemas','repaso','test'];
+  const validViews=['home','favoritos','quotes','esquemas','repaso','test','ensayos','repaso-srs','busqueda'];
   if(validViews.includes(viewName)) showView(viewName,true);
 }
 
