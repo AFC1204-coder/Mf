@@ -609,6 +609,40 @@ mark.hl { background:var(--hl); color:#000; border-radius:2px; padding:0 1px; }
 .auto-box { background:var(--surface); border:1px solid var(--border); border-left:3px solid rgba(93,173,226,0.33); padding:var(--sp-5) var(--sp-6); border-radius:var(--radius); margin-bottom:var(--sp-5); }
 .auto-label { font-size:var(--text-2xs); text-transform:uppercase; color:rgba(93,173,226,0.53); margin-bottom:var(--sp-3); letter-spacing:0.12em; font-family:var(--font-ui); display:flex; align-items:center; gap:var(--sp-2); }
 .lec-body { margin-bottom:var(--sp-9); }
+
+/* ── Audio TTS Player ── */
+.tts-player {
+  display:flex; align-items:center; gap:var(--sp-3);
+  background:linear-gradient(135deg, #0d1117, #111820);
+  border:1px solid #58a6ff30;
+  border-radius:var(--radius-pill);
+  padding:var(--sp-2) var(--sp-4);
+  margin-bottom:var(--sp-7);
+  font-family:var(--font-ui);
+  box-shadow:0 0 12px #58a6ff10;
+  transition:var(--trans);
+}
+.tts-player:hover { border-color:#58a6ff55; box-shadow:0 0 18px #58a6ff18; }
+.tts-btn {
+  background:none; border:none; cursor:pointer;
+  color:#58a6ff; display:flex; align-items:center; justify-content:center;
+  width:36px; height:36px; min-height:36px; border-radius:var(--radius-full);
+  transition:var(--trans); flex-shrink:0;
+}
+.tts-btn:hover { background:#58a6ff18; }
+.tts-btn:active { transform:scale(0.92); }
+.tts-btn.tts-play { background:#58a6ff20; width:40px; height:40px; min-height:40px; }
+.tts-btn.tts-play:hover { background:#58a6ff35; }
+.tts-btn svg { width:18px; height:18px; fill:currentColor; }
+.tts-btn.tts-play svg { width:20px; height:20px; }
+.tts-label {
+  font-size:var(--text-xs); color:#58a6ff; letter-spacing:0.06em;
+  text-transform:uppercase; flex:1; user-select:none;
+}
+.tts-status {
+  font-size:var(--text-2xs); color:#58a6ff88;
+  font-family:var(--font-mono); letter-spacing:0.04em; flex-shrink:0;
+}
 .autores-rel { display:flex; gap:var(--sp-3); flex-wrap:wrap; margin-bottom:var(--sp-7); }
 .autor-tag { background:var(--surface2); border:1px solid var(--border); color:var(--text2); padding:0.28rem 0.7rem; border-radius:var(--radius-sm); font-size:var(--text-sm); cursor:pointer; transition:var(--trans); font-family:var(--font-ui); }
 .autor-tag:hover { border-color:var(--accent); color:var(--accent); }
