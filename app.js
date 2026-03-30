@@ -954,6 +954,17 @@ function verLeccion(id, from=null){
 
   html+=`<div class="lec-body fmt">${fmt(lecActual.cuerpo)}</div>`;
 
+  html+=`<div class="tts-player" id="tts-player">
+    <button class="tts-btn tts-play" id="tts-play-btn" onclick="ttsTogglePlay()" title="Reproducir">
+      <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
+    </button>
+    <span class="tts-label">Escuchar lección</span>
+    <span class="tts-status" id="tts-status"></span>
+    <button class="tts-btn" id="tts-stop-btn" onclick="ttsStop()" title="Detener" style="display:none">
+      <svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>
+    </button>
+  </div>`;
+
   if(lecActual.detalles?.length){
     html+=`<div class="det-grid">`+
       lecActual.detalles.map(d=>`
@@ -1030,6 +1041,94 @@ function verLeccion(id, from=null){
 function guardarNota(id){const ta=document.getElementById(`nota-${id}`);if(ta){saveNota(id,ta.value).then(()=>toast('📝 Nota guardada'));}}
 function toggleFavLecDetalle(id,btn){toggleFavLec(id,btn);btn.textContent=favLecs().includes(id)?'★ Favorita':'☆ Favoritos';}
 function volverDeLeccion(){if(libroActual)showView('lecciones');else showView('home');}
+
+/* ═══════════════════════════════════════════
+   TTS — Web Speech API
+═══════════════════════════════════════════ */
+let ttsUtterance=null;
+let ttsPaused=false;
+
+function ttsGetText(){
+  if(!lecActual||!lecActual.cuerpo) return '';
+  return lecActual.cuerpo
+    .replace(/[#*_`~>|[\](){}]/g,'')
+    .replace(/\n{2,}/g,'. ')
+    .replace(/\n/g,' ')
+    .replace(/\s{2,}/g,' ')
+    .trim();
+}
+
+function ttsUpdateUI(state){
+  const playBtn=document.getElementById('tts-play-btn');
+  const stopBtn=document.getElementById('tts-stop-btn');
+  const status=document.getElementById('tts-status');
+  if(!playBtn) return;
+
+  if(state==='playing'){
+    playBtn.innerHTML='<svg viewBox="0 0 24 24"><rect x="5" y="4" width="4" height="16" rx="1"/><rect x="15" y="4" width="4" height="16" rx="1"/></svg>';
+    playBtn.title='Pausar';
+    stopBtn.style.display='flex';
+    status.textContent='Reproduciendo…';
+  } else if(state==='paused'){
+    playBtn.innerHTML='<svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>';
+    playBtn.title='Reanudar';
+    stopBtn.style.display='flex';
+    status.textContent='En pausa';
+  } else {
+    playBtn.innerHTML='<svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>';
+    playBtn.title='Reproducir';
+    stopBtn.style.display='none';
+    status.textContent='';
+    ttsPaused=false;
+  }
+}
+
+function ttsTogglePlay(){
+  const synth=window.speechSynthesis;
+  if(!synth){toast('Tu navegador no soporta síntesis de voz');return;}
+
+  if(synth.speaking && !ttsPaused){
+    synth.pause();
+    ttsPaused=true;
+    ttsUpdateUI('paused');
+    return;
+  }
+  if(ttsPaused){
+    synth.resume();
+    ttsPaused=false;
+    ttsUpdateUI('playing');
+    return;
+  }
+
+  const text=ttsGetText();
+  if(!text){toast('No hay contenido para leer');return;}
+
+  synth.cancel();
+  ttsUtterance=new SpeechSynthesisUtterance(text);
+  ttsUtterance.lang='es-ES';
+  ttsUtterance.rate=1;
+  ttsUtterance.pitch=1;
+
+  const voices=synth.getVoices();
+  const esVoice=voices.find(v=>v.lang==='es-ES')||voices.find(v=>v.lang.startsWith('es'));
+  if(esVoice) ttsUtterance.voice=esVoice;
+
+  ttsUtterance.onstart=()=>ttsUpdateUI('playing');
+  ttsUtterance.onend=()=>ttsUpdateUI('idle');
+  ttsUtterance.onerror=()=>ttsUpdateUI('idle');
+  ttsUtterance.onpause=()=>ttsUpdateUI('paused');
+  ttsUtterance.onresume=()=>ttsUpdateUI('playing');
+
+  synth.speak(ttsUtterance);
+}
+
+function ttsStop(){
+  const synth=window.speechSynthesis;
+  if(synth){synth.cancel();}
+  ttsUtterance=null;
+  ttsPaused=false;
+  ttsUpdateUI('idle');
+}
 
 /* ═══════════════════════════════════════════
    MARCAR COMPLETADA
@@ -1553,6 +1652,7 @@ function verAutor(enc){
    NAVIGATION
 ═══════════════════════════════════════════ */
 function showView(name, skipPush=false){
+  if(name!=='leccion' && window.speechSynthesis){speechSynthesis.cancel();ttsUtterance=null;ttsPaused=false;}
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById(`view-${name}`)?.classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
