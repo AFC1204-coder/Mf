@@ -635,14 +635,21 @@ mark.hl { background:var(--hl); color:#000; border-radius:2px; padding:0 1px; }
 .tts-btn.tts-play:hover { background:#58a6ff35; }
 .tts-btn svg { width:18px; height:18px; fill:currentColor; }
 .tts-btn.tts-play svg { width:20px; height:20px; }
+.tts-info { flex:1; display:flex; flex-direction:column; gap:2px; min-width:0; }
 .tts-label {
   font-size:var(--text-xs); color:#58a6ff; letter-spacing:0.06em;
-  text-transform:uppercase; flex:1; user-select:none;
+  text-transform:uppercase; user-select:none;
+}
+.tts-engine {
+  font-size:var(--text-2xs); color:#58a6ff66;
+  font-family:var(--font-mono); letter-spacing:0.03em;
 }
 .tts-status {
   font-size:var(--text-2xs); color:#58a6ff88;
   font-family:var(--font-mono); letter-spacing:0.04em; flex-shrink:0;
 }
+@keyframes tts-spin { to { transform:rotate(360deg); } }
+.tts-spin { animation:tts-spin 1s linear infinite; }
 .autores-rel { display:flex; gap:var(--sp-3); flex-wrap:wrap; margin-bottom:var(--sp-7); }
 .autor-tag { background:var(--surface2); border:1px solid var(--border); color:var(--text2); padding:0.28rem 0.7rem; border-radius:var(--radius-sm); font-size:var(--text-sm); cursor:pointer; transition:var(--trans); font-family:var(--font-ui); }
 .autor-tag:hover { border-color:var(--accent); color:var(--accent); }
