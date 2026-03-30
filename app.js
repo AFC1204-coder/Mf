@@ -958,8 +958,14 @@ function verLeccion(id, from=null){
     <button class="tts-btn tts-play" id="tts-play-btn" onclick="ttsTogglePlay()" title="Reproducir">
       <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
     </button>
-    <span class="tts-label">Escuchar lección</span>
+    <div class="tts-info">
+      <span class="tts-label">Escuchar lección</span>
+      <span class="tts-engine" id="tts-engine"></span>
+    </div>
     <span class="tts-status" id="tts-status"></span>
+    <button class="tts-btn" id="tts-download-btn" onclick="ttsDownload()" title="Descargar MP3" style="display:none">
+      <svg viewBox="0 0 24 24"><path d="M12 16l-6-6h4V4h4v6h4l-6 6z"/><rect x="4" y="18" width="16" height="2" rx="1"/></svg>
+    </button>
     <button class="tts-btn" id="tts-stop-btn" onclick="ttsStop()" title="Detener" style="display:none">
       <svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>
     </button>
@@ -1043,10 +1049,13 @@ function toggleFavLecDetalle(id,btn){toggleFavLec(id,btn);btn.textContent=favLec
 function volverDeLeccion(){if(libroActual)showView('lecciones');else showView('home');}
 
 /* ═══════════════════════════════════════════
-   TTS — Web Speech API
+   TTS — Google Cloud TTS + Web Speech API fallback
 ═══════════════════════════════════════════ */
 let ttsUtterance=null;
 let ttsPaused=false;
+let ttsAudio=null;       // HTMLAudioElement for Cloud TTS
+let ttsAudioUrl=null;    // Signed URL for download
+let ttsMode=null;        // 'cloud' | 'webspeech' | null
 
 function ttsGetText(){
   if(!lecActual||!lecActual.cuerpo) return '';
@@ -1061,47 +1070,125 @@ function ttsGetText(){
 function ttsUpdateUI(state){
   const playBtn=document.getElementById('tts-play-btn');
   const stopBtn=document.getElementById('tts-stop-btn');
+  const dlBtn=document.getElementById('tts-download-btn');
   const status=document.getElementById('tts-status');
+  const engine=document.getElementById('tts-engine');
   if(!playBtn) return;
 
-  if(state==='playing'){
+  const showDl=ttsMode==='cloud'&&ttsAudioUrl;
+
+  if(state==='loading'){
+    playBtn.innerHTML='<svg viewBox="0 0 24 24" class="tts-spin"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="31 31"/></svg>';
+    playBtn.disabled=true;
+    stopBtn.style.display='none';
+    dlBtn.style.display='none';
+    status.textContent='Generando audio…';
+    if(engine) engine.textContent='';
+  } else if(state==='playing'){
     playBtn.innerHTML='<svg viewBox="0 0 24 24"><rect x="5" y="4" width="4" height="16" rx="1"/><rect x="15" y="4" width="4" height="16" rx="1"/></svg>';
     playBtn.title='Pausar';
+    playBtn.disabled=false;
     stopBtn.style.display='flex';
+    dlBtn.style.display=showDl?'flex':'none';
     status.textContent='Reproduciendo…';
+    if(engine) engine.textContent=ttsMode==='cloud'?'Google Cloud':'Voz del navegador';
   } else if(state==='paused'){
     playBtn.innerHTML='<svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>';
     playBtn.title='Reanudar';
+    playBtn.disabled=false;
     stopBtn.style.display='flex';
+    dlBtn.style.display=showDl?'flex':'none';
     status.textContent='En pausa';
   } else {
     playBtn.innerHTML='<svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>';
     playBtn.title='Reproducir';
+    playBtn.disabled=false;
     stopBtn.style.display='none';
+    dlBtn.style.display='none';
     status.textContent='';
+    if(engine) engine.textContent='';
     ttsPaused=false;
   }
 }
 
-function ttsTogglePlay(){
-  const synth=window.speechSynthesis;
-  if(!synth){toast('Tu navegador no soporta síntesis de voz');return;}
-
-  if(synth.speaking && !ttsPaused){
-    synth.pause();
-    ttsPaused=true;
-    ttsUpdateUI('paused');
-    return;
-  }
-  if(ttsPaused){
-    synth.resume();
-    ttsPaused=false;
-    ttsUpdateUI('playing');
-    return;
+async function ttsTogglePlay(){
+  // If Cloud audio is active, handle pause/resume
+  if(ttsMode==='cloud'&&ttsAudio){
+    if(!ttsAudio.paused&&!ttsAudio.ended){
+      ttsAudio.pause();
+      ttsUpdateUI('paused');
+      return;
+    }
+    if(ttsAudio.paused&&!ttsAudio.ended){
+      ttsAudio.play();
+      ttsUpdateUI('playing');
+      return;
+    }
   }
 
+  // If Web Speech is active, handle pause/resume
+  if(ttsMode==='webspeech'){
+    const synth=window.speechSynthesis;
+    if(synth.speaking&&!ttsPaused){
+      synth.pause();
+      ttsPaused=true;
+      ttsUpdateUI('paused');
+      return;
+    }
+    if(ttsPaused){
+      synth.resume();
+      ttsPaused=false;
+      ttsUpdateUI('playing');
+      return;
+    }
+  }
+
+  // Fresh play — try Cloud first, then fallback
   const text=ttsGetText();
   if(!text){toast('No hay contenido para leer');return;}
+
+  ttsUpdateUI('loading');
+
+  try{
+    const resp=await fetch(`${SB_URL}/functions/v1/tts-proxy`,{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Content-Type':'application/json'},
+      body:JSON.stringify({leccion_id:lecActual.id,text})
+    });
+    const data=await resp.json();
+
+    if(data.url&&!data.fallback){
+      ttsAudioUrl=data.url;
+      ttsMode='cloud';
+      ttsPlayCloud(data.url);
+      return;
+    }
+  }catch(_){}
+
+  // Fallback to Web Speech API
+  ttsPlayWebSpeech(text);
+}
+
+function ttsPlayCloud(url){
+  if(ttsAudio){ttsAudio.pause();ttsAudio=null;}
+  ttsAudio=new Audio(url);
+  ttsAudio.onplay=()=>ttsUpdateUI('playing');
+  ttsAudio.onpause=()=>{if(!ttsAudio.ended)ttsUpdateUI('paused');};
+  ttsAudio.onended=()=>ttsUpdateUI('idle');
+  ttsAudio.onerror=()=>{
+    toast('Error de audio, usando voz del navegador');
+    ttsPlayWebSpeech(ttsGetText());
+  };
+  ttsAudio.play().catch(()=>{
+    ttsPlayWebSpeech(ttsGetText());
+  });
+}
+
+function ttsPlayWebSpeech(text){
+  ttsMode='webspeech';
+  ttsAudioUrl=null;
+  const synth=window.speechSynthesis;
+  if(!synth){toast('Tu navegador no soporta síntesis de voz');ttsUpdateUI('idle');return;}
 
   synth.cancel();
   ttsUtterance=new SpeechSynthesisUtterance(text);
@@ -1123,11 +1210,25 @@ function ttsTogglePlay(){
 }
 
 function ttsStop(){
+  if(ttsAudio){ttsAudio.pause();ttsAudio.currentTime=0;ttsAudio=null;}
   const synth=window.speechSynthesis;
   if(synth){synth.cancel();}
   ttsUtterance=null;
   ttsPaused=false;
+  ttsMode=null;
+  ttsAudioUrl=null;
   ttsUpdateUI('idle');
+}
+
+function ttsDownload(){
+  if(!ttsAudioUrl)return;
+  const a=document.createElement('a');
+  a.href=ttsAudioUrl;
+  const titulo=(lecActual?.titulo||'leccion').replace(/[^a-zA-Z0-9áéíóúñ ]/g,'').replace(/\s+/g,'-').toLowerCase();
+  a.download=`${titulo}.mp3`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 }
 
 /* ═══════════════════════════════════════════
@@ -1652,7 +1753,7 @@ function verAutor(enc){
    NAVIGATION
 ═══════════════════════════════════════════ */
 function showView(name, skipPush=false){
-  if(name!=='leccion' && window.speechSynthesis){speechSynthesis.cancel();ttsUtterance=null;ttsPaused=false;}
+  if(name!=='leccion'){if(ttsAudio){ttsAudio.pause();ttsAudio=null;}if(window.speechSynthesis){speechSynthesis.cancel();}ttsUtterance=null;ttsPaused=false;ttsMode=null;ttsAudioUrl=null;}
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById(`view-${name}`)?.classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
