@@ -1049,13 +1049,20 @@ function toggleFavLecDetalle(id,btn){toggleFavLec(id,btn);btn.textContent=favLec
 function volverDeLeccion(){if(libroActual)showView('lecciones');else showView('home');}
 
 /* ═══════════════════════════════════════════
-   TTS — Google Cloud TTS + Web Speech API fallback
+   TTS — Google Cloud TTS (directo) + Web Speech API fallback
+   Cache local en IndexedDB para no regenerar audio
 ═══════════════════════════════════════════ */
+const GCLOUD_TTS_KEY='AIzaSyAr_AtWkVbr6FAZbAlT3h5gSt9o4D_vnE0';
+const GCLOUD_TTS_URL='https://texttospeech.googleapis.com/v1/text:synthesize';
+const TTS_CACHE_DB='scs-tts-cache';
+const TTS_CACHE_STORE='audio';
+const TTS_MAX_BYTES=4800;
+
 let ttsUtterance=null;
 let ttsPaused=false;
-let ttsAudio=null;       // HTMLAudioElement for Cloud TTS
-let ttsAudioUrl=null;    // Signed URL for download
-let ttsMode=null;        // 'cloud' | 'webspeech' | null
+let ttsAudio=null;
+let ttsAudioBlob=null;
+let ttsMode=null;
 
 function ttsGetText(){
   if(!lecActual||!lecActual.cuerpo) return '';
@@ -1067,6 +1074,83 @@ function ttsGetText(){
     .trim();
 }
 
+/* ── IndexedDB cache ── */
+function ttsCacheOpen(){
+  return new Promise((resolve,reject)=>{
+    const req=indexedDB.open(TTS_CACHE_DB,1);
+    req.onupgradeneeded=()=>req.result.createObjectStore(TTS_CACHE_STORE);
+    req.onsuccess=()=>resolve(req.result);
+    req.onerror=()=>reject(req.error);
+  });
+}
+async function ttsCacheGet(id){
+  try{
+    const db=await ttsCacheOpen();
+    return new Promise((resolve)=>{
+      const tx=db.transaction(TTS_CACHE_STORE,'readonly');
+      const req=tx.objectStore(TTS_CACHE_STORE).get(id);
+      req.onsuccess=()=>resolve(req.result||null);
+      req.onerror=()=>resolve(null);
+    });
+  }catch(_){return null;}
+}
+async function ttsCachePut(id,blob){
+  try{
+    const db=await ttsCacheOpen();
+    const tx=db.transaction(TTS_CACHE_STORE,'readwrite');
+    tx.objectStore(TTS_CACHE_STORE).put(blob,id);
+  }catch(_){}
+}
+
+/* ── Text chunking (Google TTS limit ~5000 bytes per request) ── */
+function ttsChunkText(text){
+  const enc=new TextEncoder();
+  if(enc.encode(text).length<=TTS_MAX_BYTES) return [text];
+  const sentences=text.split(/(?<=[.!?])\s+/);
+  const chunks=[];
+  let current='';
+  for(const s of sentences){
+    const candidate=current?current+' '+s:s;
+    if(enc.encode(candidate).length>TTS_MAX_BYTES){
+      if(current) chunks.push(current);
+      current=s;
+    }else{
+      current=candidate;
+    }
+  }
+  if(current) chunks.push(current);
+  return chunks;
+}
+
+/* ── Google Cloud TTS API call ── */
+async function ttsCallGoogle(text){
+  const chunks=ttsChunkText(text);
+  const audioParts=[];
+  for(const chunk of chunks){
+    const resp=await fetch(`${GCLOUD_TTS_URL}?key=${GCLOUD_TTS_KEY}`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        input:{text:chunk},
+        voice:{languageCode:'es-ES',name:'es-ES-Neural2-A'},
+        audioConfig:{audioEncoding:'MP3',speakingRate:1.0,pitch:0}
+      })
+    });
+    if(!resp.ok) throw new Error(`Google TTS ${resp.status}`);
+    const data=await resp.json();
+    const raw=atob(data.audioContent);
+    const bytes=new Uint8Array(raw.length);
+    for(let i=0;i<raw.length;i++) bytes[i]=raw.charCodeAt(i);
+    audioParts.push(bytes);
+  }
+  const totalLen=audioParts.reduce((s,p)=>s+p.length,0);
+  const result=new Uint8Array(totalLen);
+  let offset=0;
+  for(const part of audioParts){result.set(part,offset);offset+=part.length;}
+  return new Blob([result],{type:'audio/mpeg'});
+}
+
+/* ── UI update ── */
 function ttsUpdateUI(state){
   const playBtn=document.getElementById('tts-play-btn');
   const stopBtn=document.getElementById('tts-stop-btn');
@@ -1075,7 +1159,7 @@ function ttsUpdateUI(state){
   const engine=document.getElementById('tts-engine');
   if(!playBtn) return;
 
-  const showDl=ttsMode==='cloud'&&ttsAudioUrl;
+  const showDl=ttsMode==='cloud'&&ttsAudioBlob;
 
   if(state==='loading'){
     playBtn.innerHTML='<svg viewBox="0 0 24 24" class="tts-spin"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="31 31"/></svg>';
@@ -1111,66 +1195,43 @@ function ttsUpdateUI(state){
   }
 }
 
+/* ── Main toggle ── */
 async function ttsTogglePlay(){
-  // If Cloud audio is active, handle pause/resume
   if(ttsMode==='cloud'&&ttsAudio){
-    if(!ttsAudio.paused&&!ttsAudio.ended){
-      ttsAudio.pause();
-      ttsUpdateUI('paused');
-      return;
-    }
-    if(ttsAudio.paused&&!ttsAudio.ended){
-      ttsAudio.play();
-      ttsUpdateUI('playing');
-      return;
-    }
+    if(!ttsAudio.paused&&!ttsAudio.ended){ttsAudio.pause();ttsUpdateUI('paused');return;}
+    if(ttsAudio.paused&&!ttsAudio.ended){ttsAudio.play();ttsUpdateUI('playing');return;}
   }
-
-  // If Web Speech is active, handle pause/resume
   if(ttsMode==='webspeech'){
     const synth=window.speechSynthesis;
-    if(synth.speaking&&!ttsPaused){
-      synth.pause();
-      ttsPaused=true;
-      ttsUpdateUI('paused');
-      return;
-    }
-    if(ttsPaused){
-      synth.resume();
-      ttsPaused=false;
-      ttsUpdateUI('playing');
-      return;
-    }
+    if(synth.speaking&&!ttsPaused){synth.pause();ttsPaused=true;ttsUpdateUI('paused');return;}
+    if(ttsPaused){synth.resume();ttsPaused=false;ttsUpdateUI('playing');return;}
   }
 
-  // Fresh play — try Cloud first, then fallback
   const text=ttsGetText();
   if(!text){toast('No hay contenido para leer');return;}
 
+  ttsStop();
   ttsUpdateUI('loading');
 
   try{
-    const resp=await fetch(`${SB_URL}/functions/v1/tts-proxy`,{
-      method:'POST',
-      headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Content-Type':'application/json'},
-      body:JSON.stringify({leccion_id:lecActual.id,text})
-    });
-    const data=await resp.json();
-
-    if(data.url&&!data.fallback){
-      ttsAudioUrl=data.url;
-      ttsMode='cloud';
-      ttsPlayCloud(data.url);
-      return;
+    const cacheId=lecActual.id;
+    let blob=await ttsCacheGet(cacheId);
+    if(!blob){
+      blob=await ttsCallGoogle(text);
+      await ttsCachePut(cacheId,blob);
     }
-  }catch(_){}
-
-  // Fallback to Web Speech API
-  ttsPlayWebSpeech(text);
+    ttsAudioBlob=blob;
+    ttsMode='cloud';
+    ttsPlayCloud(blob);
+  }catch(e){
+    console.warn('Google TTS failed, fallback to Web Speech:',e.message);
+    ttsPlayWebSpeech(text);
+  }
 }
 
-function ttsPlayCloud(url){
+function ttsPlayCloud(blob){
   if(ttsAudio){ttsAudio.pause();ttsAudio=null;}
+  const url=URL.createObjectURL(blob);
   ttsAudio=new Audio(url);
   ttsAudio.onplay=()=>ttsUpdateUI('playing');
   ttsAudio.onpause=()=>{if(!ttsAudio.ended)ttsUpdateUI('paused');};
@@ -1179,14 +1240,12 @@ function ttsPlayCloud(url){
     toast('Error de audio, usando voz del navegador');
     ttsPlayWebSpeech(ttsGetText());
   };
-  ttsAudio.play().catch(()=>{
-    ttsPlayWebSpeech(ttsGetText());
-  });
+  ttsAudio.play().catch(()=>ttsPlayWebSpeech(ttsGetText()));
 }
 
 function ttsPlayWebSpeech(text){
   ttsMode='webspeech';
-  ttsAudioUrl=null;
+  ttsAudioBlob=null;
   const synth=window.speechSynthesis;
   if(!synth){toast('Tu navegador no soporta síntesis de voz');ttsUpdateUI('idle');return;}
 
@@ -1216,19 +1275,21 @@ function ttsStop(){
   ttsUtterance=null;
   ttsPaused=false;
   ttsMode=null;
-  ttsAudioUrl=null;
+  ttsAudioBlob=null;
   ttsUpdateUI('idle');
 }
 
 function ttsDownload(){
-  if(!ttsAudioUrl)return;
+  if(!ttsAudioBlob)return;
+  const url=URL.createObjectURL(ttsAudioBlob);
   const a=document.createElement('a');
-  a.href=ttsAudioUrl;
+  a.href=url;
   const titulo=(lecActual?.titulo||'leccion').replace(/[^a-zA-Z0-9áéíóúñ ]/g,'').replace(/\s+/g,'-').toLowerCase();
   a.download=`${titulo}.mp3`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 /* ═══════════════════════════════════════════
