@@ -1054,7 +1054,7 @@ function volverDeLeccion(){if(libroActual)showView('lecciones');else showView('h
 ═══════════════════════════════════════════ */
 const GCLOUD_TTS_KEY='AIzaSyAr_AtWkVbr6FAZbAlT3h5gSt9o4D_vnE0';
 const GCLOUD_TTS_URL='https://texttospeech.googleapis.com/v1/text:synthesize';
-const TTS_CACHE_DB='scs-tts-cache';
+const TTS_CACHE_DB='scs-tts-cache-v2';
 const TTS_CACHE_STORE='audio';
 const TTS_MAX_BYTES=4800;
 
@@ -1072,6 +1072,16 @@ function ttsGetText(){
     .replace(/\n/g,' ')
     .replace(/\s{2,}/g,' ')
     .trim();
+}
+
+/* Convert plain text to SSML with natural pauses */
+function ttsToSSML(text){
+  let ssml=text
+    .replace(/\.\s+/g,'.<break time="600ms"/> ')
+    .replace(/;\s+/g,';<break time="400ms"/> ')
+    .replace(/:\s+/g,':<break time="400ms"/> ')
+    .replace(/,\s+/g,', ');
+  return `<speak>${ssml}</speak>`;
 }
 
 /* ── IndexedDB cache ── */
@@ -1131,9 +1141,9 @@ async function ttsCallGoogle(text){
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        input:{text:chunk},
-        voice:{languageCode:'es-ES',name:'es-ES-Neural2-A'},
-        audioConfig:{audioEncoding:'MP3',speakingRate:1.0,pitch:0}
+        input:{ssml:ttsToSSML(chunk)},
+        voice:{languageCode:'es-ES',name:'es-ES-Studio-F'},
+        audioConfig:{audioEncoding:'MP3',speakingRate:0.95,pitch:-1.0}
       })
     });
     if(!resp.ok) throw new Error(`Google TTS ${resp.status}`);
