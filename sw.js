@@ -60,6 +60,10 @@ self.addEventListener('fetch', (e) => {
 });
 
 self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+    return;
+  }
   if (event.data && event.data.type === 'SHOW_NOTIFICATION') {
     const { title, body, tag } = event.data;
     self.registration.showNotification(title, {
