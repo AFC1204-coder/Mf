@@ -1582,15 +1582,15 @@ function abrirTest(libroId=null){
   if(libroId){
     const libro=libros.find(l=>l.id===libroId);
     sub.textContent=libro?`${libro.titulo} — ${libro.autor}`:'Libro seleccionado';
-    // Si es test de libro, ocultar filtro de eje
-    if(cont?.parentElement) cont.parentElement.style.display='none';
-    const ejePill=document.querySelector('[data-eje=""]');
-    const pillsParent=ejePill?.closest('.tconfig-pills')?.parentElement;
-    if(pillsParent) pillsParent.style.display='none';
+    // Si es test de libro, ocultar filtro de eje (label + pills)
+    const ejeLabel=cont.previousElementSibling;
+    cont.style.display='none';
+    if(ejeLabel&&ejeLabel.classList.contains('tconfig-label')) ejeLabel.style.display='none';
   } else {
     sub.textContent='Todas las preguntas disponibles';
-    const pillsParent=cont?.closest('.tconfig-box')?.querySelector('.tconfig-pills')?.parentElement;
-    if(pillsParent) pillsParent.style.display='';
+    const ejeLabel=cont.previousElementSibling;
+    cont.style.display='';
+    if(ejeLabel&&ejeLabel.classList.contains('tconfig-label')) ejeLabel.style.display='';
   }
   tcUpdateInfo();
   document.getElementById('tconfig-overlay').classList.remove('hidden');
