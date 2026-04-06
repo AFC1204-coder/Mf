@@ -65,10 +65,10 @@ self.addEventListener('message', (event) => {
     return;
   }
   if (event.data && event.data.type === 'SHOW_NOTIFICATION') {
-    const { title, body, tag } = event.data;
+    const { title, body, tag, icon } = event.data;
     self.registration.showNotification(title, {
       body: body,
-      icon: SCS_ICON,
+      icon: icon || SCS_ICON,
       badge: SCS_ICON,
       tag: tag || 'scs-' + Date.now(),
       vibrate: [100, 50, 100],

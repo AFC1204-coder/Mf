@@ -13,6 +13,7 @@ let lastNotifCheck = 0;
 let currentFilter = 'all';
 let notifAchievementQueue = [];
 let isShowingAchievement = false;
+let achievementProcessing = false;
 
 /* ── PANEL TOGGLE ── */
 function toggleNotifPanel() {
@@ -204,12 +205,13 @@ async function markNotifRead(id, el) {
   updateBadge();
   updateNotifStats();
   try {
-    await fetch(SB_URL + '/rest/v1/notificaciones?id=eq.' + id, {
+    const resp = await fetch(SB_URL + '/rest/v1/notificaciones?id=eq.' + id, {
       method: 'PATCH',
       headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
       body: JSON.stringify({ leida: true })
     });
-  } catch (e) { /* silent */ }
+    if (!resp.ok) console.warn('markNotifRead failed:', resp.status);
+  } catch (e) { console.warn('markNotifRead error:', e); }
 }
 
 async function markAllRead() {
@@ -218,12 +220,13 @@ async function markAllRead() {
   updateBadge();
   updateNotifStats();
   try {
-    await fetch(SB_URL + '/rest/v1/notificaciones?usuario_id=eq.default&leida=eq.false', {
+    const resp = await fetch(SB_URL + '/rest/v1/notificaciones?usuario_id=eq.default&leida=eq.false', {
       method: 'PATCH',
       headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
       body: JSON.stringify({ leida: true })
     });
-  } catch (e) { /* silent */ }
+    if (!resp.ok) console.warn('markAllRead failed:', resp.status);
+  } catch (e) { console.warn('markAllRead error:', e); }
 }
 
 /* ── DISMISS (DELETE) NOTIFICATION ── */
@@ -240,32 +243,46 @@ async function dismissNotif(id, btn) {
   updateNotifStats();
   updateFilterCounts();
   try {
-    await fetch(SB_URL + '/rest/v1/notificaciones?id=eq.' + id, {
+    const resp = await fetch(SB_URL + '/rest/v1/notificaciones?id=eq.' + id, {
       method: 'DELETE',
       headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Prefer': 'return=minimal' }
     });
-  } catch (e) { /* silent */ }
+    if (!resp.ok) console.warn('dismissNotif failed:', resp.status);
+  } catch (e) { console.warn('dismissNotif error:', e); }
 }
 
 /* ── ACHIEVEMENT TOAST WITH QUEUE ── */
 function showAchievement(icon, title, msg) {
   notifAchievementQueue.push({ icon, title, msg });
-  if (!isShowingAchievement) processAchievementQueue();
+  if (!isShowingAchievement && !achievementProcessing) processAchievementQueue();
 }
 
 function processAchievementQueue() {
   if (!notifAchievementQueue.length) {
     isShowingAchievement = false;
+    achievementProcessing = false;
     return;
   }
   isShowingAchievement = true;
+  achievementProcessing = true;
   const { icon, title, msg } = notifAchievementQueue.shift();
 
   const t = document.getElementById('achievement-toast');
   const progBar = document.getElementById('ach-progress-bar');
-  document.getElementById('ach-icon').textContent = icon;
-  document.getElementById('ach-title').textContent = title;
-  document.getElementById('ach-msg').textContent = msg;
+  const achIcon = document.getElementById('ach-icon');
+  const achTitle = document.getElementById('ach-title');
+  const achMsg = document.getElementById('ach-msg');
+
+  // Guard: if toast DOM elements are missing, skip gracefully
+  if (!t || !progBar || !achIcon || !achTitle || !achMsg) {
+    console.warn('Achievement toast DOM elements missing, skipping');
+    setTimeout(processAchievementQueue, 100);
+    return;
+  }
+
+  achIcon.textContent = icon;
+  achTitle.textContent = title;
+  achMsg.textContent = msg;
 
   // Reset and animate progress bar
   progBar.style.transition = 'none';
@@ -331,7 +348,7 @@ async function checkForNewNotifications() {
         updateNotifStats();
       }
     }
-  } catch (e) { /* silent */ }
+  } catch (e) { console.warn('checkForNewNotifications error:', e); }
 }
 
 /* ── STREAK & REPASO CHECK ── */
@@ -423,38 +440,40 @@ async function reqPushPerm() {
   }
 }
 
-function sendPushNotif(title, body) {
+function sendPushNotif(title, body, icon) {
   // ANTI-SPAM PROTECCIÓN: ¡Nunca lanzar un cartel al SO Android si el usuario ya está viendo la app!
   if (!document.hidden) return;
 
   if (!('Notification' in window) || Notification.permission !== 'granted') return;
   try {
+    const badge = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="%23080808"/><text x="32" y="42" text-anchor="middle" font-size="28" fill="%23c9a84c">' + (icon || '§') + '</text></svg>');
     // Use Service Worker for persistent notifications (works even in background on Android)
     if (navigator.serviceWorker && navigator.serviceWorker.controller) {
       navigator.serviceWorker.controller.postMessage({
         type: 'SHOW_NOTIFICATION',
         title: title,
         body: body,
+        icon: badge,
         tag: 'scs-' + Date.now()
       });
     } else {
       // Fallback to basic Notification API
       new Notification(title, {
         body: body,
-        icon: 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="%23080808"/><text x="32" y="42" text-anchor="middle" font-size="28" fill="%23c9a84c">§</text></svg>'),
+        icon: badge,
         tag: 'scs-' + Date.now()
       });
     }
-  } catch (e) { /* silent */ }
+  } catch (e) { console.warn('Push notification failed:', e); }
 }
 
 /* ── SERVICE WORKER REGISTRATION ── */
-if ('serviceWorker' in navigator) {
-  // Force nuke all old caches on load
-  caches.keys().then(names => names.forEach(n => caches.delete(n)));
+// Registration is handled in index.html to avoid duplicate registration.
+// This block only ensures the SW is ready for push notifications.
+if ('serviceWorker' in navigator && !navigator.serviceWorker.controller) {
   navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(reg => {
     console.log('SCS Service Worker registered:', reg.scope);
-    reg.update(); // Force immediate check for new SW
+    reg.update();
   }).catch(err => {
     console.warn('SW registration failed:', err);
   });
