@@ -288,24 +288,25 @@ async function getCover(autor, titulo, libroId) {
 
   let url = null;
 
-  // 1. Intentar OpenLibrary
+  // 1. Google Books API (best quality thumbnails, no key needed)
   try {
-    const q = encodeURIComponent(`${titulo} ${autor}`);
-    const r = await fetch(`https://openlibrary.org/search.json?q=${q}&limit=1&fields=cover_i`);
+    const q = encodeURIComponent(`intitle:${titulo} inauthor:${autor}`);
+    const r = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${q}&maxResults=1&fields=items(volumeInfo/imageLinks)`);
     const d = await r.json();
-    const coverId = d?.docs?.[0]?.cover_i;
-    if (coverId) url = `https://covers.openlibrary.org/b/id/${coverId}-L.jpg?default=false`;
-  } catch {}
+    const thumb = d?.items?.[0]?.volumeInfo?.imageLinks?.thumbnail;
+    if (thumb) {
+      url = thumb.replace('http://', 'https://').replace('&edge=curl', '').replace('zoom=1', 'zoom=2');
+    }
+  } catch { /* fallback to OpenLibrary */ }
 
-  // 2. Fallback: Google Books
+  // 2. Fallback: OpenLibrary
   if (!url) {
     try {
       const q = encodeURIComponent(`${titulo} ${autor}`);
-      const r = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${q}&maxResults=1&fields=items(volumeInfo/imageLinks)`);
+      const r = await fetch(`https://openlibrary.org/search.json?q=${q}&limit=1&fields=cover_i`);
       const d = await r.json();
-      const thumb = d?.items?.[0]?.volumeInfo?.imageLinks;
-      if (thumb) url = (thumb.thumbnail || thumb.smallThumbnail || '').replace('http://', 'https://');
-      if (url) url = url.replace('&edge=curl', '').replace('zoom=1', 'zoom=2');
+      const coverId = d?.docs?.[0]?.cover_i;
+      if (coverId) url = `https://covers.openlibrary.org/b/id/${coverId}-M.jpg`;
     } catch {}
   }
 
@@ -322,6 +323,21 @@ async function getCover(autor, titulo, libroId) {
   }
 
   return url;
+}
+
+/* Auto-fetch covers for books without portada_url on initial load */
+async function autoFetchCovers() {
+  const sinPortada = libros.filter(l => !l.portada_url || l.portada_url === '');
+  if (!sinPortada.length) return;
+  // Process in batches of 3 to avoid rate limiting
+  for (let i = 0; i < sinPortada.length; i += 3) {
+    const batch = sinPortada.slice(i, i + 3);
+    await Promise.all(batch.map(async libro => {
+      const url = await getCover(libro.autor, libro.titulo, libro.id);
+      if (url) libro.portada_url = url;
+    }));
+  }
+  renderLibros();
 }
 
 /* ═══════════════════════════════════════════
@@ -429,6 +445,8 @@ async function init() {
       setTimeout(()=>document.getElementById('loader-screen').style.display='none',500);
     },300);
     renderStats(); renderEjes(); renderLibros(); renderContinua(); renderUltimosLibros(); renderEsquemas(); initAdminTrigger();
+    // Auto-fetch missing covers in background
+    setTimeout(() => autoFetchCovers(), 2000);
     // Restaurar estado desde URL hash (para enlaces compartidos y marcadores)
     restoreFromURL();
   } catch(e) {
