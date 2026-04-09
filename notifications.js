@@ -75,11 +75,12 @@ function renderNotifList() {
     }
 
     const cls = n.leida ? '' : ' unread';
-    const tipoClass = 'tipo-' + (n.tipo || 'sistema');
+    const safeId = escH(n.id);
+    const tipoClass = 'tipo-' + escH(n.tipo || 'sistema');
     const ico = n.icono || '🔔';
-    const tipoTag = n.tipo ? '<span class="notif-tipo-tag">' + (n.tipo || '') + '</span>' : '';
+    const tipoTag = n.tipo ? '<span class="notif-tipo-tag">' + escH(n.tipo || '') + '</span>' : '';
 
-    html += '<div class="notif-item' + cls + '" data-id="' + n.id + '" onclick="markNotifRead(\x27' + n.id + '\x27,this)">' +
+    html += '<div class="notif-item' + cls + '" data-id="' + safeId + '" onclick="markNotifRead(\x27' + safeId + '\x27,this)">' +
       '<span class="notif-dot"></span>' +
       '<div class="notif-icon-wrap ' + tipoClass + '">' + escH(ico) + '</div>' +
       '<div class="notif-content">' +
@@ -90,7 +91,7 @@ function renderNotifList() {
           tipoTag +
         '</div>' +
       '</div>' +
-      '<button class="notif-dismiss" onclick="event.stopPropagation();dismissNotif(\x27' + n.id + '\x27,this)" title="Eliminar">✕</button>' +
+      '<button class="notif-dismiss" onclick="event.stopPropagation();dismissNotif(\x27' + safeId + '\x27,this)" title="Eliminar">✕</button>' +
     '</div>';
   });
 

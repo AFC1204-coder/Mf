@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SCS — Observatorio de Transiciones Civilizacionales</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js" crossorigin="anonymous" defer></script>
 <style>
 :root {
   --bg-deep: #0a0b0f;
@@ -563,6 +563,9 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// HTML escape to prevent XSS from database content
+const escH = s => (s == null ? '' : String(s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
 let DATA = { vectors: [], scenarios: [], analyses: [], tensions: [], applications: [] };
 let currentView = 'vectors';
 let filterVector = null;
@@ -589,7 +592,7 @@ async function loadAll() {
 
     render();
   } catch (e) {
-    document.getElementById('content').innerHTML = '<div class="empty-state">Error al conectar con Supabase: ' + e.message + '</div>';
+    document.getElementById('content').innerHTML = '<div class="empty-state">Error al conectar con Supabase: ' + escH(e.message) + '</div>';
   }
 }
 
@@ -612,11 +615,11 @@ function renderVectors() {
     const count = (scenariosByVector[v.id] || []).length;
     const authors = (v.autores_principales || []).slice(0, 5).join(', ');
     const extra = (v.autores_principales || []).length > 5 ? ` +${v.autores_principales.length - 5}` : '';
-    return `<div class="vector-card" onclick="filterByVector('${v.id}')">
-      <div class="order">Vector ${v.orden}</div>
+    return `<div class="vector-card" onclick="filterByVector('${escH(v.id)}')">
+      <div class="order">Vector ${escH(v.orden)}</div>
       ${count > 0 ? `<div class="scenario-count">${count} escenario${count > 1 ? 's' : ''}</div>` : ''}
-      <h3>${v.nombre}</h3>
-      <div class="authors">${authors}${extra}</div>
+      <h3>${escH(v.nombre)}</h3>
+      <div class="authors">${escH(authors)}${escH(extra)}</div>
     </div>`;
   }).join('') + '</div>';
 }
@@ -647,8 +650,8 @@ function renderScenarios(vectorFilter) {
     const contradice = analyses.filter(a => a.posicion === 'contradice');
     const matiza = analyses.filter(a => a.posicion === 'matiza');
 
-    return `<div class="scenario-card" id="sc-${s.id}">
-      <div class="scenario-header" onclick="toggleScenario('${s.id}')">
+    return `<div class="scenario-card" id="sc-${escH(s.id)}">
+      <div class="scenario-header" onclick="toggleScenario('${escH(s.id)}')">
         <div class="prob-ring">
           <svg width="64" height="64" viewBox="0 0 64 64">
             <circle class="bg" cx="32" cy="32" r="26" fill="none" stroke-width="4"/>
@@ -658,33 +661,33 @@ function renderScenarios(vectorFilter) {
           <div class="prob-text">${Math.round(prob * 100)}%</div>
         </div>
         <div class="scenario-info">
-          <h3>${s.titulo}</h3>
+          <h3>${escH(s.titulo)}</h3>
           <div class="scenario-meta">
-            ${vector ? `<span class="meta-tag">${vector.nombre}</span>` : ''}
-            <span class="meta-tag">${s.horizonte || '—'}</span>
+            ${vector ? `<span class="meta-tag">${escH(vector.nombre)}</span>` : ''}
+            <span class="meta-tag">${escH(s.horizonte || '—')}</span>
             <span class="meta-tag">${apoya.length}↑ ${contradice.length}↓ ${matiza.length}↔</span>
           </div>
-          <div class="scenario-tesis">${s.tesis || ''}</div>
+          <div class="scenario-tesis">${escH(s.tesis || '')}</div>
         </div>
         <span class="expand-icon">▾</span>
       </div>
 
       <div class="scenario-detail">
-        ${s.descripcion ? `<div class="detail-section"><h4>Descomposición Tetlock</h4><p style="font-size:0.82rem;color:var(--text-secondary);line-height:1.65;white-space:pre-line;">${s.descripcion}</p></div>` : ''}
+        ${s.descripcion ? `<div class="detail-section"><h4>Descomposición Tetlock</h4><p style="font-size:0.82rem;color:var(--text-secondary);line-height:1.65;white-space:pre-line;">${escH(s.descripcion)}</p></div>` : ''}
 
         ${analyses.length ? `<div class="detail-section">
           <h4>Análisis por Marco (${analyses.length})</h4>
           <div class="analysis-list">
             ${[...apoya, ...contradice, ...matiza].map(a => `
-              <div class="analysis-card ${a.posicion}">
+              <div class="analysis-card ${escH(a.posicion)}">
                 <div class="analysis-top">
-                  <span class="analysis-author">${a.autor}</span>
-                  <span class="position-badge ${a.posicion}">${a.posicion}</span>
+                  <span class="analysis-author">${escH(a.autor)}</span>
+                  <span class="position-badge ${escH(a.posicion)}">${escH(a.posicion)}</span>
                 </div>
-                <div class="analysis-pred">${a.prediccion}</div>
+                <div class="analysis-pred">${escH(a.prediccion)}</div>
                 <button class="toggle-details" onclick="event.stopPropagation();this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent==='+ mecanismo'?'− mecanismo':'+ mecanismo'">+ mecanismo</button>
-                <div class="analysis-mech" style="display:none;margin-top:8px;">${a.mecanismo}</div>
-                <div class="confidence">Confianza del marco: ${a.confianza_marco}</div>
+                <div class="analysis-mech" style="display:none;margin-top:8px;">${escH(a.mecanismo)}</div>
+                <div class="confidence">Confianza del marco: ${escH(a.confianza_marco)}</div>
               </div>
             `).join('')}
           </div>
@@ -694,10 +697,10 @@ function renderScenarios(vectorFilter) {
           <h4>Tensiones entre Marcos (${tensions.length})</h4>
           ${tensions.map(t => `
             <div class="tension-card">
-              <div class="tension-vs">${t.autor_a} ⟷ ${t.autor_b}</div>
-              <div class="tension-text">${t.tension}</div>
-              <div class="tension-impl"><strong style="color:var(--text-primary);font-size:0.78rem;">Implicación:</strong> ${t.implicacion}</div>
-              ${t.resolucion_posible ? `<div class="tension-resolution"><strong>Resolución posible:</strong> ${t.resolucion_posible}</div>` : ''}
+              <div class="tension-vs">${escH(t.autor_a)} ⟷ ${escH(t.autor_b)}</div>
+              <div class="tension-text">${escH(t.tension)}</div>
+              <div class="tension-impl"><strong style="color:var(--text-primary);font-size:0.78rem;">Implicación:</strong> ${escH(t.implicacion)}</div>
+              ${t.resolucion_posible ? `<div class="tension-resolution"><strong>Resolución posible:</strong> ${escH(t.resolucion_posible)}</div>` : ''}
             </div>
           `).join('')}
         </div>` : ''}
@@ -706,9 +709,9 @@ function renderScenarios(vectorFilter) {
           <h4>Aplicaciones Personales (${apps.length})</h4>
           ${apps.map(a => `
             <div class="app-card">
-              <div class="app-domain">${a.dominio}</div>
-              <div class="app-action">${a.accion}</div>
-              ${a.robustez ? `<div class="app-robustez">Robustez: ${a.robustez}</div>` : ''}
+              <div class="app-domain">${escH(a.dominio)}</div>
+              <div class="app-action">${escH(a.accion)}</div>
+              ${a.robustez ? `<div class="app-robustez">Robustez: ${escH(a.robustez)}</div>` : ''}
             </div>
           `).join('')}
         </div>` : ''}

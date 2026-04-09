@@ -1970,7 +1970,7 @@ async function renderEnsayos() {
   }
 }
 
-function nl2br(s){ return (s||'').split('\n').join('<br>'); }
+function nl2br(s){ return esc(s||'').split('\n').join('<br>'); }
 
 function verEnsayo(id) {
   const a = ensayosCache.find(x => x.id === id);
@@ -1991,7 +1991,7 @@ function verEnsayo(id) {
           <span><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Ensayo</span><span class="ensayo-toggle">▲</span>
         </div>
         <div class="ensayo-section-body">
-          <div class="ensayo-body-text">${(a.cuerpo||'').replace(/\n/g,'<br>')}</div>
+          <div class="ensayo-body-text">${esc(a.cuerpo||'').replace(/\n/g,'<br>')}</div>
         </div>
       </div>
       <div class="ensayo-section">
@@ -1999,7 +1999,7 @@ function verEnsayo(id) {
           <span>🤝 Convergencias</span><span class="ensayo-toggle">▼</span>
         </div>
         <div class="ensayo-section-body" style="display:none">
-          <div class="ensayo-body-text">${(a.convergencias||'—').replace(/\n/g,'<br>')}</div>
+          <div class="ensayo-body-text">${esc(a.convergencias||'—').replace(/\n/g,'<br>')}</div>
         </div>
       </div>
       <div class="ensayo-section">
@@ -2007,7 +2007,7 @@ function verEnsayo(id) {
           <span>⚡ Divergencias</span><span class="ensayo-toggle">▼</span>
         </div>
         <div class="ensayo-section-body" style="display:none">
-          <div class="ensayo-body-text">${(a.divergencias||'—').replace(/\n/g,'<br>')}</div>
+          <div class="ensayo-body-text">${esc(a.divergencias||'—').replace(/\n/g,'<br>')}</div>
         </div>
       </div>
       <div class="ensayo-section ensayo-sintesis">
@@ -2016,7 +2016,7 @@ function verEnsayo(id) {
         </div>
         <div class="ensayo-section-body" style="display:none">
           <div class="ensayo-sintesis-nota">Esta síntesis es tu elaboración personal — no la de los autores</div>
-          <div class="ensayo-body-text">${(a.sintesis_original||'—').replace(/\n/g,'<br>')}</div>
+          <div class="ensayo-body-text">${esc(a.sintesis_original||'—').replace(/\n/g,'<br>')}</div>
         </div>
       </div>
       <div class="ensayo-section">
@@ -2024,7 +2024,7 @@ function verEnsayo(id) {
           <span>🎯 Aplicación Práctica</span><span class="ensayo-toggle">▼</span>
         </div>
         <div class="ensayo-section-body" style="display:none">
-          <div class="ensayo-body-text">${(a.aplicacion||'—').replace(/\n/g,'<br>')}</div>
+          <div class="ensayo-body-text">${esc(a.aplicacion||'—').replace(/\n/g,'<br>')}</div>
         </div>
       </div>
     </div>
