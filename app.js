@@ -696,7 +696,7 @@ function renderAtril(){
   const root = document.getElementById('atril');
   if (!root) return;
   const nNoches = nochesEsteMes();
-  const top = `<div class="atril-top"><div>Biblioteca soberana · <strong>Noche</strong></div>
+  const top = `<div class="atril-top"><div>Mente fría · <strong>Noche</strong></div>
     <div class="atril-nights">${lampsHtml(nNoches)}<span>${nNoches} noche${nNoches===1?'':'s'}</span>
       <button type="button" class="atril-sound${Ambiente.on?' on':''}" onclick="event.preventDefault();Ambiente.toggle()">${Ambiente.on?'Ambiente · on':'Ambiente'}</button>
     </div></div>`;
@@ -1737,7 +1737,7 @@ function pdfDrawChrome(doc,meta,pn){
   doc.setFont('helvetica','normal');doc.setFontSize(6.5);doc.setTextColor(...PDF_C.muted);
   doc.text(`${meta.libro}  —  ${meta.autor}`,PDF_ML,14);
   doc.text(meta.eje||'',PDF_PW-PDF_MR,14,{align:'right'});
-  doc.text('Segundo Cerebro Soberano',PDF_ML,PDF_PH-8);
+  doc.text('Mente fría',PDF_ML,PDF_PH-8);
   doc.setFillColor(...PDF_C.gold);doc.circle(PDF_PW/2,PDF_PH-7.5,0.8,'F');
   doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(...PDF_C.blue);
   doc.text(String(pn),PDF_PW-PDF_MR,PDF_PH-8,{align:'right'});
@@ -1811,7 +1811,7 @@ function pdfDrawCover(doc,meta){
   if(meta.n){ty+=8;doc.text(`${meta.n} lecciones`,PDF_ML,ty);}
   doc.setFillColor(...PDF_C.gold);doc.rect(PDF_ML,PDF_PH-70,PDF_CW,0.5,'F');
   doc.setFontSize(9);doc.setTextColor(...PDF_C.muted);
-  doc.text('Segundo Cerebro Soberano',PDF_ML,PDF_PH-55);
+  doc.text('Mente fría',PDF_ML,PDF_PH-55);
   doc.setFontSize(7.5);
   doc.text(`Exportado: ${new Date().toLocaleDateString('es-ES',{year:'numeric',month:'long'})}`,PDF_ML,PDF_PH-48);
 }
@@ -2799,7 +2799,7 @@ function onSpotlightSearch(v) {
   
   if (!q || q.length < 2) {
     state.style.display = 'block';
-    state.textContent = q ? 'Escribe más para buscar...' : 'Escribe para explorar el Segundo Cerebro';
+    state.textContent = q ? 'Escribe más para buscar...' : 'Escribe para explorar Mente fría';
     resCont.innerHTML = '';
     return;
   }

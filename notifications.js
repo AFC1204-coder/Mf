@@ -395,7 +395,7 @@ async function reqPushPerm() {
     if (p === 'granted') {
       toast('Notificaciones push activadas ✓');
       checkPushPermission(); // refresh banner
-      sendPushNotif('🔔 Notificaciones activas', 'Recibirás alertas de racha, repasos y logros del Segundo Cerebro Soberano.');
+      sendPushNotif('🔔 Notificaciones activas', 'Recibirás alertas de racha, repasos y logros de Mente fría.');
     } else {
       checkPushPermission();
     }
@@ -559,7 +559,7 @@ function scheduleReminder() {
     const lastStudy = localStorage.getItem('scs_last_study_date');
     const today = new Date().toISOString().slice(0, 10);
     if (lastStudy !== today) {
-      showAchievement('⏰', 'Hora de estudiar', 'Tu recordatorio diario del Segundo Cerebro Soberano. Mantén la racha viva.', 'racha');
+      showAchievement('⏰', 'Hora de estudiar', 'Tu recordatorio diario de Mente fría.', 'racha');
     }
     // Reschedule for next day
     scheduleReminder();

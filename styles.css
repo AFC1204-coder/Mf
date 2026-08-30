@@ -288,8 +288,13 @@ nav {
   backdrop-filter:blur(24px) saturate(160%); -webkit-backdrop-filter:blur(24px) saturate(160%);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
 }
-.nav-brand { font-family:var(--font-ui); font-size:0.67rem; color:var(--accent); letter-spacing:0.18em; text-transform:uppercase; cursor:pointer; user-select:none; transition:var(--trans); display:flex; align-items:center; gap:var(--sp-3); }
+.nav-brand { font-family:var(--font-display); font-size:0.67rem; color:var(--accent); letter-spacing:0.18em; text-transform:none; cursor:pointer; user-select:none; transition:var(--trans); display:flex; align-items:center; gap:0.55rem; }
 .nav-brand:hover { opacity:0.7; }
+.nav-mark { font-family:var(--font-display); font-size:1.7rem; color:var(--accent); line-height:1; font-weight:400; }
+.nav-word { font-family:var(--font-display); font-size:1.15rem; font-weight:500; font-style:italic; color:var(--text); letter-spacing:0.02em; text-transform:none; }
+.loader-brand { display:flex; flex-direction:column; align-items:center; gap:0.6rem; animation:pulse 2s infinite ease-in-out; }
+.loader-brand .nav-mark { font-size:4.2rem; }
+.loader-word { font-family:var(--font-display); font-size:1.8rem; font-style:italic; color:var(--text); letter-spacing:0.02em; }
 .nav-brand-icon { width:28px; height:28px; background:var(--accent); border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:var(--text-sm); color:#000; font-weight:700; flex-shrink:0; letter-spacing:0; }
 .nav-brand-text { display:flex; flex-direction:column; line-height:var(--lh-tight); }
 .nav-brand-sub { font-size:0.5rem; color:var(--text3); letter-spacing:0.12em; }

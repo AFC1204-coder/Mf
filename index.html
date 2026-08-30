@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Segundo Cerebro Soberano</title>
-<meta name="description" content="Herramienta soberana para adquirir y retener conocimiento de por vida. 131 libros, 1166 lecciones, spaced repetition.">
-<meta property="og:title" content="Segundo Cerebro Soberano">
-<meta property="og:description" content="Herramienta soberana para adquirir y retener conocimiento de por vida. 131 libros, 1166 lecciones, spaced repetition.">
+<title>Mente fría</title>
+<meta name="description" content="Biblioteca soberana. Lecciones, ensayos y sentadas de noche.">
+<meta property="og:title" content="Mente fría">
+<meta property="og:description" content="Biblioteca soberana. Lecciones, ensayos y sentadas de noche.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://tu-dominio.com/Mf/">
 <meta property="og:image" content="https://tu-dominio.com/Mf/social-card.png">
@@ -17,7 +17,7 @@
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='36' fill='%23080808'/%3E%3Ctext x='90' y='118' text-anchor='middle' font-size='80' fill='%23c9a84c'%3E§%3C/text%3E%3C/svg%3E">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="SCS">
+<meta name="apple-mobile-web-app-title" content="Mente fría">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
@@ -34,29 +34,32 @@
     padding-top: 1rem !important;
     background: transparent !important;
   }
-  .nav-brand img {
-    height: 48px !important;
+  .nav-brand img, .nav-mark {
+    height: 36px !important;
     width: auto !important;
     max-width: 100% !important;
-    max-width: auto !important;
-    max-width: 100% !important;
     object-fit: contain !important;
-    transform: translateX(-10px) !important;
+    transform: none !important;
   }
+  .nav-word { font-size: 1rem !important; }
 }
 </style>
 </head>
 <body>
 
 <div id="loader-screen">
-  <img src="loader_logo.png" alt="Cargando Segundo Cerebro Soberano" style="width: 260px; height: auto; filter: drop-shadow(0 4px 15px rgba(201,168,76,0.4)); animation: pulse 2s infinite ease-in-out;">
+  <div class="loader-brand">
+    <span class="nav-mark">§</span>
+    <div class="loader-word">Mente fría</div>
+  </div>
   <div class="loader-ring"></div>
   <div class="loader-msg" id="loader-msg">cargando biblioteca...</div>
 </div>
 
 <nav>
   <div class="nav-brand" onclick="showView('home')" style="cursor:pointer" id="admin-trigger">
-    <img src="logo_nuevo.png" alt="Segundo Cerebro Soberano" style="height: 48px; width: auto; max-width: 100%; object-fit: contain; filter: drop-shadow(0 2px 8px rgba(201,168,76,0.3));">
+    <span class="nav-mark">§</span>
+    <span class="nav-word">Mente fría</span>
   </div>
   <div class="nav-links">
     <button class="nav-btn active" onclick="showView('home')" id="nav-home" title="Biblioteca"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg> <span class="lbl">Biblioteca</span></button>
@@ -480,7 +483,7 @@ if('serviceWorker' in navigator){
       <span class="spotlight-badge">⌘K</span>
     </div>
     <div class="spotlight-content">
-      <div class="spotlight-state" id="spotlight-state">Escribe para explorar el Segundo Cerebro</div>
+      <div class="spotlight-state" id="spotlight-state">Escribe para explorar Mente fría</div>
       <div id="spotlight-results"></div>
     </div>
   </div>

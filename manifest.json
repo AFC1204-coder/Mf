@@ -1,7 +1,7 @@
 {
-  "name": "Segundo Cerebro Soberano",
-  "short_name": "SCS",
-  "description": "Sistema de conocimiento personal con spaced repetition, quizzes y análisis transversal",
+  "name": "Mente fría",
+  "short_name": "Mente fría",
+  "description": "Biblioteca soberana. Lecciones, ensayos y sentadas de noche.",
   "start_url": "/Mf/",
   "scope": "/Mf/",
   "display": "standalone",
