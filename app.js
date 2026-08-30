@@ -428,7 +428,7 @@ async function init() {
       document.getElementById('loader-screen').classList.add('hidden');
       setTimeout(()=>document.getElementById('loader-screen').style.display='none',500);
     },300);
-    renderStats(); renderEjes(); renderLibros(); renderContinua(); renderUltimosLibros(); renderEsquemas(); initAdminTrigger();
+    renderStats(); renderEjes(); renderLibros(); renderAtril(); renderUltimosLibros(); renderEsquemas(); initAdminTrigger();
     // Restaurar estado desde URL hash (para enlaces compartidos y marcadores)
     restoreFromURL();
   } catch(e) {
@@ -516,25 +516,420 @@ function renderUltimosLibros(){
 }
 
 /* ═══════════════════════════════════════════
-   CONTINUA
+   ATRIL — sesión de noche
 ═══════════════════════════════════════════ */
-function renderContinua(){
+const NOCHE_K = 'scs2_noche';
+let srsLimiteSesion = 20;
+let srsSkipDash = false;
+
+const Ambiente = (() => {
+  const K = 'scs2_ambiente';
+  let ctx = null, master = null, timer = null, on = false;
+
+  function wanted(){ return LS.get(K, false) === true; }
+
+  function ensure(){
+    if (ctx) return;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    ctx = new AC();
+    master = ctx.createGain();
+    master.gain.value = 0;
+    const lp = ctx.createBiquadFilter();
+    lp.type = 'lowpass';
+    lp.frequency.value = 640;
+    lp.Q.value = 0.65;
+    master.connect(lp);
+    lp.connect(ctx.destination);
+
+    const dur = 2;
+    const buf = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    let last = 0;
+    for (let i = 0; i < data.length; i++) {
+      last = (last + 0.02 * (Math.random() * 2 - 1)) / 1.02;
+      data[i] = last * 0.35;
+    }
+    const noise = ctx.createBufferSource();
+    noise.buffer = buf;
+    noise.loop = true;
+    const ng = ctx.createGain(); ng.gain.value = 0.03;
+    const nf = ctx.createBiquadFilter(); nf.type = 'lowpass'; nf.frequency.value = 240;
+    noise.connect(nf); nf.connect(ng); ng.connect(master);
+    noise.start();
+
+    [[82.41, 0.032], [123.47, 0.022], [164.81, 0.016]].forEach(([f, g]) => {
+      const o = ctx.createOscillator();
+      o.type = 'sine';
+      o.frequency.value = f;
+      const og = ctx.createGain(); og.gain.value = g;
+      o.connect(og); og.connect(master);
+      o.start();
+      const lfo = ctx.createOscillator();
+      lfo.frequency.value = 0.025 + Math.random() * 0.03;
+      const lg = ctx.createGain(); lg.gain.value = 3.5;
+      lfo.connect(lg); lg.connect(o.detune);
+      lfo.start();
+    });
+  }
+
+  function note(){
+    if (!ctx || !on) return;
+    const scale = [196, 220, 233.08, 261.63, 293.66, 329.63];
+    const f = scale[Math.floor(Math.random() * scale.length)];
+    const o = ctx.createOscillator();
+    o.type = 'triangle';
+    o.frequency.value = f;
+    const g = ctx.createGain();
+    const t = ctx.currentTime;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.035, t + 2.2);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 9);
+    const f2 = ctx.createBiquadFilter();
+    f2.type = 'lowpass';
+    f2.frequency.value = 820;
+    o.connect(f2); f2.connect(g); g.connect(master);
+    o.start();
+    o.stop(t + 10);
+  }
+
+  function syncBtn(){
+    document.querySelectorAll('.atril-sound').forEach(b => {
+      b.classList.toggle('on', on);
+      b.textContent = on ? 'Ambiente · on' : 'Ambiente';
+    });
+  }
+
+  function start(){
+    ensure();
+    if (!ctx) return;
+    ctx.resume();
+    on = true;
+    const t = ctx.currentTime;
+    master.gain.cancelScheduledValues(t);
+    master.gain.linearRampToValueAtTime(1, t + 2.8);
+    LS.set(K, true);
+    if (timer) clearInterval(timer);
+    timer = setInterval(note, 12000);
+    setTimeout(note, 1800);
+    syncBtn();
+  }
+
+  function stop(){
+    on = false;
+    if (ctx && master) {
+      const t = ctx.currentTime;
+      master.gain.cancelScheduledValues(t);
+      master.gain.linearRampToValueAtTime(0, t + 1.4);
+    }
+    if (timer) { clearInterval(timer); timer = null; }
+    LS.set(K, false);
+    syncBtn();
+  }
+
+  function toggle(){ on ? stop() : start(); }
+
+  document.addEventListener('visibilitychange', () => {
+    if (!ctx) return;
+    if (document.hidden) ctx.suspend();
+    else if (on) ctx.resume();
+  });
+
+  return { toggle, start, stop, wanted, get on(){ return on; } };
+})();
+
+function hoyISO(){
+  const o = new Date();
+  return `${o.getFullYear()}-${String(o.getMonth()+1).padStart(2,'0')}-${String(o.getDate()).padStart(2,'0')}`;
+}
+function lecsDeLibro(libId){
+  return lecs.filter(l=>l.libro_id===libId).sort((a,b)=>(a.orden||0)-(b.orden||0));
+}
+function isNocheCerrada(){
+  const n = LS.get(NOCHE_K, null);
+  return !!(n && n.date === hoyISO() && n.closed);
+}
+function setNocheCerrada(lecId){
+  LS.set(NOCHE_K, { date: hoyISO(), lecId: lecId || null, closed: true });
+}
+function pickNocheLeccion(){
+  const comp = completadasSet();
   const ultima = getUltima();
-  if (!ultima) return;
-  const lec = lecs.find(l=>l.id===ultima.lecId);
-  const libro = libros.find(l=>l.id===ultima.libId);
-  if (!lec || !libro) return;
-  const banner = document.getElementById('continua-banner');
-  banner.style.display = 'flex';
-  banner.innerHTML = `
-    <div class="continua-ico"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
-    <div class="continua-info">
-      <div class="continua-label">Continúa donde lo dejaste</div>
-      <div class="continua-titulo">${esc(lec.titulo)}</div>
-      <div class="continua-libro">${esc(libro.titulo)} — ${esc(libro.autor)}</div>
+  if (ultima) {
+    const lec = lecs.find(l=>l.id===ultima.lecId);
+    if (lec && !comp.has(lec.id)) return lec;
+    if (lec) {
+      const next = lecsDeLibro(lec.libro_id).find(l => !comp.has(l.id));
+      if (next) return next;
+    }
+  }
+  const ordered = [...lecs].sort((a,b)=>(a.orden||0)-(b.orden||0));
+  return ordered.find(l=>!comp.has(l.id)) || null;
+}
+function excerptNoche(cuerpo){
+  const t = (cuerpo||'').replace(/[#>*_`]/g,'').replace(/\s+/g,' ').trim();
+  if (!t) return 'Esta noche cabe una lección. El resto espera.';
+  if (t.length <= 240) return t;
+  return t.slice(0, 240).replace(/\s+\S*$/, '') + '.';
+}
+function nochesEsteMes(){
+  const y = new Date().getFullYear(), m = new Date().getMonth();
+  const days = new Set();
+  prog.forEach(p=>{
+    if (!p.fecha) return;
+    const o = new Date(p.fecha);
+    if (o.getFullYear()===y && o.getMonth()===m) {
+      days.add(`${o.getFullYear()}-${String(o.getMonth()+1).padStart(2,'0')}-${String(o.getDate()).padStart(2,'0')}`);
+    }
+  });
+  if (isNocheCerrada()) days.add(hoyISO());
+  return days.size;
+}
+function lampsHtml(n){
+  const lit = Math.min(7, Math.max(0, n));
+  let h = '';
+  for (let i=0;i<7;i++) h += `<i class="${i<lit?'on':''}"></i>`;
+  return h;
+}
+
+function renderAtril(){
+  const root = document.getElementById('atril');
+  if (!root) return;
+  const nNoches = nochesEsteMes();
+  const top = `<div class="atril-top"><div>Biblioteca soberana · <strong>Noche</strong></div>
+    <div class="atril-nights">${lampsHtml(nNoches)}<span>${nNoches} noche${nNoches===1?'':'s'}</span>
+      <button type="button" class="atril-sound${Ambiente.on?' on':''}" onclick="event.preventDefault();Ambiente.toggle()">${Ambiente.on?'Ambiente · on':'Ambiente'}</button>
+    </div></div>`;
+
+  if (isNocheCerrada()) {
+    const n = LS.get(NOCHE_K, {});
+    const done = lecs.find(l=>l.id===n.lecId);
+    const nxt = pickNocheLeccion();
+    const tomorrow = nxt ? esc(nxt.titulo) : 'El corpus está al día.';
+    root.innerHTML = `${top}
+      <p class="atril-kicker">La lámpara sigue encendida</p>
+      <h2 class="atril-title closed">Hasta mañana.</h2>
+      <p class="atril-meta">${done ? 'Marcado · '+esc(done.titulo) : 'Sesión de esta noche completa.'}</p>
+      <p class="atril-excerpt">No hay deuda en la puerta. El marcador espera.</p>
+      <p class="atril-tomorrow">Mañana en el atril: <em>${tomorrow}</em></p>
+      <div class="atril-stamp">Ex libris · ${hoyISO().slice(8)} ${['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'][+hoyISO().slice(5,7)-1]}</div>`;
+    return;
+  }
+
+  const lec = pickNocheLeccion();
+  if (!lec) {
+    root.innerHTML = `${top}
+      <p class="atril-kicker">Nada pendiente</p>
+      <h2 class="atril-title closed">El atril está vacío.</h2>
+      <p class="atril-meta">Todas las lecciones están marcadas.</p>`;
+    return;
+  }
+  const libro = libros.find(l=>l.id===lec.libro_id);
+  const body = excerptNoche(lec.cuerpo);
+  const drop = esc(body.charAt(0));
+  const rest = esc(body.slice(1));
+  const ord = lec.orden ? `Lección ${lec.orden}` : 'Lección';
+  const nLib = lecsDeLibro(lec.libro_id).length;
+  root.innerHTML = `${top}
+    <p class="atril-kicker">El atril está puesto · ~20 minutos</p>
+    <h2 class="atril-title">${esc(lec.titulo)}</h2>
+    <p class="atril-meta">${ord}${nLib?` de ${nLib}`:''} · <em>${esc(libro?libro.titulo:'')}</em>${libro?' — '+esc(libro.autor):''}</p>
+    <p class="atril-excerpt"><span class="drop">${drop}</span>${rest}</p>
+    <p class="atril-after">Después, si quieres: <b>5 tarjetas</b> del mismo hilo — no la cola entera.</p>
+    <div class="atril-actions">
+      <button class="atril-open" onclick="abrirAtril()">Abrir el libro</button>
+      <button class="atril-ghost" onclick="otroVolumenAtril()">Otro volumen</button>
+      <button class="atril-ghost" onclick="cincoTarjetasNoche()">Cinco tarjetas</button>
+    </div>`;
+}
+function renderContinua(){ renderAtril(); }
+
+function abrirAtril(){
+  if (Ambiente.wanted()) Ambiente.start();
+  const lec = pickNocheLeccion();
+  if (!lec) return;
+  libroActual = libros.find(l=>l.id===lec.libro_id) || null;
+  abrirCuaderno(lec.id);
+}
+function otroVolumenAtril(){
+  const cur = pickNocheLeccion();
+  const comp = completadasSet();
+  const pool = lecs.filter(l => !comp.has(l.id) && (!cur || l.libro_id !== cur.libro_id));
+  const src = pool.length ? pool : lecs.filter(l => !comp.has(l.id));
+  if (!src.length) { toast('Sin otro volumen pendiente'); return; }
+  const l = src[Math.floor(Math.random()*src.length)];
+  setUltima(l.id, l.libro_id);
+  renderAtril();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function cincoTarjetasNoche(){
+  srsLimiteSesion = 5;
+  srsSkipDash = true;
+  showView('repaso-srs');
+  iniciarSesionSRS();
+}
+
+/* ═══════════════════════════════════════════
+   CUADERNO NOCHE — snap de 3 actos, un libro
+═══════════════════════════════════════════ */
+function cuadPlain(s, max){
+  const t = (s||'').replace(/[#>*_`]/g,'').replace(/\s+/g,' ').trim();
+  if (!t) return '';
+  if (max && t.length > max) return t.slice(0, max).replace(/\s+\S*$/, '') + '…';
+  return t;
+}
+function siguienteLeccionMismoLibro(id){
+  const lec = lecs.find(l=>l.id===id);
+  if (!lec) return null;
+  const comp = completadasSet();
+  const list = lecsDeLibro(lec.libro_id);
+  const idx = list.findIndex(l=>l.id===id);
+  return list.slice(idx+1).find(l=>!comp.has(l.id)) || list.find(l=>!comp.has(l.id) && l.id!==id) || null;
+}
+function primeraLecDeLibro(libroId){
+  const comp = completadasSet();
+  const list = lecsDeLibro(libroId);
+  return list.find(l=>!comp.has(l.id)) || list[0] || null;
+}
+function vecinoLibro(dir){
+  if (!libroActual || !libros.length) return null;
+  const i = libros.findIndex(l=>l.id===libroActual.id);
+  const j = i + dir;
+  if (i < 0 || j < 0 || j >= libros.length) return null;
+  return libros[j];
+}
+let cuadernoSwipeLock = false;
+function irTomo(dir){
+  if (cuadernoSwipeLock) return;
+  const b = vecinoLibro(dir);
+  if (!b) { toast(dir>0 ? 'Último tomo de la estantería' : 'Primer tomo'); return; }
+  const lec = primeraLecDeLibro(b.id);
+  if (!lec) { toast('Ese tomo no tiene lecciones'); return; }
+  cuadernoSwipeLock = true;
+  abrirCuaderno(lec.id);
+  setTimeout(()=>{ cuadernoSwipeLock = false; }, 450);
+}
+function bindCuadernoGestos(root){
+  let x0=0, y0=0;
+  root.addEventListener('touchstart', e => {
+    const t = e.changedTouches[0];
+    x0 = t.clientX; y0 = t.clientY;
+  }, {passive:true});
+  root.addEventListener('touchend', e => {
+    const t = e.changedTouches[0];
+    const dx = t.clientX - x0, dy = t.clientY - y0;
+    if (Math.abs(dx) < 72 || Math.abs(dx) < Math.abs(dy) * 1.25) return;
+    irTomo(dx < 0 ? 1 : -1);
+  }, {passive:true});
+  let acc = 0;
+  root.addEventListener('wheel', e => {
+    if (Math.abs(e.deltaX) <= Math.abs(e.deltaY) || Math.abs(e.deltaX) < 10) { acc = 0; return; }
+    e.preventDefault();
+    acc += e.deltaX;
+    if (Math.abs(acc) > 90) { irTomo(acc > 0 ? 1 : -1); acc = 0; }
+  }, {passive:false});
+}
+function onCuadernoKeys(e){
+  if (!document.body.classList.contains('noche')) return;
+  if (e.key === 'ArrowRight') { e.preventDefault(); irTomo(1); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); irTomo(-1); }
+}
+document.addEventListener('keydown', onCuadernoKeys);
+function abrirCuaderno(id){
+  lecActual = lecs.find(l=>l.id===id);
+  if (!lecActual) return;
+  libroActual = libros.find(l=>l.id===lecActual.libro_id) || libroActual;
+  setUltima(id, lecActual.libro_id);
+  if (Ambiente.wanted()) Ambiente.start();
+  renderCuaderno();
+  showView('cuaderno');
+  const root = document.getElementById('cuaderno-root');
+  if (root) root.scrollTop = 0;
+}
+function salirCuaderno(){
+  showView('home');
+}
+function folioDesdeCuaderno(){
+  if (lecActual) verLeccion(lecActual.id);
+}
+function otraDelTomo(){
+  const n = siguienteLeccionMismoLibro(lecActual?.id);
+  if (!n) { toast('No hay otra pendiente en este tomo'); return; }
+  abrirCuaderno(n.id);
+}
+async function cerrarNocheCuaderno(){
+  if (lecActual) await marcarCompletada(lecActual.id);
+  showView('home');
+}
+function renderCuaderno(){
+  const root = document.getElementById('cuaderno-root');
+  if (!root || !lecActual) return;
+  const libro = libros.find(l=>l.id===lecActual.libro_id);
+  const meta = `${libro?esc(libro.titulo):''}${libro?' — '+esc(libro.autor):''}${lecActual.orden?' · Lección '+lecActual.orden:''}`;
+  const tesis = cuadPlain(lecActual.cuerpo, 1100);
+  const manana = lecActual.aplicacion_practica || lecActual.conexion_cruzada || '';
+  const giro = lecActual.autocorreccion || '';
+  const nxt = siguienteLeccionMismoLibro(lecActual.id);
+  let n = 1;
+  const acts = [];
+
+  acts.push(`<section class="cuad-act tesis" data-i="${n++}">
+    <p class="cuad-kicker">Acto I · el marco</p>
+    <h2 class="cuad-title">${esc(lecActual.titulo)}</h2>
+    <p class="cuad-meta">${meta}</p>
+    ${tesis ? `<div class="cuad-body"><span class="drop">${esc(tesis.charAt(0))}</span>${esc(tesis.slice(1))}</div>` : ''}
+    <p class="cuad-hint">↑ actos de esta lección · ← → otro tomo</p>
+  </section>`);
+
+  if (manana && manana.trim()) {
+    acts.push(`<section class="cuad-act manana" data-i="${n++}">
+      <p class="cuad-kicker">Acto II · mañana</p>
+      <h2 class="cuad-title">Qué haces con esto</h2>
+      <p class="cuad-meta">Una acción. No el libro entero.</p>
+      <div class="cuad-body fmt">${fmt(manana)}</div>
+      <p class="cuad-hint">Sigue · el giro</p>
+    </section>`);
+  }
+
+  if (giro && giro.trim()) {
+    acts.push(`<section class="cuad-act giro" data-i="${n++}">
+      <p class="cuad-kicker">Acto III · el giro</p>
+      <h2 class="cuad-title">Dónde se rompe el marco</h2>
+      <p class="cuad-meta">La duda que el propio texto se hace.</p>
+      <div class="cuad-body fmt">${fmt(giro)}</div>
+      <p class="cuad-hint">Última página</p>
+    </section>`);
+  }
+
+  acts.push(`<section class="cuad-act cierre" data-i="${n++}">
+    <p class="cuad-kicker">La lámpara sigue encendida</p>
+    <h2 class="cuad-title closed atril-title">Hasta mañana.</h2>
+    <p class="cuad-meta">Esta sentada basta. El marcador queda aquí.</p>
+    <div class="cuad-stamp">Ex libris · ${hoyISO().slice(8)} ${['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'][+hoyISO().slice(5,7)-1]}</div>
+    <div class="cuad-actions">
+      <button class="atril-open" onclick="cerrarNocheCuaderno()">Cerrar por hoy</button>
+      ${nxt?`<button class="atril-ghost" onclick="otraDelTomo()">Otra de este tomo</button>`:''}
+      <button class="atril-ghost" onclick="folioDesdeCuaderno()">Ver folio</button>
     </div>
-    <div class="continua-arrow" style="color:var(--accent); display:flex; align-items:center;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></div>`;
-  banner.onclick = () => { libroActual = libro; verLeccion(ultima.lecId); };
+  </section>`);
+
+  const total = acts.length;
+  const dots = Array.from({length:total}, (_,i)=>`<i class="${i===0?'on':''}"></i>`).join('');
+  root.innerHTML = `
+    <div class="cuad-bar">
+      <button type="button" onclick="salirCuaderno()">Salir</button>
+      <button type="button" class="atril-sound${Ambiente.on?' on':''}" onclick="Ambiente.toggle()">${Ambiente.on?'Ambiente · on':'Ambiente'}</button>
+    </div>
+    <div class="cuad-dots">${dots}</div>
+    <button type="button" class="cuad-side prev" onclick="irTomo(-1)" aria-label="Tomo anterior">‹</button>
+    <button type="button" class="cuad-side next" onclick="irTomo(1)" aria-label="Tomo siguiente">›</button>
+    ${acts.join('')}`;
+  bindCuadernoGestos(root);
+  root.onscroll = () => {
+    const h = root.clientHeight || 1;
+    const i = Math.round(root.scrollTop / h);
+    root.querySelectorAll('.cuad-dots i').forEach((d,k)=>d.classList.toggle('on', k===i));
+  };
 }
 
 /* ═══════════════════════════════════════════
@@ -597,7 +992,7 @@ function buscarEnLecciones(q){
     const idx=textoBase.toLowerCase().indexOf(ql);
     const raw=idx>=0?textoBase.slice(Math.max(0,idx-40),idx+80):'';
     const snippet=raw?'...'+esc(raw).replace(new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi'),'<mark class="hl">$1</mark>')+'...':'';
-    return `<div class="search-lec-item" onclick="verLeccion('${l.libro_id}','${l.id}')">
+    return `<div class="search-lec-item" onclick="verLeccion('${l.id}')">
       <div class="search-lec-title">${hl(l.titulo,q)}</div>
       <div class="search-lec-book">${libro?esc(libro.titulo):''} ${libro?'· '+esc(libro.autor):''}</div>
       ${snippet?`<div class="search-lec-snippet">${snippet}</div>`:''}
@@ -1309,7 +1704,10 @@ async function marcarCompletada(id){
   try{
     await sb('progreso',{method:'POST',body:JSON.stringify({tipo:'leccion',item_id:id,resultado:'correcta',fecha:new Date().toISOString()})});
     prog.push({tipo:'leccion',item_id:id,resultado:'correcta',fecha:new Date().toISOString()});
-    toast('✓ Lección completada'); verLeccion(id); renderStats();
+    setNocheCerrada(id);
+    toast('✓ Lección completada');
+    renderStats(); renderAtril();
+    if (!document.body.classList.contains('noche')) verLeccion(id);
   }catch(e){toast('Error: '+e.message);}
 }
 
@@ -1825,6 +2223,7 @@ function verAutor(enc){
 ═══════════════════════════════════════════ */
 function showView(name, skipPush=false){
   if(name!=='leccion'){if(ttsAudio){ttsAudio.pause();ttsAudio=null;}if(window.speechSynthesis){speechSynthesis.cancel();}ttsUtterance=null;ttsPaused=false;ttsMode=null;ttsAudioUrl=null;}
+  document.body.classList.toggle('noche', name==='cuaderno');
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById(`view-${name}`)?.classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
@@ -1838,6 +2237,7 @@ function showView(name, skipPush=false){
     const state={view:name,libroId:libroActual?.id||null,lecId:lecActual?.id||null};
     let hash=`#${name}`;
     if(name==='leccion'&&lecActual) hash=`#leccion/${lecActual.libro_id}/${lecActual.id}`;
+    if(name==='cuaderno'&&lecActual) hash=`#cuaderno/${lecActual.libro_id}/${lecActual.id}`;
     if(name==='lecciones'&&libroActual) hash=`#lecciones/${libroActual.id}`;
     history.pushState(state,'',hash);
   }
@@ -2054,6 +2454,7 @@ async function srsRPC(fn, body) {
 }
 
 async function initSRS() {
+  if (srsSkipDash) { srsSkipDash = false; return; }
   renderSRSDashboard();
   try {
     srsEstado = await srsRPC('estado_repaso', { p_usuario: SRS_USER });
@@ -2144,7 +2545,8 @@ async function iniciarSesionSRS() {
   const root = document.getElementById('srs-root');
   root.innerHTML = '<div class="empty">Cargando cola...</div>';
   try {
-    srsCola = await srsRPC('obtener_cola_repaso', { p_usuario: SRS_USER, p_modo: srsModo, p_limite: 20 });
+    srsCola = await srsRPC('obtener_cola_repaso', { p_usuario: SRS_USER, p_modo: srsModo, p_limite: srsLimiteSesion || 20 });
+    srsLimiteSesion = 20;
     if (!srsCola || !srsCola.length) {
       root.innerHTML = `<button class="back-btn" onclick="renderSRSDashboard()">← Dashboard</button>
         <div class="empty" style="margin-top:2rem"><span style="font-size:2rem;display:block;margin-bottom:0.8rem">🎉</span>
@@ -2286,6 +2688,13 @@ function restoreFromURL(){
 
   if(!hash||hash==='home') return;
 
+  if(hash.startsWith('cuaderno/')){
+    const parts=hash.split('/');
+    const libroId=parts[1]; const lecId=parts[2];
+    if(libroId) libroActual=libros.find(l=>l.id===libroId)||null;
+    if(lecId){ abrirCuaderno(lecId); return; }
+  }
+
   // Formato: #leccion/LIBRO_ID/LEC_ID
   if(hash.startsWith('leccion/')){
     const parts=hash.split('/');
@@ -2352,6 +2761,7 @@ init();
 function toggleSpotlight() {
   const overlay = document.getElementById('spotlight-overlay');
   const input = document.getElementById('spotlight-input');
+  if (!overlay || !input) { showView('home'); document.getElementById('search-input')?.focus(); return; }
   if (overlay.classList.contains('hidden')) {
     overlay.classList.remove('hidden');
     input.value = '';

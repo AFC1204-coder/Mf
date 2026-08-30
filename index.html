@@ -109,17 +109,18 @@
 
   <!-- HOME -->
   <div class="view active" id="view-home">
-    <div style="margin-bottom:1.4rem;display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap">
-      <h1 class="page-title" style="font-size:1.55rem;margin-bottom:0">Biblioteca</h1>
+    <div id="atril"></div>
+    <div class="home-catalog-head" style="margin-bottom:1.4rem;display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap">
+      <h1 class="page-title" style="font-size:1.55rem;margin-bottom:0">Explorar</h1>
       <p class="page-sub" id="home-sub" style="margin-bottom:0;font-size:0.7rem">cargando...</p>
     </div>
-    <div class="stats-row">
+    <div class="stats-row home-stats-quiet">
       <div class="stat-card"><div class="stat-num" id="s-libros">—</div><div class="stat-label">Libros</div></div>
       <div class="stat-card"><div class="stat-num" id="s-comp">—</div><div class="stat-label">Lec. completadas</div></div>
       <div class="stat-card pct"><div class="stat-num" id="s-pct">—</div><div class="stat-label">Progreso</div></div>
       <div class="stat-card streak"><div class="stat-num" id="s-racha">—</div><div class="stat-label">Racha <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></div></div>
     </div>
-    <div id="continua-banner" class="continua-banner" style="display:none"></div>
+    <div id="continua-banner" class="continua-banner" style="display:none" hidden></div>
     <div id="ultimos-libros-section" style="display:none">
       <p class="sec-label">Últimos visitados</p>
       <div id="ultimos-libros-cont" class="ultimos-row"></div>
@@ -186,6 +187,11 @@
   <div class="view" id="view-leccion">
     <button class="back-btn" id="back-lec-btn" onclick="volverDeLeccion()">← Lecciones</button>
     <div id="leccion-contenido"></div>
+  </div>
+
+  <!-- CUADERNO NOCHE (snap, un libro) -->
+  <div class="view" id="view-cuaderno">
+    <div id="cuaderno-root"></div>
   </div>
 
   <!-- TEST CONFIG MODAL -->
@@ -465,6 +471,20 @@ if('serviceWorker' in navigator){
 }
 </script>
 <script src="notifications.js" defer></script>
+
+<div id="spotlight-overlay" class="spotlight-overlay hidden" onclick="if(event.target===this)toggleSpotlight()">
+  <div class="spotlight-box" onclick="event.stopPropagation()">
+    <div class="spotlight-header">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input class="spotlight-input" id="spotlight-input" type="search" placeholder="Buscar en el corpus…" autocomplete="off">
+      <span class="spotlight-badge">⌘K</span>
+    </div>
+    <div class="spotlight-content">
+      <div class="spotlight-state" id="spotlight-state">Escribe para explorar el Segundo Cerebro</div>
+      <div id="spotlight-results"></div>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>

@@ -145,7 +145,7 @@ function getDateLabel(dateStr) {
 
 /* ── BADGE & STATS ── */
 function updateBadge() {
-  const unread = notifCache.filter(n => !n.leida).length;
+  const unread = notifCache.filter(n => !n.leida && n.tipo !== 'racha' && n.tipo !== 'repaso').length;
   ['notif-badge', 'notif-badge-mobile'].forEach(id => {
     const b = document.getElementById(id);
     if (b) {
@@ -322,7 +322,7 @@ async function checkForNewNotifications() {
     const d = await sb('notificaciones?usuario_id=eq.default&leida=eq.false&order=fecha.desc&limit=10');
     if (d && d.length) {
       const newOnes = d.filter(n => !notifCache.find(c => c.id === n.id));
-      newOnes.forEach(n => {
+      newOnes.filter(n => n.tipo !== 'racha' && n.tipo !== 'repaso').forEach(n => {
         showAchievement(n.icono || '🔔', n.titulo, n.mensaje);
         notifCache.unshift(n);
       });
@@ -354,26 +354,7 @@ async function checkStreakAndRepasos() {
     const repaso = await repasoRes.json();
 
     await loadNotifications();
-
-    if (racha && racha.alerta) {
-      setTimeout(() => {
-        const dias = racha.dias_sin_actividad;
-        const ico = dias >= 7 ? '💀' : dias >= 3 ? '⚠️' : '🔥';
-        showAchievement(ico,
-          dias >= 7 ? 'Racha perdida' : 'Racha en riesgo',
-          'Llevas ' + dias + ' días sin estudiar. El spacing effect necesita consistencia.'
-        );
-      }, 2000);
-    }
-
-    if (repaso && repaso.pendientes > 0) {
-      setTimeout(() => {
-        showAchievement('📋',
-          repaso.pendientes + ' repasos pendientes',
-          'El spacing effect maximiza la retención. Cada repaso refuerza tus conexiones neuronales.'
-        );
-      }, racha && racha.alerta ? 7500 : 2000);
-    }
+    // Atril: no toasts de deuda. La racha/cola siguen en el panel si las abres.
   } catch (e) {
     console.error('Streak/repaso check:', e);
   }
