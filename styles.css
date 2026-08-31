@@ -923,6 +923,27 @@ mark.hl { background:var(--hl); color:#000; border-radius:2px; padding:0 1px; }
 
 /* ── FOLIO (lección larga = página de libro) ── */
 #view-leccion { max-width: 42rem; }
+.lec-chrome {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.6rem;
+}
+.lec-chrome .back-btn { margin-bottom: 0; }
+.folio-mapa { margin: 0 0 1.2rem; }
+.folio-mapa-btn {
+  background: transparent;
+  border: 1px solid #cbb992;
+  color: #8a6a28;
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.folio-mapa-btn:hover { border-color: #8a6a28; }
 .folio {
   background: #efe4cc;
   color: #2a2218;

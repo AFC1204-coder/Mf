@@ -651,7 +651,7 @@ const Ambiente = (() => {
     else if (on) ctx.resume();
   });
 
-  return { toggle, start, stop, wanted, get on(){ return on; } };
+  return { toggle, start, stop, wanted, syncBtn, get on(){ return on; } };
 })();
 
 function hoyISO(){
@@ -1275,14 +1275,47 @@ function renderEsquemas(){
   }).join('');
 }
 
-function abrirEsquema(key){
+function esquemaDeLibro(libro){
+  if (!libro) return null;
+  const a = (libro.autor || '').toLowerCase();
+  const t = (libro.titulo || '').toLowerCase();
+  const hay = s => a.includes(s) || t.includes(s);
+  const key =
+    hay('cialdini') ? 'cialdini' :
+    hay('weinstein') ? 'weinstein' :
+    hay('kahneman') ? 'kahneman' :
+    hay('mcgilchrist') ? 'mcgilchrist' :
+    (hay('taleb') || hay('antifrágil') || hay('antifragil')) ? 'taleb' :
+    (hay('tetlock') || hay('superforecast')) ? 'tetlock' :
+    (hay('strauss') || hay('howe') || hay('fourth turning') || hay('cuarto giro')) ? 'fourth-turning' :
+    null;
+  if (!key) return null;
+  return ESQUEMAS_DATA.find(e => e.key === key && e.disponible) || null;
+}
+let esquemaReturn = 'esquemas';
+function abrirEsquema(key, from){
   const e = ESQUEMAS_DATA.find(x=>x.key===key);
   if(!e||!e.disponible){ toast('Esquema próximamente'); return; }
   const basePath = window.location.pathname.endsWith('/')
     ? window.location.pathname
     : window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
   const url = window.location.origin + basePath + e.file;
+  const iframe = document.getElementById('esquema-iframe');
+  const title = document.getElementById('esquema-viewer-title');
+  if (iframe && title) {
+    iframe.src = url;
+    title.textContent = e.titulo;
+    esquemaReturn = from || 'esquemas';
+    const back = document.getElementById('esquema-back-btn');
+    if (back) back.textContent = esquemaReturn === 'leccion' ? '← Folio' : '← Esquemas';
+    showView('esquema-viewer');
+    return;
+  }
   window.open(url, '_blank');
+}
+function volverDeEsquema(){
+  if (esquemaReturn === 'leccion' && lecActual) { verLeccion(lecActual.id); return; }
+  showView('esquemas');
 }
 
 function esquemaFullscreen(){}
@@ -1324,6 +1357,7 @@ function renderLibroHero(){
         </div>
         <div style="margin-top:0.8rem;display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap">
           <span class="eje-tag ${ejeClass(l.eje)}">${ejeIcon(l.eje)} ${esc(l.eje||'—')}</span>
+          ${esquemaDeLibro(l)?`<button class="act-btn secondary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="event.stopPropagation();abrirEsquema('${esquemaDeLibro(l).key}')">Mapa</button>`:''}
           <button class="act-btn secondary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="testDelLibro('${l.id}')"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg> Test</button>
           <button class="act-btn secondary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="abrirPdfModal()">⬇ PDF</button>
           <button class="act-btn secondary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="compartirLibro()">🔗 Compartir</button>
@@ -1419,6 +1453,10 @@ function verLeccion(id, from=null){
     ${lecActual.orden?`<span class="lec-ord">Lección ${lecActual.orden}</span>`:''}
     ${done?`<span class="lec-done">Completada</span>`:''}
   </div>`;
+  const mapa = esquemaDeLibro(libro);
+  if (mapa) {
+    html+=`<p class="folio-mapa"><button type="button" class="folio-mapa-btn" onclick="abrirEsquema('${mapa.key}','leccion')">Ver el mapa · ${esc(mapa.titulo)}</button></p>`;
+  }
 
   html+=`<div class="lec-body fmt">${fmt(lecActual.cuerpo)}</div>`;
 
@@ -2319,6 +2357,7 @@ function showView(name, skipPush=false){
   if(name==='ensayos')renderEnsayos();
   if(name==='busqueda'){ setTimeout(()=>{ const i=document.getElementById('corpus-search-input'); if(i)i.focus(); },100); }
   if(name==='repaso-srs')initSRS();
+  if(name==='leccion'||name==='cuaderno') Ambiente.syncBtn();
 }
 
 /* ═══════════════════════════════════════════

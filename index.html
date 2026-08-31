@@ -193,7 +193,10 @@
 
   <!-- LECCION DETAIL -->
   <div class="view" id="view-leccion">
-    <button class="back-btn" id="back-lec-btn" onclick="volverDeLeccion()">← Lecciones</button>
+    <div class="lec-chrome">
+      <button class="back-btn" id="back-lec-btn" onclick="volverDeLeccion()">← Lecciones</button>
+      <button type="button" class="atril-sound" id="lec-ambiente" onclick="Ambiente.toggle()">Ambiente</button>
+    </div>
     <div id="leccion-contenido"></div>
   </div>
 
@@ -310,7 +313,7 @@
 
   <!-- ESQUEMA VIEWER -->
   <div class="view" id="view-esquema-viewer">
-    <button class="back-btn" onclick="showView('esquemas')">← Esquemas</button>
+    <button class="back-btn" id="esquema-back-btn" onclick="volverDeEsquema()">← Esquemas</button>
     <div class="esquema-viewer-wrap">
       <div class="esquema-viewer-header">
         <span class="esquema-viewer-title" id="esquema-viewer-title">—</span>
