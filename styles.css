@@ -931,6 +931,19 @@ mark.hl { background:var(--hl); color:#000; border-radius:2px; padding:0 1px; }
   margin-bottom: 0.6rem;
 }
 .lec-chrome .back-btn { margin-bottom: 0; }
+.lec-chrome-r { display: flex; align-items: center; gap: 0.4rem; }
+.lec-kindle {
+  background: transparent;
+  border: 0;
+  color: var(--text3);
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 8px 10px;
+}
+.lec-kindle.on { color: var(--accent); }
 .folio-mapa { margin: 0 0 1.2rem; }
 .folio-mapa-btn {
   background: transparent;
@@ -2004,3 +2017,108 @@ svg {
   .folio { transition: none; }
   .folio.slide-in { animation: none; }
 }
+
+/* ── KINDLE (lectura de poco esfuerzo) ── */
+body.kindle {
+  background: #f4ead8 !important;
+  color: #3a332b;
+}
+body.kindle nav,
+body.kindle .bottom-nav { display: none !important; }
+body.kindle main {
+  max-width: none;
+  padding: 1.2rem 0 3rem;
+  background: #f4ead8;
+}
+body.kindle #view-leccion { max-width: min(40rem, 92vw); }
+body.kindle .lec-chrome .back-btn,
+body.kindle .lec-kindle,
+body.kindle .atril-sound { color: #6b5e4e; }
+body.kindle .lec-kindle.on,
+body.kindle .atril-sound.on { color: #7a6240; }
+body.kindle .folio {
+  background: transparent;
+  box-shadow: none;
+  color: #3a332b;
+  padding: 0.4rem 0 2rem;
+}
+body.kindle .folio::before { display: none; }
+body.kindle .folio .lec-titulo {
+  color: #2c261f;
+  font-weight: 500;
+  font-size: clamp(1.35rem, 3vw, 1.85rem);
+}
+body.kindle .folio .lec-meta-header { border-bottom-color: #d9ccb4; }
+body.kindle .folio .lec-meta-libro,
+body.kindle .folio .lec-ord,
+body.kindle .folio .lec-done { color: #7a6d5c; }
+body.kindle .folio .fmt {
+  color: #3a332b;
+  font-size: 1.18rem;
+  line-height: 1.72;
+}
+body.kindle .folio .fmt strong { color: #2c261f; font-weight: 600; }
+body.kindle .folio .fmt em { color: #4a4036; }
+body.kindle .folio .lec-body.fmt>p:first-child::first-letter {
+  color: #3a332b;
+  font-weight: 500;
+}
+body.kindle .folio .aplic-box,
+body.kindle .folio .con-box { border-top-color: #d9ccb4; }
+body.kindle .folio .aplic-label,
+body.kindle .folio .con-label,
+body.kindle .folio .auto-label,
+body.kindle .folio .autores-kicker,
+body.kindle .folio .notas-label,
+body.kindle .folio .det-card-title { color: #7a6d5c; }
+body.kindle .folio .auto-box {
+  background: #ebe1cc;
+  border: 1px solid #d9ccb4;
+}
+body.kindle .folio-mapa-btn {
+  border-color: #d9ccb4;
+  color: #6b5e4e;
+}
+body.kindle .folio .autor-tag { border-color: #d9ccb4; color: #3a332b; }
+body.kindle .folio .notas-section { border-top-color: #d9ccb4; }
+body.kindle .folio .notas-area {
+  background: #efe6d2;
+  color: #3a332b;
+  border-color: #d9ccb4;
+}
+body.kindle .folio .tts-player,
+body.kindle .folio .det-card { border-color: #d9ccb4; }
+body.kindle .folio .tts-btn { color: #6b5e4e; }
+body.kindle .folio table { color: #3a332b; }
+body.kindle .folio th, body.kindle .folio td {
+  border-color: #d9ccb4;
+  color: #3a332b;
+  background: transparent;
+}
+body.kindle .folio th { color: #6b5e4e; }
+body.kindle .lec-actions .act-btn {
+  background: transparent;
+  border: 1px solid #d9ccb4;
+  color: #3a332b;
+}
+body.kindle .lec-actions .act-btn.primary {
+  background: #3a332b;
+  color: #f4ead8;
+  border-color: #3a332b;
+}
+body.kindle #view-cuaderno.active { background: #f4ead8; }
+body.kindle .cuad-act.tesis,
+body.kindle .cuad-act.manana,
+body.kindle .cuad-act.giro,
+body.kindle .cuad-act.cierre { background: #f4ead8; }
+body.kindle .cuad-kicker { color: #7a6d5c; }
+body.kindle .cuad-title { color: #2c261f; }
+body.kindle .cuad-meta,
+body.kindle .cuad-hint { color: #7a6d5c; }
+body.kindle .cuad-body { color: #3a332b; }
+body.kindle .cuad-body .drop { color: #3a332b; }
+body.kindle .cuad-bar button,
+body.kindle .cuad-side { color: #7a6d5c; }
+body.kindle .cuad-dots i { background: #d9ccb4; }
+body.kindle .cuad-dots i.on { background: #7a6d5c; }
+body.kindle .cuad-bar span { pointer-events: auto; }

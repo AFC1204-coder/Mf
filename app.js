@@ -654,6 +654,32 @@ const Ambiente = (() => {
   return { toggle, start, stop, wanted, syncBtn, get on(){ return on; } };
 })();
 
+const Lectura = (() => {
+  const K = 'scs2_kindle';
+  function on(){ return LS.get(K, false) === true; }
+  function syncBtn(){
+    document.querySelectorAll('.lec-kindle').forEach(b => {
+      b.classList.toggle('on', on());
+      b.textContent = on() ? 'Kindle · on' : 'Kindle';
+    });
+  }
+  function apply(view){
+    const reading = view
+      ? (view === 'leccion' || view === 'cuaderno')
+      : !!(document.getElementById('view-leccion')?.classList.contains('active')
+        || document.getElementById('view-cuaderno')?.classList.contains('active'));
+    document.body.classList.toggle('kindle', on() && reading);
+    syncBtn();
+  }
+  function toggle(){
+    LS.set(K, !on());
+    const view = document.getElementById('view-cuaderno')?.classList.contains('active') ? 'cuaderno'
+      : document.getElementById('view-leccion')?.classList.contains('active') ? 'leccion' : null;
+    apply(view);
+  }
+  return { on, apply, toggle, syncBtn };
+})();
+
 function hoyISO(){
   const o = new Date();
   return `${o.getFullYear()}-${String(o.getMonth()+1).padStart(2,'0')}-${String(o.getDate()).padStart(2,'0')}`;
@@ -990,7 +1016,10 @@ function renderCuaderno(){
   root.innerHTML = `
     <div class="cuad-bar">
       <button type="button" onclick="salirCuaderno()">Salir</button>
-      <button type="button" class="atril-sound${Ambiente.on?' on':''}" onclick="Ambiente.toggle()">${Ambiente.on?'Ambiente · on':'Ambiente'}</button>
+      <span>
+        <button type="button" class="lec-kindle" onclick="Lectura.toggle()">Kindle</button>
+        <button type="button" class="atril-sound${Ambiente.on?' on':''}" onclick="Ambiente.toggle()">${Ambiente.on?'Ambiente · on':'Ambiente'}</button>
+      </span>
     </div>
     <div class="cuad-dots">${dots}</div>
     <button type="button" class="cuad-side prev" onclick="irTomo(-1)" aria-label="Tomo anterior">‹</button>
@@ -2391,6 +2420,7 @@ function verAutor(enc){
 function showView(name, skipPush=false){
   if(name!=='leccion'){if(ttsAudio){ttsAudio.pause();ttsAudio=null;}if(window.speechSynthesis){speechSynthesis.cancel();}ttsUtterance=null;ttsPaused=false;ttsMode=null;ttsAudioUrl=null;}
   document.body.classList.toggle('noche', name==='cuaderno');
+  Lectura.apply(name);
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById(`view-${name}`)?.classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));

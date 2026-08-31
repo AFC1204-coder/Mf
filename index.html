@@ -195,7 +195,10 @@
   <div class="view" id="view-leccion">
     <div class="lec-chrome">
       <button class="back-btn" id="back-lec-btn" onclick="volverDeLeccion()">← Lecciones</button>
-      <button type="button" class="atril-sound" id="lec-ambiente" onclick="Ambiente.toggle()">Ambiente</button>
+      <div class="lec-chrome-r">
+        <button type="button" class="lec-kindle" onclick="Lectura.toggle()">Kindle</button>
+        <button type="button" class="atril-sound" id="lec-ambiente" onclick="Ambiente.toggle()">Ambiente</button>
+      </div>
     </div>
     <div id="leccion-contenido"></div>
   </div>
