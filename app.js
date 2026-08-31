@@ -669,6 +669,9 @@ const Lectura = (() => {
       : !!(document.getElementById('view-leccion')?.classList.contains('active')
         || document.getElementById('view-cuaderno')?.classList.contains('active'));
     document.body.classList.toggle('kindle', on() && reading);
+    const paper = on() && reading;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', paper ? '#efe6d0' : '#080808');
+    document.documentElement.style.colorScheme = paper ? 'light' : 'dark';
     syncBtn();
   }
   function toggle(){
