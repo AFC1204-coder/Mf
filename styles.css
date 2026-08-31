@@ -646,7 +646,7 @@ body.noche main { max-width: none; padding: 0; }
 }
 .cuad-body {
   font-family: var(--font-body);
-  font-size: 1.12rem;
+  font-size: calc(1.12rem * var(--tipo, 1.14));
   line-height: 1.7;
   color: #d8d0c4;
   max-width: 38em;
@@ -999,6 +999,18 @@ mark.hl { background:var(--hl); color:#000; border-radius:2px; padding:0 1px; }
   cursor: pointer;
   padding: 8px 10px;
 }
+.lec-tipo {
+  background: transparent;
+  border: 0;
+  color: var(--text3);
+  font-family: Georgia, serif;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 8px 6px;
+  min-width: 36px;
+  min-height: 44px;
+}
+.lec-tipo:hover { color: var(--text); }
 .lec-kindle.on { color: var(--accent); }
 .gemini-row {
   display: flex;
@@ -2155,6 +2167,7 @@ body.kindle .lec-chrome:hover,
 body.kindle .lec-chrome:focus-within { opacity: 1; }
 body.kindle .lec-chrome .back-btn,
 body.kindle .lec-kindle,
+body.kindle .lec-tipo,
 body.kindle .atril-sound {
   color: var(--kindle-mute);
   background: none;
@@ -2198,7 +2211,7 @@ body.kindle .folio .fmt,
 body.kindle .folio .lec-body {
   font-family: 'Literata', Georgia, serif;
   font-optical-sizing: auto;
-  font-size: 1.28rem;
+  font-size: calc(1.28rem * var(--tipo, 1.14));
   line-height: 1.68;
   color: var(--kindle-ink);
   text-align: justify;
@@ -2386,7 +2399,7 @@ body.kindle .cuad-meta,
 body.kindle .cuad-hint { color: var(--kindle-mute); }
 body.kindle .cuad-body {
   font-family: 'Literata', Georgia, serif;
-  font-size: 1.28rem;
+  font-size: calc(1.28rem * var(--tipo, 1.14));
   line-height: 1.68;
   color: var(--kindle-ink);
   text-align: justify;

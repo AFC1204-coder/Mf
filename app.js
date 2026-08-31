@@ -709,7 +709,21 @@ const Ambiente = (() => {
 
 const Lectura = (() => {
   const K = 'scs2_ereader';
+  const TK = 'scs2_tipo';
+  const STEPS = [0.92, 1, 1.14, 1.32, 1.52];
   function on(){ return LS.get(K, true) !== false; }
+  function tipoIdx(){
+    const n = Number(LS.get(TK, 2));
+    return Number.isFinite(n) ? Math.max(0, Math.min(STEPS.length-1, n)) : 2;
+  }
+  function applyTipo(){
+    document.documentElement.style.setProperty('--tipo', String(STEPS[tipoIdx()]));
+  }
+  function tipo(dir){
+    const i = Math.max(0, Math.min(STEPS.length-1, tipoIdx()+dir));
+    LS.set(TK, i);
+    applyTipo();
+  }
   function syncBtn(){
     document.querySelectorAll('.lec-kindle').forEach(b => {
       b.classList.toggle('on', on());
@@ -725,6 +739,7 @@ const Lectura = (() => {
     const paper = on() && reading;
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', paper ? '#efe6d0' : '#080808');
     document.documentElement.style.colorScheme = paper ? 'light' : 'dark';
+    applyTipo();
     syncBtn();
   }
   function toggle(){
@@ -733,7 +748,8 @@ const Lectura = (() => {
       : document.getElementById('view-leccion')?.classList.contains('active') ? 'leccion' : null;
     apply(view);
   }
-  return { on, apply, toggle, syncBtn };
+  applyTipo();
+  return { on, apply, toggle, syncBtn, tipo };
 })();
 
 function modoCarta(){
@@ -1154,6 +1170,8 @@ function renderCuaderno(){
     <div class="cuad-bar">
       <button type="button" onclick="salirCuaderno()">Salir</button>
       <span>
+        <button type="button" class="lec-tipo" onclick="Lectura.tipo(-1)" aria-label="Letra más pequeña">A−</button>
+        <button type="button" class="lec-tipo" onclick="Lectura.tipo(1)" aria-label="Letra más grande">A+</button>
         <button type="button" class="lec-kindle" onclick="Lectura.toggle()">Kindle</button>
         <button type="button" class="atril-sound${Ambiente.on?' on':''}" onclick="Ambiente.toggle()">${Ambiente.on?'Ambiente · on':'Ambiente'}</button>
       </span>
