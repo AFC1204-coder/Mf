@@ -712,26 +712,46 @@ function pickNocheLeccion(){
   return ordered.find(l=>!comp.has(l.id)) || null;
 }
 function excerptNoche(cuerpo){
-  const t = (cuerpo||'').replace(/[#>*_`]/g,'').replace(/\s+/g,' ').trim();
+  const t = (cuerpo||'').replace(/<[^>]+>/g,' ').replace(/[#>*_`]/g,'').replace(/\s+/g,' ').trim();
   if (!t) return { text: 'Esta noche cabe una lección. El resto espera.', more: false };
-  if (t.length <= 280) return { text: t, more: false };
-  const slice = t.slice(0, 420);
-  let end = -1;
-  for (let i = slice.length - 1; i > 90; i--) {
-    if ('.!?…'.includes(slice[i]) && (i === slice.length - 1 || /\s/.test(slice[i+1]||''))) {
-      end = i + 1;
-      break;
-    }
-  }
-  if (end < 90) return { text: slice.replace(/\s+\S*$/, ''), more: true };
-  return { text: slice.slice(0, end).trim(), more: true };
+  const parts = t.match(/[^.!?…]+[.!?…]+(?:\s+|$)|[^.!?…]+$/g);
+  const sents = (parts && parts.length) ? parts.map(s => s.trim()).filter(Boolean) : [t];
+  if (sents.length <= 2 && t.length < 520) return { text: t, more: false };
+  return { text: sents.slice(0, 2).join(' '), more: true };
 }
 function abrirFolioAtril(id){
-  if (Ambiente.wanted()) Ambiente.start();
+  pasarPagina(() => {
+    const lec = lecs.find(l=>l.id===id);
+    if (!lec) return;
+    libroActual = libros.find(l=>l.id===lec.libro_id) || null;
+    verLeccion(id);
+  });
+}
+function expandirAtril(id){
   const lec = lecs.find(l=>l.id===id);
-  if (!lec) return;
-  libroActual = libros.find(l=>l.id===lec.libro_id) || null;
-  verLeccion(id);
+  const el = document.querySelector('#atril .atril-excerpt');
+  if (!lec || !el) { abrirFolioAtril(id); return; }
+  el.classList.remove('has-more');
+  el.removeAttribute('onclick');
+  el.removeAttribute('role');
+  el.innerHTML = `<div class="fmt">${fmt(lec.cuerpo)}</div>`;
+  document.querySelectorAll('#atril .atril-seguir, #atril .atril-expand').forEach(n => n.remove());
+  const after = document.querySelector('#atril .atril-after');
+  if (after) after.insertAdjacentHTML('beforebegin',
+    `<button type="button" class="atril-seguir" onclick="abrirFolioAtril('${id}')">Abrir el folio</button>`);
+}
+function pasarPagina(fn){
+  if (Ambiente.wanted()) Ambiente.start();
+  document.body.classList.add('page-out');
+  setTimeout(() => {
+    fn();
+    document.body.classList.remove('page-out');
+    const v = document.querySelector('.view.active');
+    if (v) {
+      v.classList.add('page-in');
+      setTimeout(() => v.classList.remove('page-in'), 620);
+    }
+  }, 320);
 }
 function nochesEsteMes(){
   const y = new Date().getFullYear(), m = new Date().getMonth();
@@ -833,8 +853,11 @@ function renderAtril(){
     <p class="atril-kicker">El atril está puesto · ~20 minutos</p>
     <h2 class="atril-title">${esc(lec.titulo)}</h2>
     <p class="atril-meta">${ord}${nLib?` de ${nLib}`:''} · <em>${esc(libro?libro.titulo:'')}</em>${libro?' — '+esc(libro.autor):''}</p>
-    <p class="atril-excerpt${ex.more?' has-more':''}" ${ex.more?`role="button" tabindex="0" onclick="abrirFolioAtril('${lec.id}')"`:''}><span class="drop">${drop}</span>${rest}</p>
-    ${ex.more?`<button type="button" class="atril-seguir" onclick="abrirFolioAtril('${lec.id}')">Seguir en el folio</button>`:''}
+    <p class="atril-excerpt${ex.more?' has-more':''}"><span class="drop">${drop}</span>${rest}</p>
+    ${ex.more?`<div class="atril-mas">
+      <button type="button" class="atril-expand" onclick="expandirAtril('${lec.id}')">Mostrar el resto</button>
+      <button type="button" class="atril-seguir" onclick="abrirFolioAtril('${lec.id}')">Seguir en el folio</button>
+    </div>`:''}
     <p class="atril-after">Después, si quieres: <b>5 tarjetas</b> del mismo hilo — no la cola entera.</p>
     <div class="atril-actions">
       <button class="atril-open" onclick="abrirAtril()">Abrir el libro</button>
@@ -886,10 +909,13 @@ function cincoTarjetasNoche(){
    CUADERNO NOCHE — snap de 3 actos, un libro
 ═══════════════════════════════════════════ */
 function cuadPlain(s, max){
-  const t = (s||'').replace(/[#>*_`]/g,'').replace(/\s+/g,' ').trim();
+  const t = (s||'').replace(/<[^>]+>/g,' ').replace(/[#>*_`]/g,'').replace(/\s+/g,' ').trim();
   if (!t) return '';
-  if (max && t.length > max) return t.slice(0, max).replace(/\s+\S*$/, '') + '…';
-  return t;
+  if (!max || t.length <= max) return t;
+  const slice = t.slice(0, max);
+  const parts = slice.match(/[^.!?…]+[.!?…]+(?:\s+|$)/g);
+  if (parts && parts.join('').trim().length > 80) return parts.join(' ').trim();
+  return slice.replace(/\s+\S*$/, '');
 }
 function siguienteLeccionMismoLibro(id){
   const lec = lecs.find(l=>l.id===id);
@@ -919,8 +945,14 @@ function irTomo(dir){
   const lec = primeraLecDeLibro(b.id);
   if (!lec) { toast('Ese tomo no tiene lecciones'); return; }
   cuadernoSwipeLock = true;
-  abrirCuaderno(lec.id);
-  setTimeout(()=>{ cuadernoSwipeLock = false; }, 450);
+  const root = document.getElementById('cuaderno-root');
+  if (root) root.classList.add(dir>0?'tomo-out-left':'tomo-out-right');
+  setTimeout(()=>{
+    abrirCuaderno(lec.id);
+    const n = document.getElementById('cuaderno-root');
+    if (n) n.classList.add(dir>0?'tomo-in-right':'tomo-in-left');
+    cuadernoSwipeLock = false;
+  }, 280);
 }
 function bindCuadernoGestos(root){
   let x0=0, y0=0;
@@ -1614,16 +1646,18 @@ function irLeccionFolio(dir){
   if(!id){ toast(dir>0?'Última lección del tomo':'Primera lección del tomo'); return; }
   folioLock=true;
   const folio=cont.querySelector('.folio');
-  if(folio) folio.classList.add(dir>0?'slide-out-left':'slide-out-right');
+  if(folio) folio.classList.add(dir>0?'turn-out-left':'turn-out-right');
+  document.body.classList.add('page-out');
   setTimeout(()=>{
+    document.body.classList.remove('page-out');
     verLeccion(id);
     window.scrollTo(0,0);
     requestAnimationFrame(()=>{
       const f=document.querySelector('#leccion-contenido .folio');
-      if(f) f.classList.add('slide-in');
+      if(f) f.classList.add(dir>0?'turn-in-right':'turn-in-left');
     });
     folioLock=false;
-  }, 260);
+  }, 340);
 }
 function folioTargetOK(t){
   return !t.closest('textarea, input, button, a, .notas-area, .tts-player');
