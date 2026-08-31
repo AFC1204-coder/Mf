@@ -713,9 +713,25 @@ function pickNocheLeccion(){
 }
 function excerptNoche(cuerpo){
   const t = (cuerpo||'').replace(/[#>*_`]/g,'').replace(/\s+/g,' ').trim();
-  if (!t) return 'Esta noche cabe una lección. El resto espera.';
-  if (t.length <= 240) return t;
-  return t.slice(0, 240).replace(/\s+\S*$/, '') + '.';
+  if (!t) return { text: 'Esta noche cabe una lección. El resto espera.', more: false };
+  if (t.length <= 280) return { text: t, more: false };
+  const slice = t.slice(0, 420);
+  let end = -1;
+  for (let i = slice.length - 1; i > 90; i--) {
+    if ('.!?…'.includes(slice[i]) && (i === slice.length - 1 || /\s/.test(slice[i+1]||''))) {
+      end = i + 1;
+      break;
+    }
+  }
+  if (end < 90) return { text: slice.replace(/\s+\S*$/, ''), more: true };
+  return { text: slice.slice(0, end).trim(), more: true };
+}
+function abrirFolioAtril(id){
+  if (Ambiente.wanted()) Ambiente.start();
+  const lec = lecs.find(l=>l.id===id);
+  if (!lec) return;
+  libroActual = libros.find(l=>l.id===lec.libro_id) || null;
+  verLeccion(id);
 }
 function nochesEsteMes(){
   const y = new Date().getFullYear(), m = new Date().getMonth();
@@ -808,16 +824,17 @@ function renderAtril(){
     return;
   }
   const libro = libros.find(l=>l.id===lec.libro_id);
-  const body = excerptNoche(lec.cuerpo);
-  const drop = esc(body.charAt(0));
-  const rest = esc(body.slice(1));
+  const ex = excerptNoche(lec.cuerpo);
+  const drop = esc(ex.text.charAt(0));
+  const rest = esc(ex.text.slice(1));
   const ord = lec.orden ? `Lección ${lec.orden}` : 'Lección';
   const nLib = lecsDeLibro(lec.libro_id).length;
   root.innerHTML = `${top}
     <p class="atril-kicker">El atril está puesto · ~20 minutos</p>
     <h2 class="atril-title">${esc(lec.titulo)}</h2>
     <p class="atril-meta">${ord}${nLib?` de ${nLib}`:''} · <em>${esc(libro?libro.titulo:'')}</em>${libro?' — '+esc(libro.autor):''}</p>
-    <p class="atril-excerpt"><span class="drop">${drop}</span>${rest}</p>
+    <p class="atril-excerpt${ex.more?' has-more':''}" ${ex.more?`role="button" tabindex="0" onclick="abrirFolioAtril('${lec.id}')"`:''}><span class="drop">${drop}</span>${rest}</p>
+    ${ex.more?`<button type="button" class="atril-seguir" onclick="abrirFolioAtril('${lec.id}')">Seguir en el folio</button>`:''}
     <p class="atril-after">Después, si quieres: <b>5 tarjetas</b> del mismo hilo — no la cola entera.</p>
     <div class="atril-actions">
       <button class="atril-open" onclick="abrirAtril()">Abrir el libro</button>

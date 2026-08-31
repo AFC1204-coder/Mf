@@ -468,6 +468,21 @@ main { max-width:var(--content-max); margin:0 auto; padding:var(--sp-8) var(--sp
   padding-right: 10px;
   color: var(--accent);
 }
+.atril-excerpt.has-more { cursor: pointer; }
+.atril-seguir {
+  display: inline-block;
+  margin: 0.85rem 0 0;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--accent);
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.atril-seguir:hover { color: var(--accent2); }
 .atril-after {
   clear: both;
   margin-top: 1.4rem;
