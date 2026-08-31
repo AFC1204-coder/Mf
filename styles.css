@@ -1996,6 +1996,10 @@ svg {
   #atril { max-width: 720px; }
   .libros-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
 }
+@media (min-width: 1500px) {
+  :root { --content-max: 1360px; }
+  #view-leccion { max-width: min(60rem, 100%); }
+}
 @media (prefers-reduced-motion: reduce) {
   .folio { transition: none; }
   .folio.slide-in { animation: none; }
