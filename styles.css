@@ -121,7 +121,7 @@
   /* Layout */
   --nav-h:  80px;
   --bnav-h: 64px;
-  --content-max: 960px;
+  --content-max: 1120px;
 
   /* Line-height scale */
   --lh-none:    1;
@@ -922,7 +922,7 @@ mark.hl { background:var(--hl); color:#000; border-radius:2px; padding:0 1px; }
 .lec-body { margin-bottom:var(--sp-9); }
 
 /* ── FOLIO (lección larga = página de libro) ── */
-#view-leccion { max-width: 42rem; }
+#view-leccion { max-width: min(52rem, 100%); margin: 0 auto; }
 .lec-chrome {
   display: flex;
   justify-content: space-between;
@@ -950,6 +950,7 @@ mark.hl { background:var(--hl); color:#000; border-radius:2px; padding:0 1px; }
   padding: 2.2rem 1.7rem 2.4rem;
   box-shadow: 0 28px 80px rgba(0,0,0,.55), 0 0 0 1px #cbb992;
   position: relative;
+  margin: 0 auto;
 }
 .folio::before {
   content: "";
@@ -1977,4 +1978,17 @@ svg {
   .spotlight-overlay { padding-top: 5vh; }
   .spotlight-box { width: 95%; max-height: 80vh; }
   .spotlight-badge { display: none; }
+}
+
+@media (min-width: 1100px) {
+  :root { --content-max: 1240px; }
+  main { padding-left: 2rem; padding-right: 2rem; }
+  #view-leccion { max-width: min(56rem, 100%); }
+  .folio { padding: 2.8rem 3.2rem 3rem; }
+  #atril { max-width: 720px; }
+  .libros-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+}
+@media (min-width: 1500px) {
+  :root { --content-max: 1360px; }
+  #view-leccion { max-width: min(60rem, 100%); }
 }
