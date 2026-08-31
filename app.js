@@ -683,6 +683,21 @@ const Lectura = (() => {
   return { on, apply, toggle, syncBtn };
 })();
 
+function modoCarta(){
+  try {
+    if (new URLSearchParams(location.search).get('carta') === '1') {
+      sessionStorage.setItem('scs2_carta', '1');
+      return true;
+    }
+    return sessionStorage.getItem('scs2_carta') === '1';
+  } catch(e) { return false; }
+}
+function aplicarCarta(){
+  const on = modoCarta();
+  document.body.classList.toggle('carta', on);
+  if (on) document.body.classList.add('kindle');
+}
+
 function hoyISO(){
   const o = new Date();
   return `${o.getFullYear()}-${String(o.getMonth()+1).padStart(2,'0')}-${String(o.getDate()).padStart(2,'0')}`;
@@ -1511,6 +1526,7 @@ function verLeccion(id, from=null){
   if(from==='repaso'){backBtn.onclick=()=>showView('repaso');backBtn.textContent='← Repaso';}
   else if(from==='autor'){backBtn.onclick=()=>showView('autor');backBtn.textContent='← Autor';}
   else if(from==='favoritos'){backBtn.onclick=()=>showView('favoritos');backBtn.textContent='← Favoritos';}
+  else if(modoCarta()){backBtn.onclick=()=>{ if(libroActual) verLibro(libroActual.id); }; backBtn.textContent='← Este tomo';}
   else{backBtn.onclick=()=>volverDeLeccion();backBtn.textContent='← Lecciones';}
 
   const comp=completadasSet();
@@ -1623,11 +1639,11 @@ function verLeccion(id, from=null){
       ?`<button class="act-btn primary" onclick="marcarCompletada('${id}')">✓ Marcar completada</button>`
       :`<button class="act-btn done-mark" disabled>✓ Completada</button>`}
     <button class="act-btn secondary" id="btn-fav-lec" onclick="toggleFavLecDetalle('${id}',this)">${fav?'★ Favorita':'☆ Favoritos'}</button>
-    <button class="act-btn secondary" onclick="compartirLeccion()">🔗 Compartir</button>
+    <button class="act-btn secondary" onclick="compartirLeccion()">Compartir</button>
     <button class="act-btn secondary" onclick="abrirPdfModal()">⬇ PDF</button>
     <button class="act-btn secondary" onclick="testDelLibro('${lecActual.libro_id}')"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg> Test</button>
-    ${prev?`<button class="act-btn secondary" onclick="verLeccion('${prev.id}');window.scrollTo(0,0)">← Anterior</button>`:''}
-    ${sig?`<button class="act-btn primary" onclick="verLeccion('${sig.id}');window.scrollTo(0,0)">Siguiente →</button>`:''}
+    ${prev?`<button class="act-btn secondary carta-ok" onclick="verLeccion('${prev.id}');window.scrollTo(0,0)">← Anterior</button>`:''}
+    ${sig?`<button class="act-btn primary carta-ok" onclick="verLeccion('${sig.id}');window.scrollTo(0,0)">Siguiente →</button>`:''}
   </div>`;
 
   document.getElementById('leccion-contenido').innerHTML=html;
@@ -2482,6 +2498,11 @@ function showView(name, skipPush=false){
   if(name!=='leccion'){if(ttsAudio){ttsAudio.pause();ttsAudio=null;}if(window.speechSynthesis){speechSynthesis.cancel();}ttsUtterance=null;ttsPaused=false;ttsMode=null;ttsAudioUrl=null;}
   document.body.classList.toggle('noche', name==='cuaderno');
   Lectura.apply(name);
+  if (modoCarta() && (name==='home' || name==='favoritos' || name==='esquemas' || name==='ensayos' || name==='repaso-srs' || name==='test' || name==='busqueda')) {
+    if (lecActual) { verLeccion(lecActual.id); return; }
+    if (libroActual) { verLibro(libroActual.id); return; }
+  }
+  aplicarCarta();
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById(`view-${name}`)?.classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
@@ -3028,33 +3049,40 @@ function hablarConGemini(tipo){
   toast('Prompt copiado · pega en Gemini');
 }
 
-function compartirLeccion(){
-  if(!lecActual) return;
-  const base=window.location.origin+window.location.pathname;
-  const url=`${base}#leccion/${lecActual.libro_id}/${lecActual.id}`;
-  if(navigator.clipboard){
-    navigator.clipboard.writeText(url).then(()=>toast('🔗 Enlace copiado'));
+function urlCarta(hashPath){
+  const u = new URL(window.location.origin + window.location.pathname);
+  u.searchParams.set('carta', '1');
+  u.hash = hashPath;
+  return u.toString();
+}
+function enviarCarta({ title, text, url }){
+  if (navigator.share) {
+    navigator.share({ title, text, url }).catch(() => copiarCarta(url));
+  } else copiarCarta(url);
+}
+function copiarCarta(url){
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(()=>toast('Enlace copiado'));
   } else {
-    // fallback para navegadores sin clipboard API
     const ta=document.createElement('textarea');
     ta.value=url; document.body.appendChild(ta); ta.select();
     document.execCommand('copy'); document.body.removeChild(ta);
-    toast('🔗 Enlace copiado');
+    toast('Enlace copiado');
   }
 }
-
+function compartirLeccion(){
+  if(!lecActual) return;
+  const libro = libros.find(l=>l.id===lecActual.libro_id);
+  const frase = ultimaFrase(lecActual.autocorreccion || lecActual.cuerpo);
+  const url = urlCarta(`leccion/${lecActual.libro_id}/${lecActual.id}`);
+  const text = [frase ? `«${frase}»` : lecActual.titulo, libro ? `${libro.titulo} — ${libro.autor}` : ''].filter(Boolean).join('\n');
+  enviarCarta({ title: lecActual.titulo, text, url });
+}
 function compartirLibro(){
   if(!libroActual) return;
-  const base=window.location.origin+window.location.pathname;
-  const url=`${base}#lecciones/${libroActual.id}`;
-  if(navigator.clipboard){
-    navigator.clipboard.writeText(url).then(()=>toast('🔗 Enlace copiado'));
-  } else {
-    const ta=document.createElement('textarea');
-    ta.value=url; document.body.appendChild(ta); ta.select();
-    document.execCommand('copy'); document.body.removeChild(ta);
-    toast('🔗 Enlace copiado');
-  }
+  const url = urlCarta(`lecciones/${libroActual.id}`);
+  const text = `${libroActual.titulo} — ${libroActual.autor}`;
+  enviarCarta({ title: libroActual.titulo, text, url });
 }
 
 /* START */

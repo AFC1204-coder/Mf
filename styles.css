@@ -2366,6 +2366,14 @@ body.kindle .cuad-side { color: var(--kindle-mute); }
 body.kindle .cuad-dots i { background: var(--kindle-rule); }
 body.kindle .cuad-dots i.on { background: var(--kindle-mute); }
 body.kindle .cuad-bar span { pointer-events: auto; }
+body.carta nav,
+body.carta .bottom-nav { display: none !important; }
+body.carta .gemini-row,
+body.carta .tts-player,
+body.carta .notas-section,
+body.carta .lec-actions .act-btn:not(.carta-ok),
+body.carta .libro-hero .act-btn { display: none !important; }
+body.carta main { padding-top: 1.2rem; }
 
 body.page-out {
   overflow: hidden;
