@@ -118,16 +118,12 @@
   <!-- HOME -->
   <div class="view active" id="view-home">
     <div id="atril"></div>
-    <div class="home-catalog-head" style="margin-bottom:1.4rem;display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap">
-      <h1 class="page-title" style="font-size:1.55rem;margin-bottom:0">Explorar</h1>
-      <p class="page-sub" id="home-sub" style="margin-bottom:0;font-size:0.7rem">cargando...</p>
+    <section class="estanteria" aria-label="Estantería">
+    <div class="estanteria-head">
+      <h1 class="estanteria-title">Estantería</h1>
+      <p class="estanteria-sub" id="home-sub"></p>
     </div>
-    <div class="stats-row home-stats-quiet">
-      <div class="stat-card"><div class="stat-num" id="s-libros">—</div><div class="stat-label">Libros</div></div>
-      <div class="stat-card"><div class="stat-num" id="s-comp">—</div><div class="stat-label">Lec. completadas</div></div>
-      <div class="stat-card pct"><div class="stat-num" id="s-pct">—</div><div class="stat-label">Progreso</div></div>
-      <div class="stat-card streak"><div class="stat-num" id="s-racha">—</div><div class="stat-label">Racha <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></div></div>
-    </div>
+    <div class="stats-row home-stats-quiet" hidden></div>
     <div id="continua-banner" class="continua-banner" style="display:none" hidden></div>
     <div id="ultimos-libros-section" style="display:none">
       <p class="sec-label">Últimos visitados</p>
@@ -139,7 +135,7 @@
       <button class="q-btn" onclick="comenzarRepasoRapido()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Repaso</button>
       <button class="q-btn" onclick="verQuotes()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg> Citas</button>
     </div>
-    <p class="sec-label">Explorar por eje</p>
+    <p class="sec-label">Por eje</p>
     <div class="eje-filters" id="eje-filters"></div>
     <div class="eje-filters-sub" id="eje-filters-sub"></div>
     <div class="search-wrap">
@@ -148,13 +144,14 @@
       <button class="sc" id="search-clear" onclick="clearSearch()">✕</button>
     </div>
     <div id="search-results-lecs" class="search-results-lecs" style="display:none"></div>
-    <p class="sec-label" id="libros-count-label">Todos los libros</p>
+    <p class="sec-label" id="libros-count-label">Los tomos</p>
     <div class="libros-grid" id="libros-container">
       <div class="skeleton sk-card"></div>
       <div class="skeleton sk-card"></div>
       <div class="skeleton sk-card"></div>
       <div class="skeleton sk-card"></div>
     </div>
+    </section>
   </div>
 
   <!-- FAVORITOS -->

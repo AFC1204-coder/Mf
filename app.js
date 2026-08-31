@@ -459,16 +459,21 @@ function completadasSet(){
   return new Set(prog.filter(p=>p.tipo==='leccion'&&p.resultado==='correcta').map(p=>p.item_id));
 }
 function renderStats(){
-  const comp=completadasSet();
-  const pct=lecs.length?Math.round(comp.size/lecs.length*100):0;
-  animStat('s-libros',libros.length);
-  animStat('s-comp',comp.size);
-  animStat('s-pct',pct+'%');
-  animStat('s-racha',calcStreak());
-  document.getElementById('home-sub').textContent=`${libros.length} libros · ${lecs.length} lecciones · ${preg.length} preguntas`;
+  const sub=document.getElementById('home-sub');
+  if (sub) sub.textContent = libros.length ? `${libros.length} tomos` : '';
+  const n=document.getElementById('s-libros');
+  if (n) {
+    const comp=completadasSet();
+    const pct=lecs.length?Math.round(comp.size/lecs.length*100):0;
+    animStat('s-libros',libros.length);
+    animStat('s-comp',comp.size);
+    animStat('s-pct',pct+'%');
+    animStat('s-racha',calcStreak());
+  }
 }
 function animStat(id,val){
   const el=document.getElementById(id);
+  if (!el) return;
   const str=String(val);
   if(el.textContent!=='—'&&el.textContent!==str){
     el.style.animation='none';el.offsetHeight;
@@ -1217,7 +1222,7 @@ function renderLibros(){
   const pagina=f.slice((paginaActual-1)*PAGE_SIZE,paginaActual*PAGE_SIZE);
   const cont=document.getElementById('libros-container');
   const lbl=document.getElementById('libros-count-label');
-  const ejeLabel=subEjeActivo?`${ejeIcon(subEjeActivo)} ${subEjeActivo}`:ejeActivo?`${ejeIcon(ejeActivo)} ${ejeActivo}`:'Todos los libros';
+  const ejeLabel=subEjeActivo?`${ejeIcon(subEjeActivo)} ${subEjeActivo}`:ejeActivo?`${ejeIcon(ejeActivo)} ${ejeActivo}`:'Los tomos';
   lbl.innerHTML=`${ejeLabel} <span style="opacity:0.6;font-size:0.9em">(${total})</span>`;
   if(!total){cont.innerHTML=`<div class="empty">Sin resultados</div>`;renderPaginacion(0,1,1);return;}
   const comp=completadasSet();
