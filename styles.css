@@ -921,6 +921,89 @@ mark.hl { background:var(--hl); color:#000; border-radius:2px; padding:0 1px; }
 .auto-label { font-size:var(--text-2xs); text-transform:uppercase; color:rgba(93,173,226,0.53); margin-bottom:var(--sp-3); letter-spacing:0.12em; font-family:var(--font-ui); display:flex; align-items:center; gap:var(--sp-2); }
 .lec-body { margin-bottom:var(--sp-9); }
 
+/* ── FOLIO (lección larga = página de libro) ── */
+#view-leccion { max-width: 42rem; }
+.folio {
+  background: #efe4cc;
+  color: #2a2218;
+  padding: 2.2rem 1.7rem 2.4rem;
+  box-shadow: 0 28px 80px rgba(0,0,0,.55), 0 0 0 1px #cbb992;
+  position: relative;
+}
+.folio::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 10px;
+  background: linear-gradient(90deg, rgba(0,0,0,.12), transparent);
+  pointer-events: none;
+}
+.folio .lec-titulo {
+  color: #1f1810;
+  font-weight: 500;
+  font-size: clamp(1.55rem, 3.8vw, 2.15rem);
+}
+.folio .lec-meta-header { border-bottom-color: #cbb992; }
+.folio .lec-meta-libro { color: #6a5c48; }
+.folio .lec-ord, .folio .lec-done {
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-family: var(--font-ui);
+  color: #8a6a28;
+}
+.folio .fmt { color: #2a2218; }
+.folio .fmt strong { color: #6a4e1e; }
+.folio .fmt em { color: #4a3c2c; }
+.folio .lec-body.fmt>p:first-child::first-letter { color: #8a6a28; }
+.folio .aplic-box,
+.folio .con-box {
+  background: transparent;
+  border: 0;
+  border-top: 1px solid #cbb992;
+  border-radius: 0;
+  padding: 1.5rem 0 0.2rem;
+  margin: 1.8rem 0 0;
+}
+.folio .aplic-label,
+.folio .con-label,
+.folio .auto-label,
+.folio .autores-kicker,
+.folio .notas-label {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #8a6a28;
+}
+.folio .auto-box {
+  background: #ead9b8;
+  border: 1px dashed #8a6a28;
+  border-radius: 0;
+  padding: 1.3rem 1.2rem;
+  margin-top: 1.8rem;
+}
+.folio .autores-kicker { margin: 1.6rem 0 0.5rem; }
+.folio .autor-tag {
+  background: transparent;
+  border: 1px solid #cbb992;
+  color: #2a2218;
+}
+.folio .notas-section { margin-top: 1.8rem; padding-top: 1.2rem; border-top: 1px dashed #cbb992; }
+.folio .notas-area {
+  background: #f3ead6;
+  color: #2a2218;
+  border-color: #cbb992;
+}
+.folio .tts-player {
+  background: transparent;
+  border: 1px solid #cbb992;
+  box-shadow: none;
+}
+.folio .tts-player:hover { border-color: #8a6a28; box-shadow: none; }
+.folio .tts-btn { color: #8a6a28; }
+.folio .tts-label { color: #6a5c48; }
+
 /* ── Audio TTS Player ── */
 .tts-player {
   display:flex; align-items:center; gap:var(--sp-3);

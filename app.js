@@ -1397,11 +1397,12 @@ function verLeccion(id, from=null){
     </div>`;
   }
 
+  html+=`<article class="folio">`;
   html+=`<h2 class="lec-titulo">${esc(lecActual.titulo)}</h2>`;
   html+=`<div class="lec-meta-header">
     ${libro?`<span class="lec-meta-libro">${esc(libro.titulo)} — ${esc(libro.autor)}</span>`:''}
-    ${lecActual.orden?`<span style="font-size:0.6rem;color:var(--text3);font-family:var(--font-mono)">Lección ${lecActual.orden}</span>`:''}
-    ${done?`<span style="font-size:0.7rem;color:var(--success);font-family:var(--font-mono)">✓ Completada</span>`:''}
+    ${lecActual.orden?`<span class="lec-ord">Lección ${lecActual.orden}</span>`:''}
+    ${done?`<span class="lec-done">Completada</span>`:''}
   </div>`;
 
   html+=`<div class="lec-body fmt">${fmt(lecActual.cuerpo)}</div>`;
@@ -1438,7 +1439,7 @@ function verLeccion(id, from=null){
     const yaEnCuerpo = aplTxt.length > 10 && bodyTxt.includes(aplTxt);
     if(!yaEnCuerpo){
       html+=`<div class="aplic-box">
-        <div class="aplic-label">⚡ Aplicación práctica — acción para mañana</div>
+        <div class="aplic-label">Mañana</div>
         <div class="fmt">${fmt(lecActual.aplicacion_practica)}</div>
       </div>`;
     }
@@ -1446,30 +1447,30 @@ function verLeccion(id, from=null){
 
   if(lecActual.conexion_cruzada){
     html+=`<div class="con-box">
-      <div class="con-label">⟳ Conexión cruzada</div>
+      <div class="con-label">Cruce</div>
       <div class="fmt">${fmt(lecActual.conexion_cruzada)}</div>
     </div>`;
   }
 
   if(lecActual.autocorreccion){
     html+=`<div class="auto-box">
-      <div class="auto-label">⚠ Autocorrección metodológica</div>
+      <div class="auto-label">El giro</div>
       <div class="fmt">${fmt(lecActual.autocorreccion)}</div>
     </div>`;
   }
 
   if(lecActual.autores_relacionados?.length){
-    html+=`<div style="font-size:0.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:0.12em;font-family:var(--font-mono);margin-bottom:0.5rem">Autores relacionados</div>`;
+    html+=`<div class="autores-kicker">Autores relacionados</div>`;
     html+=`<div class="autores-rel">`+
       lecActual.autores_relacionados.map(a=>`<span class="autor-tag" onclick="verAutor('${encodeURIComponent(a)}')">${a}</span>`).join('')+`</div>`;
   }
 
   const notaGuardada=(getNotas(id)||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   html+=`<div class="notas-section">
-    <div class="notas-label">📝 Mis notas</div>
-    <textarea class="notas-area" id="nota-${id}" placeholder="Escribe tus reflexiones sobre esta lección...">${notaGuardada}</textarea>
+    <div class="notas-label">Al margen</div>
+    <textarea class="notas-area" id="nota-${id}" placeholder="Una frase. No un resumen.">${notaGuardada}</textarea>
     <button class="notas-save" onclick="guardarNota('${id}')">Guardar nota</button>
-  </div>`;
+  </div></article>`;
 
   const lecsL=lecs.filter(l=>l.libro_id===lecActual.libro_id).sort((a,b)=>a.orden-b.orden);
   const idx=lecsL.findIndex(l=>l.id===id);
