@@ -1676,14 +1676,12 @@ function verLeccion(id, from=null){
 
   html+=`<div class="lec-actions">
     ${!done
-      ?`<button class="act-btn primary" onclick="marcarCompletada('${id}')">✓ Marcar completada</button>`
-      :`<button class="act-btn done-mark" disabled>✓ Completada</button>`}
-    <button class="act-btn secondary" id="btn-fav-lec" onclick="toggleFavLecDetalle('${id}',this)">${fav?'★ Favorita':'☆ Favoritos'}</button>
-    <button class="act-btn secondary" onclick="compartirLeccion()">Compartir</button>
-    <button class="act-btn secondary" onclick="abrirPdfModal()">⬇ PDF</button>
-    <button class="act-btn secondary" onclick="testDelLibro('${lecActual.libro_id}')"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg> Test</button>
-    ${prev?`<button class="act-btn secondary carta-ok" onclick="verLeccion('${prev.id}');window.scrollTo(0,0)">← Anterior</button>`:''}
-    ${sig?`<button class="act-btn primary carta-ok" onclick="verLeccion('${sig.id}');window.scrollTo(0,0)">Siguiente →</button>`:''}
+      ?`<button class="act-btn" onclick="marcarCompletada('${id}')">Marcar leída</button>`
+      :`<button class="act-btn done-mark" disabled>Leída</button>`}
+    <button class="act-btn" id="btn-fav-lec" onclick="toggleFavLecDetalle('${id}',this)">${fav?'Guardada':'Guardar'}</button>
+    <button class="act-btn share carta-ok" onclick="compartirLeccion()">Enviar</button>
+    ${prev?`<button class="act-btn carta-ok" onclick="verLeccion('${prev.id}');window.scrollTo(0,0)">Anterior</button>`:''}
+    ${sig?`<button class="act-btn next carta-ok" onclick="verLeccion('${sig.id}');window.scrollTo(0,0)">Siguiente</button>`:''}
   </div>`;
 
   document.getElementById('leccion-contenido').innerHTML=html;
@@ -1698,7 +1696,7 @@ function verLeccion(id, from=null){
 }
 
 function guardarNota(id){const ta=document.getElementById(`nota-${id}`);if(ta){saveNota(id,ta.value).then(()=>toast('📝 Nota guardada'));}}
-function toggleFavLecDetalle(id,btn){toggleFavLec(id,btn);btn.textContent=favLecs().includes(id)?'★ Favorita':'☆ Favoritos';}
+function toggleFavLecDetalle(id,btn){toggleFavLec(id,btn);btn.textContent=favLecs().includes(id)?'Guardada':'Guardar';}
 function volverDeLeccion(){if(libroActual)showView('lecciones');else showView('home');}
 
 let folioGestosBound=false, folioLock=false, folioX0=0, folioY0=0, folioAcc=0;
