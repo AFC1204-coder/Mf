@@ -2372,6 +2372,10 @@ body.carta .gemini-row,
 body.carta .tts-player,
 body.carta .notas-section,
 body.carta .lec-actions .act-btn:not(.carta-ok),
+body.carta .autores-rel,
+body.carta .autores-kicker,
+body.carta .folio-mapa,
+body.carta .cuad-side,
 body.carta .libro-hero .act-btn { display: none !important; }
 body.carta main { padding-top: 1.2rem; }
 

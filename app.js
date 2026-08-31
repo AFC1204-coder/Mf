@@ -692,6 +692,13 @@ function modoCarta(){
     return sessionStorage.getItem('scs2_carta') === '1';
   } catch(e) { return false; }
 }
+function cartaLibroId(){
+  try { return sessionStorage.getItem('scs2_carta_libro'); } catch(e) { return null; }
+}
+function fijarCartaLibro(id){
+  if (!id) return;
+  try { sessionStorage.setItem('scs2_carta_libro', id); } catch(e) {}
+}
 function aplicarCarta(){
   const on = modoCarta();
   document.body.classList.toggle('carta', on);
@@ -954,6 +961,7 @@ function vecinoLibro(dir){
 }
 let cuadernoSwipeLock = false;
 function irTomo(dir){
+  if (modoCarta()) return;
   if (cuadernoSwipeLock) return;
   const b = vecinoLibro(dir);
   if (!b) { toast(dir>0 ? 'Último tomo de la estantería' : 'Primer tomo'); return; }
@@ -1420,6 +1428,10 @@ function esquemaFullscreen(){}
    VER LIBRO
 ═══════════════════════════════════════════ */
 function verLibro(id){
+  if (modoCarta() && cartaLibroId() && id !== cartaLibroId()) {
+    verLibro(cartaLibroId());
+    return;
+  }
   libroActual=libros.find(l=>l.id===id);
   if(!libroActual)return;
   addUltimo(id);
@@ -1519,6 +1531,10 @@ function renderLecs(list,q=''){
 function verLeccion(id, from=null){
   lecActual=lecs.find(l=>l.id===id);
   if(!lecActual)return;
+  if (modoCarta() && cartaLibroId() && lecActual.libro_id !== cartaLibroId()) {
+    verLibro(cartaLibroId());
+    return;
+  }
   const libId=lecActual.libro_id;
   if(!libroActual) libroActual=libros.find(l=>l.id===libId);
   setUltima(id, libId);
@@ -2471,6 +2487,7 @@ function leccionAleatoria(){
    VISTA AUTOR
 ═══════════════════════════════════════════ */
 function verAutor(enc){
+  if (modoCarta()) return;
   const autor=decodeURIComponent(enc);
   const list=lecs.filter(l=>l.autores_relacionados?.includes(autor));
   document.getElementById('autor-name').textContent=autor;
@@ -2979,6 +2996,7 @@ function restoreFromURL(){
   if(hash.startsWith('leccion/')){
     const parts=hash.split('/');
     const libroId=parts[1]; const lecId=parts[2];
+    if (modoCarta() && libroId) fijarCartaLibro(libroId);
     if(libroId) libroActual=libros.find(l=>l.id===libroId)||null;
     if(lecId){
       lecActual=lecs.find(l=>l.id===lecId)||null;
@@ -2989,6 +3007,7 @@ function restoreFromURL(){
   // Formato: #lecciones/LIBRO_ID
   if(hash.startsWith('lecciones/')){
     const libroId=hash.split('/')[1];
+    if (modoCarta() && libroId) fijarCartaLibro(libroId);
     if(libroId){
       libroActual=libros.find(l=>l.id===libroId)||null;
       if(libroActual){ verLibro(libroActual.id); return; }
