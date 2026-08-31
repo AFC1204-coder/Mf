@@ -655,8 +655,8 @@ const Ambiente = (() => {
 })();
 
 const Lectura = (() => {
-  const K = 'scs2_kindle';
-  function on(){ return LS.get(K, false) === true; }
+  const K = 'scs2_ereader';
+  function on(){ return LS.get(K, true) !== false; }
   function syncBtn(){
     document.querySelectorAll('.lec-kindle').forEach(b => {
       b.classList.toggle('on', on());
