@@ -573,7 +573,16 @@ const Ambiente = (() => {
     lp.frequency.value = 520;
     lp.Q.value = 0.5;
     master.connect(lp);
-    lp.connect(ctx.destination);
+    const hp = ctx.createBiquadFilter();
+    hp.type = 'highpass';
+    hp.frequency.value = 35;
+    const comp = ctx.createDynamicsCompressor();
+    comp.threshold.value = -20;
+    comp.knee.value = 10;
+    comp.ratio.value = 2.5;
+    comp.attack.value = 0.03;
+    comp.release.value = 0.3;
+    lp.connect(hp); hp.connect(comp); comp.connect(ctx.destination);
 
     const dur = 8;
     const n = ctx.sampleRate * dur;
@@ -586,6 +595,13 @@ const Ambiente = (() => {
       b = (b + 0.016 * (Math.random() * 2 - 1)) / 1.016;
       L[i] = a * 0.28;
       R[i] = b * 0.28;
+    }
+    const fade = Math.floor(ctx.sampleRate * 0.15);
+    for (let i = 0; i < fade; i++) {
+      const w = i / fade;
+      const j = n - fade + i;
+      L[j] = L[j] * (1 - w) + L[i] * w;
+      R[j] = R[j] * (1 - w) + R[i] * w;
     }
     const noise = ctx.createBufferSource();
     noise.buffer = bufL;
@@ -620,14 +636,14 @@ const Ambiente = (() => {
     const g = ctx.createGain();
     const t = ctx.currentTime;
     g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(0.018, t + 3.5);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + 14);
+    g.gain.exponentialRampToValueAtTime(0.011, t + 4);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 10);
     const f2 = ctx.createBiquadFilter();
     f2.type = 'lowpass';
     f2.frequency.value = 640;
     o.connect(f2); f2.connect(g); g.connect(master);
     o.start();
-    o.stop(t + 15);
+    o.stop(t + 11);
   }
 
   function syncBtn(){
@@ -647,7 +663,7 @@ const Ambiente = (() => {
     master.gain.linearRampToValueAtTime(GAIN, t + 2.8);
     persist(true);
     if (timer) clearInterval(timer);
-    timer = setInterval(note, 16000);
+    timer = setInterval(note, 24000);
     setTimeout(note, 2800);
     syncBtn();
   }
