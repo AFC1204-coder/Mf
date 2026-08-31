@@ -679,8 +679,15 @@ const Ambiente = (() => {
     master.gain.linearRampToValueAtTime(0.25, t + 0.12);
     master.gain.linearRampToValueAtTime(1, t + (ms || 400) / 1000);
   }
+  function bed(level){
+    if (!ctx || !master || !on) return;
+    const t = ctx.currentTime;
+    master.gain.cancelScheduledValues(t);
+    master.gain.setValueAtTime(master.gain.value, t);
+    master.gain.linearRampToValueAtTime(level, t + 0.45);
+  }
 
-  return { toggle, start, stop, wanted, syncBtn, duck, get on(){ return on; } };
+  return { toggle, start, stop, wanted, syncBtn, duck, bed, get on(){ return on; } };
 })();
 
 const Lectura = (() => {
@@ -1786,22 +1793,33 @@ let ttsAudioBlob=null;
 let ttsMode=null;
 
 function ttsGetText(){
-  if(!lecActual||!lecActual.cuerpo) return '';
-  return lecActual.cuerpo
-    .replace(/[#*_`~>|[\](){}]/g,'')
-    .replace(/\n{2,}/g,'. ')
-    .replace(/\n/g,' ')
-    .replace(/\s{2,}/g,' ')
+  if(!lecActual) return '';
+  const clean = s => (s||'')
+    .replace(/<table[\s\S]*?<\/table>/gi,' ')
+    .replace(/<[^>]+>/g,' ')
+    .replace(/[#*_`~>|[\]]/g,'')
+    .replace(/\s+/g,' ')
     .trim();
+  const parts=[];
+  const cuerpo=clean(lecActual.cuerpo);
+  if(cuerpo) parts.push(cuerpo);
+  const man=clean(lecActual.aplicacion_practica);
+  if(man && (!cuerpo || !cuerpo.toLowerCase().includes(man.slice(0,40).toLowerCase()))) parts.push('Mañana. '+man);
+  const cruce=clean(lecActual.conexion_cruzada);
+  if(cruce) parts.push('Cruce. '+cruce);
+  const giro=clean(lecActual.autocorreccion);
+  if(giro) parts.push('El giro. '+giro);
+  return parts.join(' ');
 }
 
 /* Convert plain text to SSML with natural pauses */
 function ttsToSSML(text){
-  let ssml=text
-    .replace(/\.\s+/g,'.<break time="600ms"/> ')
-    .replace(/;\s+/g,';<break time="400ms"/> ')
-    .replace(/:\s+/g,':<break time="400ms"/> ')
-    .replace(/,\s+/g,', ');
+  const safe=text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  let ssml=safe
+    .replace(/Mañana\./g,'<break time="500ms"/>Mañana.')
+    .replace(/Cruce\./g,'<break time="500ms"/>Cruce.')
+    .replace(/El giro\./g,'<break time="700ms"/>El giro.')
+    .replace(/\.\s+/g,'.<break time="450ms"/> ');
   return `<speak>${ssml}</speak>`;
 }
 
@@ -1945,7 +1963,7 @@ async function ttsTogglePlay(){
   ttsUpdateUI('loading');
 
   try{
-    const cacheId=lecActual.id;
+    const cacheId=lecActual.id+'-v4';
     let blob=await ttsCacheGet(cacheId);
     if(!blob){
       blob=await ttsCallGoogle(text);
@@ -1964,9 +1982,9 @@ function ttsPlayCloud(blob){
   if(ttsAudio){ttsAudio.pause();ttsAudio=null;}
   const url=URL.createObjectURL(blob);
   ttsAudio=new Audio(url);
-  ttsAudio.onplay=()=>ttsUpdateUI('playing');
-  ttsAudio.onpause=()=>{if(!ttsAudio.ended)ttsUpdateUI('paused');};
-  ttsAudio.onended=()=>ttsUpdateUI('idle');
+  ttsAudio.onplay=()=>{ if(Ambiente.bed) Ambiente.bed(0.2); ttsUpdateUI('playing'); };
+  ttsAudio.onpause=()=>{ if(!ttsAudio.ended){ if(Ambiente.bed) Ambiente.bed(1); ttsUpdateUI('paused'); } };
+  ttsAudio.onended=()=>{ if(Ambiente.bed) Ambiente.bed(1); ttsUpdateUI('idle'); };
   ttsAudio.onerror=()=>{
     toast('Error de audio, usando voz del navegador');
     ttsPlayWebSpeech(ttsGetText());
@@ -1990,8 +2008,8 @@ function ttsPlayWebSpeech(text){
   const esVoice=voices.find(v=>v.lang==='es-ES')||voices.find(v=>v.lang.startsWith('es'));
   if(esVoice) ttsUtterance.voice=esVoice;
 
-  ttsUtterance.onstart=()=>ttsUpdateUI('playing');
-  ttsUtterance.onend=()=>ttsUpdateUI('idle');
+  ttsUtterance.onstart=()=>{ if(Ambiente.bed) Ambiente.bed(0.2); ttsUpdateUI('playing'); };
+  ttsUtterance.onend=()=>{ if(Ambiente.bed) Ambiente.bed(1); ttsUpdateUI('idle'); };
   ttsUtterance.onerror=()=>ttsUpdateUI('idle');
   ttsUtterance.onpause=()=>ttsUpdateUI('paused');
   ttsUtterance.onresume=()=>ttsUpdateUI('playing');
@@ -2000,6 +2018,7 @@ function ttsPlayWebSpeech(text){
 }
 
 function ttsStop(){
+  if(Ambiente.bed) Ambiente.bed(1);
   if(ttsAudio){ttsAudio.pause();ttsAudio.currentTime=0;ttsAudio=null;}
   const synth=window.speechSynthesis;
   if(synth){synth.cancel();}

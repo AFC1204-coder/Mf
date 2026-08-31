@@ -2406,7 +2406,6 @@ body.kindle .cuad-bar span { pointer-events: auto; }
 body.carta nav,
 body.carta .bottom-nav { display: none !important; }
 body.carta .gemini-row,
-body.carta .tts-player,
 body.carta .notas-section,
 body.carta .lec-actions .act-btn:not(.carta-ok),
 body.carta .autores-rel,
