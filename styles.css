@@ -340,7 +340,7 @@ main { max-width:var(--content-max); margin:0 auto; padding:var(--sp-8) var(--sp
 
 
 /* ── TYPOGRAPHY ── */
-.page-title { font-family:var(--font-display); font-size:var(--text-3xl); color:var(--text); margin-bottom:var(--sp-2); font-weight:700; letter-spacing:-0.01em; line-height:var(--lh-tight); }
+.page-title { font-family:var(--font-display); font-size:var(--text-3xl); color:var(--text); margin-bottom:var(--sp-2); font-weight:400; font-style:italic; letter-spacing:0; line-height:var(--lh-tight); }
 .page-sub { font-size:var(--text-sm); color:var(--text3); font-family:var(--font-ui); margin-bottom:var(--sp-7); letter-spacing:0.04em; }
 .sec-label { font-size:var(--text-xs); text-transform:uppercase; letter-spacing:0.18em; color:var(--accent-dim); font-family:var(--font-ui); font-weight:600; margin-bottom:var(--sp-4); padding-bottom:var(--sp-3); border-bottom:1px solid rgba(255,255,255,0.05); }
 
@@ -864,7 +864,7 @@ mark.hl { background:var(--hl); color:#000; border-radius:2px; padding:0 1px; }
 .libro-hero-cover { width:110px; height:155px; object-fit:cover; object-position:top; border-radius:var(--radius); border:1px solid var(--border); flex-shrink:0; filter:brightness(0.9); }
 .libro-hero-cover-ph { width:110px; height:155px; background:var(--surface2); border-radius:var(--radius); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:2.5rem; flex-shrink:0; }
 .libro-hero-info { flex:1; min-width:0; }
-.libro-hero-title { font-family:var(--font-display); font-size:1.5rem; font-weight:700; line-height:var(--lh-snug); margin-bottom:var(--sp-2); }
+.libro-hero-title { font-family:var(--font-display); font-size:1.5rem; font-weight:500; font-style:italic; line-height:var(--lh-snug); margin-bottom:var(--sp-2); }
 .libro-hero-autor { font-size:var(--text-base); color:var(--text2); font-style:italic; margin-bottom:var(--sp-5); }
 .libro-hero-desc { font-size:var(--text-base); color:var(--text2); line-height:var(--lh-relaxed); margin-bottom:var(--sp-5); font-style:italic; }
 .libro-hero-stats { display:flex; gap:var(--sp-5); margin-bottom:var(--sp-5); }
@@ -2403,6 +2403,37 @@ body.kindle .cuad-side { color: var(--kindle-mute); }
 body.kindle .cuad-dots i { background: var(--kindle-rule); }
 body.kindle .cuad-dots i.on { background: var(--kindle-mute); }
 body.kindle .cuad-bar span { pointer-events: auto; }
+
+/* ── Cristal (unifica búsqueda / nav con el catálogo) ── */
+.libro-card,
+.lec-item,
+.esquema-card,
+.ensayo-card,
+.ultimo-chip,
+.search-results-lecs,
+.pag-btn,
+.search-input {
+  background: rgba(20, 21, 28, 0.5);
+  border-color: rgba(255,255,255,0.08);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+}
+.search-input { border-radius: 12px; }
+.search-input:focus {
+  background: rgba(20, 21, 28, 0.72);
+  border-color: rgba(201,168,76,0.35);
+}
+.eje-pill {
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.ensayo-card-titulo,
+.esquema-title {
+  font-weight: 500;
+  font-style: italic;
+  font-family: var(--font-display);
+}
 body.carta nav,
 body.carta .bottom-nav { display: none !important; }
 body.carta .gemini-row,
