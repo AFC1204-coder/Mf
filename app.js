@@ -519,6 +519,7 @@ function renderUltimosLibros(){
    ATRIL — sesión de noche
 ═══════════════════════════════════════════ */
 const NOCHE_K = 'scs2_noche';
+const HILO_K = 'scs2_hilo';
 let srsLimiteSesion = 20;
 let srsSkipDash = false;
 
@@ -691,6 +692,29 @@ function lampsHtml(n){
   for (let i=0;i<7;i++) h += `<i class="${i<lit?'on':''}"></i>`;
   return h;
 }
+function ultimaFrase(raw){
+  const t = (raw||'').replace(/[#>*_`]/g,'').replace(/\s+/g,' ').trim();
+  if (!t) return '';
+  const parts = t.split(/(?<=[.!?…])\s+/).filter(s => s.replace(/["«»""]/g,'').trim().length > 24);
+  const s = (parts.pop() || t).trim();
+  return s.length > 280 ? s.slice(0, 277).replace(/\s+\S*$/, '') + '…' : s;
+}
+function guardarHilo(fromLec, nextLec){
+  if (!fromLec) return;
+  const libro = libros.find(l => l.id === fromLec.libro_id);
+  const frase = ultimaFrase(fromLec.autocorreccion || fromLec.cuerpo);
+  if (!frase) return;
+  LS.set(HILO_K, {
+    frase,
+    fromId: fromLec.id,
+    nextId: (nextLec && nextLec.id) || fromLec.id,
+    titulo: fromLec.titulo,
+    libro: libro ? libro.titulo : '',
+    autor: libro ? libro.autor : '',
+  });
+}
+function getHilo(){ return LS.get(HILO_K, null); }
+function clearHilo(){ try { localStorage.removeItem(HILO_K); } catch(e) {} }
 
 function renderAtril(){
   const root = document.getElementById('atril');
@@ -704,15 +728,30 @@ function renderAtril(){
   if (isNocheCerrada()) {
     const n = LS.get(NOCHE_K, {});
     const done = lecs.find(l=>l.id===n.lecId);
-    const nxt = pickNocheLeccion();
-    const tomorrow = nxt ? esc(nxt.titulo) : 'El corpus está al día.';
+    const hilo = getHilo();
+    const tomorrow = hilo?.frase
+      ? esc(hilo.frase)
+      : (pickNocheLeccion() ? esc(pickNocheLeccion().titulo) : 'El corpus está al día.');
     root.innerHTML = `${top}
       <p class="atril-kicker">La lámpara sigue encendida</p>
       <h2 class="atril-title closed">Hasta mañana.</h2>
       <p class="atril-meta">${done ? 'Marcado · '+esc(done.titulo) : 'Sesión de esta noche completa.'}</p>
-      <p class="atril-excerpt">No hay deuda en la puerta. El marcador espera.</p>
-      <p class="atril-tomorrow">Mañana en el atril: <em>${tomorrow}</em></p>
+      <p class="atril-excerpt">El marcador queda en una frase. Mañana abre aquí.</p>
+      <p class="atril-tomorrow"><em>${tomorrow}</em></p>
       <div class="atril-stamp">Ex libris · ${hoyISO().slice(8)} ${['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'][+hoyISO().slice(5,7)-1]}</div>`;
+    return;
+  }
+
+  const hilo = getHilo();
+  if (hilo && hilo.frase) {
+    root.innerHTML = `${top}
+      <p class="atril-kicker">Anoche te quedaste aquí</p>
+      <h2 class="atril-title hilo">${esc(hilo.frase)}</h2>
+      <p class="atril-meta">${esc(hilo.libro)}${hilo.autor?' — '+esc(hilo.autor):''}${hilo.titulo?' · '+esc(hilo.titulo):''}</p>
+      <div class="atril-actions">
+        <button class="atril-open" onclick="continuarHilo()">Continúa</button>
+        <button class="atril-ghost" onclick="otroVolumenAtril()">Otro volumen</button>
+      </div>`;
     return;
   }
 
@@ -746,12 +785,25 @@ function renderContinua(){ renderAtril(); }
 
 function abrirAtril(){
   if (Ambiente.wanted()) Ambiente.start();
+  const hilo = getHilo();
+  if (hilo && hilo.nextId && lecs.find(l=>l.id===hilo.nextId)) {
+    abrirCuaderno(hilo.nextId);
+    return;
+  }
   const lec = pickNocheLeccion();
   if (!lec) return;
   libroActual = libros.find(l=>l.id===lec.libro_id) || null;
   abrirCuaderno(lec.id);
 }
+function continuarHilo(){
+  const hilo = getHilo();
+  const id = hilo?.nextId;
+  if (!id || !lecs.find(l=>l.id===id)) { clearHilo(); abrirAtril(); return; }
+  if (Ambiente.wanted()) Ambiente.start();
+  abrirCuaderno(id);
+}
 function otroVolumenAtril(){
+  clearHilo();
   const cur = pickNocheLeccion();
   const comp = completadasSet();
   const pool = lecs.filter(l => !comp.has(l.id) && (!cur || l.libro_id !== cur.libro_id));
@@ -847,6 +899,7 @@ function abrirCuaderno(id){
   if (root) root.scrollTop = 0;
 }
 function salirCuaderno(){
+  if (lecActual) guardarHilo(lecActual, lecActual);
   showView('home');
 }
 function folioDesdeCuaderno(){
@@ -858,7 +911,11 @@ function otraDelTomo(){
   abrirCuaderno(n.id);
 }
 async function cerrarNocheCuaderno(){
-  if (lecActual) await marcarCompletada(lecActual.id);
+  if (lecActual) {
+    const nxt = siguienteLeccionMismoLibro(lecActual.id);
+    guardarHilo(lecActual, nxt);
+    await marcarCompletada(lecActual.id);
+  }
   showView('home');
 }
 function renderCuaderno(){
