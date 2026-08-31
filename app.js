@@ -546,6 +546,7 @@ let srsSkipDash = false;
 const Ambiente = (() => {
   const K = 'scs2_ambiente';
   let ctx = null, master = null, timer = null, on = false;
+  const GAIN = 1.5;
 
   function persist(v){
     try {
@@ -643,7 +644,7 @@ const Ambiente = (() => {
     on = true;
     const t = ctx.currentTime;
     master.gain.cancelScheduledValues(t);
-    master.gain.linearRampToValueAtTime(1, t + 2.8);
+    master.gain.linearRampToValueAtTime(GAIN, t + 2.8);
     persist(true);
     if (timer) clearInterval(timer);
     timer = setInterval(note, 16000);
@@ -676,15 +677,15 @@ const Ambiente = (() => {
     const t = ctx.currentTime;
     master.gain.cancelScheduledValues(t);
     master.gain.setValueAtTime(master.gain.value, t);
-    master.gain.linearRampToValueAtTime(0.25, t + 0.12);
-    master.gain.linearRampToValueAtTime(1, t + (ms || 400) / 1000);
+    master.gain.linearRampToValueAtTime(0.35, t + 0.12);
+    master.gain.linearRampToValueAtTime(GAIN, t + (ms || 400) / 1000);
   }
   function bed(level){
     if (!ctx || !master || !on) return;
     const t = ctx.currentTime;
     master.gain.cancelScheduledValues(t);
     master.gain.setValueAtTime(master.gain.value, t);
-    master.gain.linearRampToValueAtTime(level, t + 0.45);
+    master.gain.linearRampToValueAtTime(level >= 0.99 ? GAIN : level * GAIN, t + 0.45);
   }
 
   return { toggle, start, stop, wanted, syncBtn, duck, bed, get on(){ return on; } };
