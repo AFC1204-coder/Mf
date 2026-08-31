@@ -569,28 +569,32 @@ const Ambiente = (() => {
     master.gain.value = 0;
     const lp = ctx.createBiquadFilter();
     lp.type = 'lowpass';
-    lp.frequency.value = 640;
-    lp.Q.value = 0.65;
+    lp.frequency.value = 520;
+    lp.Q.value = 0.5;
     master.connect(lp);
     lp.connect(ctx.destination);
 
-    const dur = 2;
-    const buf = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate);
-    const data = buf.getChannelData(0);
-    let last = 0;
-    for (let i = 0; i < data.length; i++) {
-      last = (last + 0.02 * (Math.random() * 2 - 1)) / 1.02;
-      data[i] = last * 0.35;
+    const dur = 8;
+    const n = ctx.sampleRate * dur;
+    const bufL = ctx.createBuffer(2, n, ctx.sampleRate);
+    const L = bufL.getChannelData(0);
+    const R = bufL.getChannelData(1);
+    let a = 0, b = 0;
+    for (let i = 0; i < n; i++) {
+      a = (a + 0.018 * (Math.random() * 2 - 1)) / 1.018;
+      b = (b + 0.016 * (Math.random() * 2 - 1)) / 1.016;
+      L[i] = a * 0.28;
+      R[i] = b * 0.28;
     }
     const noise = ctx.createBufferSource();
-    noise.buffer = buf;
+    noise.buffer = bufL;
     noise.loop = true;
-    const ng = ctx.createGain(); ng.gain.value = 0.03;
-    const nf = ctx.createBiquadFilter(); nf.type = 'lowpass'; nf.frequency.value = 240;
+    const ng = ctx.createGain(); ng.gain.value = 0.045;
+    const nf = ctx.createBiquadFilter(); nf.type = 'lowpass'; nf.frequency.value = 180;
     noise.connect(nf); nf.connect(ng); ng.connect(master);
     noise.start();
 
-    [[82.41, 0.032], [123.47, 0.022], [164.81, 0.016]].forEach(([f, g]) => {
+    [[82.41, 0.028], [123.47, 0.018], [164.81, 0.012]].forEach(([f, g], i) => {
       const o = ctx.createOscillator();
       o.type = 'sine';
       o.frequency.value = f;
@@ -598,8 +602,8 @@ const Ambiente = (() => {
       o.connect(og); og.connect(master);
       o.start();
       const lfo = ctx.createOscillator();
-      lfo.frequency.value = 0.025 + Math.random() * 0.03;
-      const lg = ctx.createGain(); lg.gain.value = 3.5;
+      lfo.frequency.value = 0.018 + i * 0.007;
+      const lg = ctx.createGain(); lg.gain.value = 2.2;
       lfo.connect(lg); lg.connect(o.detune);
       lfo.start();
     });
@@ -607,22 +611,22 @@ const Ambiente = (() => {
 
   function note(){
     if (!ctx || !on) return;
-    const scale = [196, 220, 233.08, 261.63, 293.66, 329.63];
+    const scale = [164.81, 196.00, 246.94, 293.66, 329.63];
     const f = scale[Math.floor(Math.random() * scale.length)];
     const o = ctx.createOscillator();
-    o.type = 'triangle';
+    o.type = 'sine';
     o.frequency.value = f;
     const g = ctx.createGain();
     const t = ctx.currentTime;
     g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(0.035, t + 2.2);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + 9);
+    g.gain.exponentialRampToValueAtTime(0.018, t + 3.5);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 14);
     const f2 = ctx.createBiquadFilter();
     f2.type = 'lowpass';
-    f2.frequency.value = 820;
+    f2.frequency.value = 640;
     o.connect(f2); f2.connect(g); g.connect(master);
     o.start();
-    o.stop(t + 10);
+    o.stop(t + 15);
   }
 
   function syncBtn(){
@@ -642,8 +646,8 @@ const Ambiente = (() => {
     master.gain.linearRampToValueAtTime(1, t + 2.8);
     persist(true);
     if (timer) clearInterval(timer);
-    timer = setInterval(note, 12000);
-    setTimeout(note, 1800);
+    timer = setInterval(note, 16000);
+    setTimeout(note, 2800);
     syncBtn();
   }
 
@@ -667,7 +671,16 @@ const Ambiente = (() => {
     else if (on) ctx.resume();
   });
 
-  return { toggle, start, stop, wanted, syncBtn, get on(){ return on; } };
+  function duck(ms){
+    if (!ctx || !master || !on) return;
+    const t = ctx.currentTime;
+    master.gain.cancelScheduledValues(t);
+    master.gain.setValueAtTime(master.gain.value, t);
+    master.gain.linearRampToValueAtTime(0.25, t + 0.12);
+    master.gain.linearRampToValueAtTime(1, t + (ms || 400) / 1000);
+  }
+
+  return { toggle, start, stop, wanted, syncBtn, duck, get on(){ return on; } };
 })();
 
 const Lectura = (() => {
@@ -788,6 +801,7 @@ function expandirAtril(id){
 }
 function pasarPagina(fn){
   if (Ambiente.wanted()) Ambiente.start();
+  if (Ambiente.duck) Ambiente.duck(520);
   document.body.classList.add('page-out');
   setTimeout(() => {
     fn();
@@ -1706,6 +1720,7 @@ function irLeccionFolio(dir){
   const id=dir>0?cont.dataset.sig:cont.dataset.prev;
   if(!id){ toast(dir>0?'Última lección del tomo':'Primera lección del tomo'); return; }
   folioLock=true;
+  if (Ambiente.duck) Ambiente.duck(520);
   const folio=cont.querySelector('.folio');
   if(folio) folio.classList.add(dir>0?'turn-out-left':'turn-out-right');
   document.body.classList.add('page-out');
