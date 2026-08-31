@@ -1543,6 +1543,9 @@ function verLeccion(id, from=null){
   </div>`;
 
   document.getElementById('leccion-contenido').innerHTML=html;
+  const cont=document.getElementById('leccion-contenido');
+  if(cont){ cont.dataset.prev=prev?prev.id:''; cont.dataset.sig=sig?sig.id:''; }
+  bindFolioGestos();
   showView('leccion');
   // Inicializar subrayados si el módulo está disponible
   if(typeof SCSSubrayados !== 'undefined' && SCSSubrayados.init) {
@@ -1553,6 +1556,59 @@ function verLeccion(id, from=null){
 function guardarNota(id){const ta=document.getElementById(`nota-${id}`);if(ta){saveNota(id,ta.value).then(()=>toast('📝 Nota guardada'));}}
 function toggleFavLecDetalle(id,btn){toggleFavLec(id,btn);btn.textContent=favLecs().includes(id)?'★ Favorita':'☆ Favoritos';}
 function volverDeLeccion(){if(libroActual)showView('lecciones');else showView('home');}
+
+let folioGestosBound=false, folioLock=false, folioX0=0, folioY0=0, folioAcc=0;
+function irLeccionFolio(dir){
+  const cont=document.getElementById('leccion-contenido');
+  if(!cont||folioLock) return;
+  const id=dir>0?cont.dataset.sig:cont.dataset.prev;
+  if(!id){ toast(dir>0?'Última lección del tomo':'Primera lección del tomo'); return; }
+  folioLock=true;
+  const folio=cont.querySelector('.folio');
+  if(folio) folio.classList.add(dir>0?'slide-out-left':'slide-out-right');
+  setTimeout(()=>{
+    verLeccion(id);
+    window.scrollTo(0,0);
+    requestAnimationFrame(()=>{
+      const f=document.querySelector('#leccion-contenido .folio');
+      if(f) f.classList.add('slide-in');
+    });
+    folioLock=false;
+  }, 260);
+}
+function folioTargetOK(t){
+  return !t.closest('textarea, input, button, a, .notas-area, .tts-player');
+}
+function bindFolioGestos(){
+  const view=document.getElementById('view-leccion');
+  if(!view||folioGestosBound) return;
+  folioGestosBound=true;
+  view.addEventListener('touchstart', e=>{
+    if(!folioTargetOK(e.target)) return;
+    const t=e.changedTouches[0]; folioX0=t.clientX; folioY0=t.clientY;
+  }, {passive:true});
+  view.addEventListener('touchend', e=>{
+    if(!document.getElementById('view-leccion').classList.contains('active')) return;
+    const t=e.changedTouches[0];
+    const dx=t.clientX-folioX0, dy=t.clientY-folioY0;
+    if(Math.abs(dx)<72||Math.abs(dx)<Math.abs(dy)*1.25) return;
+    irLeccionFolio(dx<0?1:-1);
+  }, {passive:true});
+  view.addEventListener('wheel', e=>{
+    if(!document.getElementById('view-leccion').classList.contains('active')) return;
+    if(!folioTargetOK(e.target)) return;
+    if(Math.abs(e.deltaX)<=Math.abs(e.deltaY)||Math.abs(e.deltaX)<10){ folioAcc=0; return; }
+    e.preventDefault();
+    folioAcc+=e.deltaX;
+    if(Math.abs(folioAcc)>90){ irLeccionFolio(folioAcc>0?1:-1); folioAcc=0; }
+  }, {passive:false});
+  document.addEventListener('keydown', e=>{
+    if(!document.getElementById('view-leccion')?.classList.contains('active')) return;
+    if(e.target.closest('textarea, input')) return;
+    if(e.key==='ArrowRight'){ e.preventDefault(); irLeccionFolio(1); }
+    if(e.key==='ArrowLeft'){ e.preventDefault(); irLeccionFolio(-1); }
+  });
+}
 
 /* ═══════════════════════════════════════════
    TTS — Google Cloud TTS (directo) + Web Speech API fallback
