@@ -547,7 +547,18 @@ const Ambiente = (() => {
   const K = 'scs2_ambiente';
   let ctx = null, master = null, timer = null, on = false;
 
-  function wanted(){ return LS.get(K, false) === true; }
+  function persist(v){
+    try {
+      if (typeof modoCarta === 'function' && modoCarta()) LS.set('scs2_carta_amb', v);
+      else LS.set(K, v);
+    } catch(e) { LS.set(K, v); }
+  }
+  function wanted(){
+    try {
+      if (typeof modoCarta === 'function' && modoCarta()) return LS.get('scs2_carta_amb', true) !== false;
+    } catch(e) {}
+    return LS.get(K, false) === true;
+  }
 
   function ensure(){
     if (ctx) return;
@@ -629,7 +640,7 @@ const Ambiente = (() => {
     const t = ctx.currentTime;
     master.gain.cancelScheduledValues(t);
     master.gain.linearRampToValueAtTime(1, t + 2.8);
-    LS.set(K, true);
+    persist(true);
     if (timer) clearInterval(timer);
     timer = setInterval(note, 12000);
     setTimeout(note, 1800);
@@ -644,7 +655,7 @@ const Ambiente = (() => {
       master.gain.linearRampToValueAtTime(0, t + 1.4);
     }
     if (timer) { clearInterval(timer); timer = null; }
-    LS.set(K, false);
+    persist(false);
     syncBtn();
   }
 
@@ -707,7 +718,15 @@ function fijarCartaLibro(id){
 function aplicarCarta(){
   const on = modoCarta();
   document.body.classList.toggle('carta', on);
-  if (on) document.body.classList.add('kindle');
+  if (on) {
+    document.body.classList.add('kindle');
+    const go = () => { if (Ambiente.wanted()) Ambiente.start(); };
+    go();
+    if (!window.__cartaAmb) {
+      window.__cartaAmb = true;
+      document.addEventListener('pointerdown', go, { once: true });
+    }
+  }
 }
 
 function hoyISO(){
