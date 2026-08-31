@@ -967,6 +967,33 @@ mark.hl { background:var(--hl); color:#000; border-radius:2px; padding:0 1px; }
   padding: 8px 10px;
 }
 .lec-kindle.on { color: var(--accent); }
+.gemini-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem 0.8rem;
+  margin: 1.6rem 0 0.4rem;
+}
+.gemini-kicker {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text3);
+  width: 100%;
+}
+.gemini-chip {
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  padding: 0.4rem 0.75rem;
+  cursor: pointer;
+  border-radius: 999px;
+}
+.gemini-chip:hover { border-color: var(--accent-dim); color: var(--text); }
 .folio-mapa { margin: 0 0 1.2rem; }
 .folio-mapa-btn {
   background: transparent;
@@ -2219,6 +2246,13 @@ body.kindle .folio .det-card-title {
   text-transform: none;
   color: var(--kindle-mute);
   font-weight: 400;
+}
+body.kindle .gemini-kicker { color: var(--kindle-mute); letter-spacing: 0.04em; text-transform: none; font-family: 'Literata', Georgia, serif; }
+body.kindle .gemini-chip {
+  border-color: var(--kindle-rule);
+  color: var(--kindle-ink);
+  font-family: 'Literata', Georgia, serif;
+  border-radius: 0;
 }
 body.kindle .folio .auto-box,
 body.kindle .folio .det-card {

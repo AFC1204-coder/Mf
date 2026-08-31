@@ -1593,6 +1593,13 @@ function verLeccion(id, from=null){
     </div>`;
   }
 
+  html+=`<div class="gemini-row">
+    <span class="gemini-kicker">Hablarlo</span>
+    <button type="button" class="gemini-chip" onclick="hablarConGemini('hilo')">Sigue el hilo</button>
+    <button type="button" class="gemini-chip" onclick="hablarConGemini('semana')">En la semana</button>
+    <button type="button" class="gemini-chip" onclick="hablarConGemini('pelea')">Quién se pelea</button>
+  </div>`;
+
   if(lecActual.autores_relacionados?.length){
     html+=`<div class="autores-kicker">Autores relacionados</div>`;
     html+=`<div class="autores-rel">`+
@@ -2971,6 +2978,54 @@ function restoreFromURL(){
   const viewName=hash.split('/')[0];
   const validViews=['home','favoritos','quotes','esquemas','repaso','test','ensayos','repaso-srs','busqueda'];
   if(validViews.includes(viewName)) showView(viewName,true);
+}
+
+function fraseParaGemini(){
+  const sel = (window.getSelection && window.getSelection().toString() || '').trim();
+  if (sel.length > 24) return sel.slice(0, 800);
+  const g = (lecActual?.autocorreccion || '').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+  if (g) return g.slice(0, 800);
+  return ((lecActual?.titulo || '') + '. ' + (lecActual?.cuerpo || '').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ')).trim().slice(0, 500);
+}
+function promptGemini(tipo){
+  const libro = libros.find(l => l.id === lecActual?.libro_id);
+  const chips = {
+    hilo: 'Esta frase me ha dejado pensando. ¿Con qué otras ideas la conectas? No me hagas un resumen: hablemos.',
+    semana: 'Si esto fuera verdad, ¿dónde lo vería yo el martes? Inventa escenas, no teoría.',
+    pelea: '¿Qué autor se reiría o se enfadaría con esto? Ponlos a discutir.',
+  };
+  const q = chips[tipo] || chips.hilo;
+  return [
+    'Vamos a hablar, no a resumir.',
+    libro ? `Libro: ${libro.titulo} — ${libro.autor}` : '',
+    lecActual ? `Lección: ${lecActual.titulo}` : '',
+    `Frase:\n«${fraseParaGemini()}»`,
+    q,
+  ].filter(Boolean).join('\n\n');
+}
+function abrirGemini(prompt){
+  const go = () => {
+    const android = /Android/i.test(navigator.userAgent || '');
+    const url = 'https://gemini.google.com/app';
+    if (android) {
+      window.location.href = 'intent://gemini.google.com/app#Intent;scheme=https;package=com.google.android.apps.bard;S.browser_fallback_url=' + encodeURIComponent(url) + ';end';
+      setTimeout(() => {
+        if (document.visibilityState === 'visible') {
+          try { window.open(url, '_blank'); } catch(e) {}
+        }
+      }, 1100);
+    } else {
+      window.open(url, '_blank', 'noopener');
+    }
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(prompt).then(go).catch(go);
+  } else go();
+}
+function hablarConGemini(tipo){
+  if (!lecActual) return;
+  abrirGemini(promptGemini(tipo));
+  toast('Prompt copiado · pega en Gemini');
 }
 
 function compartirLeccion(){
