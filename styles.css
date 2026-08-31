@@ -1002,7 +1002,39 @@ mark.hl { background:var(--hl); color:#000; border-radius:2px; padding:0 1px; }
 }
 .folio .tts-player:hover { border-color: #8a6a28; box-shadow: none; }
 .folio .tts-btn { color: #8a6a28; }
-.folio .tts-label { color: #6a5c48; }
+.folio .det-card {
+  background: transparent;
+  border: 1px solid #cbb992;
+}
+.folio .det-card-title {
+  color: #8a6a28;
+  border-bottom-color: #cbb992;
+}
+.folio table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.95rem;
+  font-family: var(--font-body);
+  color: #2a2218;
+  background: transparent;
+}
+.folio th, .folio td {
+  border: 1px solid #cbb992;
+  padding: 0.55rem 0.7rem;
+  text-align: left;
+  vertical-align: top;
+  color: #2a2218;
+  background: transparent;
+}
+.folio th {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8a6a28;
+  font-weight: 600;
+}
 
 /* ── Audio TTS Player ── */
 .tts-player {

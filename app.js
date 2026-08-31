@@ -329,6 +329,21 @@ async function getCover(autor, titulo, libroId) {
 ═══════════════════════════════════════════ */
 function fmt(raw) {
   if (!raw) return '';
+  if (/<table[\s>]/i.test(raw)) {
+    const tables = [];
+    const masked = raw.replace(/<table[\s\S]*?<\/table>/gi, m => {
+      tables.push(m
+        .replace(/\son\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, '')
+        .replace(/\sstyle\s*=\s*("[^"]*"|'[^']*')/gi, ''));
+      return `\n\n@@TBL${tables.length - 1}@@\n\n`;
+    });
+    let html = fmt(masked);
+    tables.forEach((t, i) => {
+      html = html.replace(new RegExp(`<p>\\s*@@TBL${i}@@\\s*</p>`), t)
+                 .replace(`@@TBL${i}@@`, t);
+    });
+    return html;
+  }
   const esc  = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const inline = s => s
     .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
