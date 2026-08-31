@@ -1017,7 +1017,7 @@ function irTomo(dir){
   const root = document.getElementById('cuaderno-root');
   if (root) root.classList.add(dir>0?'tomo-out-left':'tomo-out-right');
   setTimeout(()=>{
-    abrirCuaderno(lec.id);
+    abrirCuaderno(lec.id, false, true);
     const n = document.getElementById('cuaderno-root');
     if (n) n.classList.add(dir>0?'tomo-in-right':'tomo-in-left');
     cuadernoSwipeLock = false;
@@ -1049,14 +1049,14 @@ function onCuadernoKeys(e){
   if (e.key === 'ArrowLeft') { e.preventDefault(); irTomo(-1); }
 }
 document.addEventListener('keydown', onCuadernoKeys);
-function abrirCuaderno(id){
+function abrirCuaderno(id, skipPush=false, replace=false){
   lecActual = lecs.find(l=>l.id===id);
   if (!lecActual) return;
   libroActual = libros.find(l=>l.id===lecActual.libro_id) || libroActual;
   setUltima(id, lecActual.libro_id);
   if (Ambiente.wanted()) Ambiente.start();
   renderCuaderno();
-  showView('cuaderno');
+  showView('cuaderno', skipPush, replace);
   const root = document.getElementById('cuaderno-root');
   if (root) root.scrollTop = 0;
 }
@@ -1254,6 +1254,7 @@ function irPagina(p){
   const tp=Math.ceil(filtrarLibrosActivos().length/PAGE_SIZE);
   if(p<1||p>tp)return;
   paginaActual=p;renderLibros();window.scrollTo(0,0);
+  history.replaceState({view:'home', libroId:null, lecId:null, pagina:p, eje:ejeActivo, subEje:subEjeActivo},'','#home');
 }
 function renderLibros(){
   const f=filtrarLibrosActivos();
@@ -1574,7 +1575,7 @@ function renderLecs(list,q=''){
 /* ═══════════════════════════════════════════
    VER LECCION
 ═══════════════════════════════════════════ */
-function verLeccion(id, from=null){
+function verLeccion(id, from=null, skipPush=false, replace=false){
   lecActual=lecs.find(l=>l.id===id);
   if(!lecActual)return;
   if (modoCarta() && cartaLibroId() && lecActual.libro_id !== cartaLibroId()) {
@@ -1710,7 +1711,7 @@ function verLeccion(id, from=null){
   const cont=document.getElementById('leccion-contenido');
   if(cont){ cont.dataset.prev=prev?prev.id:''; cont.dataset.sig=sig?sig.id:''; }
   bindFolioGestos();
-  showView('leccion');
+  showView('leccion', skipPush, replace);
   // Inicializar subrayados si el módulo está disponible
   if(typeof SCSSubrayados !== 'undefined' && SCSSubrayados.init) {
     SCSSubrayados.init(lecActual.id);
@@ -1734,7 +1735,7 @@ function irLeccionFolio(dir){
   document.body.classList.add('page-out');
   setTimeout(()=>{
     document.body.classList.remove('page-out');
-    verLeccion(id);
+    verLeccion(id, null, false, true);
     window.scrollTo(0,0);
     requestAnimationFrame(()=>{
       const f=document.querySelector('#leccion-contenido .folio');
@@ -2568,7 +2569,7 @@ function verAutor(enc){
 /* ═══════════════════════════════════════════
    NAVIGATION
 ═══════════════════════════════════════════ */
-function showView(name, skipPush=false){
+function showView(name, skipPush=false, replace=false){
   if(name!=='leccion'){if(ttsAudio){ttsAudio.pause();ttsAudio=null;}if(window.speechSynthesis){speechSynthesis.cancel();}ttsUtterance=null;ttsPaused=false;ttsMode=null;ttsAudioUrl=null;}
   document.body.classList.toggle('noche', name==='cuaderno');
   Lectura.apply(name);
@@ -2587,14 +2588,20 @@ function showView(name, skipPush=false){
   if(botMap[name])document.getElementById(botMap[name])?.classList.add('active');
   window.scrollTo(0,0);
   if(!skipPush){
-    const state={view:name,libroId:libroActual?.id||null,lecId:lecActual?.id||null};
+    const state={view:name,libroId:libroActual?.id||null,lecId:lecActual?.id||null,pagina:paginaActual,eje:ejeActivo,subEje:subEjeActivo};
     let hash=`#${name}`;
     if(name==='leccion'&&lecActual) hash=`#leccion/${lecActual.libro_id}/${lecActual.id}`;
     if(name==='cuaderno'&&lecActual) hash=`#cuaderno/${lecActual.libro_id}/${lecActual.id}`;
     if(name==='lecciones'&&libroActual) hash=`#lecciones/${libroActual.id}`;
-    history.pushState(state,'',hash);
+    if(name==='home') hash=`#home`;
+    if(replace) history.replaceState(state,'',hash);
+    else history.pushState(state,'',hash);
   }
-  if(name==='home'){paginaActual=1;document.getElementById('search-results-lecs').style.display='none';renderStats();renderLibros();renderContinua();renderUltimosLibros();}
+  if(name==='home'){
+    if(!skipPush && !replace) paginaActual=1;
+    document.getElementById('search-results-lecs').style.display='none';
+    renderStats();renderEjes();renderLibros();renderContinua();renderUltimosLibros();
+  }
   if(name==='favoritos')renderFavoritos();
   if(name==='ensayos')renderEnsayos();
   if(name==='busqueda'){ setTimeout(()=>{ const i=document.getElementById('corpus-search-input'); if(i)i.focus(); },100); }
@@ -3003,11 +3010,14 @@ window.addEventListener('popstate', e => {
   const hash = window.location.hash.slice(1);
   if(!state && !hash){ showView('home', true); return; }
   if(!state && hash){ restoreFromURL(); return; }
-  const {view, libroId, lecId} = state;
+  const {view, libroId, lecId, pagina, eje, subEje} = state;
+  if(pagina) paginaActual=pagina;
+  if(eje!==undefined){ ejeActivo=eje; subEjeActivo=subEje||null; }
   if(libroId) libroActual = libros.find(l=>l.id===libroId)||libroActual;
   if(lecId)   lecActual   = lecs.find(l=>l.id===lecId)||lecActual;
   if(view==='lecciones' && libroActual){ renderLibroHero(); renderLecs(lecs.filter(l=>l.libro_id===libroActual.id)); showView(view, true); return; }
-  if(view==='leccion'   && lecActual)  { verLeccion(lecActual.id, null); return; }
+  if(view==='leccion'   && lecActual)  { verLeccion(lecActual.id, null, true); return; }
+  if(view==='cuaderno'  && lecActual)  { abrirCuaderno(lecActual.id, true); return; }
   showView(view, true);
 });
 
