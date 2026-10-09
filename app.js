@@ -314,9 +314,9 @@ async function getCover(autor, titulo, libroId) {
   // 3. Persistir en Supabase para no volver a buscar
   if (url && libroId) {
     try {
-      await sb(`libros?id=eq.${libroId}`, {
-        method: 'PATCH',
-        body: JSON.stringify({ portada_url: url })
+      await sb('rpc/set_portada', {
+        method: 'POST',
+        body: JSON.stringify({ p_id: libroId, p_url: url })
       });
     } catch {}
   }

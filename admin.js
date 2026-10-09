@@ -1,7 +1,5 @@
 const SUPABASE_URL = 'https://aduizdiiacrvpoavjmab.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkdWl6ZGlpYWNydnBvYXZqbWFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1OTg5MDEsImV4cCI6MjA4NzE3NDkwMX0.US2sEhlSBJbcwg93txuL-9AdPKo2LLmdVX5dur7i5GQ';
-const ADMIN_HASH = '94b371e3f19434d45d7dbd5fe23efd511caa57ccdc84d794c5feaf371d888c54';
-let adminSessionPwd = null;
 
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -10,19 +8,23 @@ let allLibros = [];
 let preguntasPendientes = [];
 let libroSeleccionado = null;
 
-// LOGIN
+// LOGIN — Supabase Auth; la escritura la permite RLS solo a usuarios de public.admins
 async function checkLogin() {
+  const email = document.getElementById('login-email').value.trim();
   const pwd = document.getElementById('login-input').value;
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pwd));
-  const hash = [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
-  if (hash === ADMIN_HASH) {
-    adminSessionPwd = pwd;
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('admin-screen').classList.add('active');
-    cargarLibros();
-  } else {
-    document.getElementById('login-error').style.display = 'block';
+  const err = document.getElementById('login-error');
+  err.style.display = 'none';
+  const { error } = await db.auth.signInWithPassword({ email, password: pwd });
+  let esAdmin = false;
+  if (!error) {
+    const r = await db.rpc('is_admin');
+    esAdmin = r.data === true;
+    if (!esAdmin) await db.auth.signOut();
   }
+  if (error || !esAdmin) { err.style.display = 'block'; return; }
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('admin-screen').classList.add('active');
+  cargarLibros();
 }
 
 // NAVIGATION
@@ -162,16 +164,15 @@ Responde SOLO con JSON válido, sin texto adicional, sin markdown:
 [{"texto":"...","opciones":["...","...","...","..."],"correcta":0,"explicacion":"...","dificultad":2}]`;
 
   try {
+    const { data: sesion } = await db.auth.getSession();
     const response = await fetch(`${SUPABASE_URL}/functions/v1/generar-preguntas`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${sesion.session ? sesion.session.access_token : ''}`
       },
-      body: JSON.stringify({
-        admin_password: adminSessionPwd,
-        prompt: prompt
-      })
+      body: JSON.stringify({ prompt: prompt })
     });
 
     if (!response.ok) {
