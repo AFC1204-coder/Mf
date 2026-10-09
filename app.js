@@ -443,7 +443,7 @@ async function init() {
       document.getElementById('loader-screen').classList.add('hidden');
       setTimeout(()=>document.getElementById('loader-screen').style.display='none',500);
     },300);
-    renderStats(); renderEjes(); renderLibros(); renderAtril(); renderUltimosLibros(); renderEsquemas(); initAdminTrigger();
+    renderStats(); renderEjes(); renderLibros(); renderAtril(); renderUltimosLibros(); renderRutas(); renderEsquemas(); initAdminTrigger();
     // Restaurar estado desde URL hash (para enlaces compartidos y marcadores)
     restoreFromURL();
   } catch(e) {
@@ -1520,7 +1520,7 @@ function verLibro(id){
   document.querySelector('.lec-tab.active')?.classList.remove('active');
   document.querySelectorAll('.lec-tab')[0]?.classList.add('active');
   document.getElementById('search-lecs').value='';
-  renderLibroHero(); renderLecs(lecs.filter(l=>l.libro_id===id)); showView('lecciones');
+  renderLibroHero(); renderLecs(lecs.filter(l=>l.libro_id===id)); renderRelacionados(); showView('lecciones');
 }
 
 function renderLibroHero(){
@@ -1529,6 +1529,11 @@ function renderLibroHero(){
   const lecsL=lecs.filter(x=>x.libro_id===l.id);
   const done=lecsL.filter(x=>comp.has(x.id)).length;
   const pct=lecsL.length?Math.round(done/lecsL.length*100):0;
+  const minTot=lecsL.reduce((sum,x)=>sum+Didactica.minutosLectura(x),0);
+  const sigL=Didactica.siguienteLeccion(l,lecs,comp);
+  const ordenadas=[...lecsL].sort((a,b)=>(a.orden||0)-(b.orden||0));
+  const ctaLec=sigL||ordenadas[0];
+  const ctaTxt=!lecsL.length?'':done===0?'Empezar a leer':sigL?`Continuar · lección ${ordenadas.findIndex(x=>x.id===sigL.id)+1}`:'Releer desde el principio';
   const coverHTML = l.portada_url
     ? `<img class="libro-hero-cover" src="${l.portada_url}" alt="${l.titulo}" loading="lazy">`
     : `<div class="libro-hero-cover-ph" id="hero-cover-ph">${ejeIcon(l.eje)}</div>`;
@@ -1541,9 +1546,11 @@ function renderLibroHero(){
         ${l.descripcion_breve?`<div class="libro-hero-desc">${esc(l.descripcion_breve)}</div>`:''}
         <div class="libro-hero-stats">
           <span class="libro-hero-stat"><span>${lecsL.length}</span> lecciones</span>
-          <span class="libro-hero-stat"><span>${done}</span> completadas</span>
-          <span class="libro-hero-stat"><span>${pct}%</span> progreso</span>
+          <span class="libro-hero-stat"><span>${minTot<60?minTot+' min':(Math.round(minTot/6)/10)+' h'}</span> de lectura</span>
+          <span class="libro-hero-stat"><span>${done}</span> leídas</span>
         </div>
+        <div class="hero-prog" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><i style="width:${pct}%"></i></div>
+        ${ctaTxt?`<button type="button" class="hero-cta" onclick="verLeccion('${ctaLec.id}')">${ctaTxt} <span aria-hidden="true">→</span></button>`:''}
         <div style="margin-top:0.8rem;display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap">
           <span class="eje-tag ${ejeClass(l.eje)}">${ejeIcon(l.eje)} ${esc(l.eje||'—')}</span>
           ${esquemaDeLibro(l)?`<button class="act-btn secondary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="event.stopPropagation();abrirEsquema('${esquemaDeLibro(l).key}')">Mapa</button>`:''}
@@ -1584,26 +1591,112 @@ function filtrarLecs(tipo,btn){
 function renderLecs(list,q=''){
   const comp=completadasSet();
   const cont=document.getElementById('lecciones-container');
-  if(!list.length){cont.innerHTML=`<div class="empty">Sin lecciones</div>`;return;}
-  cont.innerHTML=list.map(l=>{
+  if(!list.length){cont.innerHTML=`<div class="empty">${libroActual&&!lecs.some(x=>x.libro_id===libroActual.id)?'Este tomo aún no tiene lecciones.':'Sin lecciones'}</div>`;return;}
+  const sig=libroActual?Didactica.siguienteLeccion(libroActual,lecs,comp):null;
+  const orden=[...list].sort((a,b)=>(a.orden||0)-(b.orden||0));
+  cont.innerHTML=`<ol class="ruta-lecs">`+orden.map((l,i)=>{
     const done=comp.has(l.id);
     const nA=l.autores_relacionados?.length||0;
-    const tHL=hl(l.titulo,q);
     const fav=favLecs().includes(l.id);
-    return `<div class="lec-item ${done?'done':''}" onclick="verLeccion('${l.id}')">
-      <div class="lec-left">
-        <div class="lec-title">${tHL}</div>
-        <div class="lec-meta">
-          <span class="lec-num">${l.orden?`#${l.orden}`:''}</span>
-          ${nA?`<span class="lec-authors">🔗 ${nA} autor${nA>1?'es':''}</span>`:''}
+    const adelanto=Didactica.avance(l,140);
+    const conFigura=(typeof Diagrama!=='undefined'&&Diagrama.deLeccion(l).length)||l.imagen_principal;
+    return `<li class="ruta-lec${done?' done':''}${sig&&sig.id===l.id?' current':''}" onclick="verLeccion('${l.id}')">
+      <span class="ruta-nodo" aria-hidden="true">${done?'✓':(l.orden||i+1)}</span>
+      <div class="ruta-body">
+        <div class="ruta-t">${hl(l.titulo,q)}</div>
+        ${adelanto?`<div class="ruta-p">${esc(adelanto)}</div>`:''}
+        <div class="ruta-m">
+          <span>${Didactica.minutosLectura(l)} min</span>
+          ${conFigura?`<span>con diagrama</span>`:''}
+          ${nA?`<span>${nA} autor${nA>1?'es':''} cruzado${nA>1?'s':''}</span>`:''}
+          ${sig&&sig.id===l.id?`<span class="ruta-sig">siguiente</span>`:''}
         </div>
       </div>
       <div class="lec-right">
-        <button class="fav-btn ${fav?'on':''}" onclick="event.stopPropagation();toggleFavLec('${l.id}',this)">${fav?'★':'☆'}</button>
-        <span class="lec-status ${done?'ok':'no'}">${done?'✓':'○'}</span>
+        <button class="fav-btn ${fav?'on':''}" onclick="event.stopPropagation();toggleFavLec('${l.id}',this)" aria-label="Guardar lección">${fav?'★':'☆'}</button>
       </div>
-    </div>`;
-  }).join('');
+    </li>`;
+  }).join('')+`</ol>`;
+}
+
+/* Para seguir leyendo: mismo tema y autores cruzados en las lecciones de este tomo. */
+function renderRelacionados(){
+  const cont=document.getElementById('libro-relacionados');
+  if(!cont) return;
+  const rel=libroActual?Didactica.relacionados(libroActual,libros,lecs,3):[];
+  if(!rel.length){cont.innerHTML='';return;}
+  cont.innerHTML=`<p class="sec-label rel-label">Para seguir leyendo</p>
+    <div class="rel-libros">`+rel.map(b=>{
+      const p=Didactica.progresoLibro(b,lecs,completadasSet());
+      return `<button type="button" class="rel-libro" onclick="verLibro('${b.id}')">
+        <span class="rel-t">${esc(b.titulo)}</span>
+        <span class="rel-a">${esc(b.autor)}</span>
+        <span class="rel-m">${p.total} lecciones${p.hechas?` · ${p.pct}%`:''}</span>
+      </button>`;}).join('')+`</div>`;
+}
+
+/* ═══════════════════════════════════════════
+   RUTAS DE APRENDIZAJE
+═══════════════════════════════════════════ */
+let rutaActual=null;
+const RUTA_ICONOS={
+  brain:'<path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/>',
+  dado:'<rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="8.5" cy="8.5" r="1"/><circle cx="15.5" cy="8.5" r="1"/><circle cx="8.5" cy="15.5" r="1"/><circle cx="15.5" cy="15.5" r="1"/>',
+  grafico:'<path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>',
+  cerebro:'<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
+  red:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/>',
+  hoja:'<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10Z"/><path d="M2 21c0-3 1.9-5.4 5.1-6 2.4-.5 4.9-2 5.9-3"/>',
+  columnas:'<path d="M3 22h18"/><path d="M6 18v-7M10 18v-7M14 18v-7M18 18v-7"/><path d="m12 2 9 5H3Z"/>',
+  tablero:'<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>'
+};
+function rutaIcono(k){return `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${RUTA_ICONOS[k]||RUTA_ICONOS.brain}</svg>`;}
+
+function renderRutas(){
+  const sec=document.getElementById('rutas-section'), cont=document.getElementById('rutas-row');
+  if(!sec||!cont) return;
+  const rs=Didactica.rutasDisponibles(libros,lecs,completadasSet());
+  if(!rs.length){sec.hidden=true;return;}
+  sec.hidden=false;
+  cont.innerHTML=rs.map(r=>`<button type="button" class="ruta-card tn-${r.tono}" onclick="verRuta('${r.id}')">
+    <span class="ruta-ico">${rutaIcono(r.icono)}</span>
+    <span class="ruta-ct">${esc(r.titulo)}</span>
+    <span class="ruta-cs">${esc(r.sub)}</span>
+    <span class="ruta-cm">${r.items.length} tomos · ${r.total} lecciones</span>
+    <span class="ruta-bar"><i style="width:${r.pct}%"></i></span>
+  </button>`).join('');
+}
+
+function verRuta(id,skipPush=false){
+  if(!Didactica.RUTAS.some(r=>r.id===id)) return;
+  rutaActual=id;
+  renderRuta();
+  showView('ruta',skipPush);
+}
+function renderRuta(){
+  const cont=document.getElementById('ruta-cont');
+  const r=Didactica.rutasDisponibles(libros,lecs,completadasSet()).find(x=>x.id===rutaActual);
+  if(!cont) return;
+  if(!r){cont.innerHTML='<div class="empty">Esta ruta aún no tiene suficientes tomos.</div>';return;}
+  const minTot=r.items.reduce((s,i)=>s+lecs.filter(l=>l.libro_id===i.libro.id).reduce((a,l)=>a+Didactica.minutosLectura(l),0),0);
+  const sigItem=r.items.find(i=>i.prog.total&&i.prog.hechas<i.prog.total)||r.items[0];
+  cont.innerHTML=`<header class="ruta-hdr tn-${r.tono}">
+      <div class="ruta-kicker">${rutaIcono(r.icono)} Ruta de aprendizaje</div>
+      <h1 class="ruta-h1">${esc(r.titulo)}</h1>
+      <p class="ruta-desc">${esc(r.descripcion)}</p>
+      <div class="ruta-resumen"><span><b>${r.items.length}</b> tomos</span><span><b>${r.total}</b> lecciones</span><span><b>${Math.round(minTot/60*10)/10}</b> h de lectura</span><span><b>${r.pct}%</b> completado</span></div>
+      <div class="hero-prog" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${r.pct}"><i style="width:${r.pct}%"></i></div>
+    </header>
+    <ol class="ruta-libros">`+r.items.map((i,n)=>{
+      const b=i.libro, p=i.prog, actual=b.id===sigItem.libro.id&&p.pct<100;
+      return `<li class="ruta-libro${p.pct===100?' done':''}${actual?' current':''}" onclick="verLibro('${b.id}')">
+        <span class="ruta-nodo" aria-hidden="true">${p.pct===100?'✓':n+1}</span>
+        <div class="ruta-body">
+          <div class="ruta-t">${esc(b.titulo)}</div>
+          <div class="ruta-a">${esc(b.autor)}</div>
+          <div class="ruta-p">${esc(i.por)}</div>
+          <div class="ruta-m"><span>${p.total} lecciones</span><span>${p.hechas}/${p.total} leídas</span>${actual?'<span class="ruta-sig">'+(p.hechas?'continúa aquí':'empieza aquí')+'</span>':''}</div>
+        </div>
+      </li>`;}).join('')+`</ol>`;
 }
 
 /* ═══════════════════════════════════════════
@@ -1632,27 +1725,42 @@ function verLeccion(id, from=null, skipPush=false, replace=false){
   const libro=libros.find(l=>l.id===lecActual.libro_id);
   let html='';
 
-  if(lecActual.imagen_principal){
+  const figuras=(typeof Diagrama!=='undefined'?Diagrama.deLeccion(lecActual):[]).map(Diagrama.render).join('');
+  if(!figuras && lecActual.imagen_principal){
     html+=`<div class="lec-img-wrap">
       <img src="${lecActual.imagen_principal}" alt="${esc(lecActual.titulo)}" loading="lazy" referrerpolicy="no-referrer"
-        onerror="this.parentElement.style.display='none'">
+        onclick="abrirZoomImagen(this)" title="Ampliar" onerror="this.parentElement.style.display='none'">
       ${lecActual.imagen_caption?`<div class="lec-img-cap">${esc(lecActual.imagen_caption)}</div>`:''}
     </div>`;
   }
 
+  const lecsL=lecs.filter(l=>l.libro_id===lecActual.libro_id).sort((a,b)=>a.orden-b.orden);
+  const idx=lecsL.findIndex(l=>l.id===id);
+  const prev=idx>0?lecsL[idx-1]:null;
+  const sig=idx>=0&&idx<lecsL.length-1?lecsL[idx+1]:null;
+  const mins=Didactica.minutosLectura(lecActual);
   html+=`<article class="folio">`;
   html+=`<h2 class="lec-titulo">${esc(lecActual.titulo)}</h2>`;
   html+=`<div class="lec-meta-header">
     ${libro?`<span class="lec-meta-libro">${esc(libro.titulo)} — ${esc(libro.autor)}</span>`:''}
-    ${lecActual.orden?`<span class="lec-ord">Lección ${lecActual.orden}</span>`:''}
+    ${idx>=0?`<span class="lec-ord">Lección ${idx+1} de ${lecsL.length}</span>`:(lecActual.orden?`<span class="lec-ord">Lección ${lecActual.orden}</span>`:'')}
+    <span class="lec-min">${mins} min</span>
     ${done?`<span class="lec-done">Completada</span>`:''}
   </div>`;
+  if(lecsL.length>1){
+    html+=`<nav class="lec-pasos" aria-label="Lecciones del tomo">`+lecsL.map((l,i)=>
+      `<button type="button" class="lec-paso${comp.has(l.id)?' done':''}${l.id===id?' on':''}" onclick="verLeccion('${l.id}');window.scrollTo(0,0)" title="${i+1}. ${esc(l.titulo)}" aria-label="Lección ${i+1}: ${esc(l.titulo)}"${l.id===id?' aria-current="step"':''}></button>`
+    ).join('')+`</nav>`;
+  }
+  if(lecActual.idea_clave){
+    html+=`<aside class="idea-clave"><div class="idea-label">Idea clave</div><p>${esc(lecActual.idea_clave)}</p></aside>`;
+  }
   const mapa = esquemaDeLibro(libro);
   if (mapa) {
     html+=`<p class="folio-mapa"><button type="button" class="folio-mapa-btn" onclick="abrirEsquema('${mapa.key}','leccion')">Ver el mapa · ${esc(mapa.titulo)}</button></p>`;
   }
 
-  html+=`<div class="lec-body fmt">${fmt(lecActual.cuerpo)}</div>`;
+  html+=`<div class="lec-body fmt">${cuerpoConFigura(lecActual.cuerpo,figuras)}</div>`;
 
   html+=`<div class="tts-player" id="tts-player">
     <button class="tts-btn tts-play" id="tts-play-btn" onclick="ttsTogglePlay()" title="Reproducir">
@@ -1706,6 +1814,8 @@ function verLeccion(id, from=null, skipPush=false, replace=false){
     </div>`;
   }
 
+  html+=comprobacionHtml(lecActual);
+
   html+=`<div class="gemini-row">
     <span class="gemini-kicker">Hablarlo</span>
     <button type="button" class="gemini-chip" onclick="hablarConGemini('hilo')">Sigue el hilo</button>
@@ -1725,11 +1835,6 @@ function verLeccion(id, from=null, skipPush=false, replace=false){
     <textarea class="notas-area" id="nota-${id}" placeholder="Una frase. No un resumen.">${notaGuardada}</textarea>
     <button class="notas-save" onclick="guardarNota('${id}')">Guardar nota</button>
   </div></article>`;
-
-  const lecsL=lecs.filter(l=>l.libro_id===lecActual.libro_id).sort((a,b)=>a.orden-b.orden);
-  const idx=lecsL.findIndex(l=>l.id===id);
-  const prev=idx>0?lecsL[idx-1]:null;
-  const sig=idx>=0&&idx<lecsL.length-1?lecsL[idx+1]:null;
 
   html+=`<div class="lec-actions">
     ${!done
@@ -1751,6 +1856,64 @@ function verLeccion(id, from=null, skipPush=false, replace=false){
     SCSSubrayados.init(lecActual.id);
   }
 }
+
+/* Primer párrafo → figura → resto, para que el diagrama ilustre la idea ya enunciada. */
+function cuerpoConFigura(cuerpo, figuras){
+  if(!figuras) return fmt(cuerpo);
+  const partes=String(cuerpo||'').split(/\n\s*\n/);
+  const primero=partes[0]||'';
+  const esParrafo=!/^\s*([-*•|#>]|\d+[.)]\s)/.test(primero) && !/<table/i.test(primero);
+  if(!esParrafo || partes.length<2) return figuras+fmt(cuerpo);
+  return fmt(primero)+figuras+fmt(partes.slice(1).join('\n\n'));
+}
+
+/* Comprobación activa: una pregunta del mismo libro, afín a la lección. No guarda progreso. */
+function comprobacionHtml(lec){
+  const qs=Didactica.preguntasParaLeccion(lec,preg,1);
+  if(!qs.length) return '';
+  const p=qs[0];
+  return `<section class="check" data-p="${p.id}">
+    <div class="check-label">Compruébalo</div>
+    <div class="check-q">${esc(p.texto)}</div>
+    <div class="check-opts">${p.opciones.map((op,i)=>`<button type="button" class="check-opt" data-i="${i}" onclick="comprobar(this)"><span class="check-l">${LETRAS[i]||i+1}</span><span>${esc(op)}</span></button>`).join('')}</div>
+    <div class="check-fb" aria-live="polite"></div>
+  </section>`;
+}
+function comprobar(btn){
+  const box=btn.closest('.check'); if(!box||box.classList.contains('hecho')) return;
+  const p=preg.find(x=>x.id===box.dataset.p); if(!p) return;
+  const i=Number(btn.dataset.i), ok=i===p.correcta;
+  box.classList.add('hecho');
+  box.querySelectorAll('.check-opt').forEach(b=>{
+    b.disabled=true;
+    const k=Number(b.dataset.i);
+    if(k===p.correcta) b.classList.add('ok'); else if(k===i) b.classList.add('err');
+  });
+  box.querySelector('.check-fb').innerHTML=`<strong>${ok?'Eso es.':'No exactamente.'}</strong> ${esc(p.explicacion||'')}`;
+}
+
+function abrirZoomDiagrama(fig){
+  try{ if(window.getSelection && String(window.getSelection()).length) return; }catch(e){}
+  const c=fig.cloneNode(true);
+  c.removeAttribute('onclick'); c.removeAttribute('title');
+  abrirZoom(c);
+}
+function abrirZoomImagen(img){
+  const c=document.createElement('img');
+  c.src=img.src; c.alt=img.alt||'';
+  abrirZoom(c);
+}
+function abrirZoom(nodo){
+  cerrarZoom();
+  const o=document.createElement('div');
+  o.className='dg-zoom'; o.setAttribute('role','dialog'); o.setAttribute('aria-label','Imagen ampliada');
+  o.appendChild(nodo);
+  o.insertAdjacentHTML('beforeend','<span class="dg-zoom-x">cerrar ✕</span>');
+  o.addEventListener('click',cerrarZoom);
+  document.body.appendChild(o);
+}
+function cerrarZoom(){ document.querySelectorAll('.dg-zoom').forEach(n=>n.remove()); }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') cerrarZoom(); });
 
 function guardarNota(id){const ta=document.getElementById(`nota-${id}`);if(ta){saveNota(id,ta.value).then(()=>toast('📝 Nota guardada'));}}
 function toggleFavLecDetalle(id,btn){toggleFavLec(id,btn);btn.textContent=favLecs().includes(id)?'Guardada':'Guardar';}
@@ -2607,7 +2770,7 @@ function showView(name, skipPush=false, replace=false){
   if(name!=='leccion'){if(ttsAudio){ttsAudio.pause();ttsAudio=null;}if(window.speechSynthesis){speechSynthesis.cancel();}ttsUtterance=null;ttsPaused=false;ttsMode=null;ttsAudioUrl=null;}
   document.body.classList.toggle('noche', name==='cuaderno');
   Lectura.apply(name);
-  if (modoCarta() && (name==='home' || name==='favoritos' || name==='esquemas' || name==='ensayos' || name==='repaso-srs' || name==='test' || name==='busqueda')) {
+  if (modoCarta() && (name==='home' || name==='favoritos' || name==='esquemas' || name==='ensayos' || name==='repaso-srs' || name==='test' || name==='busqueda' || name==='ruta')) {
     if (lecActual) { verLeccion(lecActual.id); return; }
     if (libroActual) { verLibro(libroActual.id); return; }
   }
@@ -2615,18 +2778,19 @@ function showView(name, skipPush=false, replace=false){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById(`view-${name}`)?.classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  const topMap={home:'nav-home',favoritos:'nav-favoritos',test:'nav-test',resultados:'nav-test',esquemas:'nav-esquemas','esquema-viewer':'nav-esquemas',busqueda:'nav-busqueda',ensayos:'nav-ensayos','ensayo-detalle':'nav-ensayos','repaso-srs':'nav-repaso-srs'};
+  const topMap={ruta:'nav-home',home:'nav-home',favoritos:'nav-favoritos',test:'nav-test',resultados:'nav-test',esquemas:'nav-esquemas','esquema-viewer':'nav-esquemas',busqueda:'nav-busqueda',ensayos:'nav-ensayos','ensayo-detalle':'nav-ensayos','repaso-srs':'nav-repaso-srs'};
   if(topMap[name])document.getElementById(topMap[name])?.classList.add('active');
   document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('active'));
-  const botMap={home:'bnav-home',favoritos:'bnav-favoritos',test:'bnav-test',resultados:'bnav-test',esquemas:'bnav-esquemas','esquema-viewer':'bnav-esquemas',busqueda:'bnav-busqueda',ensayos:'bnav-ensayos','ensayo-detalle':'bnav-ensayos','repaso-srs':'bnav-repaso-srs'};
+  const botMap={ruta:'bnav-home',home:'bnav-home',favoritos:'bnav-favoritos',test:'bnav-test',resultados:'bnav-test',esquemas:'bnav-esquemas','esquema-viewer':'bnav-esquemas',busqueda:'bnav-busqueda',ensayos:'bnav-ensayos','ensayo-detalle':'bnav-ensayos','repaso-srs':'bnav-repaso-srs'};
   if(botMap[name])document.getElementById(botMap[name])?.classList.add('active');
   window.scrollTo(0,0);
   if(!skipPush){
-    const state={view:name,libroId:libroActual?.id||null,lecId:lecActual?.id||null,pagina:paginaActual,eje:ejeActivo,subEje:subEjeActivo};
+    const state={view:name,libroId:libroActual?.id||null,lecId:lecActual?.id||null,ruta:rutaActual,pagina:paginaActual,eje:ejeActivo,subEje:subEjeActivo};
     let hash=`#${name}`;
     if(name==='leccion'&&lecActual) hash=`#leccion/${lecActual.libro_id}/${lecActual.id}`;
     if(name==='cuaderno'&&lecActual) hash=`#cuaderno/${lecActual.libro_id}/${lecActual.id}`;
     if(name==='lecciones'&&libroActual) hash=`#lecciones/${libroActual.id}`;
+    if(name==='ruta'&&rutaActual) hash=`#ruta/${rutaActual}`;
     if(name==='home') hash=`#home`;
     if(replace) history.replaceState(state,'',hash);
     else history.pushState(state,'',hash);
@@ -2634,7 +2798,7 @@ function showView(name, skipPush=false, replace=false){
   if(name==='home'){
     if(!skipPush && !replace) paginaActual=1;
     document.getElementById('search-results-lecs').style.display='none';
-    renderStats();renderEjes();renderLibros();renderContinua();renderUltimosLibros();
+    renderStats();renderEjes();renderLibros();renderContinua();renderUltimosLibros();renderRutas();
   }
   if(name==='favoritos')renderFavoritos();
   if(name==='ensayos')renderEnsayos();
@@ -3044,12 +3208,13 @@ window.addEventListener('popstate', e => {
   const hash = window.location.hash.slice(1);
   if(!state && !hash){ showView('home', true); return; }
   if(!state && hash){ restoreFromURL(); return; }
-  const {view, libroId, lecId, pagina, eje, subEje} = state;
+  const {view, libroId, lecId, pagina, eje, subEje, ruta} = state;
   if(pagina) paginaActual=pagina;
   if(eje!==undefined){ ejeActivo=eje; subEjeActivo=subEje||null; }
   if(libroId) libroActual = libros.find(l=>l.id===libroId)||libroActual;
   if(lecId)   lecActual   = lecs.find(l=>l.id===lecId)||lecActual;
-  if(view==='lecciones' && libroActual){ renderLibroHero(); renderLecs(lecs.filter(l=>l.libro_id===libroActual.id)); showView(view, true); return; }
+  if(view==='lecciones' && libroActual){ renderLibroHero(); renderLecs(lecs.filter(l=>l.libro_id===libroActual.id)); renderRelacionados(); showView(view, true); return; }
+  if(view==='ruta'){ if(ruta) rutaActual=ruta; renderRuta(); showView(view, true); return; }
   if(view==='leccion'   && lecActual)  { verLeccion(lecActual.id, null, true); return; }
   if(view==='cuaderno'  && lecActual)  { abrirCuaderno(lecActual.id, true); return; }
   showView(view, true);
@@ -3103,6 +3268,12 @@ function restoreFromURL(){
       lecActual=lecs.find(l=>l.id===lecId)||null;
       if(lecActual){ verLeccion(lecActual.id); return; }
     }
+  }
+
+  // Formato: #ruta/ID
+  if(hash.startsWith('ruta/')){
+    verRuta(hash.split('/')[1],true);
+    return;
   }
 
   // Formato: #lecciones/LIBRO_ID
