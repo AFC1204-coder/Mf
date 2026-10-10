@@ -2759,3 +2759,39 @@ body.kindle .check-opt.err { border-color: #9c4a3f; background: rgba(156,74,63,0
 .tu-row-t { font-size:var(--text-base, 1rem); }
 .tu-row-s { font-size:var(--text-xs); color:var(--text3); }
 .tu-row:hover .tu-row-t { color:var(--accent); }
+
+/* ── SESIÓN DE HOY ── */
+body.en-sesion .bottom-nav { display:none !important; }
+.ses-card { margin:1.6rem 0 0; padding:1.2rem 0 0; border-top:1px solid var(--border); }
+.ses-card-k { font-family:var(--font-ui); font-size:var(--text-2xs); letter-spacing:0.14em; text-transform:uppercase; color:var(--accent); margin:0 0 0.8rem; }
+.ses-pasos { list-style:none; counter-reset:ses; margin:0 0 0.4rem; padding:0; }
+.ses-pasos li { counter-increment:ses; display:flex; gap:0.7rem; align-items:baseline; padding:0.35rem 0; font-size:var(--text-sm); color:var(--text2); }
+.ses-pasos li::before { content:counter(ses); font-family:var(--font-display); font-style:italic; color:var(--accent-dim, var(--accent)); width:1rem; flex-shrink:0; }
+.ses-pasos li b { font-weight:600; color:var(--text); min-width:5.4rem; font-family:var(--font-ui); letter-spacing:0.04em; }
+.ses-pasos li span { color:var(--text3); }
+
+#view-sesion { max-width:640px; margin:0 auto; }
+.ses-bar { display:flex; align-items:center; gap:var(--sp-4); margin-bottom:var(--sp-7); }
+.ses-seg { flex:1; display:flex; gap:6px; }
+.ses-seg i { flex:1; height:3px; border-radius:2px; background:var(--border2); transition:var(--trans); }
+.ses-seg i.hecho { background:var(--accent-dim, var(--accent)); }
+.ses-seg i.on { background:var(--accent); }
+.ses-cuenta { font-family:var(--font-ui); font-size:var(--text-xs); color:var(--text3); letter-spacing:0.08em; }
+.ses-kicker { font-family:var(--font-ui); font-size:var(--text-xs); letter-spacing:0.16em; text-transform:uppercase; color:var(--accent); margin:0 0 var(--sp-4); }
+.ses-title { font-family:var(--font-display); font-weight:600; font-size:var(--text-2xl, 1.7rem); line-height:1.2; margin:0 0 var(--sp-3); }
+.ses-meta { color:var(--text3); font-size:var(--text-sm); margin:0 0 var(--sp-5); }
+.ses-sub { font-family:var(--font-ui); font-size:var(--text-sm); color:var(--text2); margin:var(--sp-6) 0 var(--sp-3); display:block; }
+.ses-sub small { color:var(--text3); }
+.ses-cita { margin:var(--sp-4) 0 0; padding:0 0 0 var(--sp-5); border-left:2px solid var(--accent-dim, var(--accent)); font-family:var(--font-display); font-style:italic; font-size:1.15rem; line-height:1.55; color:var(--text); }
+.ses-idea { font-family:var(--font-display); font-size:1.3rem; line-height:1.5; color:var(--text); margin:0 0 var(--sp-5); }
+.ses-texto { font-size:var(--text-base); line-height:var(--lh-relaxed); color:var(--text2); margin:0 0 var(--sp-5); }
+.ses-lectura { margin-top:var(--sp-5); }
+.ses-modo, .ses-opciones { display:flex; gap:var(--sp-3); flex-wrap:wrap; }
+.ses-chip { background:none; border:1px solid var(--border2); color:var(--text2); padding:0.6rem 1.1rem; min-height:44px; border-radius:var(--radius-pill); cursor:pointer; font-family:var(--font-ui); font-size:var(--text-sm); transition:var(--trans); }
+.ses-chip:hover:not(:disabled) { border-color:var(--accent-dim, var(--accent)); color:var(--text); }
+.ses-chip.on { border-color:var(--accent); color:var(--accent); }
+.ses-chip:disabled { opacity:0.55; cursor:default; }
+.ses-pie { margin-top:var(--sp-8); }
+.ses-fin { text-align:left; padding-top:var(--sp-6); }
+.ses-noches { margin:var(--sp-4) 0 var(--sp-6); }
+.ses-cierre-acciones { display:flex; gap:14px; align-items:center; flex-wrap:wrap; margin-top:var(--sp-7); }

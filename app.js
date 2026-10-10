@@ -447,6 +447,8 @@ async function init() {
     // Restaurar estado desde URL hash (para enlaces compartidos y marcadores)
     restoreFromURL();
     despertarLeidasUnaVez();
+    if (typeof track==='function') track('app_abierta',{sesion_hecha:isNocheCerrada()});
+    if (typeof sesPrecargar==='function') sesPrecargar();
   } catch(e) {
     clearInterval(msgTimer);
     document.getElementById('loader-msg').textContent = 'Error al cargar: '+(e.message||'desconocido');
@@ -906,7 +908,7 @@ function renderAtril(){
     root.innerHTML = `${top}
       <p class="atril-kicker">La lámpara sigue encendida</p>
       <h2 class="atril-title closed">Hasta mañana.</h2>
-      <p class="atril-meta">${done ? 'Marcado · '+esc(done.titulo) : 'Sesión de esta noche completa.'}</p>
+      <p class="atril-meta">${(typeof sesionResumenHoy==='function' && sesionResumenHoy()?.texto) ? esc(sesionResumenHoy().texto) : (done ? 'Marcado · '+esc(done.titulo) : 'Sesión de esta noche completa.')}</p>
       <p class="atril-excerpt">El marcador queda en una frase. Mañana abre aquí.</p>
       <p class="atril-tomorrow"><em>${tomorrow}</em></p>
       <div class="atril-stamp">Ex libris · ${hoyISO().slice(8)} ${['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'][+hoyISO().slice(5,7)-1]}</div>`;
@@ -914,13 +916,16 @@ function renderAtril(){
   }
 
   const hilo = getHilo();
+  const hoyCard = (typeof sesionCardHtml === 'function') ? sesionCardHtml() : '';
   if (hilo && hilo.frase) {
     root.innerHTML = `${top}
       <p class="atril-kicker">Anoche te quedaste aquí</p>
       <h2 class="atril-title hilo">${esc(hilo.frase)}</h2>
       <p class="atril-meta">${esc(hilo.libro)}${hilo.autor?' — '+esc(hilo.autor):''}${hilo.titulo?' · '+esc(hilo.titulo):''}</p>
+      ${hoyCard}
       <div class="atril-actions">
-        <button class="atril-open" onclick="continuarHilo()">Continúa</button>
+        ${hoyCard ? '' : '<button class="atril-open" onclick="continuarHilo()">Continúa</button>'}
+        ${hoyCard ? '<button class="atril-ghost" onclick="continuarHilo()">Abrir el cuaderno</button>' : ''}
         <button class="atril-ghost" onclick="otroVolumenAtril()">Otro volumen</button>
       </div>`;
     return;
@@ -931,7 +936,8 @@ function renderAtril(){
     root.innerHTML = `${top}
       <p class="atril-kicker">Nada pendiente</p>
       <h2 class="atril-title closed">El atril está vacío.</h2>
-      <p class="atril-meta">Todas las lecciones están marcadas.</p>`;
+      <p class="atril-meta">Todas las lecciones están marcadas.</p>
+      ${hoyCard}`;
     return;
   }
   const libro = libros.find(l=>l.id===lec.libro_id);
@@ -949,11 +955,10 @@ function renderAtril(){
       <button type="button" class="atril-expand" onclick="expandirAtril('${lec.id}')">Mostrar el resto</button>
       <button type="button" class="atril-seguir" onclick="abrirFolioAtril('${lec.id}')">Seguir en el folio</button>
     </div>`:''}
-    <p class="atril-after">Después, si quieres: <b>5 tarjetas</b> de este tomo — no la cola entera.</p>
+    ${hoyCard}
     <div class="atril-actions">
-      <button class="atril-open" onclick="abrirAtril()">Abrir el libro</button>
+      <button class="${hoyCard ? 'atril-ghost' : 'atril-open'}" onclick="abrirAtril()">${hoyCard ? 'Abrir el cuaderno' : 'Abrir el libro'}</button>
       <button class="atril-ghost" onclick="otroVolumenAtril()">Otro volumen</button>
-      <button class="atril-ghost" onclick="cincoTarjetasNoche()">Cinco tarjetas</button>
     </div>`;
 }
 function renderContinua(){ renderAtril(); }
@@ -2283,16 +2288,17 @@ async function despertarLeidasUnaVez(){
 /* ═══════════════════════════════════════════
    MARCAR COMPLETADA
 ═══════════════════════════════════════════ */
-async function marcarCompletada(id){
+async function marcarCompletada(id, opts={}){
   try{
     await sb('progreso',{method:'POST',body:JSON.stringify({tipo:'leccion',item_id:id,resultado:'correcta',fecha:new Date().toISOString()})});
     prog.push({tipo:'leccion',item_id:id,resultado:'correcta',fecha:new Date().toISOString()});
     setNocheCerrada(id);
     marcarDiaEstudiado();
     tarjetasDeLecciones([id]).catch(e=>console.warn('Repaso:', e));
-    toast('✓ Lección completada');
+    if (typeof track==='function') track('leccion_leida',{origen:opts.sinNavegar?'sesion':'folio'});
+    if (!opts.sinNavegar) toast('✓ Lección completada');
     renderStats(); renderAtril();
-    if (!document.body.classList.contains('noche')) verLeccion(id);
+    if (!opts.sinNavegar && !document.body.classList.contains('noche')) verLeccion(id);
   }catch(e){toast('Error: '+e.message);}
 }
 
@@ -2810,6 +2816,7 @@ function verAutor(enc){
 function showView(name, skipPush=false, replace=false){
   if(name!=='leccion'){if(ttsAudio){ttsAudio.pause();ttsAudio=null;}if(window.speechSynthesis){speechSynthesis.cancel();}ttsUtterance=null;ttsPaused=false;ttsMode=null;ttsAudioUrl=null;}
   document.body.classList.toggle('noche', name==='cuaderno');
+  document.body.classList.toggle('en-sesion', name==='sesion');
   Lectura.apply(name);
   if (modoCarta() && (name==='home' || name==='favoritos' || name==='esquemas' || name==='ensayos' || name==='repaso-srs' || name==='test' || name==='busqueda' || name==='ruta')) {
     if (lecActual) { verLeccion(lecActual.id); return; }
@@ -2820,7 +2827,7 @@ function showView(name, skipPush=false, replace=false){
   document.getElementById(`view-${name}`)?.classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   // Cinco secciones: Hoy · Biblioteca · Repaso · Tú · Buscar
-  const secMap={home:'home',ruta:'home',biblioteca:'biblioteca',lecciones:'biblioteca',quotes:'biblioteca',esquemas:'biblioteca','esquema-viewer':'biblioteca',ensayos:'biblioteca','ensayo-detalle':'biblioteca',autor:'biblioteca',
+  const secMap={home:'home',sesion:'home',ruta:'home',biblioteca:'biblioteca',lecciones:'biblioteca',quotes:'biblioteca',esquemas:'biblioteca','esquema-viewer':'biblioteca',ensayos:'biblioteca','ensayo-detalle':'biblioteca',autor:'biblioteca',
     'repaso-srs':'repaso-srs',test:'repaso-srs',resultados:'repaso-srs',repaso:'repaso-srs',tu:'tu',favoritos:'tu',busqueda:'busqueda'};
   const sec=secMap[name];
   document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('active'));
@@ -3219,6 +3226,7 @@ function renderSRSItem() {
 function srsContarDia(){
   revisiones.push(new Date().toISOString());
   marcarDiaEstudiado();
+  if (typeof track==='function') track('tarjeta',{origen:'repaso'});
 }
 
 async function srsResponderQuiz(idx, correcta, repasoId) {
@@ -3271,6 +3279,7 @@ window.addEventListener('popstate', e => {
   if(!state && !hash){ showView('home', true); return; }
   if(!state && hash){ restoreFromURL(); return; }
   const {view, libroId, lecId, pagina, eje, subEje, ruta} = state;
+  if(view==='sesion'){ showView('home', true); return; }
   if(pagina) paginaActual=pagina;
   if(eje!==undefined){ ejeActivo=eje; subEjeActivo=subEje||null; }
   if(libroId) libroActual = libros.find(l=>l.id===libroId)||libroActual;

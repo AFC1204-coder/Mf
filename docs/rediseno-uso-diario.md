@@ -552,6 +552,16 @@ no coincidía con ningún `modo`); corregido en cliente y en la migración.
 | M7 | Rutas a tablas, por lecciones (15–25), + rutas «Emociones y atención» y «Economía básica» | — |
 | M8 | Resumen semanal + mapa de dominios en «Tú» | M2, M4 |
 
+**Estado (10 oct 2026):** M1 (sesión de hoy v1), M3 (paso «Lleva» con
+compromisos), M4 (eventos, en el cliente) y la parte de M2 que no necesita
+datos nuevos (tarjetas al leer) están en código: `lib/sesion.js` (+ tests),
+`sesion-ui.js`, tarjeta «Hoy» en el atril. Tablas `eventos` y `compromisos` y
+vistas de métricas en `supabase/migrations/20261011_sesion_eventos.sql`
+(**pendiente de aplicar**; sin ella la sesión funciona: los eventos esperan
+en una cola local y «¿lo hiciste?» no aparece). Pendientes de medio plazo:
+M2 (`preguntas.leccion_id`), M5 (onboarding + constancia semanal), M6 (modo 2
+min dentro del cuaderno), M7 (rutas en tablas), M8 (resumen semanal y mapa).
+
 ### Apuesta grande · 2–3 meses
 
 | # | Cambio | Por qué es grande |
