@@ -11,6 +11,7 @@ Necesito que apliques una migración SQL en mi proyecto de Supabase "Mente fría
 - Trabaja solo en este proyecto y solo en el SQL Editor. No cambies ajustes, claves, autenticación ni otras tablas.
 - Si te pide iniciar sesión, para y avísame; yo me identifico.
 - Si aparece un aviso de "operación potencialmente destructiva", revisa que es esperado (esta migración solo crea tablas y vistas nuevas y concede permisos) y confirma solo ese aviso.
+- Al pulsar Run, Supabase puede mostrar "Potential issue detected" avisando de que las tablas nuevas se crearán sin Row Level Security. Es una decisión ya tomada: elige **"Run without RLS"** (igual que el resto de tablas de la app, que usa la clave anónima y un usuario único). No actives RLS en estas tablas.
 - Si algo no coincide con lo descrito (otro proyecto, errores de sintaxis, tablas que ya existen con otro contenido), para y cuéntamelo antes de seguir.
 
 ## Qué hace la migración

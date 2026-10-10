@@ -596,3 +596,15 @@ petición.
 3. **Las 5.333 tarjetas**: dormirlas (recomendado, reversible) o borrarlas.
 4. **Barra inferior**: ¿Esquemas y Ensayos dentro de Biblioteca (recomendado) o conservar acceso directo?
 5. **Cuentas**: ¿la app seguirá siendo de un usuario (se aplaza G3) o se quiere abrir a más gente (G3 sube a medio plazo)?
+
+---
+
+## 14. Nota de seguridad (10 oct 2026)
+
+Las tablas `eventos` y `compromisos` se crearon **sin RLS**, igual que el resto
+(`repaso`, `progreso`, `notas`…): la app usa la clave anónima, que es pública, con
+un usuario único `default`, así que cualquiera con esa clave puede leerlas y
+escribirlas. El contenido es de baja sensibilidad (eventos de uso y el texto de
+las acciones, que sale de las lecciones), pero la solución real es G3: Supabase
+Auth + RLS por `auth.uid()`. Hasta entonces, no guardar en la base de datos nada
+más sensible que lo que ya hay.
