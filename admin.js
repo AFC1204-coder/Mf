@@ -32,10 +32,42 @@ function showTab(name) {
   document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + name).style.display = 'block';
-  const tabs = ['nuevo-libro', 'generar', 'corpus'];
+  const tabs = ['nuevo-libro', 'generar', 'corpus', 'infografias'];
   const idx = tabs.indexOf(name);
   document.querySelectorAll('.nav-btn')[idx].classList.add('active');
   if (name === 'corpus') renderCorpus();
+  if (name === 'infografias') cargarInfografias();
+}
+
+// INFOGRAFÍAS — revisión: aprobar o rechazar (rechazada = el generador la rehace en la próxima tanda)
+const escH = s => String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+async function cargarInfografias() {
+  const box = document.getElementById('info-lista');
+  box.innerHTML = '<div style="color:var(--text-dim);font-size:0.85rem;">Cargando...</div>';
+  const { data, error } = await db.from('libros')
+    .select('id,titulo,autor,infografia_url,infografia_estado,infografia_modelo,infografia_prompt')
+    .eq('infografia_estado', 'pendiente').order('infografia_at', { ascending: true });
+  if (error) { box.innerHTML = '<div style="color:var(--text-dim);font-size:0.85rem;">No se pudo cargar (¿está aplicada la migración de infografías?).</div>'; return; }
+  if (!data.length) { box.innerHTML = '<div style="color:var(--text-dim);font-size:0.85rem;">Nada pendiente de revisar.</div>'; return; }
+  box.innerHTML = data.map(l => `
+    <div class="info-item" id="info-${escH(l.id)}" style="display:flex;gap:1rem;align-items:flex-start;margin:1rem 0;padding-bottom:1rem;border-bottom:1px solid var(--border);flex-wrap:wrap;">
+      <a href="${escH(l.infografia_url)}" target="_blank" rel="noopener"><img src="${escH(l.infografia_url)}" alt="" style="width:220px;max-width:100%;border-radius:8px;border:1px solid var(--border);"></a>
+      <div style="flex:1;min-width:200px;">
+        <div style="font-weight:600;">${escH(l.titulo)}</div>
+        <div style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.6rem;">${escH(l.autor)} · ${escH(l.infografia_modelo || '')}</div>
+        <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
+          <button class="btn" onclick="revisarInfografia('${escH(l.id)}','aprobada')">Aprobar</button>
+          <button class="btn-secondary" onclick="revisarInfografia('${escH(l.id)}','rechazada')">Rechazar</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+async function revisarInfografia(id, estado) {
+  const { error } = await db.from('libros').update({ infografia_estado: estado }).eq('id', id);
+  if (error) { alert('No se pudo guardar: ' + error.message); return; }
+  const el = document.getElementById('info-' + id);
+  if (el) el.remove();
+  if (!document.querySelector('#info-lista .info-item')) document.getElementById('info-lista').innerHTML = '<div style="color:var(--text-dim);font-size:0.85rem;">Nada pendiente de revisar.</div>';
 }
 
 // CARGAR LIBROS

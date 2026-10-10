@@ -614,3 +614,10 @@ escribirlas. El contenido es de baja sensibilidad (eventos de uso y el texto de
 las acciones, que sale de las lecciones), pero la solución real es G3: Supabase
 Auth + RLS por `auth.uid()`. Hasta entonces, no guardar en la base de datos nada
 más sensible que lo que ya hay.
+
+---
+
+## 15. Imágenes (oct 2026)
+
+- **Auditoría de los SVG antiguos** (`docs/auditoria-svg.md`): ≈ 90 % con texto ilegible en móvil, 205+ con faltas de tilde, 22 corruptos. Se propone rehacerlos como especificaciones para el motor de diagramas, no como SVG libre.
+- **Infografías por libro** (`docs/infografias.md`): tubería generadora con revisión humana, lista para usarse cuando haya clave de API y se aplique `20261012_infografias.sql`.

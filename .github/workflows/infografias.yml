@@ -1,0 +1,58 @@
+name: Infografías de libros
+
+# Se lanza a mano (también desde el móvil): Actions → «Infografías de libros» → Run workflow.
+# Por defecto SOLO SIMULA (no llama a ninguna API de pago). Para generar de verdad, marca «ejecutar».
+# Secretos necesarios para generar: OPENAI_API_KEY, ADMIN_EMAIL, ADMIN_PASSWORD (ver docs/infografias.md).
+
+on:
+  workflow_dispatch:
+    inputs:
+      ejecutar:
+        description: 'Generar de verdad (cuesta dinero). Si no, solo simula.'
+        type: boolean
+        default: false
+      limite:
+        description: 'Cuántos libros como máximo'
+        type: string
+        default: '3'
+      calidad:
+        description: 'Calidad de la imagen'
+        type: choice
+        options: [low, medium, high]
+        default: medium
+      libro:
+        description: 'Id de un libro concreto (vacío = los siguientes pendientes)'
+        type: string
+        default: ''
+      max_coste:
+        description: 'Tope de coste estimado en USD'
+        type: string
+        default: '3'
+
+permissions:
+  contents: read
+
+jobs:
+  generar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Generar infografías
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+          EJECUTAR: ${{ inputs.ejecutar }}
+          LIMITE: ${{ inputs.limite }}
+          CALIDAD: ${{ inputs.calidad }}
+          LIBRO: ${{ inputs.libro }}
+          MAX_COSTE: ${{ inputs.max_coste }}
+        run: |
+          args=(--limite "$LIMITE" --calidad "$CALIDAD" --max-coste "$MAX_COSTE")
+          if [ -n "$LIBRO" ]; then args+=(--libro "$LIBRO"); fi
+          if [ "$EJECUTAR" = "true" ]; then args+=(--ejecutar); fi
+          node tools/infografias/generar.mjs "${args[@]}"

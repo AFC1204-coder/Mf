@@ -33,6 +33,7 @@
       <button class="nav-btn active" onclick="showTab('nuevo-libro')">Nuevo libro</button>
       <button class="nav-btn" onclick="showTab('generar')">Generar preguntas</button>
       <button class="nav-btn" onclick="showTab('corpus')">Corpus</button>
+      <button class="nav-btn" onclick="showTab('infografias')">Infografías</button>
     </nav>
     <a href="index.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--text-dim);text-decoration:none;letter-spacing:0.1em;">← App</a>
   </header>
@@ -124,6 +125,13 @@
       </div>
 
       <div class="log-box" id="log-generar"></div>
+    </div>
+
+    <!-- TAB: INFOGRAFÍAS -->
+    <div id="tab-infografias" class="tab-content" style="display:none;">
+      <div class="section-title">Infografías pendientes de revisión</div>
+      <div class="section-sub">Solo se muestran en la app las aprobadas. Revisa que no haya texto inventado, erratas ni tildes que falten.</div>
+      <div id="info-lista"><div style="color:var(--text-dim);font-size:0.85rem;">Cargando...</div></div>
     </div>
 
     <!-- TAB: CORPUS -->

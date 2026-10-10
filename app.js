@@ -1530,6 +1530,19 @@ function verLibro(id){
   renderLibroHero(); renderLecs(lecs.filter(l=>l.libro_id===id)); renderRelacionados(); showView('lecciones');
 }
 
+/* Infografía del libro: solo se muestra si un administrador la ha aprobado */
+function infografiaAprobada(l){ return !!(l && l.infografia_url && l.infografia_estado==='aprobada'); }
+function abrirZoomUrl(url,alt){
+  const c=document.createElement('img'); c.src=url; c.alt=alt||''; abrirZoom(c);
+}
+function infografiaLibroHtml(l){
+  if(!infografiaAprobada(l)) return '';
+  return `<figure class="libro-info">
+    <img src="${esc(l.infografia_url).replace(/"/g,'&quot;')}" alt="Mapa visual de ${esc(l.titulo).replace(/"/g,'&quot;')}" loading="lazy" onclick="abrirZoomImagen(this)">
+    <figcaption>Mapa visual · toca para ampliar</figcaption>
+  </figure>`;
+}
+
 function renderLibroHero(){
   const l=libroActual;
   const comp=completadasSet();
@@ -1566,7 +1579,8 @@ function renderLibroHero(){
           <button class="act-btn secondary" style="padding:0.3rem 0.75rem;font-size:0.7rem" onclick="compartirLibro()">🔗 Compartir</button>
         </div>
       </div>
-    </div>`;
+    </div>
+    ${infografiaLibroHtml(l)}`;
   if(!l.portada_url){
     getCover(l.autor, l.titulo, l.id).then(url=>{
       if(!url) return;
@@ -1765,6 +1779,10 @@ function verLeccion(id, from=null, skipPush=false, replace=false){
   const mapa = esquemaDeLibro(libro);
   if (mapa) {
     html+=`<p class="folio-mapa"><button type="button" class="folio-mapa-btn" onclick="abrirEsquema('${mapa.key}','leccion')">Ver el mapa · ${esc(mapa.titulo)}</button></p>`;
+  }
+  if (infografiaAprobada(libro)) {
+    const q=t=>esc(t).replace(/"/g,'&quot;');
+    html+=`<p class="folio-mapa"><button type="button" class="folio-mapa-btn" data-url="${q(libro.infografia_url)}" data-alt="${q('Mapa visual de '+libro.titulo)}" onclick="abrirZoomUrl(this.dataset.url,this.dataset.alt)">Ver el mapa visual del libro</button></p>`;
   }
 
   html+=`<div class="lec-body fmt">${cuerpoConFigura(lecActual.cuerpo,figuras)}</div>`;

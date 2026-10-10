@@ -2827,3 +2827,8 @@ body.en-sesion .bottom-nav { display:none !important; }
 .dom-barra i { display:block; height:100%; background:var(--accent); border-radius:2px; }
 .dom-sub { display:grid; grid-template-columns:1fr auto; gap:4px var(--sp-4); padding:var(--sp-3) 0 0 var(--sp-4); }
 .dom-sub .dom-nombre { color:var(--text2); }
+
+/* ── INFOGRAFÍA DEL LIBRO ── */
+.libro-info { margin:var(--sp-6) auto 0; max-width:440px; }
+.libro-info img { display:block; width:100%; height:auto; border-radius:var(--radius-lg); border:1px solid var(--border); background:var(--surface); cursor:zoom-in; }
+.libro-info figcaption { margin-top:var(--sp-3); text-align:center; font-family:var(--font-ui); font-size:var(--text-xs); letter-spacing:0.08em; text-transform:uppercase; color:var(--text3); }
