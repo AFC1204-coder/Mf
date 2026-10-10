@@ -6,7 +6,7 @@ Qué hace, en este orden: (1) migración de infografías en Supabase, (2) abrir 
 
 Antes de pegarlo:
 - Inicia sesión en **Supabase**, **GitHub** y **OpenAI** (platform.openai.com) en ese mismo Chrome. No le des tus credenciales a Claude.
-- Sustituye `[TU_EMAIL_ADMIN]` (aparece 1 vez) por el email del administrador de Supabase que creaste.
+- Sustituye `[TU_EMAIL_ADMIN]` (aparece 2 veces, debajo de la línea) por el email del administrador de Supabase que creaste.
 - Ten a mano un momento: te pedirá que **tú** escribas contraseñas y claves y que **confirmes** el único gasto (≈ 0,15 $).
 
 Copia todo lo que hay debajo de la línea.
