@@ -557,9 +557,16 @@ compromisos), M4 (eventos, en el cliente) y la parte de M2 que no necesita
 datos nuevos (tarjetas al leer) están en código: `lib/sesion.js` (+ tests),
 `sesion-ui.js`, tarjeta «Hoy» en el atril. Tablas `eventos` y `compromisos` y
 vistas de métricas en `supabase/migrations/20261011_sesion_eventos.sql`
-(**aplicada el 10 oct 2026**, sin RLS: ver §14). Pendientes de medio plazo:
-M2 (`preguntas.leccion_id`), M5 (onboarding + constancia semanal), M6 (modo 2
-min dentro del cuaderno), M7 (rutas en tablas), M8 (resumen semanal y mapa).
+(**aplicada el 10 oct 2026**, sin RLS: ver §14). **Estado (10 oct 2026, 2.ª entrega):** M5 hecho (onboarding de 3 preguntas
+—objetivo, tiempo, días por semana—, ruta activa que decide la lección de la
+sesión, constancia semanal con «semanas seguidas con tu objetivo»; el perfil
+vive en el navegador, sin tabla), M8 hecho (resumen de la semana y mapa de
+dominios en «Tú»; «asentadas» sale de las reflexiones en nivel ≥ 4), M6
+cubierto por el modo «2 min» de la sesión, y M7 a medias (rutas «Emociones y
+atención» y «Economía básica» añadidas en `lib/didactica.js`; falta pasarlas a
+tablas editables). Pendiente: M2 (`preguntas.leccion_id`, requiere migración y
+backfill), `perfil_usuario` en base de datos (hoy solo local), resumen
+semanal como carta compartible, y la apuesta grande (push, grafo, cuentas).
 
 ### Apuesta grande · 2–3 meses
 

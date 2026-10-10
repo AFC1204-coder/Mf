@@ -800,6 +800,11 @@ function setNocheCerrada(lecId){
 function pickNocheLeccion(){
   const comp = completadasSet();
   const ultima = getUltima();
+  // Con ruta activa: si lo último que abriste no es de la ruta, la sesión sigue la ruta
+  if (typeof rutaActivaItems === 'function' && rutaActivaItems()) {
+    const ul = ultima && lecs.find(l=>l.id===ultima.lecId);
+    if (!ul || !lecEnRuta(ul)) { const rl = rutaSiguienteLeccion(); if (rl) return rl; }
+  }
   if (ultima) {
     const lec = lecs.find(l=>l.id===ultima.lecId);
     if (lec && !comp.has(lec.id)) return lec;
@@ -892,9 +897,10 @@ function clearHilo(){ try { localStorage.removeItem(HILO_K); } catch(e) {} }
 function renderAtril(){
   const root = document.getElementById('atril');
   if (!root) return;
-  const nNoches = nochesEsteMes();
+  const sem = (typeof estadoSemana === 'function') ? estadoSemana() : null;
+  const nNoches = sem ? sem.n : nochesEsteMes();
   const top = `<div class="atril-top"><div>Mente fría · <strong>Noche</strong></div>
-    <div class="atril-nights">${lampsHtml(nNoches)}<span>${nNoches} noche${nNoches===1?'':'s'}</span>
+    <div class="atril-nights">${lampsHtml(nNoches)}<span>${sem ? esc(sem.texto) : nNoches+' noche'+(nNoches===1?'':'s')}</span>
       <button type="button" class="atril-sound${Ambiente.on?' on':''}" onclick="event.preventDefault();Ambiente.toggle()">${Ambiente.on?'Ambiente · on':'Ambiente'}</button>
     </div></div>`;
 
@@ -917,8 +923,10 @@ function renderAtril(){
 
   const hilo = getHilo();
   const hoyCard = (typeof sesionCardHtml === 'function') ? sesionCardHtml() : '';
-  if (hilo && hilo.frase) {
-    root.innerHTML = `${top}
+  const intro = (typeof perfilCardHtml === 'function') ? perfilCardHtml() : '';
+  const hiloOk = hilo && hilo.frase && (typeof hiloValido !== 'function' || hiloValido(hilo));
+  if (hiloOk) {
+    root.innerHTML = `${top}${intro}
       <p class="atril-kicker">Anoche te quedaste aquí</p>
       <h2 class="atril-title hilo">${esc(hilo.frase)}</h2>
       <p class="atril-meta">${esc(hilo.libro)}${hilo.autor?' — '+esc(hilo.autor):''}${hilo.titulo?' · '+esc(hilo.titulo):''}</p>
@@ -933,7 +941,7 @@ function renderAtril(){
 
   const lec = pickNocheLeccion();
   if (!lec) {
-    root.innerHTML = `${top}
+    root.innerHTML = `${top}${intro}
       <p class="atril-kicker">Nada pendiente</p>
       <h2 class="atril-title closed">El atril está vacío.</h2>
       <p class="atril-meta">Todas las lecciones están marcadas.</p>
@@ -946,7 +954,7 @@ function renderAtril(){
   const rest = esc(ex.text.slice(1));
   const ord = lec.orden ? `Lección ${lec.orden}` : 'Lección';
   const nLib = lecsDeLibro(lec.libro_id).length;
-  root.innerHTML = `${top}
+  root.innerHTML = `${top}${intro}
     <p class="atril-kicker">El atril está puesto · ${Didactica.minutosLectura(lec)} min</p>
     <h2 class="atril-title">${esc(lec.titulo)}</h2>
     <p class="atril-meta">${ord}${nLib?` de ${nLib}`:''} · <em>${esc(libro?libro.titulo:'')}</em>${libro?' — '+esc(libro.autor):''}</p>
@@ -2241,30 +2249,6 @@ function ttsDownload(){
 }
 
 /* ═══════════════════════════════════════════
-   TÚ — constancia, guardados y ajustes
-═══════════════════════════════════════════ */
-function renderTu(){
-  const root = document.getElementById('tu-cont');
-  if (!root) return;
-  const comp = completadasSet();
-  const noches = nochesEsteMes();
-  const racha = calcStreak();
-  const fila = (t, sub, fn) => `<button type="button" class="tu-row" onclick="${fn}"><span class="tu-row-t">${t}</span><span class="tu-row-s">${sub}</span></button>`;
-  root.innerHTML = `
-    <div class="srs-stats-grid">
-      <div class="srs-stat"><div class="srs-stat-num">${noches}</div><div class="srs-stat-lbl">Noches este mes</div></div>
-      <div class="srs-stat"><div class="srs-stat-num">${racha}</div><div class="srs-stat-lbl">Días seguidos</div></div>
-      <div class="srs-stat"><div class="srs-stat-num">${comp.size}</div><div class="srs-stat-lbl">Lecciones leídas</div></div>
-    </div>
-    <p class="tu-nota">Cuenta leer y repasar. El día acaba a las 04:00.</p>
-    <div class="tu-list">
-      ${fila('Guardados', `${favLecs().length} lecciones · ${favLibros().length} libros`, "showView('favoritos')")}
-      ${fila('Avisos', 'Recordatorio diario y ajustes', 'toggleNotifPanel()')}
-      ${fila('Mapa de conexiones', 'Autores y tesis cruzadas', "location.href='mapa.html'")}
-    </div>`;
-}
-
-/* ═══════════════════════════════════════════
    REPASO DESDE LO LEÍDO — solo entra lo que has leído
 ═══════════════════════════════════════════ */
 async function tarjetasDeLecciones(ids, repartirDias=0){
@@ -2816,7 +2800,7 @@ function verAutor(enc){
 function showView(name, skipPush=false, replace=false){
   if(name!=='leccion'){if(ttsAudio){ttsAudio.pause();ttsAudio=null;}if(window.speechSynthesis){speechSynthesis.cancel();}ttsUtterance=null;ttsPaused=false;ttsMode=null;ttsAudioUrl=null;}
   document.body.classList.toggle('noche', name==='cuaderno');
-  document.body.classList.toggle('en-sesion', name==='sesion');
+  document.body.classList.toggle('en-sesion', name==='sesion'||name==='onboarding');
   Lectura.apply(name);
   if (modoCarta() && (name==='home' || name==='favoritos' || name==='esquemas' || name==='ensayos' || name==='repaso-srs' || name==='test' || name==='busqueda' || name==='ruta')) {
     if (lecActual) { verLeccion(lecActual.id); return; }
@@ -2827,7 +2811,7 @@ function showView(name, skipPush=false, replace=false){
   document.getElementById(`view-${name}`)?.classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   // Cinco secciones: Hoy · Biblioteca · Repaso · Tú · Buscar
-  const secMap={home:'home',sesion:'home',ruta:'home',biblioteca:'biblioteca',lecciones:'biblioteca',quotes:'biblioteca',esquemas:'biblioteca','esquema-viewer':'biblioteca',ensayos:'biblioteca','ensayo-detalle':'biblioteca',autor:'biblioteca',
+  const secMap={home:'home',sesion:'home',onboarding:'home',ruta:'home',biblioteca:'biblioteca',lecciones:'biblioteca',quotes:'biblioteca',esquemas:'biblioteca','esquema-viewer':'biblioteca',ensayos:'biblioteca','ensayo-detalle':'biblioteca',autor:'biblioteca',
     'repaso-srs':'repaso-srs',test:'repaso-srs',resultados:'repaso-srs',repaso:'repaso-srs',tu:'tu',favoritos:'tu',busqueda:'busqueda'};
   const sec=secMap[name];
   document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('active'));
@@ -3279,7 +3263,7 @@ window.addEventListener('popstate', e => {
   if(!state && !hash){ showView('home', true); return; }
   if(!state && hash){ restoreFromURL(); return; }
   const {view, libroId, lecId, pagina, eje, subEje, ruta} = state;
-  if(view==='sesion'){ showView('home', true); return; }
+  if(view==='sesion'||view==='onboarding'){ showView('home', true); return; }
   if(pagina) paginaActual=pagina;
   if(eje!==undefined){ ejeActivo=eje; subEjeActivo=subEje||null; }
   if(libroId) libroActual = libros.find(l=>l.id===libroId)||libroActual;

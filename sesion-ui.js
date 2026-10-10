@@ -53,7 +53,7 @@ async function sesPrecargar() {
 function sesLeccionHoy() {
   const hilo = getHilo();
   const comp = completadasSet();
-  if (hilo && hilo.nextId) {
+  if (hilo && hilo.nextId && hiloValido(hilo)) {
     const l = lecs.find(x => x.id === hilo.nextId);
     if (l && !comp.has(l.id)) return l;
   }
@@ -81,6 +81,7 @@ function sesionCardHtml() {
   const { lec, plan } = sesPlan(false);
   if (plan.vacia) return '';
   const libro = lec ? libros.find(l => l.id === lec.libro_id) : null;
+  const ruta = rutaActivaItems();
   const det = {
     recuerda: p => `${p.n} ${p.n === 1 ? 'idea de antes' : 'ideas de antes'}`,
     lee: p => `${lec ? esc(lec.titulo) : ''} · ${p.min} min`,
@@ -91,7 +92,7 @@ function sesionCardHtml() {
   const solo = sesPrecarga.tarjetas.length && lec
     ? `<button type="button" class="atril-ghost" onclick="sesionEmpezar(true)">Solo recordar</button>` : '';
   return `<div class="ses-card">
-    <p class="ses-card-k">Hoy · ${plan.minutos} min${libro ? ' · ' + esc(libro.titulo) : ''}</p>
+    <p class="ses-card-k">Hoy · ${plan.minutos} min${ruta ? ' · ' + esc(ruta.titulo) + ' ' + ruta.pct + '%' : (libro ? ' · ' + esc(libro.titulo) : '')}</p>
     <ol class="ses-pasos">${items}</ol>
     <div class="atril-actions">
       <button type="button" class="atril-open" onclick="sesionEmpezar(false)">Empezar</button>${solo}
@@ -399,7 +400,7 @@ function sesionFin() {
     <p class="ses-kicker">La lámpara sigue encendida</p>
     <h2 class="atril-title closed">Hasta mañana.</h2>
     <p class="ses-meta">${esc(texto) || 'Sesión de hoy completa.'}</p>
-    <div class="atril-nights ses-noches">${lampsHtml(nochesEsteMes())}<span>${nochesEsteMes()} noche${nochesEsteMes() === 1 ? '' : 's'} este mes</span></div>
+    <div class="atril-nights ses-noches">${lampsHtml(estadoSemana().n)}<span>${esc(estadoSemana().texto)}</span></div>
     ${hilo && hilo.frase ? `<p class="ses-sub">Mañana abre aquí</p><p class="atril-tomorrow"><em>${esc(hilo.frase)}</em></p>` : ''}
     <div class="atril-stamp">Ex libris · ${Dia.hoy().slice(8)} ${mes}</div>
     <div class="ses-cierre-acciones">
