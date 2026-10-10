@@ -1,0 +1,15 @@
+{
+  "titulo": "Thinking in Bets",
+  "autor": "Annie Duke",
+  "eje": "Psicología y Conducta",
+  "subeje": "Cognitiva",
+  "nodos": [
+    { "etiqueta": "Resulting", "texto": "Juzgar una decisión por su resultado es un error", "icono": "dado" },
+    { "etiqueta": "Suerte y habilidad", "texto": "El problema de la atribución", "icono": "balanza" },
+    { "etiqueta": "Creencias como apuestas", "texto": "Toda opinión tiene un grado de confianza", "icono": "diana" },
+    { "etiqueta": "La trampa de la certeza", "texto": "Decir «no sé» es una ventaja", "icono": "pregunta" },
+    { "etiqueta": "Truth-seeking pods", "texto": "El grupo como sistema de debiasing", "icono": "grupo" },
+    { "etiqueta": "Arquitectura de decisiones", "texto": "Diseña el sistema antes de necesitarlo", "icono": "bombilla" }
+  ],
+  "cierre": "Separar la calidad de la decisión de la calidad del resultado."
+}

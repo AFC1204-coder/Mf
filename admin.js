@@ -1,7 +1,5 @@
 const SUPABASE_URL = 'https://aduizdiiacrvpoavjmab.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkdWl6ZGlpYWNydnBvYXZqbWFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1OTg5MDEsImV4cCI6MjA4NzE3NDkwMX0.US2sEhlSBJbcwg93txuL-9AdPKo2LLmdVX5dur7i5GQ';
-const ADMIN_HASH = '94b371e3f19434d45d7dbd5fe23efd511caa57ccdc84d794c5feaf371d888c54';
-let adminSessionPwd = null;
 
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -10,19 +8,23 @@ let allLibros = [];
 let preguntasPendientes = [];
 let libroSeleccionado = null;
 
-// LOGIN
+// LOGIN — Supabase Auth; la escritura la permite RLS solo a usuarios de public.admins
 async function checkLogin() {
+  const email = document.getElementById('login-email').value.trim();
   const pwd = document.getElementById('login-input').value;
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pwd));
-  const hash = [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
-  if (hash === ADMIN_HASH) {
-    adminSessionPwd = pwd;
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('admin-screen').classList.add('active');
-    cargarLibros();
-  } else {
-    document.getElementById('login-error').style.display = 'block';
+  const err = document.getElementById('login-error');
+  err.style.display = 'none';
+  const { error } = await db.auth.signInWithPassword({ email, password: pwd });
+  let esAdmin = false;
+  if (!error) {
+    const r = await db.rpc('is_admin');
+    esAdmin = r.data === true;
+    if (!esAdmin) await db.auth.signOut();
   }
+  if (error || !esAdmin) { err.style.display = 'block'; return; }
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('admin-screen').classList.add('active');
+  cargarLibros();
 }
 
 // NAVIGATION
@@ -30,10 +32,42 @@ function showTab(name) {
   document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + name).style.display = 'block';
-  const tabs = ['nuevo-libro', 'generar', 'corpus'];
+  const tabs = ['nuevo-libro', 'generar', 'corpus', 'infografias'];
   const idx = tabs.indexOf(name);
   document.querySelectorAll('.nav-btn')[idx].classList.add('active');
   if (name === 'corpus') renderCorpus();
+  if (name === 'infografias') cargarInfografias();
+}
+
+// INFOGRAFÍAS — revisión: aprobar o rechazar (rechazada = el generador la rehace en la próxima tanda)
+const escH = s => String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+async function cargarInfografias() {
+  const box = document.getElementById('info-lista');
+  box.innerHTML = '<div style="color:var(--text-dim);font-size:0.85rem;">Cargando...</div>';
+  const { data, error } = await db.from('libros')
+    .select('id,titulo,autor,infografia_url,infografia_estado,infografia_modelo,infografia_prompt')
+    .eq('infografia_estado', 'pendiente').order('infografia_at', { ascending: true });
+  if (error) { box.innerHTML = '<div style="color:var(--text-dim);font-size:0.85rem;">No se pudo cargar (¿está aplicada la migración de infografías?).</div>'; return; }
+  if (!data.length) { box.innerHTML = '<div style="color:var(--text-dim);font-size:0.85rem;">Nada pendiente de revisar.</div>'; return; }
+  box.innerHTML = data.map(l => `
+    <div class="info-item" id="info-${escH(l.id)}" style="display:flex;gap:1rem;align-items:flex-start;margin:1rem 0;padding-bottom:1rem;border-bottom:1px solid var(--border);flex-wrap:wrap;">
+      <a href="${escH(l.infografia_url)}" target="_blank" rel="noopener"><img src="${escH(l.infografia_url)}" alt="" style="width:220px;max-width:100%;border-radius:8px;border:1px solid var(--border);"></a>
+      <div style="flex:1;min-width:200px;">
+        <div style="font-weight:600;">${escH(l.titulo)}</div>
+        <div style="color:var(--text-dim);font-size:0.85rem;margin-bottom:0.6rem;">${escH(l.autor)} · ${escH(l.infografia_modelo || '')}</div>
+        <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
+          <button class="btn" onclick="revisarInfografia('${escH(l.id)}','aprobada')">Aprobar</button>
+          <button class="btn-secondary" onclick="revisarInfografia('${escH(l.id)}','rechazada')">Rechazar</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+async function revisarInfografia(id, estado) {
+  const { error } = await db.from('libros').update({ infografia_estado: estado }).eq('id', id);
+  if (error) { alert('No se pudo guardar: ' + error.message); return; }
+  const el = document.getElementById('info-' + id);
+  if (el) el.remove();
+  if (!document.querySelector('#info-lista .info-item')) document.getElementById('info-lista').innerHTML = '<div style="color:var(--text-dim);font-size:0.85rem;">Nada pendiente de revisar.</div>';
 }
 
 // CARGAR LIBROS
@@ -162,16 +196,15 @@ Responde SOLO con JSON válido, sin texto adicional, sin markdown:
 [{"texto":"...","opciones":["...","...","...","..."],"correcta":0,"explicacion":"...","dificultad":2}]`;
 
   try {
+    const { data: sesion } = await db.auth.getSession();
     const response = await fetch(`${SUPABASE_URL}/functions/v1/generar-preguntas`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${sesion.session ? sesion.session.access_token : ''}`
       },
-      body: JSON.stringify({
-        admin_password: adminSessionPwd,
-        prompt: prompt
-      })
+      body: JSON.stringify({ prompt: prompt })
     });
 
     if (!response.ok) {
