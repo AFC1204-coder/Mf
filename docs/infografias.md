@@ -86,6 +86,23 @@ Recomendación: empezar con **3 libros en calidad media** y mirar el resultado a
 
 Si muchas salen mal, se puede ajustar el estilo o la plantilla en `lib/infografia.js` (hay tests) y rehacer.
 
+## Alternativa sin API: mapa en SVG propio (`lib/mapa.js`)
+
+Hay una vía que no necesita clave de API, ni migración, ni gasto por imagen: dibujar el mapa como **SVG vectorial** a partir de una especificación corta (título, 3–6 ideas con icono, cierre). Ejemplo real con *Thinking in Bets*: `docs/ejemplos/mapa-thinking-in-bets.png` (render a ancho de móvil), `.svg` (9 KB) y `.json` (la especificación).
+
+| | Imagen generada (GPT image) | SVG propio (`lib/mapa.js`) |
+|---|---|---|
+| Texto | puede traer erratas y tildes mal | **exacto**, sale de la especificación |
+| Legibilidad en móvil | depende del modelo | **garantizada** (≥ 10,9 px) y comprobada midiendo |
+| Peso | ~150–300 KB | **~9 KB** |
+| Nitidez al ampliar | se pixela | **vectorial** |
+| Coste | ~0,05 $ por imagen | **0** (solo el trabajo de escribir la especificación) |
+| Revisión | humana, siempre | automática (`tools/mapa/comprobar.mjs`: desbordes, solapes, tamaño) + vistazo |
+| Efecto «ilustración» / atmósfera | **mejor** | limitado: estilo editorial limpio con iconos |
+| Editable después | no | sí |
+
+`tools/mapa/comprobar.mjs` renderiza en Chromium y mide de verdad. (La primera versión de ese comprobador solo miraba los bordes y dejó pasar un solape de título y texto que se vio al mirar la imagen; ahora también detecta textos que se pisan.)
+
 ## Siguientes pasos (no hechos)
 
 - **Por lección**: la misma tubería sirve para infografías de lección. Hoy 1.550 lecciones dependen de un SVG antiguo ilegible (ver `docs/auditoria-svg.md`); para esas es mejor rehacer el **diagrama con el motor propio** (barato y legible). Reservar la infografía de imagen para libros y para lecciones clave de las rutas.
