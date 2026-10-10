@@ -532,6 +532,14 @@ panel en `admin.html`. Se escribe con *fire-and-forget* (cola en
 | QW5 | **Apagar la culpa**: sin inserts de racha, sin partículas, `scs_last_study_date` escrito al cerrar | `notifications.js`, SQL | Ningún mensaje con «perdida» / «peligro» |
 | QW6 | Barra inferior a 5 entradas (Hoy · Biblioteca · Repaso · Tú · 🔍) moviendo vistas, sin borrarlas | `index.html`, `app.js`, `styles.css` | Todas las vistas siguen alcanzables |
 
+**Estado (10 oct 2026):** QW1–QW6 hechos en código (`lib/dia.js`, `app.js`,
+`notifications.js`, `index.html`, `styles.css`). La parte de servidor está en
+`supabase/migrations/20261010_quick_wins.sql` **pendiente de aplicar**; el
+cliente funciona sin ella (con la cola antigua) y la aprovecha en cuanto
+exista. QW0 (fusionar en `main`) queda para cuando se decida.
+De paso: el modo «Mixto» del repaso nunca devolvía tarjetas (`p_modo='mixto'`
+no coincidía con ningún `modo`); corregido en cliente y en la migración.
+
 ### Medio plazo · 3–6 semanas · la sesión
 
 | # | Cambio | Depende de |

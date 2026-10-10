@@ -58,7 +58,7 @@ const msgTimer = setInterval(() => {
 /* ═══════════════════════════════════════════
    STATE
 ═══════════════════════════════════════════ */
-let libros=[], lecs=[], preg=[], prog=[];
+let libros=[], lecs=[], preg=[], prog=[], revisiones=[];
 let libroActual=null, lecActual=null;
 let ejeActivo=null, subEjeActivo=null, searchQ='', lecFilter='all';
 let testPregs=[], testIdx=0, testResp=[], testCorr=0, testErr=0;
@@ -265,17 +265,14 @@ const getUltima  = () => LS.get(ULTIMA_K,null);
 /* ═══════════════════════════════════════════
    RACHA
 ═══════════════════════════════════════════ */
+function fechasActividad(){
+  return prog.map(p=>p.fecha).concat(revisiones);
+}
 function calcStreak() {
-  const toLocal=d=>{ const o=new Date(d); return `${o.getFullYear()}-${String(o.getMonth()+1).padStart(2,'0')}-${String(o.getDate()).padStart(2,'0')}`; };
-  const dias=[...new Set(prog.map(p=>p.fecha?toLocal(p.fecha):null).filter(Boolean))].sort();
-  if(!dias.length) return 0;
-  const hoy=toLocal(new Date());
-  let streak=0, cur=hoy;
-  for(let i=dias.length-1;i>=0;i--) {
-    if(dias[i]===cur){streak++;const d=new Date(cur+'T12:00:00');d.setDate(d.getDate()-1);cur=toLocal(d);}
-    else if(dias[i]<cur) break;
-  }
-  return streak;
+  return Dia.racha(fechasActividad());
+}
+function marcarDiaEstudiado(){
+  try { localStorage.setItem('scs_last_study_date', Dia.hoy()); } catch(e) {}
 }
 
 /* ═══════════════════════════════════════════
@@ -434,6 +431,9 @@ async function init() {
       sbAll('progreso?select=*&order=fecha.asc')
     ]);
     libros = libros.map(l=>({...l, eje:normalizeEje(l.eje)}));
+    // Fechas de repaso: también cuentan como día de estudio
+    revisiones = (await sbAll(`repaso?select=ultima_revision&ultima_revision=not.is.null&usuario_id=eq.${SRS_USER}`).catch(()=>[]))
+      .map(r=>r.ultima_revision);
     // Load favoritos and notas from Supabase
     await Promise.all([loadFavoritosFromDB(), loadNotasFromDB()]);
     // One-time migration from localStorage
@@ -446,6 +446,7 @@ async function init() {
     renderStats(); renderEjes(); renderLibros(); renderAtril(); renderUltimosLibros(); renderRutas(); renderEsquemas(); initAdminTrigger();
     // Restaurar estado desde URL hash (para enlaces compartidos y marcadores)
     restoreFromURL();
+    despertarLeidasUnaVez();
   } catch(e) {
     clearInterval(msgTimer);
     document.getElementById('loader-msg').textContent = 'Error al cargar: '+(e.message||'desconocido');
@@ -542,6 +543,7 @@ const NOCHE_K = 'scs2_noche';
 const HILO_K = 'scs2_hilo';
 let srsLimiteSesion = 20;
 let srsSkipDash = false;
+let srsLibroFiltro = null;
 
 const Ambiente = (() => {
   const K = 'scs2_ambiente';
@@ -782,10 +784,7 @@ function aplicarCarta(){
   }
 }
 
-function hoyISO(){
-  const o = new Date();
-  return `${o.getFullYear()}-${String(o.getMonth()+1).padStart(2,'0')}-${String(o.getDate()).padStart(2,'0')}`;
-}
+function hoyISO(){ return Dia.hoy(); }
 function lecsDeLibro(libId){
   return lecs.filter(l=>l.libro_id===libId).sort((a,b)=>(a.orden||0)-(b.orden||0));
 }
@@ -854,17 +853,9 @@ function pasarPagina(fn){
   }, 320);
 }
 function nochesEsteMes(){
-  const y = new Date().getFullYear(), m = new Date().getMonth();
-  const days = new Set();
-  prog.forEach(p=>{
-    if (!p.fecha) return;
-    const o = new Date(p.fecha);
-    if (o.getFullYear()===y && o.getMonth()===m) {
-      days.add(`${o.getFullYear()}-${String(o.getMonth()+1).padStart(2,'0')}-${String(o.getDate()).padStart(2,'0')}`);
-    }
-  });
-  if (isNocheCerrada()) days.add(hoyISO());
-  return days.size;
+  const fechas = fechasActividad();
+  if (isNocheCerrada()) fechas.push(new Date().toISOString());
+  return Dia.diasDelMes(fechas);
 }
 function lampsHtml(n){
   const lit = Math.min(7, Math.max(0, n));
@@ -950,7 +941,7 @@ function renderAtril(){
   const ord = lec.orden ? `Lección ${lec.orden}` : 'Lección';
   const nLib = lecsDeLibro(lec.libro_id).length;
   root.innerHTML = `${top}
-    <p class="atril-kicker">El atril está puesto · ~20 minutos</p>
+    <p class="atril-kicker">El atril está puesto · ${Didactica.minutosLectura(lec)} min</p>
     <h2 class="atril-title">${esc(lec.titulo)}</h2>
     <p class="atril-meta">${ord}${nLib?` de ${nLib}`:''} · <em>${esc(libro?libro.titulo:'')}</em>${libro?' — '+esc(libro.autor):''}</p>
     <p class="atril-excerpt${ex.more?' has-more':''}"><span class="drop">${drop}</span>${rest}</p>
@@ -958,7 +949,7 @@ function renderAtril(){
       <button type="button" class="atril-expand" onclick="expandirAtril('${lec.id}')">Mostrar el resto</button>
       <button type="button" class="atril-seguir" onclick="abrirFolioAtril('${lec.id}')">Seguir en el folio</button>
     </div>`:''}
-    <p class="atril-after">Después, si quieres: <b>5 tarjetas</b> del mismo hilo — no la cola entera.</p>
+    <p class="atril-after">Después, si quieres: <b>5 tarjetas</b> de este tomo — no la cola entera.</p>
     <div class="atril-actions">
       <button class="atril-open" onclick="abrirAtril()">Abrir el libro</button>
       <button class="atril-ghost" onclick="otroVolumenAtril()">Otro volumen</button>
@@ -999,6 +990,9 @@ function otroVolumenAtril(){
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 function cincoTarjetasNoche(){
+  const hilo = getHilo();
+  const lec = (hilo && lecs.find(l=>l.id===hilo.fromId)) || pickNocheLeccion();
+  srsLibroFiltro = lec ? lec.libro_id : null;
   srsLimiteSesion = 5;
   srsSkipDash = true;
   showView('repaso-srs');
@@ -1288,7 +1282,7 @@ function irPagina(p){
   const tp=Math.ceil(filtrarLibrosActivos().length/PAGE_SIZE);
   if(p<1||p>tp)return;
   paginaActual=p;renderLibros();window.scrollTo(0,0);
-  history.replaceState({view:'home', libroId:null, lecId:null, pagina:p, eje:ejeActivo, subEje:subEjeActivo},'','#home');
+  history.replaceState({view:'biblioteca', libroId:null, lecId:null, pagina:p, eje:ejeActivo, subEje:subEjeActivo},'','#biblioteca');
 }
 function renderLibros(){
   const f=filtrarLibrosActivos();
@@ -2242,6 +2236,51 @@ function ttsDownload(){
 }
 
 /* ═══════════════════════════════════════════
+   TÚ — constancia, guardados y ajustes
+═══════════════════════════════════════════ */
+function renderTu(){
+  const root = document.getElementById('tu-cont');
+  if (!root) return;
+  const comp = completadasSet();
+  const noches = nochesEsteMes();
+  const racha = calcStreak();
+  const fila = (t, sub, fn) => `<button type="button" class="tu-row" onclick="${fn}"><span class="tu-row-t">${t}</span><span class="tu-row-s">${sub}</span></button>`;
+  root.innerHTML = `
+    <div class="srs-stats-grid">
+      <div class="srs-stat"><div class="srs-stat-num">${noches}</div><div class="srs-stat-lbl">Noches este mes</div></div>
+      <div class="srs-stat"><div class="srs-stat-num">${racha}</div><div class="srs-stat-lbl">Días seguidos</div></div>
+      <div class="srs-stat"><div class="srs-stat-num">${comp.size}</div><div class="srs-stat-lbl">Lecciones leídas</div></div>
+    </div>
+    <p class="tu-nota">Cuenta leer y repasar. El día acaba a las 04:00.</p>
+    <div class="tu-list">
+      ${fila('Guardados', `${favLecs().length} lecciones · ${favLibros().length} libros`, "showView('favoritos')")}
+      ${fila('Avisos', 'Recordatorio diario y ajustes', 'toggleNotifPanel()')}
+      ${fila('Mapa de conexiones', 'Autores y tesis cruzadas', "location.href='mapa.html'")}
+    </div>`;
+}
+
+/* ═══════════════════════════════════════════
+   REPASO DESDE LO LEÍDO — solo entra lo que has leído
+═══════════════════════════════════════════ */
+async function tarjetasDeLecciones(ids, repartirDias=0){
+  const items = ids.map(id => lecs.find(l=>l.id===id)).filter(Boolean).map(lec => ({
+    leccion_id: lec.id,
+    preguntas: Didactica.preguntasParaLeccion(lec, preg, 3).map(p=>p.id)
+  }));
+  if (!items.length) return 0;
+  return srsRPC('repaso_desde_lecciones', { p_usuario: SRS_USER, p_items: items, p_repartir_dias: repartirDias });
+}
+// Una vez: las lecciones ya leídas despiertan sus tarjetas, repartidas en dos semanas.
+const WAKE_K = 'scs2_srs_wake_v1';
+async function despertarLeidasUnaVez(){
+  if (LS.get(WAKE_K, false)) return;
+  const ids = [...completadasSet()];
+  if (!ids.length) { LS.set(WAKE_K, true); return; }
+  try { await tarjetasDeLecciones(ids, 13); LS.set(WAKE_K, true); }
+  catch(e) { console.warn('Repaso: falta la migración repaso_desde_lecciones', e); }
+}
+
+/* ═══════════════════════════════════════════
    MARCAR COMPLETADA
 ═══════════════════════════════════════════ */
 async function marcarCompletada(id){
@@ -2249,6 +2288,8 @@ async function marcarCompletada(id){
     await sb('progreso',{method:'POST',body:JSON.stringify({tipo:'leccion',item_id:id,resultado:'correcta',fecha:new Date().toISOString()})});
     prog.push({tipo:'leccion',item_id:id,resultado:'correcta',fecha:new Date().toISOString()});
     setNocheCerrada(id);
+    marcarDiaEstudiado();
+    tarjetasDeLecciones([id]).catch(e=>console.warn('Repaso:', e));
     toast('✓ Lección completada');
     renderStats(); renderAtril();
     if (!document.body.classList.contains('noche')) verLeccion(id);
@@ -2778,11 +2819,12 @@ function showView(name, skipPush=false, replace=false){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById(`view-${name}`)?.classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  const topMap={ruta:'nav-home',home:'nav-home',favoritos:'nav-favoritos',test:'nav-test',resultados:'nav-test',esquemas:'nav-esquemas','esquema-viewer':'nav-esquemas',busqueda:'nav-busqueda',ensayos:'nav-ensayos','ensayo-detalle':'nav-ensayos','repaso-srs':'nav-repaso-srs'};
-  if(topMap[name])document.getElementById(topMap[name])?.classList.add('active');
+  // Cinco secciones: Hoy · Biblioteca · Repaso · Tú · Buscar
+  const secMap={home:'home',ruta:'home',biblioteca:'biblioteca',lecciones:'biblioteca',quotes:'biblioteca',esquemas:'biblioteca','esquema-viewer':'biblioteca',ensayos:'biblioteca','ensayo-detalle':'biblioteca',autor:'biblioteca',
+    'repaso-srs':'repaso-srs',test:'repaso-srs',resultados:'repaso-srs',repaso:'repaso-srs',tu:'tu',favoritos:'tu',busqueda:'busqueda'};
+  const sec=secMap[name];
   document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('active'));
-  const botMap={ruta:'bnav-home',home:'bnav-home',favoritos:'bnav-favoritos',test:'bnav-test',resultados:'bnav-test',esquemas:'bnav-esquemas','esquema-viewer':'bnav-esquemas',busqueda:'bnav-busqueda',ensayos:'bnav-ensayos','ensayo-detalle':'bnav-ensayos','repaso-srs':'bnav-repaso-srs'};
-  if(botMap[name])document.getElementById(botMap[name])?.classList.add('active');
+  if(sec){ document.getElementById(`nav-${sec}`)?.classList.add('active'); document.getElementById(`bnav-${sec}`)?.classList.add('active'); }
   window.scrollTo(0,0);
   if(!skipPush){
     const state={view:name,libroId:libroActual?.id||null,lecId:lecActual?.id||null,ruta:rutaActual,pagina:paginaActual,eje:ejeActivo,subEje:subEjeActivo};
@@ -2792,14 +2834,17 @@ function showView(name, skipPush=false, replace=false){
     if(name==='lecciones'&&libroActual) hash=`#lecciones/${libroActual.id}`;
     if(name==='ruta'&&rutaActual) hash=`#ruta/${rutaActual}`;
     if(name==='home') hash=`#home`;
+    if(name==='biblioteca') hash=`#biblioteca`;
     if(replace) history.replaceState(state,'',hash);
     else history.pushState(state,'',hash);
   }
-  if(name==='home'){
+  if(name==='home'){ renderStats();renderContinua();renderRutas(); }
+  if(name==='biblioteca'){
     if(!skipPush && !replace) paginaActual=1;
     document.getElementById('search-results-lecs').style.display='none';
-    renderStats();renderEjes();renderLibros();renderContinua();renderUltimosLibros();renderRutas();
+    renderStats();renderEjes();renderLibros();renderUltimosLibros();
   }
+  if(name==='tu')renderTu();
   if(name==='favoritos')renderFavoritos();
   if(name==='ensayos')renderEnsayos();
   if(name==='busqueda'){ setTimeout(()=>{ const i=document.getElementById('corpus-search-input'); if(i)i.focus(); },100); }
@@ -2987,7 +3032,7 @@ function filtrarPorAutorDesdeEnsayo(autor) {
   ejeActivo = null; subEjeActivo = null; searchQ = '';
   const input = document.getElementById('search-input');
   if (input) { input.value = autor; }
-  showView('home');
+  showView('biblioteca');
   setTimeout(() => onSearch(autor), 100);
   toast(`Filtrando libros de ${autor}`);
 }
@@ -3025,7 +3070,7 @@ function renderSRSDashboard() {
   const root = document.getElementById('srs-root');
   if (!root) return;
   const e = srsEstado;
-  const pendHoy = e ? (e[0]?.pendientes_hoy ?? '—') : '...';
+  const pendHoy = e ? Math.min(e[0]?.pendientes_hoy ?? 0, 20) : '...';
   const totalItems = e ? (e[0]?.total_items ?? '—') : '...';
   const librosActivos = e ? (e[0]?.libros_activos ?? '—') : '...';
   const n1 = e ? (e[0]?.nivel_1 ?? 0) : 0;
@@ -3033,32 +3078,34 @@ function renderSRSDashboard() {
   const n3 = e ? (e[0]?.nivel_3 ?? 0) : 0;
   const n4 = e ? (e[0]?.nivel_4 ?? 0) : 0;
   const total = n1+n2+n3+n4 || 1;
+  const fila = (lbl, n, color) => `<div class="srs-nivel-row"><span class="srs-nivel-lbl">${lbl}</span><div class="srs-nivel-bar"><div class="srs-nivel-fill" style="width:${Math.round(n/total*100)}%;background:${color}"></div></div><span class="srs-nivel-count">${n}</span></div>`;
   root.innerHTML = `
-    <h1 class="page-title" style="margin-bottom:0.3rem">🔁 Repaso Espaciado</h1>
-    <p class="page-sub" style="margin-bottom:1.8rem">Retrieval practice + reflexión personal</p>
+    <h1 class="page-title" style="margin-bottom:0.3rem">Repaso</h1>
+    <p class="page-sub" style="margin-bottom:1.8rem">Solo lo que has leído. Lo que no cabe hoy, vuelve otro día.</p>
     <div class="srs-stats-grid">
-      <div class="srs-stat"><div class="srs-stat-num" style="color:var(--accent)">${pendHoy}</div><div class="srs-stat-lbl">Pendientes hoy</div></div>
-      <div class="srs-stat"><div class="srs-stat-num">${totalItems}</div><div class="srs-stat-lbl">Total en cola</div></div>
-      <div class="srs-stat"><div class="srs-stat-num" style="color:var(--success)">${librosActivos}</div><div class="srs-stat-lbl">Libros activos</div></div>
+      <div class="srs-stat"><div class="srs-stat-num" style="color:var(--accent)">${pendHoy}</div><div class="srs-stat-lbl">Para hoy</div></div>
+      <div class="srs-stat"><div class="srs-stat-num">${totalItems}</div><div class="srs-stat-lbl">Ideas en repaso</div></div>
+      <div class="srs-stat"><div class="srs-stat-num" style="color:var(--success)">${n4}</div><div class="srs-stat-lbl">Asentadas</div></div>
     </div>
     <div class="srs-niveles">
-      <p class="sec-label" style="margin-bottom:0.8rem">Distribución por nivel</p>
-      <div class="srs-nivel-row"><span class="srs-nivel-lbl">Nivel 1</span><div class="srs-nivel-bar"><div class="srs-nivel-fill" style="width:${Math.round(n1/total*100)}%;background:#e74c3c"></div></div><span class="srs-nivel-count">${n1}</span></div>
-      <div class="srs-nivel-row"><span class="srs-nivel-lbl">Nivel 2</span><div class="srs-nivel-bar"><div class="srs-nivel-fill" style="width:${Math.round(n2/total*100)}%;background:#e67e22"></div></div><span class="srs-nivel-count">${n2}</span></div>
-      <div class="srs-nivel-row"><span class="srs-nivel-lbl">Nivel 3</span><div class="srs-nivel-bar"><div class="srs-nivel-fill" style="width:${Math.round(n3/total*100)}%;background:#f1c40f"></div></div><span class="srs-nivel-count">${n3}</span></div>
-      <div class="srs-nivel-row"><span class="srs-nivel-lbl">Nivel 4</span><div class="srs-nivel-bar"><div class="srs-nivel-fill" style="width:${Math.round(n4/total*100)}%;background:#2ecc71"></div></div><span class="srs-nivel-count">${n4}</span></div>
+      <p class="sec-label" style="margin-bottom:0.8rem">Cómo de firmes</p>
+      ${fila('Nuevas', n1, 'var(--text3)')}
+      ${fila('En curso', n2, 'var(--des, #c9a84c)')}
+      ${fila('Firmes', n3, 'var(--accent)')}
+      ${fila('Asentadas', n4, 'var(--success)')}
     </div>
     <div class="srs-modo-section">
-      <p class="sec-label" style="margin-bottom:0.8rem">Modo de sesión</p>
+      <p class="sec-label" style="margin-bottom:0.8rem">Tipo de tarjeta</p>
       <div class="srs-modo-row">
-        <button class="srs-modo-btn ${srsModo==='quiz'?'active':''}" onclick="srsSetModo('quiz')"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg> Quiz<br><small>Retrieval practice</small></button>
-        <button class="srs-modo-btn ${srsModo==='reflexion'?'active':''}" onclick="srsSetModo('reflexion')">💭 Reflexión<br><small>Honor system</small></button>
-        <button class="srs-modo-btn ${srsModo==='mixto'?'active':''}" onclick="srsSetModo('mixto')">🔀 Mixto<br><small>Ambos modos</small></button>
+        <button class="srs-modo-btn ${srsModo==='mixto'?'active':''}" onclick="srsSetModo('mixto')">Mixto<br><small>Ambos</small></button>
+        <button class="srs-modo-btn ${srsModo==='quiz'?'active':''}" onclick="srsSetModo('quiz')">Preguntas<br><small>Recuperar</small></button>
+        <button class="srs-modo-btn ${srsModo==='reflexion'?'active':''}" onclick="srsSetModo('reflexion')">Reflexión<br><small>Tu posición</small></button>
       </div>
     </div>
     <div style="display:flex;gap:0.7rem;margin-bottom:2rem;flex-wrap:wrap">
-      <button class="act-btn primary" onclick="iniciarSesionSRS()">▶ Iniciar sesión</button>
-      <button class="act-btn secondary" onclick="renderSRSActivacion()">📚 Activar libros</button>
+      <button class="act-btn primary" onclick="iniciarSesionSRS()">Repasar</button>
+      <button class="act-btn secondary" onclick="iniciarTest()">Test de un tomo o eje</button>
+      <button class="act-btn secondary" onclick="comenzarRepasoRapido()">Repaso rápido</button>
     </div>
   `;
 }
@@ -3104,13 +3151,21 @@ async function iniciarSesionSRS() {
   const root = document.getElementById('srs-root');
   root.innerHTML = '<div class="empty">Cargando cola...</div>';
   try {
-    srsCola = await srsRPC('obtener_cola_repaso', { p_usuario: SRS_USER, p_modo: srsModo, p_limite: srsLimiteSesion || 20 });
-    srsLimiteSesion = 20;
+    const lim = srsLimiteSesion || 20;
+    const libroId = srsLibroFiltro;
+    srsLimiteSesion = 20; srsLibroFiltro = null;
+    const base = { p_usuario: SRS_USER, p_modo: srsModo === 'mixto' ? null : srsModo, p_limite: lim };
+    srsCola = [];
+    if (libroId) {
+      try { srsCola = await srsRPC('obtener_cola_repaso', { ...base, p_libro_id: libroId }); }
+      catch(e) { srsCola = []; }
+    }
+    if (!srsCola || !srsCola.length) srsCola = await srsRPC('obtener_cola_repaso', base);
     if (!srsCola || !srsCola.length) {
       root.innerHTML = `<button class="back-btn" onclick="renderSRSDashboard()">← Dashboard</button>
-        <div class="empty" style="margin-top:2rem"><span style="font-size:2rem;display:block;margin-bottom:0.8rem">🎉</span>
-        No hay items pendientes hoy en modo <strong>${srsModo}</strong>.<br><br>
-        <button class="act-btn secondary" onclick="renderSRSActivacion()">Activar más libros</button></div>`;
+        <div class="empty" style="margin-top:2rem"><span style="font-size:2rem;display:block;margin-bottom:0.8rem;font-family:var(--font-display)">§</span>
+        Nada que repasar hoy.<br><br>
+        <span style="font-size:0.8rem;color:var(--text3)">Las tarjetas aparecen al leer lecciones.</span></div>`;
       return;
     }
     srsIdx = 0;
@@ -3154,11 +3209,16 @@ function renderSRSItem() {
       </div>
       <p style="font-size:0.68rem;color:var(--text3);font-family:var(--font-mono);margin-bottom:0.8rem;line-height:1.5">Evalúa si has pensado seriamente sobre esto y formado tu propio criterio — no si sigues al autor.</p>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.6rem">
-        <button class="srs-eval-btn pendiente" onclick="srsResponderReflexion('${item.repaso_id}','pendiente')">⬜ Pendiente<br><small>No he reflexionado</small></button>
-        <button class="srs-eval-btn en-proceso" onclick="srsResponderReflexion('${item.repaso_id}','en_proceso')">🟠 En proceso<br><small>Entiendo, no aplico</small></button>
-        <button class="srs-eval-btn integrado" onclick="srsResponderReflexion('${item.repaso_id}','integrado')">✅ Integrado<br><small>Tengo mi posición</small></button>
+        <button class="srs-eval-btn pendiente" onclick="srsResponderReflexion('${item.repaso_id}','pendiente')">Aún no<br><small>Vuelve en unos días</small></button>
+        <button class="srs-eval-btn en-proceso" onclick="srsResponderReflexion('${item.repaso_id}','en_proceso')">En ello<br><small>Entiendo, no aplico</small></button>
+        <button class="srs-eval-btn integrado" onclick="srsResponderReflexion('${item.repaso_id}','integrado')">Sí<br><small>Tengo mi posición</small></button>
       </div>`;
   }
+}
+
+function srsContarDia(){
+  revisiones.push(new Date().toISOString());
+  marcarDiaEstudiado();
 }
 
 async function srsResponderQuiz(idx, correcta, repasoId) {
@@ -3174,12 +3234,14 @@ async function srsResponderQuiz(idx, correcta, repasoId) {
   fb.className = `feedback ${ok?'ok':'err'}`;
   fb.innerHTML = `<div class="feedback-head">${ok?'✓ Correcto':'✗ Incorrecto'}</div>${esc(item.explicacion||'')}`;
   document.getElementById('srs-sig-btn').style.display = 'block';
+  srsContarDia();
   try { await srsRPC('registrar_repaso', { p_repaso_id: repasoId, p_evaluacion: ok?'correcto':'fallo' }); } catch(e){}
 }
 
 async function srsResponderReflexion(repasoId, evaluacion) {
   document.querySelectorAll('.srs-eval-btn').forEach(b => b.disabled = true);
   srsResumen[evaluacion] = (srsResumen[evaluacion]||0) + 1;
+  srsContarDia();
   try { await srsRPC('registrar_repaso', { p_repaso_id: repasoId, p_evaluacion: evaluacion }); } catch(e){}
   setTimeout(() => { srsIdx++; renderSRSItem(); }, 300);
 }
@@ -3188,7 +3250,7 @@ function renderSRSFin() {
   const root = document.getElementById('srs-root');
   const r = srsResumen; const total = srsCola.length;
   root.innerHTML = `<div style="text-align:center;padding:2rem 1rem">
-    <div style="font-size:3rem;margin-bottom:1rem">🎉</div>
+    <div style="font-size:2.4rem;margin-bottom:1rem;font-family:var(--font-display)">§</div>
     <h2 style="font-family:var(--font-display);font-size:1.6rem;margin-bottom:0.4rem">Sesión completada</h2>
     <p style="font-size:0.82rem;color:var(--text2);margin-bottom:2rem">Has revisado ${total} item${total!==1?'s':''} hoy</p>
     <div class="srs-stats-grid" style="margin-bottom:2rem">
@@ -3198,7 +3260,7 @@ function renderSRSFin() {
       ${r.en_proceso?`<div class="srs-stat"><div class="srs-stat-num" style="color:var(--des)">${r.en_proceso}</div><div class="srs-stat-lbl">En proceso</div></div>`:''}
       ${r.pendiente?`<div class="srs-stat"><div class="srs-stat-num" style="color:var(--text3)">${r.pendiente}</div><div class="srs-stat-lbl">Pendientes</div></div>`:''}
     </div>
-    <p style="font-size:0.7rem;color:var(--text3);font-family:var(--font-mono);margin-bottom:1.5rem">Próxima revisión: mañana</p>
+    <p style="font-size:0.7rem;color:var(--text3);font-family:var(--font-mono);margin-bottom:1.5rem">Cada tarjeta vuelve cuando toca.</p>
     <button class="act-btn primary" onclick="renderSRSDashboard()">← Volver al dashboard</button>
   </div>`;
 }
@@ -3288,7 +3350,7 @@ function restoreFromURL(){
 
   // Formato simple: #quotes, #favoritos, #esquemas
   const viewName=hash.split('/')[0];
-  const validViews=['home','favoritos','quotes','esquemas','repaso','test','ensayos','repaso-srs','busqueda'];
+  const validViews=['home','biblioteca','tu','favoritos','quotes','esquemas','repaso','test','ensayos','repaso-srs','busqueda'];
   if(validViews.includes(viewName)) showView(viewName,true);
 }
 
@@ -3387,7 +3449,7 @@ init();
 function toggleSpotlight() {
   const overlay = document.getElementById('spotlight-overlay');
   const input = document.getElementById('spotlight-input');
-  if (!overlay || !input) { showView('home'); document.getElementById('search-input')?.focus(); return; }
+  if (!overlay || !input) { showView('biblioteca'); document.getElementById('search-input')?.focus(); return; }
   if (overlay.classList.contains('hidden')) {
     overlay.classList.remove('hidden');
     input.value = '';

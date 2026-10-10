@@ -31,7 +31,8 @@ function toggleNotifPanel() {
 async function loadNotifications() {
   try {
     const d = await sb('notificaciones?usuario_id=eq.default&order=fecha.desc&limit=80');
-    notifCache = d || [];
+    // Los avisos de racha/deuda no se muestran (rediseño: sin culpa)
+    notifCache = (d || []).filter(n => n.tipo !== 'racha' && n.tipo !== 'repaso');
     renderNotifList();
     updateBadge();
     updateNotifStats();
@@ -271,9 +272,6 @@ function processAchievementQueue() {
   progBar.style.transition = 'none';
   progBar.style.width = '100%';
 
-  // Spawn particles for logro-type
-  spawnAchievementParticles();
-
   t.classList.add('show');
 
   requestAnimationFrame(() => {
@@ -336,28 +334,10 @@ async function checkForNewNotifications() {
 
 /* ── STREAK & REPASO CHECK ── */
 async function checkStreakAndRepasos() {
-  try {
-    const [rachaRes, repasoRes] = await Promise.all([
-      fetch(SB_URL + '/rest/v1/rpc/check_racha', {
-        method: 'POST',
-        headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ p_usuario_id: 'default' })
-      }),
-      fetch(SB_URL + '/rest/v1/rpc/check_repaso_pendiente', {
-        method: 'POST',
-        headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ p_usuario_id: 'default' })
-      })
-    ]);
-
-    const racha = await rachaRes.json();
-    const repaso = await repasoRes.json();
-
-    await loadNotifications();
-    // Atril: no toasts de deuda. La racha/cola siguen en el panel si las abres.
-  } catch (e) {
-    console.error('Streak/repaso check:', e);
-  }
+  // Ya no se consulta check_racha / check_repaso_pendiente: generaban avisos de culpa
+  // («Racha perdida», «N repasos pendientes»). La constancia se ve en el atril.
+  try { await loadNotifications(); }
+  catch (e) { console.error('Notificaciones:', e); }
 }
 
 /* ── PUSH NOTIFICATIONS (Browser Notification API) ── */
@@ -557,9 +537,9 @@ function scheduleReminder() {
   reminderTimer = setTimeout(() => {
     // Only fire if user hasn't studied today
     const lastStudy = localStorage.getItem('scs_last_study_date');
-    const today = new Date().toISOString().slice(0, 10);
+    const today = (window.Dia ? Dia.hoy() : new Date().toISOString().slice(0, 10));
     if (lastStudy !== today) {
-      showAchievement('⏰', 'Hora de estudiar', 'Tu recordatorio diario de Mente fría.', 'racha');
+      showAchievement('§', 'El atril está puesto', 'Una lección de pocos minutos, cuando quieras.', 'sistema');
     }
     // Reschedule for next day
     scheduleReminder();
