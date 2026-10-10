@@ -422,6 +422,18 @@ function normalizeEje(e){
 /* ═══════════════════════════════════════════
    INIT
 ═══════════════════════════════════════════ */
+/* Diagramas de lección y mapas de libro guardados en datos/*.json (ver lib/visuales.js) */
+async function cargarDatosVisuales(){
+  const leer=async u=>{ try{ const r=await fetch(u,{cache:'no-cache'}); return r.ok?await r.json():null; }catch(e){ return null; } };
+  try{
+    const [dg,mp]=await Promise.all([leer('datos/diagramas.json'),leer('datos/mapas.json')]);
+    if(typeof Visuales!=='undefined'){
+      Visuales.fusionarDiagramas(lecs,dg,Diagrama);
+      Visuales.fusionarMapas(libros,mp,Mapa);
+    }
+  }catch(e){ console.warn('Datos visuales:',e); }
+}
+
 async function init() {
   try {
     [libros, lecs, preg, prog] = await Promise.all([
@@ -431,6 +443,7 @@ async function init() {
       sbAll('progreso?select=*&order=fecha.asc')
     ]);
     libros = libros.map(l=>({...l, eje:normalizeEje(l.eje)}));
+    await cargarDatosVisuales();
     // Fechas de repaso: también cuentan como día de estudio
     revisiones = (await sbAll(`repaso?select=ultima_revision&ultima_revision=not.is.null&usuario_id=eq.${SRS_USER}`).catch(()=>[]))
       .map(r=>r.ultima_revision);
@@ -1535,7 +1548,20 @@ function infografiaAprobada(l){ return !!(l && l.infografia_url && l.infografia_
 function abrirZoomUrl(url,alt){
   const c=document.createElement('img'); c.src=url; c.alt=alt||''; abrirZoom(c);
 }
+function mapaUri(l){
+  try{ return (l && l.mapa && typeof Mapa!=='undefined') ? Mapa.aDataUri(Mapa.svg(l.mapa)) : ''; }catch(e){ return ''; }
+}
+function abrirMapaLibro(id){
+  const l=libros.find(x=>x.id===id); const u=mapaUri(l);
+  if(u) abrirZoomUrl(u,'Mapa visual de '+l.titulo);
+  else if(infografiaAprobada(l)) abrirZoomUrl(l.infografia_url,'Mapa visual de '+l.titulo);
+}
 function infografiaLibroHtml(l){
+  const uri=mapaUri(l);
+  if(uri) return `<figure class="libro-info">
+    <img src="${uri}" alt="${esc('Mapa visual de '+l.titulo)}" loading="lazy" onclick="abrirZoomImagen(this)">
+    <figcaption>Mapa visual · toca para ampliar</figcaption>
+  </figure>`;
   if(!infografiaAprobada(l)) return '';
   return `<figure class="libro-info">
     <img src="${esc(l.infografia_url).replace(/"/g,'&quot;')}" alt="Mapa visual de ${esc(l.titulo).replace(/"/g,'&quot;')}" loading="lazy" onclick="abrirZoomImagen(this)">
@@ -1780,9 +1806,8 @@ function verLeccion(id, from=null, skipPush=false, replace=false){
   if (mapa) {
     html+=`<p class="folio-mapa"><button type="button" class="folio-mapa-btn" onclick="abrirEsquema('${mapa.key}','leccion')">Ver el mapa · ${esc(mapa.titulo)}</button></p>`;
   }
-  if (infografiaAprobada(libro)) {
-    const q=t=>esc(t).replace(/"/g,'&quot;');
-    html+=`<p class="folio-mapa"><button type="button" class="folio-mapa-btn" data-url="${q(libro.infografia_url)}" data-alt="${q('Mapa visual de '+libro.titulo)}" onclick="abrirZoomUrl(this.dataset.url,this.dataset.alt)">Ver el mapa visual del libro</button></p>`;
+  if (mapaUri(libro) || infografiaAprobada(libro)) {
+    html+=`<p class="folio-mapa"><button type="button" class="folio-mapa-btn" onclick="abrirMapaLibro('${libro.id}')">Ver el mapa visual del libro</button></p>`;
   }
 
   html+=`<div class="lec-body fmt">${cuerpoConFigura(lecActual.cuerpo,figuras)}</div>`;
