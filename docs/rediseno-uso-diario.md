@@ -557,8 +557,7 @@ compromisos), M4 (eventos, en el cliente) y la parte de M2 que no necesita
 datos nuevos (tarjetas al leer) están en código: `lib/sesion.js` (+ tests),
 `sesion-ui.js`, tarjeta «Hoy» en el atril. Tablas `eventos` y `compromisos` y
 vistas de métricas en `supabase/migrations/20261011_sesion_eventos.sql`
-(**pendiente de aplicar**; sin ella la sesión funciona: los eventos esperan
-en una cola local y «¿lo hiciste?» no aparece). Pendientes de medio plazo:
+(**aplicada el 10 oct 2026**, sin RLS: ver §14). Pendientes de medio plazo:
 M2 (`preguntas.leccion_id`), M5 (onboarding + constancia semanal), M6 (modo 2
 min dentro del cuaderno), M7 (rutas en tablas), M8 (resumen semanal y mapa).
 
