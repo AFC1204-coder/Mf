@@ -18,6 +18,10 @@ describe('LintVisual.diagrama', () => {
     expect(e).toMatch(/falta de tilde/);
     expect(e).toMatch(/ñ perdida/);
   });
+  it('no confunde palabras con tilde con faltas («seleccionó», «decisión», «sección»)', () => {
+    const s = ok(); s.pie = 'Easter lo seleccionó; es una decisión y una sección clara.';
+    expect(LintVisual.diagrama(s).join()).not.toMatch(/falta de tilde/);
+  });
   it('limita número de pasos y largo de textos', () => {
     const s = ok(); s.datos.pasos = [{ t: 'a' }, { t: 'b' }];
     expect(LintVisual.diagrama(s).join()).toMatch(/pasos: 2/);
