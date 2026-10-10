@@ -534,9 +534,8 @@ panel en `admin.html`. Se escribe con *fire-and-forget* (cola en
 
 **Estado (10 oct 2026):** QW1–QW6 hechos en código (`lib/dia.js`, `app.js`,
 `notifications.js`, `index.html`, `styles.css`). La parte de servidor está en
-`supabase/migrations/20261010_quick_wins.sql` **pendiente de aplicar**; el
-cliente funciona sin ella (con la cola antigua) y la aprovecha en cuanto
-exista. QW0 (fusionar en `main`) queda para cuando se decida.
+`supabase/migrations/20261010_quick_wins.sql`, **aplicada el 10 oct 2026**
+(5.333 tarjetas dormidas, 25 activas, 6 funciones, cola ≤ 20). QW0 (fusionar en `main`) queda para cuando se decida.
 De paso: el modo «Mixto» del repaso nunca devolvía tarjetas (`p_modo='mixto'`
 no coincidía con ningún `modo`); corregido en cliente y en la migración.
 
