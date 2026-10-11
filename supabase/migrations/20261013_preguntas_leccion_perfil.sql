@@ -41,6 +41,9 @@ begin
   return n;
 end $$;
 
+-- Solo para ejecutarla a mano: que nadie la pueda llamar por la API pública.
+revoke execute on function backfill_pregunta_leccion() from public, anon, authenticated;
+
 select backfill_pregunta_leccion();
 
 -- La escritura desde admin ya está cubierta por la política update_preguntas (rol authenticated).
