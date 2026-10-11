@@ -3,13 +3,14 @@
 ═══════════════════════════════════════════ */
 
 const SCS_ICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='36' fill='%23080808'/%3E%3Ctext x='96' y='125' text-anchor='middle' font-family='Georgia,serif' font-size='90' font-weight='700' fill='%23c9a84c'%3E§%3C/text%3E%3C/svg%3E";
-const CACHE_NAME = 'scs-cache-v54';
+const CACHE_NAME = 'scs-cache-v55';
 const urlsToCache = [
   '/Mf/',
   '/Mf/index.html',
   '/Mf/styles.css',
   '/Mf/app.js',
   '/Mf/notifications.js',
+  '/Mf/lib/corpus.js',
   '/Mf/lib/diagram.js',
   '/Mf/lib/didactica.js',
   '/Mf/lib/dia.js',
@@ -55,16 +56,21 @@ self.addEventListener('fetch', (e) => {
   if (e.request.url.includes('supabase.co') || e.request.url.includes('google') || e.request.url.includes('gstatic') || e.request.url.includes('openlibrary')) {
     return;
   }
-  // Network-first strategy: always try fresh, fall back to cache for offline
+  // Archivos propios: caché primero y actualización detrás (stale-while-revalidate). La app abre al
+  // instante aunque la red vaya lenta; los cambios publicados se ven en la siguiente apertura.
+  if (e.request.method !== 'GET' || new URL(e.request.url).origin !== self.location.origin) return;
+  const red = fetch(e.request).then((response) => {
+    if (response && response.ok) {
+      const clone = response.clone();
+      caches.open(CACHE_NAME).then((cache) => cache.put(e.request, clone));
+    }
+    return response;
+  });
   e.respondWith(
-    fetch(e.request)
-      .then((response) => {
-        // Update cache with fresh response
-        const clone = response.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(e.request, clone));
-        return response;
-      })
-      .catch(() => caches.match(e.request).then(r => r || new Response('Offline', { status: 503, statusText: 'Service Unavailable' })))
+    caches.match(e.request).then((enCache) => {
+      if (enCache) { e.waitUntil(red.catch(() => {})); return enCache; }
+      return red.catch(() => new Response('Offline', { status: 503, statusText: 'Service Unavailable' }));
+    })
   );
 });
 

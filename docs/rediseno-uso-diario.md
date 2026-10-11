@@ -652,6 +652,11 @@ Cada apertura descargaba todo el corpus (≈ 17 MB de lecciones, de ellos 5,5 MB
 Solución: columnas explícitas (sin `busqueda` ni SVG antiguos), páginas en paralelo y corpus guardado en
 IndexedDB; la app arranca con lo guardado y se actualiza en segundo plano.
 
+**Estado (11 oct 2026): hecho.** `lib/corpus.js` (+ tests): columnas explícitas, páginas en paralelo,
+corpus y datos del usuario en IndexedDB (contenido caduca a las 6 h; usuario se refresca en cada apertura),
+SVG antiguo solo bajo demanda. Service worker «caché primero» para los archivos de la app.
+Prueba en Chromium con Supabase simulado: segunda apertura con la red retrasada 4 s → app lista en ~0,2 s.
+
 ### 16.2 Mazo de fichas
 Al abrir: 5 fichas, se pasa deslizando, **finito** («Has terminado por ahora»). Cada ficha pide algo:
 1. Reanudar lo que quedó a medias (o una tarjeta de repaso pendiente).
