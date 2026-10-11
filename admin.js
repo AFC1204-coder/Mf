@@ -190,7 +190,9 @@ Genera 4 preguntas de opción múltiple que evalúen:
 Para cada pregunta:
 - Texto claro y específico
 - 4 opciones (solo una correcta, las otras plausibles pero incorrectas)
-- Índice de la correcta (0-3)
+- IMPORTANTE: las 3 incorrectas deben medir entre el 80 % y el 120 % de la correcta, con el mismo nivel de detalle y la misma estructura gramatical. La correcta NO debe ser la más larga ni la más matizada. Cada incorrecta es un error conceptual realista y distinto (inversión causa/efecto, sobregeneralización, confusión con un concepto cercano), nunca una negación trivial. Prohibido «todas las anteriores», «ninguna» o «A y B».
+- Atribuye al autor solo lo que dice el libro; separa lo que dice el libro de tu propia síntesis, y no inventes cifras ni citas.
+- Índice de la correcta (0-3); no importa cuál, se barajará después
 - Explicación de 2-3 líneas que conecte con el corpus
 - Dificultad: 1 (fácil), 2 (medio), 3 (difícil)
 
@@ -230,6 +232,12 @@ Responde SOLO con JSON válido, sin texto adicional, sin markdown:
       return;
     }
 
+    // Se baraja aquí (el modelo tiende a poner la correcta en A o B) y se avisa de los avisos de forma.
+    preguntas = preguntas.map(p => window.OpcionesQ.barajarOpciones(p));
+    preguntas.forEach((p, i) => {
+      const f = window.OpcionesQ.revisarPregunta(p);
+      if (f.length) log('log-generar', 'Pregunta ' + (i + 1) + ': ' + f.join('; '), 'err');
+    });
     log('log-generar', preguntas.length + ' preguntas generadas. Revisa antes de guardar.', 'ok');
 
     libroSeleccionado = libro;
