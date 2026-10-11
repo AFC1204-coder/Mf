@@ -628,9 +628,15 @@ let srsSkipDash = false;
 let srsLibroFiltro = null;
 
 const Ambiente = (() => {
-  const K = 'scs2_ambiente';
-  let ctx = null, master = null, timer = null, on = false;
-  const GAIN = 1.5;
+  const K = 'scs2_ambiente', K_TIPO = 'scs2_ambiente_tipo', K_VOL = 'scs2_ambiente_vol';
+  const DSP = AmbienteDSP;
+  let ctx = null, master = null, timer = null, on = false, actual = null;
+  const buffers = {};
+  const IGUALAR = { marron: 1, lluvia: 1.9, sala: 0.65 };   // medido: los tres suenan a un volumen parecido
+
+  const tipo = () => DSP.tipoValido(LS.get(K_TIPO, DSP.POR_DEFECTO));
+  const volumen = () => DSP.volumenValido(LS.get(K_VOL, DSP.VOLUMEN_POR_DEFECTO));
+  const nivel = () => DSP.curvaVolumen(volumen());           // ganancia del volumen elegido
 
   function persist(v){
     try {
@@ -652,89 +658,84 @@ const Ambiente = (() => {
     ctx = new AC();
     master = ctx.createGain();
     master.gain.value = 0;
-    const lp = ctx.createBiquadFilter();
-    lp.type = 'lowpass';
-    lp.frequency.value = 520;
-    lp.Q.value = 0.5;
-    master.connect(lp);
-    const hp = ctx.createBiquadFilter();
-    hp.type = 'highpass';
-    hp.frequency.value = 35;
     const comp = ctx.createDynamicsCompressor();
-    comp.threshold.value = -20;
-    comp.knee.value = 10;
-    comp.ratio.value = 2.5;
-    comp.attack.value = 0.03;
-    comp.release.value = 0.3;
-    lp.connect(hp); hp.connect(comp); comp.connect(ctx.destination);
-
-    const dur = 8;
-    const n = ctx.sampleRate * dur;
-    const bufL = ctx.createBuffer(2, n, ctx.sampleRate);
-    const L = bufL.getChannelData(0);
-    const R = bufL.getChannelData(1);
-    let a = 0, b = 0;
-    for (let i = 0; i < n; i++) {
-      a = (a + 0.018 * (Math.random() * 2 - 1)) / 1.018;
-      b = (b + 0.016 * (Math.random() * 2 - 1)) / 1.016;
-      L[i] = a * 0.28;
-      R[i] = b * 0.28;
-    }
-    const fade = Math.floor(ctx.sampleRate * 0.15);
-    for (let i = 0; i < fade; i++) {
-      const w = i / fade;
-      const j = n - fade + i;
-      L[j] = L[j] * (1 - w) + L[i] * w;
-      R[j] = R[j] * (1 - w) + R[i] * w;
-    }
-    const noise = ctx.createBufferSource();
-    noise.buffer = bufL;
-    noise.loop = true;
-    const ng = ctx.createGain(); ng.gain.value = 0.045;
-    const nf = ctx.createBiquadFilter(); nf.type = 'lowpass'; nf.frequency.value = 180;
-    noise.connect(nf); nf.connect(ng); ng.connect(master);
-    noise.start();
-
-    [[82.41, 0.028], [123.47, 0.018], [164.81, 0.012]].forEach(([f, g], i) => {
-      const o = ctx.createOscillator();
-      o.type = 'sine';
-      o.frequency.value = f;
-      const og = ctx.createGain(); og.gain.value = g;
-      o.connect(og); og.connect(master);
-      o.start();
-      const lfo = ctx.createOscillator();
-      lfo.frequency.value = 0.018 + i * 0.007;
-      const lg = ctx.createGain(); lg.gain.value = 2.2;
-      lfo.connect(lg); lg.connect(o.detune);
-      lfo.start();
-    });
+    comp.threshold.value = -18; comp.knee.value = 12; comp.ratio.value = 3; comp.attack.value = 0.03; comp.release.value = 0.3;
+    master.connect(comp); comp.connect(ctx.destination);
   }
 
-  function note(){
-    if (!ctx || !on) return;
-    const scale = [164.81, 196.00, 246.94, 293.66, 329.63];
-    const f = scale[Math.floor(Math.random() * scale.length)];
-    const o = ctx.createOscillator();
-    o.type = 'sine';
-    o.frequency.value = f;
-    const g = ctx.createGain();
+  function filtro(tipoF, f, q){
+    const n = ctx.createBiquadFilter(); n.type = tipoF; n.frequency.value = f; if (q) n.Q.value = q; return n;
+  }
+  function bucle(clave, dur, hacer){
+    if (!buffers[clave]) {
+      const n = Math.floor(ctx.sampleRate * dur);
+      const [L, R] = hacer(n);
+      DSP.empalmar([L, R], Math.floor(ctx.sampleRate * 0.2));
+      const buf = ctx.createBuffer(2, n, ctx.sampleRate);
+      buf.copyToChannel(L, 0); buf.copyToChannel(R, 1);
+      buffers[clave] = buf;
+    }
+    const src = ctx.createBufferSource(); src.buffer = buffers[clave]; src.loop = true; src.start();
+    return src;
+  }
+
+  /** Construye un sonido y devuelve { bus, parar() }. Todo por encima de ~70 Hz: se oye por el altavoz del móvil. */
+  function construir(id){
+    const bus = ctx.createGain(); bus.gain.value = 0; bus.connect(master);
+    const fuentes = [];
+    if (id === 'lluvia') {
+      const s = bucle('lluvia', 14, n => DSP.ruidoLluvia(n, ctx.sampleRate, Math.random));
+      const hp = filtro('highpass', 260), lp = filtro('lowpass', 9000), g = ctx.createGain(); g.gain.value = 0.55;
+      s.connect(hp); hp.connect(lp); lp.connect(g); g.connect(bus); fuentes.push(s);
+    } else if (id === 'sala') {
+      const room = bucle('sala-aire', 10, n => DSP.ruidoMarron(n, Math.random, 0.09));
+      const hp = filtro('highpass', 120), lp = filtro('lowpass', 900), g = ctx.createGain(); g.gain.value = 0.10;
+      room.connect(hp); hp.connect(lp); lp.connect(g); g.connect(bus); fuentes.push(room);
+      DSP.SALA.forEach((nota, i) => {
+        const o = ctx.createOscillator(); o.type = 'sine'; o.frequency.value = nota.f;
+        const og = ctx.createGain(); og.gain.value = nota.g;
+        const lfo = ctx.createOscillator(); lfo.frequency.value = 0.03 + i * 0.011;   // vaivén lentísimo, sin melodía
+        const lg = ctx.createGain(); lg.gain.value = nota.g * 0.35;
+        lfo.connect(lg); lg.connect(og.gain);
+        const lfo2 = ctx.createOscillator(); lfo2.frequency.value = 0.021 + i * 0.007;
+        const l2 = ctx.createGain(); l2.gain.value = 2.5; lfo2.connect(l2); l2.connect(o.detune);
+        o.connect(og); og.connect(bus); o.start(); lfo.start(); lfo2.start();
+        fuentes.push(o, lfo, lfo2);
+      });
+    } else {                                                    // marrón
+      const s = bucle('marron', 12, n => DSP.ruidoMarron(n, Math.random, 0.06));
+      const hp = filtro('highpass', 70), lp = filtro('lowpass', 1500), g = ctx.createGain(); g.gain.value = 0.5;
+      s.connect(hp); hp.connect(lp); lp.connect(g); g.connect(bus); fuentes.push(s);
+    }
+    return { id, bus, parar(){ fuentes.forEach(f => { try { f.stop(); } catch(e) {} }); try { bus.disconnect(); } catch(e) {} } };
+  }
+
+  /** Pone el sonido elegido, con fundido cruzado si ya sonaba otro. */
+  function sonar(id){
     const t = ctx.currentTime;
-    g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(0.011, t + 4);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + 10);
-    const f2 = ctx.createBiquadFilter();
-    f2.type = 'lowpass';
-    f2.frequency.value = 640;
-    o.connect(f2); f2.connect(g); g.connect(master);
-    o.start();
-    o.stop(t + 11);
+    if (actual && actual.id === id) return;
+    const viejo = actual;
+    actual = construir(id);
+    actual.bus.gain.setValueAtTime(0.0001, t);
+    actual.bus.gain.linearRampToValueAtTime(IGUALAR[id] || 1, t + (viejo ? 1.6 : 0.1));
+    if (viejo) {
+      viejo.bus.gain.cancelScheduledValues(t);
+      viejo.bus.gain.setValueAtTime(viejo.bus.gain.value, t);
+      viejo.bus.gain.linearRampToValueAtTime(0.0001, t + 1.6);
+      setTimeout(() => viejo.parar(), 1900);
+    }
   }
 
+  function etiqueta(){
+    const s = DSP.SONIDOS.find(x => x.id === tipo());
+    return on ? 'Ambiente · ' + (s ? s.corto : 'on') : 'Ambiente';
+  }
   function syncBtn(){
     document.querySelectorAll('.atril-sound').forEach(b => {
       b.classList.toggle('on', on);
-      b.textContent = on ? 'Ambiente · on' : 'Ambiente';
+      b.textContent = etiqueta();
     });
+    syncPanel();
   }
 
   function start(){
@@ -742,13 +743,12 @@ const Ambiente = (() => {
     if (!ctx) return;
     ctx.resume();
     on = true;
+    sonar(tipo());
     const t = ctx.currentTime;
     master.gain.cancelScheduledValues(t);
-    master.gain.linearRampToValueAtTime(GAIN, t + 2.8);
+    master.gain.setValueAtTime(master.gain.value, t);
+    master.gain.linearRampToValueAtTime(nivel(), t + 2.8);
     persist(true);
-    if (timer) clearInterval(timer);
-    timer = setInterval(note, 24000);
-    setTimeout(note, 2800);
     syncBtn();
   }
 
@@ -757,14 +757,59 @@ const Ambiente = (() => {
     if (ctx && master) {
       const t = ctx.currentTime;
       master.gain.cancelScheduledValues(t);
+      master.gain.setValueAtTime(master.gain.value, t);
       master.gain.linearRampToValueAtTime(0, t + 1.4);
+      const viejo = actual; actual = null;
+      if (viejo) setTimeout(() => viejo.parar(), 1600);
     }
-    if (timer) { clearInterval(timer); timer = null; }
     persist(false);
     syncBtn();
   }
 
-  function toggle(){ on ? stop() : start(); }
+  /** Botón «Ambiente»: sin sonido, enciende; sonando, abre el panel para cambiarlo o apagarlo. */
+  function toggle(){ on ? abrirPanel() : start(); }
+
+  function elegir(id){
+    LS.set(K_TIPO, DSP.tipoValido(id));
+    if (!on) { start(); return; }
+    sonar(tipo());
+    syncBtn();
+  }
+  function fijarVolumen(v){
+    LS.set(K_VOL, DSP.volumenValido(v));
+    if (ctx && master && on) {
+      const t = ctx.currentTime;
+      master.gain.cancelScheduledValues(t);
+      master.gain.setValueAtTime(master.gain.value, t);
+      master.gain.linearRampToValueAtTime(nivel(), t + 0.12);
+    }
+  }
+
+  /* ── Panel: sonido y volumen ── */
+  function panel(){
+    let p = document.getElementById('amb-panel');
+    if (p) return p;
+    p = document.createElement('div');
+    p.id = 'amb-panel'; p.className = 'amb-panel'; p.hidden = true;
+    p.innerHTML = `<div class="amb-fondo" onclick="Ambiente.cerrarPanel()"></div>
+      <div class="amb-hoja" role="dialog" aria-label="Ambiente sonoro">
+        <p class="amb-k">Ambiente sonoro</p>
+        <div class="amb-opts">${DSP.SONIDOS.map(s => `<button type="button" class="amb-opt" data-id="${s.id}" onclick="Ambiente.elegir('${s.id}')"><b>${s.etiqueta}</b><span>${s.sub}</span></button>`).join('')}</div>
+        <label class="amb-vol">Volumen<input type="range" id="amb-vol" min="0" max="100" step="1" oninput="Ambiente.fijarVolumen(this.value/100)"></label>
+        <div class="amb-acc"><button type="button" class="amb-apagar" onclick="Ambiente.stop();Ambiente.cerrarPanel()">Apagar</button>
+        <button type="button" class="amb-cerrar" onclick="Ambiente.cerrarPanel()">Listo</button></div>
+      </div>`;
+    document.body.appendChild(p);
+    return p;
+  }
+  function syncPanel(){
+    const p = document.getElementById('amb-panel');
+    if (!p) return;
+    p.querySelectorAll('.amb-opt').forEach(b => b.classList.toggle('on', on && b.dataset.id === tipo()));
+    const r = document.getElementById('amb-vol'); if (r) r.value = Math.round(volumen() * 100);
+  }
+  function abrirPanel(){ const p = panel(); syncPanel(); p.hidden = false; }
+  function cerrarPanel(){ const p = document.getElementById('amb-panel'); if (p) p.hidden = true; }
 
   document.addEventListener('visibilitychange', () => {
     if (!ctx) return;
@@ -777,18 +822,18 @@ const Ambiente = (() => {
     const t = ctx.currentTime;
     master.gain.cancelScheduledValues(t);
     master.gain.setValueAtTime(master.gain.value, t);
-    master.gain.linearRampToValueAtTime(0.35, t + 0.12);
-    master.gain.linearRampToValueAtTime(GAIN, t + (ms || 400) / 1000);
+    master.gain.linearRampToValueAtTime(nivel() * 0.25, t + 0.12);
+    master.gain.linearRampToValueAtTime(nivel(), t + (ms || 400) / 1000);
   }
   function bed(level){
     if (!ctx || !master || !on) return;
     const t = ctx.currentTime;
     master.gain.cancelScheduledValues(t);
     master.gain.setValueAtTime(master.gain.value, t);
-    master.gain.linearRampToValueAtTime(level >= 0.99 ? GAIN : level * GAIN, t + 0.45);
+    master.gain.linearRampToValueAtTime(level >= 0.99 ? nivel() : level * nivel(), t + 0.45);
   }
 
-  return { toggle, start, stop, wanted, syncBtn, duck, bed, get on(){ return on; } };
+  return { toggle, start, stop, wanted, syncBtn, duck, bed, elegir, fijarVolumen, abrirPanel, cerrarPanel, get on(){ return on; } };
 })();
 
 const Lectura = (() => {
