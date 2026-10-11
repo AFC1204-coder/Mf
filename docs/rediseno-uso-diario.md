@@ -2,6 +2,7 @@
 
 Documento de diseño · 10 oct 2026 · base: rama `claude/amazing-fermi-uhpapu`
 (diagramas, rutas, «Compruébalo»), que ya incluye todo `main`.
+**Estado: fusionado en `main` el 11 oct 2026 (PR #7).**
 
 ---
 
@@ -524,7 +525,7 @@ panel en `admin.html`. Se escribe con *fire-and-forget* (cola en
 
 | # | Cambio | Archivos | Hecho cuando |
 |---|---|---|---|
-| QW0 | Fusionar `amazing-fermi-uhpapu` en `main` (diagramas, rutas, Compruébalo) | — | `main` despliega diagramas |
+| QW0 | ✅ Fusionar en `main` (diagramas, rutas, Compruébalo y todo el rediseño) | — | `main` despliega diagramas. **Hecho el 11 oct 2026 (PR #7)** |
 | QW1 | **Desatascar el repaso**: migración `estado`, nueva curva, cola solo activas, «Cinco tarjetas» filtrado por libro | SQL, `app.js` (SRS) | La pestaña Repaso nunca muestra > 20; las 5 tarjetas son del tomo |
 | QW2 | **Corte del día a las 04:00** en `hoyISO`, `calcStreak`, `nochesEsteMes`, `isNocheCerrada`, `check_racha` | `lib/core.js`, `app.js`, SQL | Test de racha con eventos a las 00:30 |
 | QW3 | Repasar cuenta como día (racha/lámparas) | `app.js`, SQL | — |
@@ -535,7 +536,7 @@ panel en `admin.html`. Se escribe con *fire-and-forget* (cola en
 **Estado (10 oct 2026):** QW1–QW6 hechos en código (`lib/dia.js`, `app.js`,
 `notifications.js`, `index.html`, `styles.css`). La parte de servidor está en
 `supabase/migrations/20261010_quick_wins.sql`, **aplicada el 10 oct 2026**
-(5.333 tarjetas dormidas, 25 activas, 6 funciones, cola ≤ 20). QW0 (fusionar en `main`) queda para cuando se decida.
+(5.333 tarjetas dormidas, 25 activas, 6 funciones, cola ≤ 20). QW0 (fusionar en `main`): **hecho el 11 oct 2026** con el PR #7, que llevó a `main` el rediseño, los 1.550 diagramas de lección (`datos/diagramas.json`) y los 256 mapas de libro (`datos/mapas.json`); desplegado en GitHub Pages y comprobado en producción.
 De paso: el modo «Mixto» del repaso nunca devolvía tarjetas (`p_modo='mixto'`
 no coincidía con ningún `modo`); corregido en cliente y en la migración.
 
@@ -621,3 +622,20 @@ más sensible que lo que ya hay.
 
 - **Auditoría de los SVG antiguos** (`docs/auditoria-svg.md`): ≈ 90 % con texto ilegible en móvil, 205+ con faltas de tilde, 22 corruptos. Se propone rehacerlos como especificaciones para el motor de diagramas, no como SVG libre.
 - **Infografías por libro** (`docs/infografias.md`): tubería generadora con revisión humana, lista para usarse cuando haya clave de API y se aplique `20261012_infografias.sql`.
+
+---
+
+## 15. Engagement y didáctica · entrega del 11 oct 2026
+
+Código hecho (migración **pendiente de aplicar**: `supabase/migrations/20261013_preguntas_leccion_perfil.sql`):
+
+| Mejora | Qué hay | Estado |
+|---|---|---|
+| **Panel de métricas** | Admin → «Métricas»: sesiones empezadas/cerradas/abandonadas, finalización, duración mediana, dónde se abandona, retención D1/D7/D30, compromisos cumplidos, onboarding y actividad diaria. Lógica pura en `lib/metricas.js` (+ tests); lee `eventos`, no necesita migración nueva | Hecho |
+| **Pregunta ↔ lección (M2)** | `preguntas.leccion_id` + `leccion_origen` (`auto`/`manual`). La migración rellena solo las parejas claras (la mejor lección puntúa ≥ 1,3× la segunda; ≈ 30 % en una muestra de 400). `Didactica.preguntasParaLeccion` usa primero las asignadas y después el parecido de texto. Admin → «Preguntas» permite confirmar o reasignar | Código hecho · falta aplicar la migración |
+| **Perfil en la base** | Tabla `perfil_usuario` (usuario `default`); `perfilSincronizar()` al arrancar y `perfilSubir()` al guardar. Gana el perfil más reciente; si la tabla no existe, no pasa nada | Código hecho · falta aplicar la migración |
+
+Siguiente (sin empezar): modo «completa el diagrama / ordena los pasos» con las figuras existentes,
+calibración («¿cuánto crees que sabes?») en «Comprueba», enlaces entre libros, rutas a tablas (M7),
+cuentas + recordatorios (G3). El panel de métricas debe leerse unas semanas antes de decidir el orden.
+

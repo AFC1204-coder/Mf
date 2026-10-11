@@ -462,6 +462,7 @@ async function init() {
     despertarLeidasUnaVez();
     if (typeof track==='function') track('app_abierta',{sesion_hecha:isNocheCerrada()});
     if (typeof sesPrecargar==='function') sesPrecargar();
+    if (typeof perfilSincronizar==='function') perfilSincronizar();
   } catch(e) {
     clearInterval(msgTimer);
     document.getElementById('loader-msg').textContent = 'Error al cargar: '+(e.message||'desconocido');

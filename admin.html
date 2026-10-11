@@ -34,6 +34,8 @@
       <button class="nav-btn" onclick="showTab('generar')">Generar preguntas</button>
       <button class="nav-btn" onclick="showTab('corpus')">Corpus</button>
       <button class="nav-btn" onclick="showTab('infografias')">Infografías</button>
+      <button class="nav-btn" onclick="showTab('metricas')">Métricas</button>
+      <button class="nav-btn" onclick="showTab('preguntas')">Preguntas</button>
     </nav>
     <a href="index.html" style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--text-dim);text-decoration:none;letter-spacing:0.1em;">← App</a>
   </header>
@@ -134,6 +136,33 @@
       <div id="info-lista"><div style="color:var(--text-dim);font-size:0.85rem;">Cargando...</div></div>
     </div>
 
+    <!-- TAB: MÉTRICAS -->
+    <div id="tab-metricas" class="tab-content" style="display:none;">
+      <div class="section-title">Uso de la app</div>
+      <div class="section-sub">Sale de los eventos que registra la app (sin contenido personal). Si ves «—» es que aún no hay datos suficientes para esa cifra.</div>
+      <div style="margin-bottom:1rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+        <button class="btn-secondary" onclick="cargarMetricas(7)">7 días</button>
+        <button class="btn-secondary" onclick="cargarMetricas(30)">30 días</button>
+        <button class="btn-secondary" onclick="cargarMetricas(90)">90 días</button>
+      </div>
+      <div id="met-cuerpo"><div style="color:var(--text-dim);font-size:0.85rem;">Cargando...</div></div>
+    </div>
+
+    <!-- TAB: PREGUNTAS ↔ LECCIÓN -->
+    <div id="tab-preguntas" class="tab-content" style="display:none;">
+      <div class="section-title">Preguntas y su lección</div>
+      <div class="section-sub">Cada pregunta debe pertenecer a la lección que comprueba: así «Comprueba» pregunta justo lo que acabas de leer. Las «auto» las emparejó el sistema por el texto; confírmalas o cámbialas.</div>
+      <div style="margin-bottom:1rem;display:flex;gap:0.5rem;flex-wrap:wrap;align-items:center;">
+        <select id="pq-filtro" onchange="cargarPreguntasLeccion()" style="padding:0.4rem;background:var(--surface,#151c26);color:inherit;border:1px solid var(--border);border-radius:6px;">
+          <option value="sin">Sin lección</option>
+          <option value="auto">Emparejadas (auto)</option>
+          <option value="manual">Confirmadas</option>
+        </select>
+        <span id="pq-resumen" style="color:var(--text-dim);font-size:0.85rem;"></span>
+      </div>
+      <div id="pq-lista"><div style="color:var(--text-dim);font-size:0.85rem;">Cargando...</div></div>
+    </div>
+
     <!-- TAB: CORPUS -->
     <div id="tab-corpus" class="tab-content" style="display:none;">
       <div class="section-title">Corpus actual</div>
@@ -144,6 +173,7 @@
   </div>
 </div>
 
+<script src="lib/metricas.js"></script>
 <script src="admin.js" defer></script>
 </body>
 </html>
