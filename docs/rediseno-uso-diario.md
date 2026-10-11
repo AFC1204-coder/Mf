@@ -709,3 +709,12 @@ Objetivo: aceptar una idea porque se sostiene y es contrastable, no por el prest
 1. Arranque instantáneo. 2. Mazo + peldaños 0–2 + reanudación. 3. Eventos y métricas de la escalera.
 4. Razonamientos (muestra → libros → lecciones). 5. Contraste (enlaces entre lecciones). 6. Tu posición.
 
+### 16.6 Ambiente sonoro (11 oct 2026)
+`lib/ambiente.js` (+ tests) y módulo `Ambiente` de `app.js`. Tres sonidos generados en el dispositivo, a elegir:
+**ruido marrón** (por defecto, neutro), **lluvia** (siseo constante + gotas suaves) y **sala tranquila**
+(acorde abierto casi inmóvil). Cambios frente al anterior: sin notas aleatorias (distraen al leer), nada
+por debajo de ~70 Hz (el altavoz del móvil no lo reproduce), fundido cruzado al cambiar, volumen con curva
+cuadrática y panel (sonido + volumen + apagar) al tocar «Ambiente» cuando suena. Medido con un analizador
+en Chromium: los tres salen a un volumen parecido (rms ≈ 0,045–0,05) y al 20 % baja a ≈ 0,006.
+No se ha escuchado en dispositivos reales: ajustar `IGUALAR` y los filtros según el oído.
+
