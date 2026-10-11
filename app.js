@@ -29,20 +29,28 @@ async function sb(path, opts={}) {
   const t = await r.text(); return t ? JSON.parse(t) : null;
 }
 async function sbAll(path, opts={}) {
-  const PAGE=1000; let all=[], offset=0;
-  while(true){
-    const sep=path.includes('?')?'&':'?';
+  // Primera página con el total (Content-Range) y el resto en paralelo.
+  const PAGE=1000;
+  const sep=path.includes('?')?'&':'?';
+  const pedir=async (offset, contar)=>{
     const r=await fetch(`${SB_URL}/rest/v1/${path}${sep}limit=${PAGE}&offset=${offset}`,{
-      headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Content-Type':'application/json','Prefer':'return=representation',...opts.headers},
+      headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Content-Type':'application/json',
+        'Prefer':contar?'count=exact':'return=representation',...opts.headers},
       ...opts
     });
     if(!r.ok){const e=await r.text();throw new Error(e);}
-    const t=await r.text(); const batch=t?JSON.parse(t):[];
-    all=all.concat(batch);
-    if(batch.length<PAGE)break;
-    offset+=PAGE;
+    const t=await r.text();
+    return { filas: t?JSON.parse(t):[], total: contar?Corpus.totalDeRango(r.headers.get('content-range')):null };
+  };
+  const primera=await pedir(0,true);
+  if(primera.filas.length<PAGE) return primera.filas;
+  if(primera.total==null){            // sin total: como antes, página a página
+    let all=primera.filas, offset=PAGE;
+    while(true){ const p=await pedir(offset,false); all=all.concat(p.filas); if(p.filas.length<PAGE)break; offset+=PAGE; }
+    return all;
   }
-  return all;
+  const resto=await Promise.all(Corpus.desplazamientos(primera.total,PAGE).map(o=>pedir(o,false)));
+  return primera.filas.concat(...resto.map(p=>p.filas));
 }
 
 /* ═══════════════════════════════════════════
@@ -422,47 +430,103 @@ function normalizeEje(e){
 /* ═══════════════════════════════════════════
    INIT
 ═══════════════════════════════════════════ */
-/* Diagramas de lección y mapas de libro guardados en datos/*.json (ver lib/visuales.js) */
-async function cargarDatosVisuales(){
-  const leer=async u=>{ try{ const r=await fetch(u,{cache:'no-cache'}); return r.ok?await r.json():null; }catch(e){ return null; } };
+/* ── Arranque: corpus guardado en el dispositivo + actualización en segundo plano (lib/corpus.js) ── */
+const leerJSON=async u=>{ try{ const r=await fetch(u,{cache:'no-cache'}); return r.ok?await r.json():null; }catch(e){ return null; } };
+
+/** Contenido: libros, lecciones (sin índice de búsqueda ni SVG antiguos), preguntas, diagramas y mapas. */
+async function descargarCorpus(){
+  const [lb, ls, pr, conUrl, conSvg, dg, mp] = await Promise.all([
+    sb('libros?select=*&publico=eq.true&order=fecha_creacion.asc'),
+    sbAll(`lecciones?select=${Corpus.COLUMNAS_LECCION}&activa=eq.true&order=orden.asc`),
+    sbAll('preguntas?select=*&activa=eq.true'),
+    sbAll('lecciones?select=id,imagen_principal&activa=eq.true&imagen_principal=not.like.data:*'),
+    sbAll('lecciones?select=id&activa=eq.true&imagen_principal=like.data:*'),
+    leerJSON('datos/diagramas.json'),
+    leerJSON('datos/mapas.json')
+  ]);
+  Corpus.fusionarImagenes(ls, conUrl, conSvg);
+  return { v: Corpus.VERSION, ts: Date.now(), libros: lb, lecs: ls, preg: pr, dg, mp };
+}
+/** Datos del usuario (pequeños): se piden en cada apertura. */
+async function descargarUsuario(){
+  const [pg, rv] = await Promise.all([
+    sbAll('progreso?select=*&order=fecha.asc'),
+    sbAll(`repaso?select=ultima_revision&ultima_revision=not.is.null&usuario_id=eq.${SRS_USER}`).catch(()=>[])
+  ]);
+  return { prog: pg, revisiones: rv.map(r=>r.ultima_revision) };
+}
+function aplicarCorpus(c){
+  libros = c.libros.map(l=>({...l, eje:normalizeEje(l.eje)}));
+  lecs = c.lecs; preg = c.preg || [];
   try{
-    const [dg,mp]=await Promise.all([leer('datos/diagramas.json'),leer('datos/mapas.json')]);
     if(typeof Visuales!=='undefined'){
-      Visuales.fusionarDiagramas(lecs,dg,Diagrama);
-      Visuales.fusionarMapas(libros,mp,Mapa);
+      Visuales.fusionarDiagramas(lecs, c.dg, Diagrama);
+      Visuales.fusionarMapas(libros, c.mp, Mapa);
     }
   }catch(e){ console.warn('Datos visuales:',e); }
+}
+function aplicarUsuario(u){
+  prog = (u && u.prog) || []; revisiones = (u && u.revisiones) || [];
+  if (u && u.fav) favCache = u.fav;          // favoritos y notas guardados: visibles desde el primer instante
+  if (u && u.notas) notasCache = u.notas;
+}
+const usuarioParaGuardar = u => ({ ...u, fav: favCache, notas: notasCache });
+function pintarTodo(){
+  renderStats(); renderEjes(); renderLibros(); renderAtril(); renderUltimosLibros(); renderRutas(); renderEsquemas();
+}
+function quitarLoader(){
+  clearInterval(msgTimer);
+  const ld=document.getElementById('loader-screen');
+  ld.classList.add('hidden');
+  setTimeout(()=>ld.style.display='none',350);
+}
+function arrancarUI(){
+  quitarLoader();
+  pintarTodo(); initAdminTrigger();
+  // Restaurar estado desde URL hash (para enlaces compartidos y marcadores)
+  restoreFromURL();
+  despertarLeidasUnaVez();
+  if (typeof track==='function') track('app_abierta',{sesion_hecha:isNocheCerrada()});
+  if (typeof sesPrecargar==='function') sesPrecargar();
+  if (typeof perfilSincronizar==='function') perfilSincronizar();
+}
+
+/** Pide lo nuevo sin bloquear: el contenido solo si caducó; el usuario siempre. Repinta si algo cambió. */
+async function refrescarEnSegundoPlano(cache){
+  try{
+    const antes = Corpus.huella({ libros, lecs, preg, prog, revisiones });
+    const [c, u] = await Promise.all([
+      Corpus.caducado(cache, Date.now()) ? descargarCorpus() : Promise.resolve(null),
+      descargarUsuario()
+    ]);
+    if(c){ await Corpus.guardar('corpus', c); aplicarCorpus(c); }
+    aplicarUsuario(u);
+    await Promise.all([loadFavoritosFromDB(), loadNotasFromDB()]);
+    await Corpus.guardar('usuario', usuarioParaGuardar(u));
+    if(Corpus.huella({ libros, lecs, preg, prog, revisiones }) !== antes && !document.body.classList.contains('en-sesion')) pintarTodo();
+  }catch(e){ console.warn('Actualización en segundo plano:', e.message||e); }
 }
 
 async function init() {
   try {
-    [libros, lecs, preg, prog] = await Promise.all([
-      sb('libros?select=*&publico=eq.true&order=fecha_creacion.asc'),
-      sbAll('lecciones?select=*&activa=eq.true&order=orden.asc'),
-      sbAll('preguntas?select=*&activa=eq.true'),
-      sbAll('progreso?select=*&order=fecha.asc')
-    ]);
-    libros = libros.map(l=>({...l, eje:normalizeEje(l.eje)}));
-    await cargarDatosVisuales();
-    // Fechas de repaso: también cuentan como día de estudio
-    revisiones = (await sbAll(`repaso?select=ultima_revision&ultima_revision=not.is.null&usuario_id=eq.${SRS_USER}`).catch(()=>[]))
-      .map(r=>r.ultima_revision);
-    // Load favoritos and notas from Supabase
+    const cache = await Corpus.leer('corpus');
+    if (Corpus.utilizable(cache)) {
+      // Arranque instantáneo con lo guardado; lo nuevo llega detrás.
+      aplicarCorpus(cache);
+      aplicarUsuario(await Corpus.leer('usuario'));
+      arrancarUI();
+      refrescarEnSegundoPlano(cache);
+      migrateLocalStorageToDB();
+      return;
+    }
+    // Primera vez (o versión nueva del formato): descarga completa.
+    const [c, u] = await Promise.all([descargarCorpus(), descargarUsuario()]);
+    await Corpus.guardar('corpus', c);     // se guarda antes de fusionar los diagramas (IndexedDB copia al guardar)
+    aplicarCorpus(c); aplicarUsuario(u);
     await Promise.all([loadFavoritosFromDB(), loadNotasFromDB()]);
-    // One-time migration from localStorage
+    await Corpus.guardar('usuario', usuarioParaGuardar(u));
     migrateLocalStorageToDB();
-    clearInterval(msgTimer);
-    setTimeout(()=>{
-      document.getElementById('loader-screen').classList.add('hidden');
-      setTimeout(()=>document.getElementById('loader-screen').style.display='none',500);
-    },300);
-    renderStats(); renderEjes(); renderLibros(); renderAtril(); renderUltimosLibros(); renderRutas(); renderEsquemas(); initAdminTrigger();
-    // Restaurar estado desde URL hash (para enlaces compartidos y marcadores)
-    restoreFromURL();
-    despertarLeidasUnaVez();
-    if (typeof track==='function') track('app_abierta',{sesion_hecha:isNocheCerrada()});
-    if (typeof sesPrecargar==='function') sesPrecargar();
-    if (typeof perfilSincronizar==='function') perfilSincronizar();
+    arrancarUI();
   } catch(e) {
     clearInterval(msgTimer);
     document.getElementById('loader-msg').textContent = 'Error al cargar: '+(e.message||'desconocido');
@@ -1647,7 +1711,7 @@ function renderLecs(list,q=''){
     const nA=l.autores_relacionados?.length||0;
     const fav=favLecs().includes(l.id);
     const adelanto=Didactica.avance(l,140);
-    const conFigura=(typeof Diagrama!=='undefined'&&Diagrama.deLeccion(l).length)||l.imagen_principal;
+    const conFigura=(typeof Diagrama!=='undefined'&&Diagrama.deLeccion(l).length)||l.imagen_principal||l._svgPendiente;
     return `<li class="ruta-lec${done?' done':''}${sig&&sig.id===l.id?' current':''}" onclick="verLeccion('${l.id}')">
       <span class="ruta-nodo" aria-hidden="true">${done?'✓':(l.orden||i+1)}</span>
       <div class="ruta-body">
@@ -1774,6 +1838,7 @@ function verLeccion(id, from=null, skipPush=false, replace=false){
   let html='';
 
   const figuras=(typeof Diagrama!=='undefined'?Diagrama.deLeccion(lecActual):[]).map(Diagrama.render).join('');
+  if(!figuras && !lecActual.imagen_principal && lecActual._svgPendiente) cargarSvgPendiente(lecActual);
   if(!figuras && lecActual.imagen_principal){
     html+=`<div class="lec-img-wrap">
       <img src="${lecActual.imagen_principal}" alt="${esc(lecActual.titulo)}" loading="lazy" referrerpolicy="no-referrer"
@@ -2305,6 +2370,24 @@ async function tarjetasDeLecciones(ids, repartirDias=0){
 }
 // Una vez: las lecciones ya leídas despiertan sus tarjetas, repartidas en dos semanas.
 const WAKE_K = 'scs2_srs_wake_v1';
+/** SVG antiguo de una lección sin otra figura: se pide solo al abrirla y se repinta si sigue abierta. */
+async function cargarSvgPendiente(lec){
+  try{
+    const r=await sb(`lecciones?select=imagen_principal&id=eq.${lec.id}`);
+    lec._svgPendiente=false;
+    if(r && r[0] && r[0].imagen_principal){
+      lec.imagen_principal=r[0].imagen_principal;
+      const cont=document.getElementById('leccion-contenido');
+      if(lecActual && lecActual.id===lec.id && cont && !cont.querySelector('.lec-img-wrap')){
+        const w=document.createElement('div'); w.className='lec-img-wrap';
+        const img=document.createElement('img'); img.src=lec.imagen_principal; img.alt=lec.titulo||''; img.referrerPolicy='no-referrer';
+        img.onclick=()=>abrirZoomImagen(img); img.onerror=()=>{ w.style.display='none'; };
+        w.appendChild(img); cont.prepend(w);
+      }
+    }
+  }catch(e){}
+}
+
 async function despertarLeidasUnaVez(){
   if (LS.get(WAKE_K, false)) return;
   const ids = [...completadasSet()];
@@ -2783,7 +2866,9 @@ function renderRepaso(){
   const libro=libros.find(x=>x.id===l.libro_id);
   let html='';
   if(libro)html+=`<div style="font-size:0.7rem;color:var(--text3);font-family:var(--font-mono);margin-bottom:0.6rem">${esc(libro.autor)} — ${esc(libro.titulo)}</div>`;
-  if(l.imagen_principal)html+=`<div class="lec-img-wrap"><img src="${l.imagen_principal}" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>`;
+  const figRep=(typeof Diagrama!=='undefined'?Diagrama.deLeccion(l):[]).map(Diagrama.render).join('');
+  if(figRep)html+=figRep;
+  else if(l.imagen_principal)html+=`<div class="lec-img-wrap"><img src="${l.imagen_principal}" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none'"></div>`;
   html+=`<h2 class="lec-titulo">${esc(l.titulo)}</h2>`;
   html+=`<div class="lec-body fmt">${fmt(l.cuerpo)}</div>`;
   if(l.detalles?.length)html+=`<div class="det-grid">`+l.detalles.map(d=>`<div class="det-card"><div class="det-card-title">${esc(d.subtitulo||d.titulo||'')}</div><div class="fmt">${fmt(d.cuerpo||d.contenido||'')}</div></div>`).join('')+`</div>`;
