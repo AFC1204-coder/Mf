@@ -1,0 +1,163 @@
+{
+ "reemplazos": [
+  {
+   "tabla": "lecciones",
+   "id": "04f3ea37-1d65-416e-9b3b-5be2ba114f65",
+   "campo": "cuerpo",
+   "antes": "tres partículas subatómicas fundamentales.",
+   "despues": "tres «partículas subatómicas fundamentales» (así las cuenta el autor; la física actual no las cuenta así: protón y neutrón no son fundamentales y hay muchas más)."
+  },
+  {
+   "tabla": "lecciones",
+   "id": "04f3ea37-1d65-416e-9b3b-5be2ba114f65",
+   "campo": "cuerpo",
+   "antes": "solo tres tipos de ADN mitocondrial (M, N, R) se distribuyen en toda la población mundial.",
+   "despues": "según el autor, solo tres tipos de ADN mitocondrial (M, N, R) se distribuyen en toda la población mundial. (Dato incorrecto: M, N y R son macrohaplogrupos de fuera de África; la humanidad tiene además los linajes africanos L0–L6, los más antiguos, y decenas de haplogrupos.)"
+  },
+  {
+   "tabla": "lecciones",
+   "id": "04f3ea37-1d65-416e-9b3b-5be2ba114f65",
+   "campo": "autocorreccion",
+   "antes": "usar datos científicos reales (tres linajes mitocondriales) para validar",
+   "despues": "partir de un dato incorrecto (no hay tres linajes mitocondriales, sino decenas de haplogrupos) para validar"
+  },
+  {
+   "tabla": "lecciones",
+   "id": "04f3ea37-1d65-416e-9b3b-5be2ba114f65",
+   "campo": "autocorreccion",
+   "antes": "La genética de poblaciones explica los tres haplogrupos mitocondriales mediante cuellos de botella evolutivos que no requieren un diluvio literal.",
+   "despues": "La genética de poblaciones explica la diversidad mitocondrial humana mediante migraciones y cuellos de botella que no requieren un diluvio literal."
+  },
+  {
+   "tabla": "lecciones",
+   "id": "88c0f7d2-59a3-4307-89b7-d0773d747605",
+   "campo": "cuerpo",
+   "antes": "Wilson cita datos de 1968 mostrando que el 85% de la población tenía síntomas físicos (palpitaciones, sudoración, pesadillas) compatibles con una impronta de amenaza en el circuito I. Esto significa que la mayoría de personas opera en estado de emergencia neurológica subclínica permanente",
+   "despues": "Wilson sostiene que muchas personas conservan improntas de amenaza en el circuito I (es una hipótesis suya: no hay una cifra que la respalde). Según ese marco, buena parte de la gente operaría en un estado de emergencia neurológica subclínica permanente"
+  },
+  {
+   "tabla": "lecciones",
+   "id": "fc0a61bf-1c39-448f-9208-059e33729816",
+   "campo": "cuerpo",
+   "antes": "Navarro distingue entre el paranoico reactivo — cuya desconfianza extrema fue adaptativa en un entorno de amenaza real y se ha generalizado — y el paranoico constitucional — cuya arquitectura de procesamiento social interpreta la amenaza como señal dominante independientemente del entorno. El pronóstico y el manejo son distintos en cada caso.",
+   "despues": "Esta lección distingue dos formas de paranoia: la reactiva — cuya desconfianza extrema fue adaptativa en un entorno de amenaza real y se ha generalizado — y la constitucional — cuya forma de procesar lo social interpreta la amenaza como señal dominante independientemente del entorno. Es una distinción de la propia lección, no de Navarro."
+  },
+  {
+   "tabla": "lecciones",
+   "id": "ce6e6d1f-d79c-4fb4-b82a-f8898777fe88",
+   "campo": "cuerpo",
+   "antes": "La extrapolación sistémica que Buzsáki sugiere es poderosa y conecta directamente con el corpus:",
+   "despues": "Una extrapolación propia de esta lección (no de Buzsáki, cuyo libro no trata de economía) conecta con el corpus como analogía:"
+  },
+  {
+   "tabla": "lecciones",
+   "id": "ce6e6d1f-d79c-4fb4-b82a-f8898777fe88",
+   "campo": "cuerpo",
+   "antes": "Alim-Louis Benabid desarrolló la técnica intuyendo que el problema era rítmico antes de que la teoría oscilatoria lo confirmara.",
+   "despues": "Alim-Louis Benabid desarrolló la técnica en los años ochenta al observar que la estimulación de alta frecuencia suprimía el temblor durante la cirugía; la lectura oscilatoria vino después."
+  },
+  {
+   "tabla": "lecciones",
+   "id": "ce6e6d1f-d79c-4fb4-b82a-f8898777fe88",
+   "campo": "cuerpo",
+   "antes": "El Alzheimer temprano muestra degradación del ritmo gamma y theta hipocampal meses o años antes de que sean evidentes los déficits cognitivos clínicos — lo que abre una ventana diagnóstica temprana que los biomarcadores químicos no proporcionan con la misma anticipación.",
+   "despues": "En el Alzheimer se observan alteraciones de los ritmos hipocampales (bien documentadas en modelos animales; en personas, lentificación del EEG) y se investiga si podrían servir como señal temprana; el plazo exacto no está establecido."
+  },
+  {
+   "tabla": "lecciones",
+   "id": "ce6e6d1f-d79c-4fb4-b82a-f8898777fe88",
+   "campo": "aplicacion_practica",
+   "antes": "CRISIS FINANCIERAS: La respuesta de QE funcionó como DBS económico",
+   "despues": "CRISIS FINANCIERAS (analogía propia, no de Buzsáki): la respuesta de QE funcionó, por analogía, como una DBS económica"
+  },
+  {
+   "tabla": "lecciones",
+   "id": "7004ee59-93a2-465a-83cb-a8db56830f74",
+   "campo": "cuerpo",
+   "antes": "Esta es la base neurológica de por qué el aprendizaje activo supera al pasivo: no es solo psicología motivacional sino electrofisiología.",
+   "despues": "Una hipótesis atractiva —no demostrada en humanos, y el theta que describe Buzsáki es sobre todo de roedores en movimiento— es que esto contribuya a que el aprendizaje activo supere al pasivo."
+  },
+  {
+   "tabla": "lecciones",
+   "id": "7004ee59-93a2-465a-83cb-a8db56830f74",
+   "campo": "aplicacion_practica",
+   "antes": "generan theta porque implican exploración activa. Las revisiones pasivas no.",
+   "despues": "podrían favorecer estados de theta (hipótesis, no demostrado) porque implican exploración activa."
+  },
+  {
+   "tabla": "lecciones",
+   "id": "7004ee59-93a2-465a-83cb-a8db56830f74",
+   "campo": "aplicacion_practica",
+   "antes": "La curiosidad es theta; la confirmación es alpha.",
+   "despues": "(Es una analogía: no está demostrado que la curiosidad sea theta y la confirmación alpha.)"
+  },
+  {
+   "tabla": "lecciones",
+   "id": "c553d47f-224c-423e-93d6-7dc6e393ce45",
+   "campo": "conexion_cruzada",
+   "antes": "Easter documenta el mecanismo biológico del entorno como calibrador: el sistema nervioso autónomo se regula por co-regulación con otros sistemas nerviosos en el entorno inmediato. No es metáfora — es fisiología.",
+   "despues": "La literatura sobre co-regulación (Porges, Siegel) documenta que el sistema nervioso autónomo se regula en interacción con otros sistemas nerviosos del entorno inmediato; Easter, por su parte, trata de la incomodidad y los hábitos, no de este mecanismo. No es metáfora — es fisiología."
+  },
+  {
+   "tabla": "lecciones",
+   "id": "c553d47f-224c-423e-93d6-7dc6e393ce45",
+   "campo": "cuerpo",
+   "antes": "El mecanismo es el priming ambiental: el cerebro",
+   "despues": "Una explicación posible (síntesis de la lección, no una tesis de Hill) es el priming ambiental: el cerebro"
+  },
+  {
+   "tabla": "lecciones",
+   "id": "a0a7429e-d91a-4ac0-9880-7faa5d762f86",
+   "campo": "cuerpo",
+   "antes": "y la fórmula gana sin excepción.",
+   "despues": "y la fórmula suele ganar."
+  },
+  {
+   "tabla": "lecciones",
+   "id": "337695f5-b069-41f6-a7b7-1355d7c1fd62",
+   "campo": "cuerpo",
+   "antes": "Los Himba de Namibia no tienen palabra para \"sorpresa\" en el sentido occidental; distinguen finamente entre tipos de calma que el español agrupa.",
+   "despues": "Estudios con los Himba de Namibia (Gendron et al., 2014) muestran que no agrupan las expresiones faciales y vocales en las categorías emocionales occidentales «universales», sino que las describen por la conducta que acompañan."
+  },
+  {
+   "tabla": "lecciones",
+   "id": "ee57b24c-70c6-451a-8023-08e68defb2f7",
+   "campo": "cuerpo",
+   "antes": "Esta arquitectura, heredada de von Neumann y Morgenstern, es el modelo normativo",
+   "despues": "Esta arquitectura, que remonta a Savage (la teoría de la utilidad esperada de von Neumann y Morgenstern es de riesgo, sin estados del mundo), es el modelo normativo"
+  },
+  {
+   "tabla": "preguntas",
+   "id": "cdfc06c8-5822-43d4-a359-e2aea26e19a9",
+   "campo": "explicacion",
+   "antes": "no fabricar objetivos falsos. Los métodos pueden compartirse; los objetivos se protegen.",
+   "despues": "no revelar los objetivos finales. Matiz: Greene (ley 3) también recomienda señuelos y cortinas de humo, es decir, sí admite fabricar pistas falsas; la opción D se acerca a su postura más radical."
+  },
+  {
+   "tabla": "preguntas",
+   "id": "c31684a4-dd50-4a58-9071-48cd3ef4d787",
+   "campo": "explicacion",
+   "antes": "Si no, necesita más margen.",
+   "despues": "Si no, necesita más margen. (Es un ejercicio propuesto por la app, no un test de Housel: el libro solo habla de margen de seguridad.)"
+  },
+  {
+   "tabla": "preguntas",
+   "id": "7a560e19-7e65-4ef3-83e3-9e18b30cd9f0",
+   "campo": "explicacion",
+   "antes": "La solución digital tiene el mismo sesgo que Gatto identifica en el homeschooling: funciona bien para quienes ya tienen las condiciones para aprovecharla.",
+   "despues": "La solución digital funciona mejor para quienes ya tienen las condiciones para aprovecharla (es una crítica externa a Christensen, no una tesis suya)."
+  }
+ ],
+ "claves": [
+  {
+   "id": "8475b09b-507d-4f33-a781-5df7f9739804",
+   "antes": 1,
+   "despues": 0
+  },
+  {
+   "id": "3c0462bc-03ff-4906-a387-4ccf3e7836e1",
+   "antes": 1,
+   "despues": 0
+  }
+ ]
+}
