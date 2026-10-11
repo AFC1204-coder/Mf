@@ -2,6 +2,7 @@
 
 Documento de diseño · 10 oct 2026 · base: rama `claude/amazing-fermi-uhpapu`
 (diagramas, rutas, «Compruébalo»), que ya incluye todo `main`.
+**Estado: fusionado en `main` el 11 oct 2026 (PR #7).**
 
 ---
 
@@ -524,7 +525,7 @@ panel en `admin.html`. Se escribe con *fire-and-forget* (cola en
 
 | # | Cambio | Archivos | Hecho cuando |
 |---|---|---|---|
-| QW0 | Fusionar `amazing-fermi-uhpapu` en `main` (diagramas, rutas, Compruébalo) | — | `main` despliega diagramas |
+| QW0 | ✅ Fusionar en `main` (diagramas, rutas, Compruébalo y todo el rediseño) | — | `main` despliega diagramas. **Hecho el 11 oct 2026 (PR #7)** |
 | QW1 | **Desatascar el repaso**: migración `estado`, nueva curva, cola solo activas, «Cinco tarjetas» filtrado por libro | SQL, `app.js` (SRS) | La pestaña Repaso nunca muestra > 20; las 5 tarjetas son del tomo |
 | QW2 | **Corte del día a las 04:00** en `hoyISO`, `calcStreak`, `nochesEsteMes`, `isNocheCerrada`, `check_racha` | `lib/core.js`, `app.js`, SQL | Test de racha con eventos a las 00:30 |
 | QW3 | Repasar cuenta como día (racha/lámparas) | `app.js`, SQL | — |
@@ -535,7 +536,7 @@ panel en `admin.html`. Se escribe con *fire-and-forget* (cola en
 **Estado (10 oct 2026):** QW1–QW6 hechos en código (`lib/dia.js`, `app.js`,
 `notifications.js`, `index.html`, `styles.css`). La parte de servidor está en
 `supabase/migrations/20261010_quick_wins.sql`, **aplicada el 10 oct 2026**
-(5.333 tarjetas dormidas, 25 activas, 6 funciones, cola ≤ 20). QW0 (fusionar en `main`) queda para cuando se decida.
+(5.333 tarjetas dormidas, 25 activas, 6 funciones, cola ≤ 20). QW0 (fusionar en `main`): **hecho el 11 oct 2026** con el PR #7, que llevó a `main` el rediseño, los 1.550 diagramas de lección (`datos/diagramas.json`) y los 256 mapas de libro (`datos/mapas.json`); desplegado en GitHub Pages y comprobado en producción.
 De paso: el modo «Mixto» del repaso nunca devolvía tarjetas (`p_modo='mixto'`
 no coincidía con ningún `modo`); corregido en cliente y en la migración.
 
