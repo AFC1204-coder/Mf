@@ -622,3 +622,20 @@ más sensible que lo que ya hay.
 
 - **Auditoría de los SVG antiguos** (`docs/auditoria-svg.md`): ≈ 90 % con texto ilegible en móvil, 205+ con faltas de tilde, 22 corruptos. Se propone rehacerlos como especificaciones para el motor de diagramas, no como SVG libre.
 - **Infografías por libro** (`docs/infografias.md`): tubería generadora con revisión humana, lista para usarse cuando haya clave de API y se aplique `20261012_infografias.sql`.
+
+---
+
+## 15. Engagement y didáctica · entrega del 11 oct 2026
+
+Código hecho (migración **pendiente de aplicar**: `supabase/migrations/20261013_preguntas_leccion_perfil.sql`):
+
+| Mejora | Qué hay | Estado |
+|---|---|---|
+| **Panel de métricas** | Admin → «Métricas»: sesiones empezadas/cerradas/abandonadas, finalización, duración mediana, dónde se abandona, retención D1/D7/D30, compromisos cumplidos, onboarding y actividad diaria. Lógica pura en `lib/metricas.js` (+ tests); lee `eventos`, no necesita migración nueva | Hecho |
+| **Pregunta ↔ lección (M2)** | `preguntas.leccion_id` + `leccion_origen` (`auto`/`manual`). La migración rellena solo las parejas claras (la mejor lección puntúa ≥ 1,3× la segunda; ≈ 30 % en una muestra de 400). `Didactica.preguntasParaLeccion` usa primero las asignadas y después el parecido de texto. Admin → «Preguntas» permite confirmar o reasignar | Código hecho · falta aplicar la migración |
+| **Perfil en la base** | Tabla `perfil_usuario` (usuario `default`); `perfilSincronizar()` al arrancar y `perfilSubir()` al guardar. Gana el perfil más reciente; si la tabla no existe, no pasa nada | Código hecho · falta aplicar la migración |
+
+Siguiente (sin empezar): modo «completa el diagrama / ordena los pasos» con las figuras existentes,
+calibración («¿cuánto crees que sabes?») en «Comprueba», enlaces entre libros, rutas a tablas (M7),
+cuentas + recordatorios (G3). El panel de métricas debe leerse unas semanas antes de decidir el orden.
+

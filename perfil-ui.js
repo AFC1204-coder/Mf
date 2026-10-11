@@ -132,6 +132,7 @@ function obGuardar() {
   const p = Perfil.crear(Object.assign({}, ob, { ts: new Date().toISOString() }), disp);
   LS.set(PERFIL_K, p);
   LS.set(SES_MODO_K, p.modo);
+  perfilSubir(p);
   if (typeof track === 'function') track('onboarding', { objetivo: p.objetivo, minutos: p.minutos, dias: p.dias, ruta: p.ruta });
   ob = null;
   showView('home');
@@ -228,4 +229,40 @@ async function tuCargarAcciones() {
     const el = document.getElementById('tu-acciones');
     if (el) el.textContent = String((r || []).length);
   } catch (e) {}
+}
+
+
+/* ── Perfil en la base (tabla perfil_usuario) ──
+   El navegador sigue siendo la fuente inmediata; la base evita perder la ruta y el objetivo si se
+   borran los datos del navegador o se cambia de dispositivo. Si la tabla no existe, no pasa nada. */
+let perfilOff = false;
+async function perfilSubir(p) {
+  if (perfilOff || !Perfil.completo(p)) return;
+  try {
+    await sb('perfil_usuario?on_conflict=usuario_id', {
+      method: 'POST', headers: { Prefer: 'resolution=merge-duplicates,return=minimal' },
+      body: JSON.stringify(Perfil.aFila(p, SRS_USER))
+    });
+  } catch (e) { if (/PGRST205|42P01|does not exist|Could not find|not find the table/i.test(String(e.message))) perfilOff = true; }
+}
+async function perfilSincronizar() {
+  if (perfilOff) return;
+  let fila = null;
+  try {
+    const r = await sb(`perfil_usuario?select=*&usuario_id=eq.${SRS_USER}&limit=1`);
+    fila = (r && r[0]) || null;
+  } catch (e) {
+    if (/PGRST205|42P01|does not exist|Could not find|not find the table/i.test(String(e.message))) perfilOff = true;
+    return;
+  }
+  const dec = Perfil.reconciliar(getPerfil(), Perfil.desdeFila(fila));
+  if (dec.accion === 'subir') perfilSubir(dec.perfil);
+  else if (dec.accion === 'bajar') {
+    const disp = Didactica.rutasDisponibles(libros, lecs, completadasSet()).map(r => r.id);
+    const p = Perfil.crear(Object.assign({}, dec.perfil), disp);
+    p.ts = dec.perfil.ts;
+    LS.set(PERFIL_K, p);
+    LS.set(SES_MODO_K, p.modo);
+    if (typeof renderAtril === 'function') renderAtril();
+  }
 }

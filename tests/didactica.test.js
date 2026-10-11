@@ -139,3 +139,19 @@ describe('rutas de aprendizaje', () => {
   });
   it('norm quita acentos', () => { expect(norm('Compórtate')).toBe('comportate'); });
 });
+
+describe('Didactica.preguntasParaLeccion — leccion_id explícito', () => {
+  const lec = { id: 'L2', libro_id: 'B', titulo: 'Sesgo de confirmación', cuerpo: 'buscamos lo que confirma' };
+  const op = [{ t: 'a' }, { t: 'b' }];
+  const pregs = [
+    { id: 'p1', libro_id: 'B', texto: 'sesgo de confirmación', explicacion: '', opciones: op, leccion_id: 'L1' },
+    { id: 'p2', libro_id: 'B', texto: 'pregunta sin parecido alguno', explicacion: '', opciones: op, leccion_id: 'L2' },
+    { id: 'p3', libro_id: 'B', texto: 'confirmación', explicacion: '', opciones: op }
+  ];
+  it('las preguntas asignadas a esa lección van primero aunque se parezcan menos', () => {
+    expect(preguntasParaLeccion(lec, pregs, 1).map(p => p.id)).toEqual(['p2']);
+  });
+  it('una pregunta asignada a otra lección no se usa por parecido', () => {
+    expect(preguntasParaLeccion(lec, pregs, 3).map(p => p.id)).toEqual(['p2', 'p3']);
+  });
+});

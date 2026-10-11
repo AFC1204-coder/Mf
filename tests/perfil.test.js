@@ -77,3 +77,26 @@ describe('rutas nuevas', () => {
     expect(ec.map(i => i.libro.titulo)).toEqual(cat.slice(6).map(b => b.titulo));
   });
 });
+
+describe('Perfil · sincronización con la base', () => {
+  const base = { objetivo: 'decidir', minutos: 7, dias: 5, ruta: 'pensar', modo: 'corta' };
+  it('fila ↔ perfil', () => {
+    const fila = Perfil.aFila(base, 'default');
+    expect(fila).toMatchObject({ usuario_id: 'default', objetivo: 'decidir', minutos: 7, dias: 5, ruta: 'pensar' });
+    expect(Perfil.desdeFila(Object.assign({}, fila))).toMatchObject({ objetivo: 'decidir', minutos: 7, dias: 5, ruta: 'pensar' });
+    expect(Perfil.desdeFila(null)).toBeNull();
+    expect(Perfil.desdeFila({ objetivo: 'x', minutos: 7 })).toBeNull();
+  });
+  it('sin remoto, sube el local; sin local, baja el remoto', () => {
+    expect(Perfil.reconciliar(base, null).accion).toBe('subir');
+    expect(Perfil.reconciliar(null, base).accion).toBe('bajar');
+    expect(Perfil.reconciliar(null, null).accion).toBe('nada');
+  });
+  it('con los dos, gana el más reciente; si son iguales no hace nada', () => {
+    const viejo = Object.assign({}, base, { dias: 3, ts: '2026-10-01T10:00:00Z' });
+    const nuevo = Object.assign({}, base, { ts: '2026-10-05T10:00:00Z' });
+    expect(Perfil.reconciliar(viejo, nuevo).accion).toBe('bajar');
+    expect(Perfil.reconciliar(nuevo, viejo).accion).toBe('subir');
+    expect(Perfil.reconciliar(base, Object.assign({}, base, { ts: '2026-01-01T00:00:00Z' })).accion).toBe('nada');
+  });
+});
