@@ -473,6 +473,7 @@ function aplicarUsuario(u){
 const usuarioParaGuardar = u => ({ ...u, fav: favCache, notas: notasCache });
 function pintarTodo(){
   renderStats(); renderEjes(); renderLibros(); renderAtril(); renderUltimosLibros(); renderRutas(); renderEsquemas();
+  if (typeof renderMazo==='function') renderMazo();
 }
 function quitarLoader(){
   clearInterval(msgTimer);
@@ -485,6 +486,7 @@ function arrancarUI(){
   pintarTodo(); initAdminTrigger();
   // Restaurar estado desde URL hash (para enlaces compartidos y marcadores)
   restoreFromURL();
+  if (typeof reanudarAlAbrir==='function') reanudarAlAbrir();
   despertarLeidasUnaVez();
   if (typeof track==='function') track('app_abierta',{sesion_hecha:isNocheCerrada()});
   if (typeof sesPrecargar==='function') sesPrecargar();
@@ -1001,7 +1003,7 @@ function renderAtril(){
 
   const hilo = getHilo();
   const hoyCard = (typeof sesionCardHtml === 'function') ? sesionCardHtml() : '';
-  const intro = (typeof perfilCardHtml === 'function') ? perfilCardHtml() : '';
+  const intro = '';   // el perfil ya no se pide en Inicio: la ruta y el tiempo se eligen en «Tú» si se quiere
   const hiloOk = hilo && hilo.frase && (typeof hiloValido !== 'function' || hiloValido(hilo));
   if (hiloOk) {
     root.innerHTML = `${top}${intro}
@@ -1824,6 +1826,7 @@ function verLeccion(id, from=null, skipPush=false, replace=false){
   const libId=lecActual.libro_id;
   if(!libroActual) libroActual=libros.find(l=>l.id===libId);
   setUltima(id, libId);
+  if (typeof lecturaInicio==='function') lecturaInicio(id);
   const backBtn=document.getElementById('back-lec-btn');
   if(from==='repaso'){backBtn.onclick=()=>showView('repaso');backBtn.textContent='← Repaso';}
   else if(from==='autor'){backBtn.onclick=()=>showView('autor');backBtn.textContent='← Autor';}
@@ -2400,6 +2403,7 @@ async function despertarLeidasUnaVez(){
    MARCAR COMPLETADA
 ═══════════════════════════════════════════ */
 async function marcarCompletada(id, opts={}){
+  if (typeof lecturaTerminada==='function') lecturaTerminada(id);
   try{
     await sb('progreso',{method:'POST',body:JSON.stringify({tipo:'leccion',item_id:id,resultado:'correcta',fecha:new Date().toISOString()})});
     prog.push({tipo:'leccion',item_id:id,resultado:'correcta',fecha:new Date().toISOString()});
@@ -2927,6 +2931,7 @@ function verAutor(enc){
    NAVIGATION
 ═══════════════════════════════════════════ */
 function showView(name, skipPush=false, replace=false){
+  if(name!=='leccion' && typeof lecturaPausar==='function') lecturaPausar();
   if(name!=='leccion'){if(ttsAudio){ttsAudio.pause();ttsAudio=null;}if(window.speechSynthesis){speechSynthesis.cancel();}ttsUtterance=null;ttsPaused=false;ttsMode=null;ttsAudioUrl=null;}
   document.body.classList.toggle('noche', name==='cuaderno');
   document.body.classList.toggle('en-sesion', name==='sesion'||name==='onboarding');

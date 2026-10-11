@@ -666,6 +666,13 @@ Al abrir: 5 fichas, se pasa deslizando, **finito** («Has terminado por ahora»)
 El mazo siguiente se precalcula y se guarda: la primera ficha aparece en < 1 s aunque no haya red.
 El mazo sustituye a Inicio al abrir (botón discreto «Ir a la biblioteca»).
 
+**Estado (11 oct 2026): v1 hecha.** `lib/mazo.js` (+ tests) y `mazo-ui.js`: mazo de 5 fichas arriba en Inicio
+(recuerda · idea de lo que toca leer + diagrama · otra idea · matiz o cita · cierre con una oferta), deslizable,
+con «Ampliar» (peldaño 1) y «Leer» (peldaño 2). Reanudación: la lectura se guarda al desplazarte y al salir;
+si saliste de la app leyendo (< 12 h), al volver se abre la lección en el mismo punto; si saliste a Inicio,
+la primera ficha es «Seguías aquí» (< 7 días). La tarjeta del cuestionario de perfil ya no aparece en Inicio
+(el perfil sigue en «Tú», opcional): el tiempo depende del día, no de una preferencia fija.
+
 ### 16.3 La escalera
 | Peldaño | Qué | Tiempo |
 |---|---|---|
