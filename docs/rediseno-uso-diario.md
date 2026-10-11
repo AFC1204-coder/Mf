@@ -627,15 +627,73 @@ más sensible que lo que ya hay.
 
 ## 15. Engagement y didáctica · entrega del 11 oct 2026
 
-Código hecho (migración **pendiente de aplicar**: `supabase/migrations/20261013_preguntas_leccion_perfil.sql`):
+Código hecho y desplegado (PR #8). Migración `supabase/migrations/20261013_preguntas_leccion_perfil.sql` **aplicada el 11 oct 2026** (2.178 de 7.044 preguntas emparejadas automáticamente; `perfil_usuario` sin RLS, como el resto):
 
 | Mejora | Qué hay | Estado |
 |---|---|---|
 | **Panel de métricas** | Admin → «Métricas»: sesiones empezadas/cerradas/abandonadas, finalización, duración mediana, dónde se abandona, retención D1/D7/D30, compromisos cumplidos, onboarding y actividad diaria. Lógica pura en `lib/metricas.js` (+ tests); lee `eventos`, no necesita migración nueva | Hecho |
-| **Pregunta ↔ lección (M2)** | `preguntas.leccion_id` + `leccion_origen` (`auto`/`manual`). La migración rellena solo las parejas claras (la mejor lección puntúa ≥ 1,3× la segunda; ≈ 30 % en una muestra de 400). `Didactica.preguntasParaLeccion` usa primero las asignadas y después el parecido de texto. Admin → «Preguntas» permite confirmar o reasignar | Código hecho · falta aplicar la migración |
-| **Perfil en la base** | Tabla `perfil_usuario` (usuario `default`); `perfilSincronizar()` al arrancar y `perfilSubir()` al guardar. Gana el perfil más reciente; si la tabla no existe, no pasa nada | Código hecho · falta aplicar la migración |
+| **Pregunta ↔ lección (M2)** | `preguntas.leccion_id` + `leccion_origen` (`auto`/`manual`). La migración rellena solo las parejas claras (la mejor lección puntúa ≥ 1,3× la segunda; ≈ 30 % en una muestra de 400). `Didactica.preguntasParaLeccion` usa primero las asignadas y después el parecido de texto. Admin → «Preguntas» permite confirmar o reasignar | Hecho |
+| **Perfil en la base** | Tabla `perfil_usuario` (usuario `default`); `perfilSincronizar()` al arrancar y `perfilSubir()` al guardar. Gana el perfil más reciente; si la tabla no existe, no pasa nada | Hecho |
 
 Siguiente (sin empezar): modo «completa el diagrama / ordena los pasos» con las figuras existentes,
 calibración («¿cuánto crees que sabes?») en «Comprueba», enlaces entre libros, rutas a tablas (M7),
 cuentas + recordatorios (G3). El panel de métricas debe leerse unas semanas antes de decidir el orden.
+
+---
+
+## 16. Del impulso a la atención profunda (diseño, 11 oct 2026)
+
+**Objetivo.** Que el impulso de coger el móvil en un hueco acabe aquí y no en X: entrada instantánea,
+consumo breve pero activo y, cuando hay tiempo, paso natural a leer o reflexionar en profundidad.
+
+### 16.1 Arranque instantáneo (requisito previo)
+Cada apertura descargaba todo el corpus (≈ 17 MB de lecciones, de ellos 5,5 MB del índice de búsqueda
+`busqueda` y 3,8 MB de SVG antiguos ya sustituidos por diagramas, + 6 MB de preguntas) sin caché de datos.
+Solución: columnas explícitas (sin `busqueda` ni SVG antiguos), páginas en paralelo y corpus guardado en
+IndexedDB; la app arranca con lo guardado y se actualiza en segundo plano.
+
+### 16.2 Mazo de fichas
+Al abrir: 5 fichas, se pasa deslizando, **finito** («Has terminado por ahora»). Cada ficha pide algo:
+1. Reanudar lo que quedó a medias (o una tarjeta de repaso pendiente).
+2–3. Ideas de la **próxima lección de la ruta** (idea clave + diagrama): preparan la lectura.
+4. Contraste con algo ya leído (cita o matiz hasta tener enlaces entre lecciones).
+5. Cierre con una única oferta de subir.
+El mazo siguiente se precalcula y se guarda: la primera ficha aparece en < 1 s aunque no haya red.
+El mazo sustituye a Inicio al abrir (botón discreto «Ir a la biblioteca»).
+
+### 16.3 La escalera
+| Peldaño | Qué | Tiempo |
+|---|---|---|
+| 0 · Ficha | idea + diagrama, pregunta de recuerdo o cita | 20–40 s |
+| 1 · Ampliar | en la misma pantalla: razonamiento (16.4), matiz y aplicación | 1 min |
+| 2 · Lección | completa, abierta por el fragmento de la ficha | 5–10 min |
+| 3 · Contraste | lección de otro libro que coincide o choca; «¿en qué coinciden y en qué chocan?» | 3–5 min |
+| 4 · Tu posición | una frase propia, guardada, que reaparece semanas después | 1–2 min |
+
+Reglas (cada una evita un fallo concreto):
+- **Sin scroll infinito disfrazado**: nada encadena solo; subir siempre es un toque tuyo, salir también.
+- **Sin presión**: una sola oferta de subir por mazo, al final, según una señal tuya (ficha en la que te
+  detuviste, pregunta fallada, ficha ampliada). Decir que no no cuesta nada.
+- **Sin salto en frío**: la lección se abre por el fragmento relacionado, con la ficha como ancla y el tiempo restante.
+- **Interrupciones**: posición guardada siempre; la siguiente apertura empieza por «Seguías en… · quedan N min».
+  La lectura profunda se reparte entre huecos.
+- **Las fichas no sustituyen a la lectura**: salen de la próxima lección de la ruta; en «Tú» se ve la
+  proporción semanal fichas / lecturas completas.
+
+Métricas: tasa de ascenso (aperturas que llegan al peldaño ≥ 2), lecturas reanudadas y, como freno,
+que el ascenso no suba a costa de menos aperturas.
+
+### 16.4 Razonamiento desde primeros principios
+Para cada libro y, por tandas, cada lección argumentativa: **premisas** (2–3) → **pasos** (2–4) →
+**conclusión** → **supuesto crítico** (si cae, cae todo) → **qué lo refutaría** (opcional).
+Objetivo: aceptar una idea porque se sostiene y es contrastable, no por el prestigio del autor.
+- Peldaño 1 de la escalera; ficha de recuerdo («¿qué premisa sostiene esto?»); en el contraste, dos
+  esquemas lado a lado muestran **en qué premisa** divergen los autores.
+- Reglas: sale del texto de la lección (nada que no esté); «no aplica» en lecciones técnicas,
+  históricas o biográficas; plantilla `razonamiento` en el motor con validación; datos en archivo.
+- Orden: muestra de 20 libros para revisar el formato → 256 libros → lecciones de las rutas activas → resto.
+
+### 16.5 Orden de construcción
+1. Arranque instantáneo. 2. Mazo + peldaños 0–2 + reanudación. 3. Eventos y métricas de la escalera.
+4. Razonamientos (muestra → libros → lecciones). 5. Contraste (enlaces entre lecciones). 6. Tu posición.
 
