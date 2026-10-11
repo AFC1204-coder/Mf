@@ -1,262 +1,266 @@
--- Correcciones de la clave de respuesta (confianza alta). Revisión por modelo, sin comprobar en la web.
--- Cada UPDATE solo se aplica si la clave sigue siendo la original; si algo no coincide, se aborta todo.
+-- Corrige 256 claves de respuesta (revisión con confianza alta; las otras 2 de las 258 ya se aplicaron en correcciones.sql).
+-- Todo o nada: solo cambia una clave si sigue siendo la original; si el recuento no es exacto, aborta.
 do $$ declare n int; begin
-update preguntas set correcta=0 where id='000dfb82-ac2a-4f98-a1c5-c9627c22a772' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 000dfb82-ac2a-4f98-a1c5-c9627c22a772'; end if;
-update preguntas set correcta=1 where id='00d11e1b-1def-4586-97ee-21f2bf4a77de' and correcta=3; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 00d11e1b-1def-4586-97ee-21f2bf4a77de'; end if;
-update preguntas set correcta=0 where id='0210f1f6-4737-45c5-ba07-dedcc57681b5' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 0210f1f6-4737-45c5-ba07-dedcc57681b5'; end if;
-update preguntas set correcta=0 where id='02a8812c-4d71-4a0f-a711-8f7bc9a18c3b' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 02a8812c-4d71-4a0f-a711-8f7bc9a18c3b'; end if;
-update preguntas set correcta=0 where id='03802167-f574-45a0-9a12-d8396c89c274' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 03802167-f574-45a0-9a12-d8396c89c274'; end if;
-update preguntas set correcta=0 where id='04439568-66dc-436a-af9b-c6a8e285d7fc' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 04439568-66dc-436a-af9b-c6a8e285d7fc'; end if;
-update preguntas set correcta=0 where id='05b0a052-37f3-4189-b3f8-25ff3cf64feb' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 05b0a052-37f3-4189-b3f8-25ff3cf64feb'; end if;
-update preguntas set correcta=0 where id='0606573a-c303-47bf-9058-321cd66203e2' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 0606573a-c303-47bf-9058-321cd66203e2'; end if;
-update preguntas set correcta=0 where id='062a1e5e-df3c-48ee-a9cb-21621ab04afa' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 062a1e5e-df3c-48ee-a9cb-21621ab04afa'; end if;
-update preguntas set correcta=0 where id='06b03f5e-4646-4000-97f4-617217086e72' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 06b03f5e-4646-4000-97f4-617217086e72'; end if;
-update preguntas set correcta=2 where id='080009d5-2e6b-4522-aaf0-72577e196af6' and correcta=3; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 080009d5-2e6b-4522-aaf0-72577e196af6'; end if;
-update preguntas set correcta=0 where id='09a703f7-7cfd-4336-99d1-6091be531bf7' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 09a703f7-7cfd-4336-99d1-6091be531bf7'; end if;
-update preguntas set correcta=0 where id='0a01a51c-f382-4e1a-8a42-7fec04f952e9' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 0a01a51c-f382-4e1a-8a42-7fec04f952e9'; end if;
-update preguntas set correcta=1 where id='3bb02819-8e2b-499e-9150-9bf9767a54bc' and correcta=3; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 3bb02819-8e2b-499e-9150-9bf9767a54bc'; end if;
-update preguntas set correcta=0 where id='3bf24fab-1f56-4e33-8d41-02489b0da393' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 3bf24fab-1f56-4e33-8d41-02489b0da393'; end if;
-update preguntas set correcta=0 where id='3c0462bc-03ff-4906-a387-4ccf3e7836e1' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 3c0462bc-03ff-4906-a387-4ccf3e7836e1'; end if;
-update preguntas set correcta=0 where id='3cdbe5ee-96e1-47a1-8465-b83bc96d06fa' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 3cdbe5ee-96e1-47a1-8465-b83bc96d06fa'; end if;
-update preguntas set correcta=0 where id='3de2114b-545b-4613-bcea-a1332a7fd031' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 3de2114b-545b-4613-bcea-a1332a7fd031'; end if;
-update preguntas set correcta=0 where id='3e01e2cf-903a-44a8-9438-3605298116e4' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 3e01e2cf-903a-44a8-9438-3605298116e4'; end if;
-update preguntas set correcta=0 where id='4002056f-54ea-4742-9f41-1dcdc7c12277' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 4002056f-54ea-4742-9f41-1dcdc7c12277'; end if;
-update preguntas set correcta=0 where id='4042af9d-cb62-4c9c-9b0b-a25107f120a5' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 4042af9d-cb62-4c9c-9b0b-a25107f120a5'; end if;
-update preguntas set correcta=1 where id='4118020a-528b-48ad-84de-07b8413ad96b' and correcta=0; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 4118020a-528b-48ad-84de-07b8413ad96b'; end if;
-update preguntas set correcta=0 where id='435d11cc-50f3-476b-9113-cc4a0eca273f' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 435d11cc-50f3-476b-9113-cc4a0eca273f'; end if;
-update preguntas set correcta=0 where id='476c47cf-f940-457e-af2f-26099ec34dde' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 476c47cf-f940-457e-af2f-26099ec34dde'; end if;
-update preguntas set correcta=0 where id='47cad194-cd29-4c4d-9afd-3750955c01cd' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 47cad194-cd29-4c4d-9afd-3750955c01cd'; end if;
-update preguntas set correcta=0 where id='482ae761-38e8-4b5c-879a-9c03857b51bf' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 482ae761-38e8-4b5c-879a-9c03857b51bf'; end if;
-update preguntas set correcta=0 where id='4ab842ca-7276-4b4c-acc0-5414c9d7709f' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 4ab842ca-7276-4b4c-acc0-5414c9d7709f'; end if;
-update preguntas set correcta=0 where id='4bdab5a0-7aec-485d-bd8a-246547913703' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 4bdab5a0-7aec-485d-bd8a-246547913703'; end if;
-update preguntas set correcta=1 where id='4c6079b7-418b-45a9-9a63-7d44d1a7bbae' and correcta=2; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 4c6079b7-418b-45a9-9a63-7d44d1a7bbae'; end if;
-update preguntas set correcta=1 where id='4e0f679b-9306-47c9-8ecb-3eb0e5090a91' and correcta=2; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 4e0f679b-9306-47c9-8ecb-3eb0e5090a91'; end if;
-update preguntas set correcta=0 where id='4f04a17a-2415-4967-a296-9ff17a4ce7ca' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 4f04a17a-2415-4967-a296-9ff17a4ce7ca'; end if;
-update preguntas set correcta=0 where id='4fa76233-b03b-45a7-b62a-969c7b9cdc01' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 4fa76233-b03b-45a7-b62a-969c7b9cdc01'; end if;
-update preguntas set correcta=0 where id='50b4a923-7a4c-462a-a5b5-3cfd8db5c46b' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 50b4a923-7a4c-462a-a5b5-3cfd8db5c46b'; end if;
-update preguntas set correcta=0 where id='518a4c41-0967-49fd-86a7-4fe2663bf50b' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 518a4c41-0967-49fd-86a7-4fe2663bf50b'; end if;
-update preguntas set correcta=0 where id='52019d20-03c7-49b5-9273-5b94ce1e58a1' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 52019d20-03c7-49b5-9273-5b94ce1e58a1'; end if;
-update preguntas set correcta=0 where id='5218d014-0765-405f-a411-47ff020a17e5' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 5218d014-0765-405f-a411-47ff020a17e5'; end if;
-update preguntas set correcta=0 where id='523c3f3b-0279-42ea-b301-357f9f3d8636' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 523c3f3b-0279-42ea-b301-357f9f3d8636'; end if;
-update preguntas set correcta=0 where id='54698ae1-f321-4444-9af9-a352a2b4e6f2' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 54698ae1-f321-4444-9af9-a352a2b4e6f2'; end if;
-update preguntas set correcta=0 where id='55c4a15b-082e-4e09-ac8a-cf99494412a7' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 55c4a15b-082e-4e09-ac8a-cf99494412a7'; end if;
-update preguntas set correcta=0 where id='5954e6b4-cabd-4fa8-b5d3-1da91a7179ae' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 5954e6b4-cabd-4fa8-b5d3-1da91a7179ae'; end if;
-update preguntas set correcta=0 where id='59af5087-2755-4def-8524-7133496f3a59' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 59af5087-2755-4def-8524-7133496f3a59'; end if;
-update preguntas set correcta=0 where id='5a7b7064-cd00-4b7c-a26b-261c7d636ee9' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 5a7b7064-cd00-4b7c-a26b-261c7d636ee9'; end if;
-update preguntas set correcta=0 where id='5d51f660-9cbd-4f68-a239-bee824d43a69' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 5d51f660-9cbd-4f68-a239-bee824d43a69'; end if;
-update preguntas set correcta=0 where id='5d68c713-17e5-4f42-b453-e4cb7d457317' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 5d68c713-17e5-4f42-b453-e4cb7d457317'; end if;
-update preguntas set correcta=0 where id='5d9c7fad-7fcb-4ff7-a8d5-81125f4d530f' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 5d9c7fad-7fcb-4ff7-a8d5-81125f4d530f'; end if;
-update preguntas set correcta=0 where id='5e370f4b-955b-4add-b10a-ac68733568d8' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 5e370f4b-955b-4add-b10a-ac68733568d8'; end if;
-update preguntas set correcta=0 where id='5ed89541-738f-469c-a319-dd1164575011' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 5ed89541-738f-469c-a319-dd1164575011'; end if;
-update preguntas set correcta=0 where id='5f923ee8-2588-4b59-a12f-cb13097bad65' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 5f923ee8-2588-4b59-a12f-cb13097bad65'; end if;
-update preguntas set correcta=0 where id='60329ff0-b799-4db2-89c4-b38c55718729' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 60329ff0-b799-4db2-89c4-b38c55718729'; end if;
-update preguntas set correcta=0 where id='61886e95-d190-4aec-bd9a-2d582e92d359' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 61886e95-d190-4aec-bd9a-2d582e92d359'; end if;
-update preguntas set correcta=1 where id='6217b284-5f0c-40ec-b20f-a7d37701cd6a' and correcta=2; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 6217b284-5f0c-40ec-b20f-a7d37701cd6a'; end if;
-update preguntas set correcta=1 where id='621b1133-5349-46f8-a260-e81e3705cbe8' and correcta=3; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 621b1133-5349-46f8-a260-e81e3705cbe8'; end if;
-update preguntas set correcta=0 where id='63a9e23a-9c63-4bd5-ba1f-222a88eff4a2' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 63a9e23a-9c63-4bd5-ba1f-222a88eff4a2'; end if;
-update preguntas set correcta=1 where id='643248ef-56e1-4d1c-ac6e-a15d0c25a62f' and correcta=3; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 643248ef-56e1-4d1c-ac6e-a15d0c25a62f'; end if;
-update preguntas set correcta=1 where id='67e4162a-1e5a-41c6-89e2-7b142207e544' and correcta=2; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 67e4162a-1e5a-41c6-89e2-7b142207e544'; end if;
-update preguntas set correcta=0 where id='6a4f43ab-e629-4507-89cf-ea0918a2d782' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 6a4f43ab-e629-4507-89cf-ea0918a2d782'; end if;
-update preguntas set correcta=0 where id='6aa65db0-b462-4ed8-9b4b-08ccac19cdb2' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 6aa65db0-b462-4ed8-9b4b-08ccac19cdb2'; end if;
-update preguntas set correcta=1 where id='6beaf959-e63e-48f7-846e-902f5ef4f080' and correcta=0; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 6beaf959-e63e-48f7-846e-902f5ef4f080'; end if;
-update preguntas set correcta=1 where id='6c7d990c-cb4b-4060-aa58-6d1dfe50673b' and correcta=3; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 6c7d990c-cb4b-4060-aa58-6d1dfe50673b'; end if;
-update preguntas set correcta=0 where id='6d4c7c5b-ff31-44af-b922-91bba7ca6b61' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 6d4c7c5b-ff31-44af-b922-91bba7ca6b61'; end if;
-update preguntas set correcta=0 where id='6d4e63e8-9e8f-41ad-901c-60bc43e9ea94' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 6d4e63e8-9e8f-41ad-901c-60bc43e9ea94'; end if;
-update preguntas set correcta=0 where id='6eb223b6-f80f-4621-b661-8596eb45292f' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 6eb223b6-f80f-4621-b661-8596eb45292f'; end if;
-update preguntas set correcta=1 where id='70285309-3229-4a63-8ab8-4f8da76c69e8' and correcta=2; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 70285309-3229-4a63-8ab8-4f8da76c69e8'; end if;
-update preguntas set correcta=0 where id='7062e7e1-b1e0-435c-b574-48dc358921bf' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 7062e7e1-b1e0-435c-b574-48dc358921bf'; end if;
-update preguntas set correcta=0 where id='71e76998-5fda-4678-b935-38a629b77f0b' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 71e76998-5fda-4678-b935-38a629b77f0b'; end if;
-update preguntas set correcta=0 where id='73266400-0628-4775-87c6-bf5d842d20b0' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 73266400-0628-4775-87c6-bf5d842d20b0'; end if;
-update preguntas set correcta=0 where id='74139659-7d62-4c79-b225-a23692db89e5' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 74139659-7d62-4c79-b225-a23692db89e5'; end if;
-update preguntas set correcta=0 where id='746edc2c-4a49-4559-9622-b68fef6e42da' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 746edc2c-4a49-4559-9622-b68fef6e42da'; end if;
-update preguntas set correcta=0 where id='75615abc-3884-432d-8a46-11f68d723a4e' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 75615abc-3884-432d-8a46-11f68d723a4e'; end if;
-update preguntas set correcta=0 where id='76412255-efa3-496a-9def-9ab5142b2a6b' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 76412255-efa3-496a-9def-9ab5142b2a6b'; end if;
-update preguntas set correcta=0 where id='764dc657-c693-4397-9ff5-180818c69885' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 764dc657-c693-4397-9ff5-180818c69885'; end if;
-update preguntas set correcta=0 where id='7682e67a-c117-44c5-a9cc-018dfe47a320' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 7682e67a-c117-44c5-a9cc-018dfe47a320'; end if;
-update preguntas set correcta=0 where id='768b991e-0c19-4032-855d-6528ecddab3d' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 768b991e-0c19-4032-855d-6528ecddab3d'; end if;
-update preguntas set correcta=0 where id='76a1a000-f53f-419b-943b-47a250fb52d8' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 76a1a000-f53f-419b-943b-47a250fb52d8'; end if;
-update preguntas set correcta=0 where id='77312251-df9e-41c2-9cf6-18f00b81df19' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 77312251-df9e-41c2-9cf6-18f00b81df19'; end if;
-update preguntas set correcta=2 where id='7856b84f-9f5a-4260-8a60-64164de1fde2' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 7856b84f-9f5a-4260-8a60-64164de1fde2'; end if;
-update preguntas set correcta=0 where id='7a78caf4-8e3a-4e0a-8429-8e8105ed015a' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 7a78caf4-8e3a-4e0a-8429-8e8105ed015a'; end if;
-update preguntas set correcta=3 where id='7aef4b24-7e93-4b6d-8ba7-2384f535b7bc' and correcta=2; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 7aef4b24-7e93-4b6d-8ba7-2384f535b7bc'; end if;
-update preguntas set correcta=0 where id='7d35334e-77a0-4539-91ff-cbcd946390bf' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 7d35334e-77a0-4539-91ff-cbcd946390bf'; end if;
-update preguntas set correcta=1 where id='7d902e10-8ef7-4a20-8753-1ccf5fefef95' and correcta=3; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 7d902e10-8ef7-4a20-8753-1ccf5fefef95'; end if;
-update preguntas set correcta=1 where id='7e9faeac-0da9-403d-bc02-cfa38de1cc6f' and correcta=0; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 7e9faeac-0da9-403d-bc02-cfa38de1cc6f'; end if;
-update preguntas set correcta=0 where id='7eefb4c2-ddb0-4bdd-b1ae-45b0741a4974' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 7eefb4c2-ddb0-4bdd-b1ae-45b0741a4974'; end if;
-update preguntas set correcta=1 where id='7fdb7a2e-38e2-4e58-988b-cd89e635bb2b' and correcta=0; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 7fdb7a2e-38e2-4e58-988b-cd89e635bb2b'; end if;
-update preguntas set correcta=0 where id='82696b0d-3772-454b-8a94-47d7d25a76b9' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 82696b0d-3772-454b-8a94-47d7d25a76b9'; end if;
-update preguntas set correcta=0 where id='82d347de-1141-4aae-a22c-2656083193d3' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 82d347de-1141-4aae-a22c-2656083193d3'; end if;
-update preguntas set correcta=0 where id='83a645ee-01e0-49cf-8010-65b5901e8cdd' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 83a645ee-01e0-49cf-8010-65b5901e8cdd'; end if;
-update preguntas set correcta=0 where id='8475b09b-507d-4f33-a781-5df7f9739804' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 8475b09b-507d-4f33-a781-5df7f9739804'; end if;
-update preguntas set correcta=1 where id='851dced8-13e7-40aa-951b-75aedc905e9b' and correcta=3; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 851dced8-13e7-40aa-951b-75aedc905e9b'; end if;
-update preguntas set correcta=0 where id='8556ad51-a3db-4ad3-9193-d1e56d3a10fb' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 8556ad51-a3db-4ad3-9193-d1e56d3a10fb'; end if;
-update preguntas set correcta=0 where id='85fb6a39-c7cc-4625-bcf1-e3a4b8fe1309' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 85fb6a39-c7cc-4625-bcf1-e3a4b8fe1309'; end if;
-update preguntas set correcta=1 where id='875a8df5-b340-4a56-8be8-e639a568f3fd' and correcta=2; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 875a8df5-b340-4a56-8be8-e639a568f3fd'; end if;
-update preguntas set correcta=0 where id='87da9af8-6c18-49bd-a22e-2f28f926b14e' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 87da9af8-6c18-49bd-a22e-2f28f926b14e'; end if;
-update preguntas set correcta=0 where id='88602595-a833-4bb6-8c8d-c21e1b3052e7' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 88602595-a833-4bb6-8c8d-c21e1b3052e7'; end if;
-update preguntas set correcta=0 where id='88f5b845-5718-49d4-ba18-27a89c4f8adc' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 88f5b845-5718-49d4-ba18-27a89c4f8adc'; end if;
-update preguntas set correcta=0 where id='895c5eb0-023c-4c9a-8cfa-21fc62320aa0' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 895c5eb0-023c-4c9a-8cfa-21fc62320aa0'; end if;
-update preguntas set correcta=0 where id='8cc9a879-85ac-4460-92b5-a525f3540919' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 8cc9a879-85ac-4460-92b5-a525f3540919'; end if;
-update preguntas set correcta=0 where id='8e183a5d-6c1b-4912-8da6-bead61cc8836' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 8e183a5d-6c1b-4912-8da6-bead61cc8836'; end if;
-update preguntas set correcta=0 where id='8e1fd5b4-2748-40b3-8ed8-3ea54869a7c5' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 8e1fd5b4-2748-40b3-8ed8-3ea54869a7c5'; end if;
-update preguntas set correcta=0 where id='8f2e64bd-93e4-4210-95a2-fcc548caf51a' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 8f2e64bd-93e4-4210-95a2-fcc548caf51a'; end if;
-update preguntas set correcta=0 where id='90392de7-45f6-4e61-97c1-41abf5009b17' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 90392de7-45f6-4e61-97c1-41abf5009b17'; end if;
-update preguntas set correcta=1 where id='91abb394-e48c-4ba5-b849-3e90945ffaba' and correcta=3; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 91abb394-e48c-4ba5-b849-3e90945ffaba'; end if;
-update preguntas set correcta=0 where id='928ffe8c-2a98-4792-ab2a-fd89317e45e2' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 928ffe8c-2a98-4792-ab2a-fd89317e45e2'; end if;
-update preguntas set correcta=0 where id='931ed4ed-3156-4b07-9667-b317ecbeb133' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 931ed4ed-3156-4b07-9667-b317ecbeb133'; end if;
-update preguntas set correcta=0 where id='94ae01e3-e181-4486-b33a-e8619b817ca2' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 94ae01e3-e181-4486-b33a-e8619b817ca2'; end if;
-update preguntas set correcta=0 where id='954b6f8c-6f8b-447e-9d1e-b1d456ee08f7' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 954b6f8c-6f8b-447e-9d1e-b1d456ee08f7'; end if;
-update preguntas set correcta=0 where id='0b507b29-be89-43bf-81bb-ad1db1c453d1' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 0b507b29-be89-43bf-81bb-ad1db1c453d1'; end if;
-update preguntas set correcta=0 where id='0c3616c7-318d-4da8-b131-724704680349' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 0c3616c7-318d-4da8-b131-724704680349'; end if;
-update preguntas set correcta=0 where id='0c508814-706f-4248-9607-059982b84dd1' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 0c508814-706f-4248-9607-059982b84dd1'; end if;
-update preguntas set correcta=0 where id='0ef500fd-a0c3-4221-b746-05a29b52f888' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 0ef500fd-a0c3-4221-b746-05a29b52f888'; end if;
-update preguntas set correcta=0 where id='0efedcf3-ef57-4a5b-a9a7-9c5afbdd63f1' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 0efedcf3-ef57-4a5b-a9a7-9c5afbdd63f1'; end if;
-update preguntas set correcta=0 where id='10cea335-ced6-4929-a2bd-f20e68d71af3' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 10cea335-ced6-4929-a2bd-f20e68d71af3'; end if;
-update preguntas set correcta=0 where id='1172ef8f-6f64-42a8-a967-313fd8b55eba' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 1172ef8f-6f64-42a8-a967-313fd8b55eba'; end if;
-update preguntas set correcta=0 where id='1305017c-1078-4026-96f7-9a5e2e9f68bf' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 1305017c-1078-4026-96f7-9a5e2e9f68bf'; end if;
-update preguntas set correcta=0 where id='14c8635e-11b4-4348-8d6d-be9cb4ad8f5a' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 14c8635e-11b4-4348-8d6d-be9cb4ad8f5a'; end if;
-update preguntas set correcta=0 where id='1506b4cc-6ca9-4c7a-a7c0-2b551f0b9614' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 1506b4cc-6ca9-4c7a-a7c0-2b551f0b9614'; end if;
-update preguntas set correcta=0 where id='158ab02b-9be1-4e99-ad7b-13bb3f24cd93' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 158ab02b-9be1-4e99-ad7b-13bb3f24cd93'; end if;
-update preguntas set correcta=0 where id='1783a579-1187-4dd7-bc24-d644d1bc9f74' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 1783a579-1187-4dd7-bc24-d644d1bc9f74'; end if;
-update preguntas set correcta=0 where id='187ed3eb-90b5-47e4-a60c-05b4895eea01' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 187ed3eb-90b5-47e4-a60c-05b4895eea01'; end if;
-update preguntas set correcta=0 where id='19b58a60-c84f-42ae-b8ee-7ee2c821e666' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 19b58a60-c84f-42ae-b8ee-7ee2c821e666'; end if;
-update preguntas set correcta=0 where id='1afc44b3-77d1-42e8-bc2b-6b6f9f462905' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 1afc44b3-77d1-42e8-bc2b-6b6f9f462905'; end if;
-update preguntas set correcta=0 where id='1c718bb8-3667-46e1-a658-27a874e8ba87' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 1c718bb8-3667-46e1-a658-27a874e8ba87'; end if;
-update preguntas set correcta=0 where id='975413e2-71b8-4f5a-a450-f4e07b21e388' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 975413e2-71b8-4f5a-a450-f4e07b21e388'; end if;
-update preguntas set correcta=0 where id='97cd3105-b918-4ba9-972b-73573c0efe09' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 97cd3105-b918-4ba9-972b-73573c0efe09'; end if;
-update preguntas set correcta=0 where id='98b55b41-f087-4201-9668-226b6277949e' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 98b55b41-f087-4201-9668-226b6277949e'; end if;
-update preguntas set correcta=3 where id='9afc2189-de7e-4a49-b0b8-1b4267976237' and correcta=2; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 9afc2189-de7e-4a49-b0b8-1b4267976237'; end if;
-update preguntas set correcta=0 where id='9bc6cacb-8e44-45e3-8b67-2b80793ad871' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 9bc6cacb-8e44-45e3-8b67-2b80793ad871'; end if;
-update preguntas set correcta=0 where id='9c099db3-9fc6-4eda-b69c-5b59ef42c723' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 9c099db3-9fc6-4eda-b69c-5b59ef42c723'; end if;
-update preguntas set correcta=0 where id='9d07a83e-dbb2-4e0c-a461-d68a709d674d' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 9d07a83e-dbb2-4e0c-a461-d68a709d674d'; end if;
-update preguntas set correcta=1 where id='9e0f4bf7-21cb-424e-8938-f1a71bf4c677' and correcta=0; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 9e0f4bf7-21cb-424e-8938-f1a71bf4c677'; end if;
-update preguntas set correcta=1 where id='a0224ee7-8242-4935-866e-f643b1ab972b' and correcta=3; get diagnostics n=row_count; if n<>1 then raise exception 'clave: a0224ee7-8242-4935-866e-f643b1ab972b'; end if;
-update preguntas set correcta=0 where id='a0641252-b4af-4e6c-b6a8-7e36e267ff4a' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: a0641252-b4af-4e6c-b6a8-7e36e267ff4a'; end if;
-update preguntas set correcta=0 where id='a252ee06-7ba4-465e-834b-faa2059f5876' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: a252ee06-7ba4-465e-834b-faa2059f5876'; end if;
-update preguntas set correcta=3 where id='a2816000-eb64-41a9-bd3a-2051eee77a9f' and correcta=2; get diagnostics n=row_count; if n<>1 then raise exception 'clave: a2816000-eb64-41a9-bd3a-2051eee77a9f'; end if;
-update preguntas set correcta=0 where id='a2963882-886b-4649-a0ee-3ea30b5e4521' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: a2963882-886b-4649-a0ee-3ea30b5e4521'; end if;
-update preguntas set correcta=0 where id='a2bad20b-93d2-4741-b1e5-3a73cd2ad0aa' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: a2bad20b-93d2-4741-b1e5-3a73cd2ad0aa'; end if;
-update preguntas set correcta=0 where id='a4ed6087-e063-4735-8dd8-5ec68eb10842' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: a4ed6087-e063-4735-8dd8-5ec68eb10842'; end if;
-update preguntas set correcta=0 where id='a4f48fb7-e522-48f3-9f8c-4cfe20c1c99a' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: a4f48fb7-e522-48f3-9f8c-4cfe20c1c99a'; end if;
-update preguntas set correcta=0 where id='a5a5e090-a35a-4362-8db7-3fc056311835' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: a5a5e090-a35a-4362-8db7-3fc056311835'; end if;
-update preguntas set correcta=1 where id='a6b5e95f-fd90-4414-9bda-b53c8c18fe96' and correcta=3; get diagnostics n=row_count; if n<>1 then raise exception 'clave: a6b5e95f-fd90-4414-9bda-b53c8c18fe96'; end if;
-update preguntas set correcta=0 where id='a6df404b-2bd0-4304-95b9-0b3b05d64d81' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: a6df404b-2bd0-4304-95b9-0b3b05d64d81'; end if;
-update preguntas set correcta=1 where id='a7e19e3c-0aba-481c-97d6-4f4323bb046e' and correcta=3; get diagnostics n=row_count; if n<>1 then raise exception 'clave: a7e19e3c-0aba-481c-97d6-4f4323bb046e'; end if;
-update preguntas set correcta=0 where id='a80aef7e-2190-42e3-b2b5-3017aa8f363f' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: a80aef7e-2190-42e3-b2b5-3017aa8f363f'; end if;
-update preguntas set correcta=0 where id='aea791ce-3229-466b-9f38-992557fd1c1c' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: aea791ce-3229-466b-9f38-992557fd1c1c'; end if;
-update preguntas set correcta=0 where id='af506f06-aac3-4015-86fa-9af425a8eff2' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: af506f06-aac3-4015-86fa-9af425a8eff2'; end if;
-update preguntas set correcta=3 where id='b01457e2-1b4d-474b-ae6c-3512d2d1a0a3' and correcta=2; get diagnostics n=row_count; if n<>1 then raise exception 'clave: b01457e2-1b4d-474b-ae6c-3512d2d1a0a3'; end if;
-update preguntas set correcta=0 where id='b0edfbdd-379e-4923-887a-7a722f4f4927' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: b0edfbdd-379e-4923-887a-7a722f4f4927'; end if;
-update preguntas set correcta=0 where id='b23a0f7d-9a2a-4fc4-ab32-c93a242c92ce' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: b23a0f7d-9a2a-4fc4-ab32-c93a242c92ce'; end if;
-update preguntas set correcta=0 where id='b3555b91-f717-4475-9b4f-a21b0e25c776' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: b3555b91-f717-4475-9b4f-a21b0e25c776'; end if;
-update preguntas set correcta=0 where id='b3748861-785d-465b-bae0-c8720c0f5bd4' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: b3748861-785d-465b-bae0-c8720c0f5bd4'; end if;
-update preguntas set correcta=2 where id='b407d4b9-0fc3-45aa-be4c-c4e6ca3add84' and correcta=3; get diagnostics n=row_count; if n<>1 then raise exception 'clave: b407d4b9-0fc3-45aa-be4c-c4e6ca3add84'; end if;
-update preguntas set correcta=0 where id='b62e6307-4f4a-4a15-9974-bcfb68e5f415' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: b62e6307-4f4a-4a15-9974-bcfb68e5f415'; end if;
-update preguntas set correcta=0 where id='b7f57511-509d-4b3e-8d87-23ca8bc262a1' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: b7f57511-509d-4b3e-8d87-23ca8bc262a1'; end if;
-update preguntas set correcta=2 where id='b8cd3f05-0c14-4f09-9394-cae5c52f0c11' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: b8cd3f05-0c14-4f09-9394-cae5c52f0c11'; end if;
-update preguntas set correcta=0 where id='ba334069-d74c-447e-8ff2-a3f4339a25ec' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: ba334069-d74c-447e-8ff2-a3f4339a25ec'; end if;
-update preguntas set correcta=0 where id='bc24bdc7-dcc4-47aa-90ea-4715a9040858' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: bc24bdc7-dcc4-47aa-90ea-4715a9040858'; end if;
-update preguntas set correcta=1 where id='bcc279bd-de93-4d39-9422-3d7197543914' and correcta=2; get diagnostics n=row_count; if n<>1 then raise exception 'clave: bcc279bd-de93-4d39-9422-3d7197543914'; end if;
-update preguntas set correcta=0 where id='bd528036-3f1b-4995-871b-a9bf9ea05de3' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: bd528036-3f1b-4995-871b-a9bf9ea05de3'; end if;
-update preguntas set correcta=2 where id='be2394a2-a744-419d-9c53-999e15e9ad72' and correcta=3; get diagnostics n=row_count; if n<>1 then raise exception 'clave: be2394a2-a744-419d-9c53-999e15e9ad72'; end if;
-update preguntas set correcta=0 where id='c1b30a36-4bd6-42dc-a047-98bc5bcc7b3b' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: c1b30a36-4bd6-42dc-a047-98bc5bcc7b3b'; end if;
-update preguntas set correcta=0 where id='c37db665-c2c9-4d9a-90fd-37cb6e77858d' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: c37db665-c2c9-4d9a-90fd-37cb6e77858d'; end if;
-update preguntas set correcta=0 where id='c39abce3-ee2b-49c4-9bc6-a1000f0d74ec' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: c39abce3-ee2b-49c4-9bc6-a1000f0d74ec'; end if;
-update preguntas set correcta=0 where id='c47de9c5-185b-4c6d-aad0-892b45971dca' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: c47de9c5-185b-4c6d-aad0-892b45971dca'; end if;
-update preguntas set correcta=0 where id='c48638c8-656b-4259-88ab-f51fa44bbf10' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: c48638c8-656b-4259-88ab-f51fa44bbf10'; end if;
-update preguntas set correcta=0 where id='c4bb164f-4195-4d02-8dce-23e4e1daf56f' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: c4bb164f-4195-4d02-8dce-23e4e1daf56f'; end if;
-update preguntas set correcta=0 where id='c4c5eb45-2603-4393-96e7-117053d1b6ea' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: c4c5eb45-2603-4393-96e7-117053d1b6ea'; end if;
-update preguntas set correcta=1 where id='c5af175e-6f80-4156-bb48-b1bee26b92e7' and correcta=3; get diagnostics n=row_count; if n<>1 then raise exception 'clave: c5af175e-6f80-4156-bb48-b1bee26b92e7'; end if;
-update preguntas set correcta=1 where id='c5b2265d-22ab-4ccb-bfbd-eefb6b5afdd7' and correcta=2; get diagnostics n=row_count; if n<>1 then raise exception 'clave: c5b2265d-22ab-4ccb-bfbd-eefb6b5afdd7'; end if;
-update preguntas set correcta=0 where id='c6b446ee-b0b4-4312-9a4d-0b891f85a6ac' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: c6b446ee-b0b4-4312-9a4d-0b891f85a6ac'; end if;
-update preguntas set correcta=0 where id='c7252eb6-c1df-4a7e-b535-6a07dd401643' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: c7252eb6-c1df-4a7e-b535-6a07dd401643'; end if;
-update preguntas set correcta=0 where id='c80ad277-1a38-4855-bc95-1a38854eb269' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: c80ad277-1a38-4855-bc95-1a38854eb269'; end if;
-update preguntas set correcta=1 where id='c89238e7-e3a5-487c-82d0-e80eb4e175b3' and correcta=3; get diagnostics n=row_count; if n<>1 then raise exception 'clave: c89238e7-e3a5-487c-82d0-e80eb4e175b3'; end if;
-update preguntas set correcta=1 where id='cb12386c-0557-496f-bc2a-240962523270' and correcta=3; get diagnostics n=row_count; if n<>1 then raise exception 'clave: cb12386c-0557-496f-bc2a-240962523270'; end if;
-update preguntas set correcta=0 where id='cc1d8460-c715-442e-9d34-b19024b44cb0' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: cc1d8460-c715-442e-9d34-b19024b44cb0'; end if;
-update preguntas set correcta=0 where id='cc4980b2-4a1d-4381-a792-e40b7c6b29cc' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: cc4980b2-4a1d-4381-a792-e40b7c6b29cc'; end if;
-update preguntas set correcta=2 where id='cc4c5d6b-904e-46d6-b18b-f798c7813030' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: cc4c5d6b-904e-46d6-b18b-f798c7813030'; end if;
-update preguntas set correcta=0 where id='cdc61136-9ff5-4d69-a65b-3985f95170b1' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: cdc61136-9ff5-4d69-a65b-3985f95170b1'; end if;
-update preguntas set correcta=1 where id='ce77600d-9c2f-4de8-a5f6-38ae2a010544' and correcta=0; get diagnostics n=row_count; if n<>1 then raise exception 'clave: ce77600d-9c2f-4de8-a5f6-38ae2a010544'; end if;
-update preguntas set correcta=0 where id='d12b1884-dfc5-467b-9804-9d08ffd4e645' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: d12b1884-dfc5-467b-9804-9d08ffd4e645'; end if;
-update preguntas set correcta=2 where id='d252d3c3-557c-4c30-b347-48a899b11b28' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: d252d3c3-557c-4c30-b347-48a899b11b28'; end if;
-update preguntas set correcta=0 where id='d26b766b-4377-47ce-ba1f-0a763239000e' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: d26b766b-4377-47ce-ba1f-0a763239000e'; end if;
-update preguntas set correcta=0 where id='d2820b68-866d-4608-bf23-2b965719481b' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: d2820b68-866d-4608-bf23-2b965719481b'; end if;
-update preguntas set correcta=0 where id='d28d5750-e6aa-48e1-9d1a-5c83cc2fb0c1' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: d28d5750-e6aa-48e1-9d1a-5c83cc2fb0c1'; end if;
-update preguntas set correcta=0 where id='d2f70636-8e1e-43e1-9de7-bee6b8c61e9f' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: d2f70636-8e1e-43e1-9de7-bee6b8c61e9f'; end if;
-update preguntas set correcta=0 where id='d466b142-113e-4f27-9264-6b4814683be4' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: d466b142-113e-4f27-9264-6b4814683be4'; end if;
-update preguntas set correcta=0 where id='d5a87862-fa53-4249-8ab1-083d4ea23dc4' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: d5a87862-fa53-4249-8ab1-083d4ea23dc4'; end if;
-update preguntas set correcta=1 where id='d6183579-10b7-47dd-b20b-c264d7489f35' and correcta=2; get diagnostics n=row_count; if n<>1 then raise exception 'clave: d6183579-10b7-47dd-b20b-c264d7489f35'; end if;
-update preguntas set correcta=0 where id='d624fe4c-6cd4-4c9f-bcf5-bcc41380f77a' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: d624fe4c-6cd4-4c9f-bcf5-bcc41380f77a'; end if;
-update preguntas set correcta=1 where id='d6d6ba9c-989f-4b93-adc9-7229778a2048' and correcta=2; get diagnostics n=row_count; if n<>1 then raise exception 'clave: d6d6ba9c-989f-4b93-adc9-7229778a2048'; end if;
-update preguntas set correcta=0 where id='d737fa46-c491-4813-b698-6527f4f48c63' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: d737fa46-c491-4813-b698-6527f4f48c63'; end if;
-update preguntas set correcta=0 where id='d7e8d425-da9c-4a42-9190-56778117dbb6' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: d7e8d425-da9c-4a42-9190-56778117dbb6'; end if;
-update preguntas set correcta=0 where id='dba76d16-6616-4348-bf23-e6d5545f9c91' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: dba76d16-6616-4348-bf23-e6d5545f9c91'; end if;
-update preguntas set correcta=0 where id='dbf04394-9ccd-4850-988a-922ee9fcc344' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: dbf04394-9ccd-4850-988a-922ee9fcc344'; end if;
-update preguntas set correcta=0 where id='dc0eed7e-a43b-42bb-b5dd-f157f069b4ae' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: dc0eed7e-a43b-42bb-b5dd-f157f069b4ae'; end if;
-update preguntas set correcta=1 where id='de98f591-10ca-4408-815b-e25ba8cdc92d' and correcta=2; get diagnostics n=row_count; if n<>1 then raise exception 'clave: de98f591-10ca-4408-815b-e25ba8cdc92d'; end if;
-update preguntas set correcta=1 where id='e00d68dc-8ac9-45c5-94d8-82385818e793' and correcta=3; get diagnostics n=row_count; if n<>1 then raise exception 'clave: e00d68dc-8ac9-45c5-94d8-82385818e793'; end if;
-update preguntas set correcta=0 where id='e1594397-a2c1-4989-8881-268bc079b794' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: e1594397-a2c1-4989-8881-268bc079b794'; end if;
-update preguntas set correcta=0 where id='e1b5f3db-3e2b-4870-b8c0-a42129984b11' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: e1b5f3db-3e2b-4870-b8c0-a42129984b11'; end if;
-update preguntas set correcta=0 where id='e2475c89-5814-45ea-976a-31e342489d19' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: e2475c89-5814-45ea-976a-31e342489d19'; end if;
-update preguntas set correcta=0 where id='e2a4df27-e080-4533-955a-0fc676a3e515' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: e2a4df27-e080-4533-955a-0fc676a3e515'; end if;
-update preguntas set correcta=0 where id='e2f9c67e-147a-41fe-b641-05c010e47d3e' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: e2f9c67e-147a-41fe-b641-05c010e47d3e'; end if;
-update preguntas set correcta=1 where id='e40864e6-a043-41aa-a3b9-3eaddca172d2' and correcta=3; get diagnostics n=row_count; if n<>1 then raise exception 'clave: e40864e6-a043-41aa-a3b9-3eaddca172d2'; end if;
-update preguntas set correcta=1 where id='e68190b5-fdb6-4a61-ac1e-23f79bdecfe4' and correcta=0; get diagnostics n=row_count; if n<>1 then raise exception 'clave: e68190b5-fdb6-4a61-ac1e-23f79bdecfe4'; end if;
-update preguntas set correcta=0 where id='e6f493d4-a05b-4d69-9435-1ca0e6b979ba' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: e6f493d4-a05b-4d69-9435-1ca0e6b979ba'; end if;
-update preguntas set correcta=0 where id='e8c2dc32-ffce-47ef-be7c-d5063a81e762' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: e8c2dc32-ffce-47ef-be7c-d5063a81e762'; end if;
-update preguntas set correcta=1 where id='ebaca941-ce96-49ca-8f75-1b5426670ca3' and correcta=3; get diagnostics n=row_count; if n<>1 then raise exception 'clave: ebaca941-ce96-49ca-8f75-1b5426670ca3'; end if;
-update preguntas set correcta=0 where id='ec376702-6bb8-4b72-9280-3dc9768817fe' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: ec376702-6bb8-4b72-9280-3dc9768817fe'; end if;
-update preguntas set correcta=0 where id='ec91b4a5-f6c9-490e-8139-a1dda59b802e' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: ec91b4a5-f6c9-490e-8139-a1dda59b802e'; end if;
-update preguntas set correcta=0 where id='eec9ff99-90e6-45b6-8344-319caf61e4fd' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: eec9ff99-90e6-45b6-8344-319caf61e4fd'; end if;
-update preguntas set correcta=0 where id='ef06b853-1b69-4118-a33f-869af0e0ceb5' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: ef06b853-1b69-4118-a33f-869af0e0ceb5'; end if;
-update preguntas set correcta=0 where id='ef15516d-a97d-43cc-9192-4910b4eead30' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: ef15516d-a97d-43cc-9192-4910b4eead30'; end if;
-update preguntas set correcta=0 where id='f082f78e-bf66-4d7c-a5b9-653f51a58344' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: f082f78e-bf66-4d7c-a5b9-653f51a58344'; end if;
-update preguntas set correcta=0 where id='f2b139fe-3978-4069-a5b9-0a0e30f12220' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: f2b139fe-3978-4069-a5b9-0a0e30f12220'; end if;
-update preguntas set correcta=0 where id='f3da569f-7c58-496b-93f3-a0f3e56f2800' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: f3da569f-7c58-496b-93f3-a0f3e56f2800'; end if;
-update preguntas set correcta=0 where id='f5ef3a92-bbd7-482f-909b-054ce918efe8' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: f5ef3a92-bbd7-482f-909b-054ce918efe8'; end if;
-update preguntas set correcta=0 where id='f62eb42f-7088-4ef0-941b-223f3ed51765' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: f62eb42f-7088-4ef0-941b-223f3ed51765'; end if;
-update preguntas set correcta=0 where id='f63799fe-19b7-46fd-a605-29a518066e9a' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: f63799fe-19b7-46fd-a605-29a518066e9a'; end if;
-update preguntas set correcta=1 where id='f8c28e3b-bf4e-499a-b71d-f89bfa1faa95' and correcta=2; get diagnostics n=row_count; if n<>1 then raise exception 'clave: f8c28e3b-bf4e-499a-b71d-f89bfa1faa95'; end if;
-update preguntas set correcta=0 where id='fa4f84d7-915e-4fd7-ac5c-7a6673adbe3f' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: fa4f84d7-915e-4fd7-ac5c-7a6673adbe3f'; end if;
-update preguntas set correcta=0 where id='fa98217d-7c8a-4a25-b344-1f1142333ba4' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: fa98217d-7c8a-4a25-b344-1f1142333ba4'; end if;
-update preguntas set correcta=0 where id='fbe937c1-3078-4bdb-98d5-495d6e4841f7' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: fbe937c1-3078-4bdb-98d5-495d6e4841f7'; end if;
-update preguntas set correcta=1 where id='fc0fdf81-3550-45fb-affc-e2593e9a482f' and correcta=0; get diagnostics n=row_count; if n<>1 then raise exception 'clave: fc0fdf81-3550-45fb-affc-e2593e9a482f'; end if;
-update preguntas set correcta=1 where id='fd13d378-74e2-4256-90e2-7c2cfa2b15a6' and correcta=3; get diagnostics n=row_count; if n<>1 then raise exception 'clave: fd13d378-74e2-4256-90e2-7c2cfa2b15a6'; end if;
-update preguntas set correcta=0 where id='fdc5f00f-1be3-4822-9e9c-b1914704fec0' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: fdc5f00f-1be3-4822-9e9c-b1914704fec0'; end if;
-update preguntas set correcta=0 where id='fdfe76e7-60ef-4ce7-ac31-c073ca844ddd' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: fdfe76e7-60ef-4ce7-ac31-c073ca844ddd'; end if;
-update preguntas set correcta=1 where id='1cb177f4-9a2b-44c6-875c-d9edc3c7709d' and correcta=2; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 1cb177f4-9a2b-44c6-875c-d9edc3c7709d'; end if;
-update preguntas set correcta=0 where id='1cc9fd19-8ec1-4dee-96a3-a235c2e1b21e' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 1cc9fd19-8ec1-4dee-96a3-a235c2e1b21e'; end if;
-update preguntas set correcta=0 where id='1de29c11-76b4-44d9-814f-6c5fbcd14186' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 1de29c11-76b4-44d9-814f-6c5fbcd14186'; end if;
-update preguntas set correcta=0 where id='1fd81f33-8d59-469f-9267-7afddee897c7' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 1fd81f33-8d59-469f-9267-7afddee897c7'; end if;
-update preguntas set correcta=0 where id='1feeb9c8-d0be-4cd3-bfbf-1b084106377e' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 1feeb9c8-d0be-4cd3-bfbf-1b084106377e'; end if;
-update preguntas set correcta=0 where id='1ff7dfcf-100a-4677-bc34-0d0de7ced605' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 1ff7dfcf-100a-4677-bc34-0d0de7ced605'; end if;
-update preguntas set correcta=1 where id='211df112-519e-40d5-987d-4a7b7821083c' and correcta=0; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 211df112-519e-40d5-987d-4a7b7821083c'; end if;
-update preguntas set correcta=0 where id='2122ab43-e00b-4cd2-9ee8-a55e5fece311' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 2122ab43-e00b-4cd2-9ee8-a55e5fece311'; end if;
-update preguntas set correcta=0 where id='21b07ee3-6f47-42ae-ba7f-aac76a21e956' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 21b07ee3-6f47-42ae-ba7f-aac76a21e956'; end if;
-update preguntas set correcta=0 where id='221ca83b-4046-4764-8115-e3d2c806f63d' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 221ca83b-4046-4764-8115-e3d2c806f63d'; end if;
-update preguntas set correcta=0 where id='22b5b68f-6dbe-42ff-ae2a-02b6faf208bb' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 22b5b68f-6dbe-42ff-ae2a-02b6faf208bb'; end if;
-update preguntas set correcta=0 where id='23091151-5b8e-4ab6-9ba3-7da0a685c307' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 23091151-5b8e-4ab6-9ba3-7da0a685c307'; end if;
-update preguntas set correcta=2 where id='2553a50f-ac76-439f-bea7-ef3e4cebec06' and correcta=3; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 2553a50f-ac76-439f-bea7-ef3e4cebec06'; end if;
-update preguntas set correcta=0 where id='2609131c-4d83-444a-b213-7095ab39957c' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 2609131c-4d83-444a-b213-7095ab39957c'; end if;
-update preguntas set correcta=1 where id='26e5dae1-8491-47fd-89fd-2039eefb8008' and correcta=2; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 26e5dae1-8491-47fd-89fd-2039eefb8008'; end if;
-update preguntas set correcta=0 where id='26fa49e1-002a-4e49-ac75-14204c9c12ae' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 26fa49e1-002a-4e49-ac75-14204c9c12ae'; end if;
-update preguntas set correcta=1 where id='279474c3-1c62-4259-b88f-40f90040c239' and correcta=2; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 279474c3-1c62-4259-b88f-40f90040c239'; end if;
-update preguntas set correcta=1 where id='283f9428-8181-4ffb-93e1-4bcbb88cd9ed' and correcta=3; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 283f9428-8181-4ffb-93e1-4bcbb88cd9ed'; end if;
-update preguntas set correcta=0 where id='2b21b10a-de2d-40a8-ab24-735694b19553' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 2b21b10a-de2d-40a8-ab24-735694b19553'; end if;
-update preguntas set correcta=0 where id='2b96ca53-1494-49b3-b497-ea80dbe45a50' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 2b96ca53-1494-49b3-b497-ea80dbe45a50'; end if;
-update preguntas set correcta=0 where id='2c9e69c0-d279-4323-af98-e3bd60b1a5c4' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 2c9e69c0-d279-4323-af98-e3bd60b1a5c4'; end if;
-update preguntas set correcta=1 where id='2d068c02-aa3f-4bec-bfee-995493b800e6' and correcta=3; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 2d068c02-aa3f-4bec-bfee-995493b800e6'; end if;
-update preguntas set correcta=0 where id='2d1fd8a7-8618-448c-8948-db54ff366a56' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 2d1fd8a7-8618-448c-8948-db54ff366a56'; end if;
-update preguntas set correcta=0 where id='2f66a443-403a-4e31-a0f3-1cb7307b5068' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 2f66a443-403a-4e31-a0f3-1cb7307b5068'; end if;
-update preguntas set correcta=0 where id='2f867991-abc7-49c1-8a7e-825200f4ff78' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 2f867991-abc7-49c1-8a7e-825200f4ff78'; end if;
-update preguntas set correcta=1 where id='30a87e69-f027-4f63-8759-2d2cfbe25515' and correcta=3; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 30a87e69-f027-4f63-8759-2d2cfbe25515'; end if;
-update preguntas set correcta=0 where id='30c508ec-ff72-488f-8146-c1ade33c1545' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 30c508ec-ff72-488f-8146-c1ade33c1545'; end if;
-update preguntas set correcta=0 where id='32e55876-a8cc-40c5-8ded-f3a0d9e565eb' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 32e55876-a8cc-40c5-8ded-f3a0d9e565eb'; end if;
-update preguntas set correcta=0 where id='34ef6de8-0b68-4045-915a-9a49b52904e7' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 34ef6de8-0b68-4045-915a-9a49b52904e7'; end if;
-update preguntas set correcta=0 where id='35bf74ed-d263-4807-9d01-43abe3b348e4' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 35bf74ed-d263-4807-9d01-43abe3b348e4'; end if;
-update preguntas set correcta=1 where id='364a73b2-6391-41ca-9031-911c9320d468' and correcta=3; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 364a73b2-6391-41ca-9031-911c9320d468'; end if;
-update preguntas set correcta=0 where id='38d3a241-0a24-481c-8da8-7433538f7a7b' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 38d3a241-0a24-481c-8da8-7433538f7a7b'; end if;
-update preguntas set correcta=2 where id='3ab2ebec-20bc-4dad-be9c-63deb4cadf45' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 3ab2ebec-20bc-4dad-be9c-63deb4cadf45'; end if;
-update preguntas set correcta=0 where id='3add8c01-aa73-4485-8505-d133b5f8658f' and correcta=1; get diagnostics n=row_count; if n<>1 then raise exception 'clave: 3add8c01-aa73-4485-8505-d133b5f8658f'; end if;
+update preguntas p set correcta=v.nueva
+from (values
+('000dfb82-ac2a-4f98-a1c5-c9627c22a772',1,0),
+('00d11e1b-1def-4586-97ee-21f2bf4a77de',3,1),
+('0210f1f6-4737-45c5-ba07-dedcc57681b5',1,0),
+('02a8812c-4d71-4a0f-a711-8f7bc9a18c3b',1,0),
+('03802167-f574-45a0-9a12-d8396c89c274',1,0),
+('04439568-66dc-436a-af9b-c6a8e285d7fc',1,0),
+('05b0a052-37f3-4189-b3f8-25ff3cf64feb',1,0),
+('0606573a-c303-47bf-9058-321cd66203e2',1,0),
+('062a1e5e-df3c-48ee-a9cb-21621ab04afa',1,0),
+('06b03f5e-4646-4000-97f4-617217086e72',1,0),
+('080009d5-2e6b-4522-aaf0-72577e196af6',3,2),
+('09a703f7-7cfd-4336-99d1-6091be531bf7',1,0),
+('0a01a51c-f382-4e1a-8a42-7fec04f952e9',1,0),
+('3bb02819-8e2b-499e-9150-9bf9767a54bc',3,1),
+('3bf24fab-1f56-4e33-8d41-02489b0da393',1,0),
+('3cdbe5ee-96e1-47a1-8465-b83bc96d06fa',1,0),
+('3de2114b-545b-4613-bcea-a1332a7fd031',1,0),
+('3e01e2cf-903a-44a8-9438-3605298116e4',1,0),
+('4002056f-54ea-4742-9f41-1dcdc7c12277',1,0),
+('4042af9d-cb62-4c9c-9b0b-a25107f120a5',1,0),
+('4118020a-528b-48ad-84de-07b8413ad96b',0,1),
+('435d11cc-50f3-476b-9113-cc4a0eca273f',1,0),
+('476c47cf-f940-457e-af2f-26099ec34dde',1,0),
+('47cad194-cd29-4c4d-9afd-3750955c01cd',1,0),
+('482ae761-38e8-4b5c-879a-9c03857b51bf',1,0),
+('4ab842ca-7276-4b4c-acc0-5414c9d7709f',1,0),
+('4bdab5a0-7aec-485d-bd8a-246547913703',1,0),
+('4c6079b7-418b-45a9-9a63-7d44d1a7bbae',2,1),
+('4e0f679b-9306-47c9-8ecb-3eb0e5090a91',2,1),
+('4f04a17a-2415-4967-a296-9ff17a4ce7ca',1,0),
+('4fa76233-b03b-45a7-b62a-969c7b9cdc01',1,0),
+('50b4a923-7a4c-462a-a5b5-3cfd8db5c46b',1,0),
+('518a4c41-0967-49fd-86a7-4fe2663bf50b',1,0),
+('52019d20-03c7-49b5-9273-5b94ce1e58a1',1,0),
+('5218d014-0765-405f-a411-47ff020a17e5',1,0),
+('523c3f3b-0279-42ea-b301-357f9f3d8636',1,0),
+('54698ae1-f321-4444-9af9-a352a2b4e6f2',1,0),
+('55c4a15b-082e-4e09-ac8a-cf99494412a7',1,0),
+('5954e6b4-cabd-4fa8-b5d3-1da91a7179ae',1,0),
+('59af5087-2755-4def-8524-7133496f3a59',1,0),
+('5a7b7064-cd00-4b7c-a26b-261c7d636ee9',1,0),
+('5d51f660-9cbd-4f68-a239-bee824d43a69',1,0),
+('5d68c713-17e5-4f42-b453-e4cb7d457317',1,0),
+('5d9c7fad-7fcb-4ff7-a8d5-81125f4d530f',1,0),
+('5e370f4b-955b-4add-b10a-ac68733568d8',1,0),
+('5ed89541-738f-469c-a319-dd1164575011',1,0),
+('5f923ee8-2588-4b59-a12f-cb13097bad65',1,0),
+('60329ff0-b799-4db2-89c4-b38c55718729',1,0),
+('61886e95-d190-4aec-bd9a-2d582e92d359',1,0),
+('6217b284-5f0c-40ec-b20f-a7d37701cd6a',2,1),
+('621b1133-5349-46f8-a260-e81e3705cbe8',3,1),
+('63a9e23a-9c63-4bd5-ba1f-222a88eff4a2',1,0),
+('643248ef-56e1-4d1c-ac6e-a15d0c25a62f',3,1),
+('67e4162a-1e5a-41c6-89e2-7b142207e544',2,1),
+('6a4f43ab-e629-4507-89cf-ea0918a2d782',1,0),
+('6aa65db0-b462-4ed8-9b4b-08ccac19cdb2',1,0),
+('6beaf959-e63e-48f7-846e-902f5ef4f080',0,1),
+('6c7d990c-cb4b-4060-aa58-6d1dfe50673b',3,1),
+('6d4c7c5b-ff31-44af-b922-91bba7ca6b61',1,0),
+('6d4e63e8-9e8f-41ad-901c-60bc43e9ea94',1,0),
+('6eb223b6-f80f-4621-b661-8596eb45292f',1,0),
+('70285309-3229-4a63-8ab8-4f8da76c69e8',2,1),
+('7062e7e1-b1e0-435c-b574-48dc358921bf',1,0),
+('71e76998-5fda-4678-b935-38a629b77f0b',1,0),
+('73266400-0628-4775-87c6-bf5d842d20b0',1,0),
+('74139659-7d62-4c79-b225-a23692db89e5',1,0),
+('746edc2c-4a49-4559-9622-b68fef6e42da',1,0),
+('75615abc-3884-432d-8a46-11f68d723a4e',1,0),
+('76412255-efa3-496a-9def-9ab5142b2a6b',1,0),
+('764dc657-c693-4397-9ff5-180818c69885',1,0),
+('7682e67a-c117-44c5-a9cc-018dfe47a320',1,0),
+('768b991e-0c19-4032-855d-6528ecddab3d',1,0),
+('76a1a000-f53f-419b-943b-47a250fb52d8',1,0),
+('77312251-df9e-41c2-9cf6-18f00b81df19',1,0),
+('7856b84f-9f5a-4260-8a60-64164de1fde2',1,2),
+('7a78caf4-8e3a-4e0a-8429-8e8105ed015a',1,0),
+('7aef4b24-7e93-4b6d-8ba7-2384f535b7bc',2,3),
+('7d35334e-77a0-4539-91ff-cbcd946390bf',1,0),
+('7d902e10-8ef7-4a20-8753-1ccf5fefef95',3,1),
+('7e9faeac-0da9-403d-bc02-cfa38de1cc6f',0,1),
+('7eefb4c2-ddb0-4bdd-b1ae-45b0741a4974',1,0),
+('7fdb7a2e-38e2-4e58-988b-cd89e635bb2b',0,1),
+('82696b0d-3772-454b-8a94-47d7d25a76b9',1,0),
+('82d347de-1141-4aae-a22c-2656083193d3',1,0),
+('83a645ee-01e0-49cf-8010-65b5901e8cdd',1,0),
+('851dced8-13e7-40aa-951b-75aedc905e9b',3,1),
+('8556ad51-a3db-4ad3-9193-d1e56d3a10fb',1,0),
+('85fb6a39-c7cc-4625-bcf1-e3a4b8fe1309',1,0),
+('875a8df5-b340-4a56-8be8-e639a568f3fd',2,1),
+('87da9af8-6c18-49bd-a22e-2f28f926b14e',1,0),
+('88602595-a833-4bb6-8c8d-c21e1b3052e7',1,0),
+('88f5b845-5718-49d4-ba18-27a89c4f8adc',1,0),
+('895c5eb0-023c-4c9a-8cfa-21fc62320aa0',1,0),
+('8cc9a879-85ac-4460-92b5-a525f3540919',1,0),
+('8e183a5d-6c1b-4912-8da6-bead61cc8836',1,0),
+('8e1fd5b4-2748-40b3-8ed8-3ea54869a7c5',1,0),
+('8f2e64bd-93e4-4210-95a2-fcc548caf51a',1,0),
+('90392de7-45f6-4e61-97c1-41abf5009b17',1,0),
+('91abb394-e48c-4ba5-b849-3e90945ffaba',3,1),
+('928ffe8c-2a98-4792-ab2a-fd89317e45e2',1,0),
+('931ed4ed-3156-4b07-9667-b317ecbeb133',1,0),
+('94ae01e3-e181-4486-b33a-e8619b817ca2',1,0),
+('954b6f8c-6f8b-447e-9d1e-b1d456ee08f7',1,0),
+('0b507b29-be89-43bf-81bb-ad1db1c453d1',1,0),
+('0c3616c7-318d-4da8-b131-724704680349',1,0),
+('0c508814-706f-4248-9607-059982b84dd1',1,0),
+('0ef500fd-a0c3-4221-b746-05a29b52f888',1,0),
+('0efedcf3-ef57-4a5b-a9a7-9c5afbdd63f1',1,0),
+('10cea335-ced6-4929-a2bd-f20e68d71af3',1,0),
+('1172ef8f-6f64-42a8-a967-313fd8b55eba',1,0),
+('1305017c-1078-4026-96f7-9a5e2e9f68bf',1,0),
+('14c8635e-11b4-4348-8d6d-be9cb4ad8f5a',1,0),
+('1506b4cc-6ca9-4c7a-a7c0-2b551f0b9614',1,0),
+('158ab02b-9be1-4e99-ad7b-13bb3f24cd93',1,0),
+('1783a579-1187-4dd7-bc24-d644d1bc9f74',1,0),
+('187ed3eb-90b5-47e4-a60c-05b4895eea01',1,0),
+('19b58a60-c84f-42ae-b8ee-7ee2c821e666',1,0),
+('1afc44b3-77d1-42e8-bc2b-6b6f9f462905',1,0),
+('1c718bb8-3667-46e1-a658-27a874e8ba87',1,0),
+('975413e2-71b8-4f5a-a450-f4e07b21e388',1,0),
+('97cd3105-b918-4ba9-972b-73573c0efe09',1,0),
+('98b55b41-f087-4201-9668-226b6277949e',1,0),
+('9afc2189-de7e-4a49-b0b8-1b4267976237',2,3),
+('9bc6cacb-8e44-45e3-8b67-2b80793ad871',1,0),
+('9c099db3-9fc6-4eda-b69c-5b59ef42c723',1,0),
+('9d07a83e-dbb2-4e0c-a461-d68a709d674d',1,0),
+('9e0f4bf7-21cb-424e-8938-f1a71bf4c677',0,1),
+('a0224ee7-8242-4935-866e-f643b1ab972b',3,1),
+('a0641252-b4af-4e6c-b6a8-7e36e267ff4a',1,0),
+('a252ee06-7ba4-465e-834b-faa2059f5876',1,0),
+('a2816000-eb64-41a9-bd3a-2051eee77a9f',2,3),
+('a2963882-886b-4649-a0ee-3ea30b5e4521',1,0),
+('a2bad20b-93d2-4741-b1e5-3a73cd2ad0aa',1,0),
+('a4ed6087-e063-4735-8dd8-5ec68eb10842',1,0),
+('a4f48fb7-e522-48f3-9f8c-4cfe20c1c99a',1,0),
+('a5a5e090-a35a-4362-8db7-3fc056311835',1,0),
+('a6b5e95f-fd90-4414-9bda-b53c8c18fe96',3,1),
+('a6df404b-2bd0-4304-95b9-0b3b05d64d81',1,0),
+('a7e19e3c-0aba-481c-97d6-4f4323bb046e',3,1),
+('a80aef7e-2190-42e3-b2b5-3017aa8f363f',1,0),
+('aea791ce-3229-466b-9f38-992557fd1c1c',1,0),
+('af506f06-aac3-4015-86fa-9af425a8eff2',1,0),
+('b01457e2-1b4d-474b-ae6c-3512d2d1a0a3',2,3),
+('b0edfbdd-379e-4923-887a-7a722f4f4927',1,0),
+('b23a0f7d-9a2a-4fc4-ab32-c93a242c92ce',1,0),
+('b3555b91-f717-4475-9b4f-a21b0e25c776',1,0),
+('b3748861-785d-465b-bae0-c8720c0f5bd4',1,0),
+('b407d4b9-0fc3-45aa-be4c-c4e6ca3add84',3,2),
+('b62e6307-4f4a-4a15-9974-bcfb68e5f415',1,0),
+('b7f57511-509d-4b3e-8d87-23ca8bc262a1',1,0),
+('b8cd3f05-0c14-4f09-9394-cae5c52f0c11',1,2),
+('ba334069-d74c-447e-8ff2-a3f4339a25ec',1,0),
+('bc24bdc7-dcc4-47aa-90ea-4715a9040858',1,0),
+('bcc279bd-de93-4d39-9422-3d7197543914',2,1),
+('bd528036-3f1b-4995-871b-a9bf9ea05de3',1,0),
+('be2394a2-a744-419d-9c53-999e15e9ad72',3,2),
+('c1b30a36-4bd6-42dc-a047-98bc5bcc7b3b',1,0),
+('c37db665-c2c9-4d9a-90fd-37cb6e77858d',1,0),
+('c39abce3-ee2b-49c4-9bc6-a1000f0d74ec',1,0),
+('c47de9c5-185b-4c6d-aad0-892b45971dca',1,0),
+('c48638c8-656b-4259-88ab-f51fa44bbf10',1,0),
+('c4bb164f-4195-4d02-8dce-23e4e1daf56f',1,0),
+('c4c5eb45-2603-4393-96e7-117053d1b6ea',1,0),
+('c5af175e-6f80-4156-bb48-b1bee26b92e7',3,1),
+('c5b2265d-22ab-4ccb-bfbd-eefb6b5afdd7',2,1),
+('c6b446ee-b0b4-4312-9a4d-0b891f85a6ac',1,0),
+('c7252eb6-c1df-4a7e-b535-6a07dd401643',1,0),
+('c80ad277-1a38-4855-bc95-1a38854eb269',1,0),
+('c89238e7-e3a5-487c-82d0-e80eb4e175b3',3,1),
+('cb12386c-0557-496f-bc2a-240962523270',3,1),
+('cc1d8460-c715-442e-9d34-b19024b44cb0',1,0),
+('cc4980b2-4a1d-4381-a792-e40b7c6b29cc',1,0),
+('cc4c5d6b-904e-46d6-b18b-f798c7813030',1,2),
+('cdc61136-9ff5-4d69-a65b-3985f95170b1',1,0),
+('ce77600d-9c2f-4de8-a5f6-38ae2a010544',0,1),
+('d12b1884-dfc5-467b-9804-9d08ffd4e645',1,0),
+('d252d3c3-557c-4c30-b347-48a899b11b28',1,2),
+('d26b766b-4377-47ce-ba1f-0a763239000e',1,0),
+('d2820b68-866d-4608-bf23-2b965719481b',1,0),
+('d28d5750-e6aa-48e1-9d1a-5c83cc2fb0c1',1,0),
+('d2f70636-8e1e-43e1-9de7-bee6b8c61e9f',1,0),
+('d466b142-113e-4f27-9264-6b4814683be4',1,0),
+('d5a87862-fa53-4249-8ab1-083d4ea23dc4',1,0),
+('d6183579-10b7-47dd-b20b-c264d7489f35',2,1),
+('d624fe4c-6cd4-4c9f-bcf5-bcc41380f77a',1,0),
+('d6d6ba9c-989f-4b93-adc9-7229778a2048',2,1),
+('d737fa46-c491-4813-b698-6527f4f48c63',1,0),
+('d7e8d425-da9c-4a42-9190-56778117dbb6',1,0),
+('dba76d16-6616-4348-bf23-e6d5545f9c91',1,0),
+('dbf04394-9ccd-4850-988a-922ee9fcc344',1,0),
+('dc0eed7e-a43b-42bb-b5dd-f157f069b4ae',1,0),
+('de98f591-10ca-4408-815b-e25ba8cdc92d',2,1),
+('e00d68dc-8ac9-45c5-94d8-82385818e793',3,1),
+('e1594397-a2c1-4989-8881-268bc079b794',1,0),
+('e1b5f3db-3e2b-4870-b8c0-a42129984b11',1,0),
+('e2475c89-5814-45ea-976a-31e342489d19',1,0),
+('e2a4df27-e080-4533-955a-0fc676a3e515',1,0),
+('e2f9c67e-147a-41fe-b641-05c010e47d3e',1,0),
+('e40864e6-a043-41aa-a3b9-3eaddca172d2',3,1),
+('e68190b5-fdb6-4a61-ac1e-23f79bdecfe4',0,1),
+('e6f493d4-a05b-4d69-9435-1ca0e6b979ba',1,0),
+('e8c2dc32-ffce-47ef-be7c-d5063a81e762',1,0),
+('ebaca941-ce96-49ca-8f75-1b5426670ca3',3,1),
+('ec376702-6bb8-4b72-9280-3dc9768817fe',1,0),
+('ec91b4a5-f6c9-490e-8139-a1dda59b802e',1,0),
+('eec9ff99-90e6-45b6-8344-319caf61e4fd',1,0),
+('ef06b853-1b69-4118-a33f-869af0e0ceb5',1,0),
+('ef15516d-a97d-43cc-9192-4910b4eead30',1,0),
+('f082f78e-bf66-4d7c-a5b9-653f51a58344',1,0),
+('f2b139fe-3978-4069-a5b9-0a0e30f12220',1,0),
+('f3da569f-7c58-496b-93f3-a0f3e56f2800',1,0),
+('f5ef3a92-bbd7-482f-909b-054ce918efe8',1,0),
+('f62eb42f-7088-4ef0-941b-223f3ed51765',1,0),
+('f63799fe-19b7-46fd-a605-29a518066e9a',1,0),
+('f8c28e3b-bf4e-499a-b71d-f89bfa1faa95',2,1),
+('fa4f84d7-915e-4fd7-ac5c-7a6673adbe3f',1,0),
+('fa98217d-7c8a-4a25-b344-1f1142333ba4',1,0),
+('fbe937c1-3078-4bdb-98d5-495d6e4841f7',1,0),
+('fc0fdf81-3550-45fb-affc-e2593e9a482f',0,1),
+('fd13d378-74e2-4256-90e2-7c2cfa2b15a6',3,1),
+('fdc5f00f-1be3-4822-9e9c-b1914704fec0',1,0),
+('fdfe76e7-60ef-4ce7-ac31-c073ca844ddd',1,0),
+('1cb177f4-9a2b-44c6-875c-d9edc3c7709d',2,1),
+('1cc9fd19-8ec1-4dee-96a3-a235c2e1b21e',1,0),
+('1de29c11-76b4-44d9-814f-6c5fbcd14186',1,0),
+('1fd81f33-8d59-469f-9267-7afddee897c7',1,0),
+('1feeb9c8-d0be-4cd3-bfbf-1b084106377e',1,0),
+('1ff7dfcf-100a-4677-bc34-0d0de7ced605',1,0),
+('211df112-519e-40d5-987d-4a7b7821083c',0,1),
+('2122ab43-e00b-4cd2-9ee8-a55e5fece311',1,0),
+('21b07ee3-6f47-42ae-ba7f-aac76a21e956',1,0),
+('221ca83b-4046-4764-8115-e3d2c806f63d',1,0),
+('22b5b68f-6dbe-42ff-ae2a-02b6faf208bb',1,0),
+('23091151-5b8e-4ab6-9ba3-7da0a685c307',1,0),
+('2553a50f-ac76-439f-bea7-ef3e4cebec06',3,2),
+('2609131c-4d83-444a-b213-7095ab39957c',1,0),
+('26e5dae1-8491-47fd-89fd-2039eefb8008',2,1),
+('26fa49e1-002a-4e49-ac75-14204c9c12ae',1,0),
+('279474c3-1c62-4259-b88f-40f90040c239',2,1),
+('283f9428-8181-4ffb-93e1-4bcbb88cd9ed',3,1),
+('2b21b10a-de2d-40a8-ab24-735694b19553',1,0),
+('2b96ca53-1494-49b3-b497-ea80dbe45a50',1,0),
+('2c9e69c0-d279-4323-af98-e3bd60b1a5c4',1,0),
+('2d068c02-aa3f-4bec-bfee-995493b800e6',3,1),
+('2d1fd8a7-8618-448c-8948-db54ff366a56',1,0),
+('2f66a443-403a-4e31-a0f3-1cb7307b5068',1,0),
+('2f867991-abc7-49c1-8a7e-825200f4ff78',1,0),
+('30a87e69-f027-4f63-8759-2d2cfbe25515',3,1),
+('30c508ec-ff72-488f-8146-c1ade33c1545',1,0),
+('32e55876-a8cc-40c5-8ded-f3a0d9e565eb',1,0),
+('34ef6de8-0b68-4045-915a-9a49b52904e7',1,0),
+('35bf74ed-d263-4807-9d01-43abe3b348e4',1,0),
+('364a73b2-6391-41ca-9031-911c9320d468',3,1),
+('38d3a241-0a24-481c-8da8-7433538f7a7b',1,0),
+('3ab2ebec-20bc-4dad-be9c-63deb4cadf45',1,2),
+('3add8c01-aa73-4485-8505-d133b5f8658f',1,0)
+) as v(id,vieja,nueva)
+where p.id=v.id::uuid and p.correcta=v.vieja;
+get diagnostics n=row_count;
+if n<>256 then raise exception 'esperaba 256 cambios y hubo %', n; end if;
 end $$;
