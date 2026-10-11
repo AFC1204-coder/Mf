@@ -113,7 +113,7 @@
       <button type="button" class="biblio-tab active">Estantería</button>
       <button type="button" class="biblio-tab" onclick="showView('esquemas')">Esquemas</button>
       <button type="button" class="biblio-tab" onclick="showView('ensayos')">Ensayos</button>
-      <button type="button" class="biblio-tab" onclick="verQuotes()">Citas</button>
+      <button type="button" class="biblio-tab" onclick="verQuotes()">Ideas</button>
     </nav>
     <section class="estanteria" aria-label="Estantería">
     <div class="estanteria-head">
@@ -179,8 +179,8 @@
   <!-- CITAS -->
   <div class="view" id="view-quotes">
     <button class="back-btn" onclick="showView('biblioteca')">← Biblioteca</button>
-    <h1 class="page-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg> Citas memorables</h1>
-    <p class="page-sub" style="margin-bottom:1.4rem">Fragmentos destacados del corpus</p>
+    <h1 class="page-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg> Ideas memorables</h1>
+    <p class="page-sub" style="margin-bottom:1.4rem">Una frase que resume la idea de cada lección. Está redactada por la app a partir del libro: no es una cita literal del autor.</p>
     <div id="quotes-container"></div>
   </div>
 

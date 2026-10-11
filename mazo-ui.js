@@ -108,7 +108,7 @@ function mazoFichaHtml(f, i, n) {
       <p class="mz-txt">${esc(Mazo.extracto(lec.autocorreccion, 420))}</p>
       <div class="mz-acc">${leer}</div>${pie}</article>`;
   if (f.tipo === 'cita' && lec) return `<article class="mz-card mz-cita">
-      <p class="mz-k">Una frase</p><blockquote class="mz-quote">${esc(Mazo.extracto(lec.cita_memorable, 300))}</blockquote>
+      <p class="mz-k">Una idea</p><blockquote class="mz-quote">${esc(Mazo.extracto(lec.cita_memorable, 300))}</blockquote>
       <p class="mz-src">${mazoFuente(lec)}</p><div class="mz-acc">${leer}</div>${pie}</article>`;
   // Cierre: una sola oferta de subir, sin presión
   const min = lec ? Didactica.minutosLectura(lec) : 0;

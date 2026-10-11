@@ -2518,7 +2518,7 @@ function pdfDrawQuote(doc,y,q,meta,pc){
   if(!q||!q.trim())return y;
   const qW=PDF_CW-36;
   doc.setFont('helvetica','italic');doc.setFontSize(10.5);
-  const lines=doc.splitTextToSize(`"${q}"`,qW);
+  const lines=doc.splitTextToSize(q,qW);   // idea memorable (paráfrasis de la app, no cita literal): sin comillas
   const bh=lines.length*5.5+12;
   y=pdfCheckPage(doc,y,bh,meta,pc);
   const cx=PDF_PW/2;
@@ -2635,17 +2635,17 @@ function exportarPDFLibro(){
 async function verQuotes(){
   showView('quotes');
   const cont=document.getElementById('quotes-container');
-  cont.innerHTML=`<div class="quotes-loading"><div class="quotes-loading-ring"></div><span>Cargando citas...</span></div>`;
+  cont.innerHTML=`<div class="quotes-loading"><div class="quotes-loading-ring"></div><span>Cargando ideas...</span></div>`;
   try{
     const citasData=await sb('lecciones?select=id,titulo,libro_id,cita_memorable&cita_memorable=not.is.null&cita_memorable=neq.&activa=eq.true&order=libro_id.asc');
     if(!citasData||!citasData.length){
-      cont.innerHTML=`<div class="quotes-empty"><span class="quotes-empty-ico">💬</span><p>Aún no hay citas memorables en la base de datos.</p></div>`;
+      cont.innerHTML=`<div class="quotes-empty"><span class="quotes-empty-ico">💬</span><p>Aún no hay ideas memorables en la base de datos.</p></div>`;
       return;
     }
     const favQ=favQuotes();
     const libroMap={};
     libros.forEach(l=>{libroMap[l.id]=l;});
-    cont.innerHTML=`<div class="quotes-meta">${citasData.length} cita${citasData.length!==1?'s':''} en el corpus</div>`+
+    cont.innerHTML=`<div class="quotes-meta">${citasData.length} idea${citasData.length!==1?'s':''} en el corpus</div>`+
       citasData.map(lec=>{
         const libro=libroMap[lec.libro_id];
         const key=`cita-${lec.id}`;

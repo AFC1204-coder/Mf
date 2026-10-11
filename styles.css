@@ -1265,8 +1265,6 @@ mark.hl { background:var(--hl); color:#000; border-radius:2px; padding:0 1px; }
 .quote-card { background:var(--surface2); border:1px solid var(--border); border-left:3px solid var(--accent); padding:var(--sp-6) var(--sp-7); border-radius:0 var(--radius) var(--radius) 0; margin-bottom:var(--sp-5); position:relative; transition:var(--trans); }
 .quote-card:hover { background:var(--surface3); border-color:var(--border2); }
 .quote-text { font-family:var(--font-display); font-size:var(--text-lg); font-style:italic; line-height:var(--lh-relaxed); color:var(--text); margin-bottom:var(--sp-4); }
-.quote-text::before { content:'\201C'; color:var(--accent); font-size:var(--text-2xl); line-height:0; vertical-align:-0.4rem; margin-right:0.2rem; }
-.quote-text::after { content:'\201D'; color:var(--accent); font-size:var(--text-2xl); line-height:0; vertical-align:-0.4rem; margin-left:0.2rem; }
 .quote-attr { font-size:var(--text-sm); color:var(--text3); font-family:var(--font-ui); display:flex; flex-direction:column; gap:0.18rem; }
 .quote-attr-lec { color:var(--text2); }
 .quote-attr-autor { color:var(--accent-dim); font-style:italic; }
