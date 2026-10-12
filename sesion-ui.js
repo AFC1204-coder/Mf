@@ -223,7 +223,7 @@ async function sesionTarjetaQuiz(idx) {
   const fb = document.getElementById('ses-fb');
   fb.style.display = 'block';
   fb.className = `feedback ${ok ? 'ok' : 'err'}`;
-  fb.innerHTML = `<div class="feedback-head">${ok ? 'Correcto' : 'No era esa'}</div>${esc(t.explicacion || '')}`;
+  fb.innerHTML = `<div class="feedback-head">${ok ? 'Correcto' : 'No era esa'}</div>${esc(t.explicacion || '')} ${(() => { const pq = (typeof preg !== 'undefined' ? preg : []).find(x => x.texto === t.pregunta_texto); return pq ? Reportar.enlace('pregunta', pq.id) : ''; })()}`;
   document.getElementById('ses-sig').style.display = 'block';
   sesionContarRepaso({ modo: 'quiz', ok });
   try { await srsRPC('registrar_repaso', { p_repaso_id: t.repaso_id, p_evaluacion: ok ? 'correcto' : 'fallo' }); } catch (e) {}
@@ -310,7 +310,7 @@ function sesionRespondeComprueba(idx) {
   const fb = document.getElementById('ses-fb');
   fb.style.display = 'block';
   fb.className = `feedback ${ok ? 'ok' : 'err'}`;
-  fb.innerHTML = `<div class="feedback-head">${ok ? 'Correcto' : 'No era esa'}</div>${esc(q.explicacion || '')}`;
+  fb.innerHTML = `<div class="feedback-head">${ok ? 'Correcto' : 'No era esa'}</div>${esc(q.explicacion || '')} ${q.id ? Reportar.enlace('pregunta', q.id) : ''}`;
   document.getElementById('ses-sig').style.display = 'block';
   track('comprobacion', { ok });
 }
