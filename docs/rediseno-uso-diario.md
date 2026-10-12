@@ -718,3 +718,19 @@ cuadrática y panel (sonido + volumen + apagar) al tocar «Ambiente» cuando sue
 en Chromium: los tres salen a un volumen parecido (rms ≈ 0,045–0,05) y al 20 % baja a ≈ 0,006.
 No se ha escuchado en dispositivos reales: ajustar `IGUALAR` y los filtros según el oído.
 
+
+## 17. Auditoría de precisión y calidad de las preguntas (2026-10-11/12)
+
+**Qué se encontró** (`docs/auditoria/`):
+- Muestra de 60 elementos: lecciones 50 % correctas / 40 % dudosas / 10 % con error; preguntas 62 / 33 / 5. Patrones: síntesis presentadas como tesis del autor, citas parafraseadas, datos concretos inventados.
+- Revisión de la clave de respuesta de las 7.044 preguntas (filtro léxico + revisión): 298 con la clave mal puesta (≈4,2 %); 256 de confianza alta corregidas y 2 más con las correcciones puntuales; 40 de confianza media y 10 dudosas/ambiguas quedan sin tocar (`2026-10-11-revision-claves.jsonl`). Veredictos de memoria, sin comprobar en la web.
+- Las «citas memorables» pasan a llamarse **ideas**: son frases de la app, no citas literales.
+
+**Sesgos del generador y su arreglo:**
+- La opción correcta era estrictamente la más larga en el 92 % de las preguntas (en los lotes de febrero–abril casi siempre en la posición 0 o 1).
+- 5.546 preguntas tuvieron sus 3 opciones incorrectas reescritas con longitud y detalle parecidos a la correcta (70–130 %), con un control en SQL (`reesc_valida`); 5 se dejaron como estaban por ser de opinión. Después se barajaron las posiciones de 6.761 preguntas (el resto depende del orden: «todas las anteriores», «A y B»…).
+- Resultado: la correcta es la más larga en el 42 % (antes 92 %); reparto de posiciones 26/26/24/24 %.
+- Copias de seguridad en Supabase: `preguntas_backup_20261011` (antes de reescribir) y `preguntas_backup_pre_barajado`.
+- Generador (`admin.js` + `lib/opciones.js`): reglas anti-sesgo en el prompt, barajado automático y aviso si una opción se desvía de 70–130 % o remite a otras opciones.
+
+**Reglas para libros nuevos:** separar «lo que dice el libro» de la síntesis propia, no inventar cifras ni citas, preguntas respondibles desde el texto de la lección, incorrectas de longitud y detalle similares a la correcta, posición de la correcta aleatoria.
