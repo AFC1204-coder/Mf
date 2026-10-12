@@ -1447,7 +1447,7 @@ function renderLibros(){
       :`<div class="libro-cover-wrap" id="cover-${libro.id}">${makePlaceholder(ejeIcon(subE),subE||'')}</div>`;
     const isDone=pct===100&&lecsL.length>0;
     return `<div class="libro-card${isDone?' completado':''}" onclick="verLibro('${libro.id}')">
-      ${isDone?'<div class="libro-done-badge">✓ 100%</div>':''}
+      ${isDone?'<div class="libro-done-badge">✓ 100%</div>':(Novedad.esNuevo(libro.fecha_creacion)?'<div class="libro-nuevo-badge">Nuevo</div>':'')}
       ${coverHTML}
       <div class="libro-body">
         <div class="libro-title">${tHL}</div>
