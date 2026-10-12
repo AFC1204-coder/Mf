@@ -1,0 +1,5 @@
+# Esta app se publica con GitHub Pages, no con Netlify.
+# Si Netlify sigue enlazado a este repo, esta orden hace que SALTE todas las compilaciones
+# (una compilación saltada no gasta créditos). Lo definitivo es desenlazar el sitio en Netlify.
+[build]
+  ignore = "exit 0"
