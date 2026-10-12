@@ -2006,6 +2006,7 @@ function verLeccion(id, from=null, skipPush=false, replace=false){
       :`<button class="act-btn done-mark" disabled>Leída</button>`}
     <button class="act-btn" id="btn-fav-lec" onclick="toggleFavLecDetalle('${id}',this)">${fav?'Guardada':'Guardar'}</button>
     <button class="act-btn share carta-ok" onclick="compartirLeccion()">Enviar</button>
+    <button class="act-btn" onclick="Reportar.abrir('leccion','${id}')">¿Algo no cuadra?</button>
     ${prev?`<button class="act-btn carta-ok" onclick="verLeccion('${prev.id}');window.scrollTo(0,0)">Anterior</button>`:''}
     ${sig?`<button class="act-btn next carta-ok" onclick="verLeccion('${sig.id}');window.scrollTo(0,0)">Siguiente</button>`:''}
   </div>`;
@@ -2053,7 +2054,7 @@ function comprobar(btn){
     const k=Number(b.dataset.i);
     if(k===p.correcta) b.classList.add('ok'); else if(k===i) b.classList.add('err');
   });
-  box.querySelector('.check-fb').innerHTML=`<strong>${ok?'Eso es.':'No exactamente.'}</strong> ${esc(p.explicacion||'')}`;
+  box.querySelector('.check-fb').innerHTML=`<strong>${ok?'Eso es.':'No exactamente.'}</strong> ${esc(p.explicacion||'')} ${Reportar.enlace('pregunta',p.id)}`;
 }
 
 function abrirZoomDiagrama(fig){
@@ -2845,6 +2846,7 @@ async function responder(idx){
     <div class="feedback ${ok?'ok':'err'}">
       <div class="feedback-head">${ok?'✓ Correcto':'✗ Incorrecto'}</div>
       <div>${esc(p.explicacion||'')}</div>
+      <div>${Reportar.enlace('pregunta',p.id)}</div>
     </div>`;
   testResp.push({p,resp:idx,ok});
   document.getElementById('btn-sig').style.display='block';
