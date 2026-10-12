@@ -736,3 +736,7 @@ No se ha escuchado en dispositivos reales: ajustar `IGUALAR` y los filtros segú
 **Reglas para libros nuevos:** separar «lo que dice el libro» de la síntesis propia, no inventar cifras ni citas, preguntas respondibles desde el texto de la lección, incorrectas de longitud y detalle similares a la correcta, posición de la correcta aleatoria.
 
 **«¿Algo no cuadra?»** (`lib/reporte.js`, `reporte-ui.js`): enlace discreto en cada lección (barra de acciones) y tras responder una pregunta (comprobación de la lección, test, sesión y repaso). Abre una hoja con el motivo (en preguntas: «la respuesta correcta es otra», «dato o atribución falso», «ambigua»; en lecciones: «dato, cita o atribución falso», «no se entiende») y una nota opcional. Se guarda en la tabla `reportes_contenido` (estado `abierto` → `revisado` / `corregido` / `descartado`); sin red se encola en el dispositivo y se reenvía al volver. Para revisar los avisos: `select * from reportes_contenido where estado='abierto' order by fecha`.
+
+## 18. Sistema de libros nuevos
+
+Piloto con Dweck (*Mindset*) y Friedman (*Capitalism and Freedom*): generador → lint determinista (cifras y citas declaradas, anatomía del corpus, forma de las preguntas) → verificador independiente con búsqueda web → corrector → carga en borrador → comprobación por huellas → publicación con la etiqueta «Nuevo» (30 días). Procedimiento completo y lecciones: `.claude/skills/nuevo-libro/SKILL.md`; registro: `docs/libros-nuevos.md`.

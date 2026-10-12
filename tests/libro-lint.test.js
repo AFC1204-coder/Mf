@@ -74,3 +74,15 @@ describe('barajar paquete', () => {
     expect(L.lint(p, AUT).errores).toEqual([]);
   });
 });
+
+import H from '../tools/libros/huellas.js';
+describe('huellas', () => {
+  it('genera una huella por lección y por pregunta, estable', () => {
+    const e = H.esperado(base());
+    expect(Object.keys(e).length).toBe(4 + 8);
+    expect(H.esperado(base())).toEqual(e);
+  });
+  it('la consulta comparar incrusta las huellas', () => {
+    expect(H.sqlComparar(base())).toMatch(/with e\(k,h\) as \(values \('l1','[0-9a-f]{32}'\)/);
+  });
+});
