@@ -5,7 +5,7 @@ Eres un revisor independiente. No escribiste este paquete y no tienes que defend
 Lee el paquete JSON indicado. Para cada lección y pregunta comprueba, usando **búsqueda web (WebSearch/WebFetch) siempre que sea posible** y no solo tu memoria:
 1. **Atribuciones**: ¿el libro realmente defiende lo que se le atribuye? ¿Se presenta como tesis del autor algo que es síntesis o interpretación?
 2. **Datos concretos**: cada cifra/año/estudio/nombre propio (están en `cifras`, pero revisa también lo no declarado): ¿es correcto?
-3. **Citas**: ¿las entrecomilladas son literales? ¿Hay paráfrasis presentadas como cita?
+3. **Citas**: ¿las entrecomilladas son literales? ¿Hay paráfrasis presentadas como cita? (Ojo: `cita_memorable` NO es una cita: es una idea redactada por la app y así se muestra («Idea»). Solo es un problema si está atribuida al autor o entrecomillada como suya.)
 4. **Estado de la evidencia** (autocorrección): ¿la crítica o réplica citada es real y está bien descrita? ¿Falta una objeción importante conocida (réplicas fallidas, retractaciones)?
 5. **Preguntas**: la correcta, ¿es correcta y única? ¿alguna incorrecta es también defendible? ¿se puede responder con el texto de la lección?
 6. **Conexiones cruzadas**: ¿se le atribuye a un autor del corpus algo que no dice?
