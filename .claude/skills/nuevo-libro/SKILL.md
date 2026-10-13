@@ -44,4 +44,4 @@ Prompt `tools/libros/prompts/verificador.md` sobre el JSON. Con búsqueda web. D
 - `cita_memorable` es una IDEA redactada por la app (se muestra como «Idea»), no una cita: no entrecomillar ni atribuir.
 - La carga la hace un agente transcribiendo: **siempre** comprobarla con huellas.
 - `execute_sql` no admite varias sesiones: los `create temp table` no persisten entre llamadas; `delete`/`update` masivos pueden dar timeout (dividir).
-- No tocar el diagrama ni el mapa del libro nuevo (viven en `datos/diagramas.json` y `datos/`); las lecciones funcionan sin ellos.
+- Tras publicar, añade los visuales: un diagrama por lección y un mapa por libro. Un agente los escribe a partir de la lección (sin hechos nuevos) en `/tmp/…/slug-diagramas.json` ({idLección:[spec]}) y `slug-mapa.json` ({idLibro:spec}); se fusionan con `node tools/datos/agregar.mjs diagramas|mapas fichero.json` (lint), se comprueban renderizados con la hoja de estilos de la app y se suben en el mismo PR (sube también la versión de caché de `sw.js`). Las lecciones funcionan sin ellos, pero el usuario los echa de menos.
