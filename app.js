@@ -21,6 +21,10 @@ const SB_URL = 'https://aduizdiiacrvpoavjmab.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkdWl6ZGlpYWNydnBvYXZqbWFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1OTg5MDEsImV4cCI6MjA4NzE3NDkwMX0.US2sEhlSBJbcwg93txuL-9AdPKo2LLmdVX5dur7i5GQ';
 
 async function sb(path, opts={}) {
+  // Modo invitado (enlace compartido): solo lectura y sin datos del dueño. Ver lib/invitado.js
+  const dec = Invitado.decidir(path, opts.method, modoCarta());
+  if (dec === 'vacio') return [];
+  if (dec === 'descartar') return null;
   const r = await fetch(`${SB_URL}/rest/v1/${path}`, {
     headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Content-Type':'application/json','Prefer':'return=representation',...opts.headers},
     ...opts
@@ -29,6 +33,7 @@ async function sb(path, opts={}) {
   const t = await r.text(); return t ? JSON.parse(t) : null;
 }
 async function sbAll(path, opts={}) {
+  if (Invitado.decidir(path, 'GET', modoCarta()) === 'vacio') return [];
   // Primera página con el total (Content-Range) y el resto en paralelo.
   const PAGE=1000;
   const sep=path.includes('?')?'&':'?';
@@ -3220,6 +3225,9 @@ let srsModo = 'mixto';
 let srsResumen = { correcto:0, fallo:0, pendiente:0, en_proceso:0, integrado:0 };
 
 async function srsRPC(fn, body) {
+  const dec = Invitado.decidir('rpc/' + fn, 'POST', modoCarta());
+  if (dec === 'vacio') return [];
+  if (dec === 'descartar') return null;
   const r = await fetch(`${SB_URL}/rest/v1/rpc/${fn}`, {
     method: 'POST',
     headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json' },

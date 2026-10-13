@@ -746,3 +746,13 @@ Piloto con Dweck (*Mindset*) y Friedman (*Capitalism and Freedom*): generador �
 ## 19. Alojamiento
 
 La app se publica con **GitHub Pages** (rutas `/Mf/…`). Netlify no se usa: `netlify.toml` solo hace que cualquier compilación de Netlify se salte, por si el sitio sigue enlazado al repo. El sitio de Netlify se puede borrar o desenlazar sin afectar a la app.
+
+## 20. Modo invitado (enlaces compartidos)
+
+Quien abre un enlace con `?carta=1` entra en **solo lectura y sin datos del dueño** (`lib/invitado.js`). Toda la comunicación con la base de datos pasa por `sb`, `sbAll` y `srsRPC`, que consultan `Invitado.decidir`:
+- Lecturas de tablas personales (`progreso`, `favoritos_usuario`, `notas`, `subrayados`, `sesiones`, `compromisos`, `eventos`, `perfil_usuario`, `repaso`…) y del repaso: **no se envían**; devuelven vacío. El invitado no ve tus notas, favoritos ni avance.
+- Escrituras: **se descartan** (tablas personales, datos compartidos y funciones de escritura). La única excepción es avisar de un fallo (`POST reportes_contenido`).
+- Sigue pudiendo leer el contenido (`libros`, `lecciones`, `preguntas`, `articulos`) y buscar (`buscar_corpus`). Lo que haga (lecciones leídas, etc.) vive solo en memoria de su sesión.
+- El modo se mantiene durante la sesión del navegador (`sessionStorage`). Es un bloqueo «suave», pensado para familia y amigos: no sustituye a un login.
+
+Límites conocidos: la clave pública va en el código y las políticas de `notas` y `favoritos_usuario` permiten todo, así que alguien técnico puede leerlas fuera de la app; cerrarlo exige un login solo para el dueño. La clave de Google TTS también es visible: conviene restringirla a este dominio en la consola de Google.
