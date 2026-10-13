@@ -1686,6 +1686,7 @@ function infografiaLibroHtml(l){
   </figure>`;
 }
 
+const NOMBRE_DUENO='Alejandro'; // «X te ha enviado este libro» en la portada del invitado
 function renderLibroHero(){
   const l=libroActual;
   const comp=completadasSet();
@@ -1700,7 +1701,10 @@ function renderLibroHero(){
   const coverHTML = l.portada_url
     ? `<img class="libro-hero-cover" src="${l.portada_url}" alt="${l.titulo}" loading="lazy">`
     : `<div class="libro-hero-cover-ph" id="hero-cover-ph">${ejeIcon(l.eje)}</div>`;
-  document.getElementById('libro-hero-cont').innerHTML=`
+  const ideasInv = modoCarta() ? Invitado.ideasDelLibro(lecsL,3) : [];
+  const kickerInv = modoCarta() ? `<div class="invit-kicker">${esc(NOMBRE_DUENO)} te ha enviado este libro</div>` : '';
+  const ideasInvHtml = ideasInv.length ? `<div class="invit-ideas"><div class="invit-ideas-k">Lo que te llevas</div><ol>${ideasInv.map(t=>`<li>${esc(t)}</li>`).join('')}</ol></div>` : '';
+  document.getElementById('libro-hero-cont').innerHTML=`${kickerInv}
     <div class="libro-hero">
       ${coverHTML}
       <div class="libro-hero-info">
@@ -1723,6 +1727,7 @@ function renderLibroHero(){
         </div>
       </div>
     </div>
+    ${ideasInvHtml}
     ${infografiaLibroHtml(l)}`;
   if(!l.portada_url){
     getCover(l.autor, l.titulo, l.id).then(url=>{
@@ -1787,6 +1792,7 @@ function renderLecs(list,q=''){
 function renderRelacionados(){
   const cont=document.getElementById('libro-relacionados');
   if(!cont) return;
+  if(modoCarta()){ cont.innerHTML=''; return; } // el invitado solo ve el libro que le han enviado
   const rel=libroActual?Didactica.relacionados(libroActual,libros,lecs,3):[];
   if(!rel.length){cont.innerHTML='';return;}
   cont.innerHTML=`<p class="sec-label rel-label">Para seguir leyendo</p>
@@ -3616,7 +3622,8 @@ function compartirLeccion(){
 function compartirLibro(){
   if(!libroActual) return;
   const url = urlCarta(`lecciones/${libroActual.id}`);
-  const text = `${libroActual.titulo} — ${libroActual.autor}`;
+  const lecsL = lecs.filter(x=>x.libro_id===libroActual.id);
+  const text = Invitado.textoCompartirLibro(libroActual, Invitado.ideasDelLibro(lecsL,1), lecsL.length, lecsL.reduce((s,x)=>s+Didactica.minutosLectura(x),0));
   enviarCarta({ title: libroActual.titulo, text, url });
 }
 
