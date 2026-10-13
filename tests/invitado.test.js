@@ -35,3 +35,19 @@ describe('Invitado · el dueño no se toca', () => {
     expect(I.decidir('/notas', undefined, true)).toBe('vacio');
   });
 });
+
+describe('Invitado · portada del libro compartido', () => {
+  const L = [{ orden: 3, idea_clave: 'Tres' }, { orden: 1, idea_clave: 'Uno' }, { orden: 2, cita_memorable: 'Dos (idea)' }, { orden: 4, idea_clave: 'Cuatro' }];
+  it('toma las primeras ideas por orden, con la idea memorable de respaldo', () => {
+    expect(I.ideasDelLibro(L, 3)).toEqual(['Uno', 'Dos (idea)', 'Tres']);
+  });
+  it('no repite ideas ni inventa las que faltan', () => {
+    expect(I.ideasDelLibro([{ orden: 1, idea_clave: 'A' }, { orden: 2, idea_clave: 'A' }, { orden: 3 }], 3)).toEqual(['A']);
+    expect(I.ideasDelLibro([], 3)).toEqual([]);
+  });
+  it('el texto de compartir lleva idea, libro y duración', () => {
+    const t = I.textoCompartirLibro({ titulo: 'T', autor: 'A' }, ['Una idea'], 8, 24);
+    expect(t).toBe('«Una idea»\nT — A\n8 lecciones · 24 min de lectura');
+    expect(I.textoCompartirLibro({ titulo: 'T', autor: 'A' }, [], 0, 0)).toBe('T — A');
+  });
+});
