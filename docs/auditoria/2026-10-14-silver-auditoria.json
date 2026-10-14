@@ -1,0 +1,902 @@
+{
+ "hallazgos": [
+  {
+   "donde": "lección 1 · conexion_cruzada",
+   "severidad": "DUDA",
+   "problema": "Se le atribuye a Tetlock que los expertos con más información y modelos más complejos no superan a modelos simples calibrados; el hallazgo de Tetlock es que los expertos prominentes superan apenas al azar y que los «zorros» superan a los «erizos».",
+   "texto_exacto_a_sustituir": "los expertos con acceso a más información y modelos más complejos no predicen mejor que modelos simples calibrados",
+   "sustitucion": "los expertos prominentes predicen apenas mejor que el azar y los pronosticadores de estilo «zorro», que combinan varias perspectivas, superan a los de estilo «erizo»",
+   "campo": "conexion_cruzada",
+   "id": "4c906303-74d2-421a-985e-8884d97040af",
+   "evidencia": "Tetlock, Expert Political Judgment (2005); Silver, cap. 2 (fox/hedgehog). Conocimiento sólido."
+  },
+  {
+   "donde": "lección 1 · aplicacion_practica",
+   "severidad": "DUDA",
+   "problema": "Se atribuye a Silver una afirmación comparativa (este ejercicio revela más que cualquier análisis retrospectivo) que no consta en el libro.",
+   "texto_exacto_a_sustituir": "Silver argumenta que este ejercicio simple revela más sobre tu capacidad predictiva real que cualquier análisis retrospectivo de tus éxitos y fracasos.",
+   "sustitucion": "Es una forma de comprobar tu capacidad predictiva real sin depender de la memoria selectiva de tus aciertos y fracasos.",
+   "campo": "aplicacion_practica",
+   "id": "4c906303-74d2-421a-985e-8884d97040af",
+   "evidencia": "No verificable en el libro; se despoja la atribución."
+  },
+  {
+   "donde": "lección 2 · cuerpo",
+   "severidad": "ERROR",
+   "problema": "Se atribuye a Silver haber documentado en los mercados financieros la sobrerreacción y la infrarreacción (conservadurismo bayesiano). El capítulo bayesiano del libro usa otros ejemplos (mamografías, 9/11, póker, Laplace) y no desarrolla ese análisis de inversores.",
+   "texto_exacto_a_sustituir": "Silver documenta ambos errores en los mercados financieros: los inversores sobrereaccionan a noticias concretas recientes ignorando la distribución histórica de resultados similares, pero también infrareaccionan cuando la evidencia apunta hacia cambios estructurales porque sus modelos previos son demasiado estables.",
+   "sustitucion": "Estos dos errores se describen en la literatura de psicología del juicio y se han propuesto también para los mercados financieros; no son un hallazgo específico de Silver.",
+   "campo": "cuerpo",
+   "id": "881be665-28c6-42fd-9185-2645120b6f26",
+   "evidencia": "Resúmenes del libro (cap. 8: Bayes con mamografías, 9/11, Laplace); no aparece ese análisis de inversores. Contraste web parcial + memoria."
+  },
+  {
+   "donde": "lección 2 · conexion_cruzada",
+   "severidad": "DUDA",
+   "problema": "Frase sobreafirmada: el «Sistema 2 bayesiano» como mecanismo de corrección que Silver prescribe «exactamente» no es una tesis de Silver ni de Kahneman en esos términos.",
+   "texto_exacto_a_sustituir": "El Sistema 2 bayesiano que Silver prescribe es exactamente el mecanismo de corrección del sesgo de representatividad que Kahneman describe.",
+   "sustitucion": "El pensamiento bayesiano que defiende Silver (partir de la tasa base y ajustarla con la evidencia) es compatible con la corrección que Kahneman propone para este sesgo.",
+   "campo": "conexion_cruzada",
+   "id": "881be665-28c6-42fd-9185-2645120b6f26",
+   "evidencia": "Interpretación de la app presentada como tesis del autor."
+  },
+  {
+   "donde": "lección 2 · aplicacion_practica",
+   "severidad": "DUDA",
+   "problema": "Atribución a Silver sin respaldo literal.",
+   "texto_exacto_a_sustituir": "Silver argumenta que los malos pronosticadores no actualizan o actualizan de forma asimétrica — solo con la evidencia que confirma la posición previa.",
+   "sustitucion": "Un sesgo habitual (el sesgo de confirmación) es actualizar solo con la evidencia que confirma la posición previa; registrar las actualizaciones ayuda a detectarlo.",
+   "campo": "aplicacion_practica",
+   "id": "881be665-28c6-42fd-9185-2645120b6f26",
+   "evidencia": "No verificable como tesis de Silver."
+  },
+  {
+   "donde": "lección 2 · autocorreccion",
+   "severidad": "DUDA",
+   "problema": "Errata «bajesianismo».",
+   "texto_exacto_a_sustituir": "bajesianismo",
+   "sustitucion": "bayesianismo",
+   "campo": "autocorreccion",
+   "id": "881be665-28c6-42fd-9185-2645120b6f26",
+   "evidencia": "Errata."
+  },
+  {
+   "donde": "lección 3 · cuerpo",
+   "severidad": "ERROR",
+   "problema": "Ejemplo de los meteorólogos de TV inventado/distorsionado: el hallazgo de Silver es el «wet bias» de ciertos meteorólogos de televisión locales (exageran la probabilidad de lluvia; p. ej. anuncian 100% y llueve ~70% de las veces), no que digan «mañana lloverá» en vez de 60%, y la cifra 60%→40% no aparece.",
+   "texto_exacto_a_sustituir": "Los meteorólogos de TV dicen \"mañana lloverá\" cuando deberían decir \"hay un 60% de probabilidad de lluvia\" — y cuando dicen 60%, históricamente llueve solo el 40% de las veces.",
+   "sustitucion": "Silver señala que algunos meteorólogos de televisión locales exageran deliberadamente la probabilidad de lluvia (el llamado «wet bias»): en los datos que cita, cuando anunciaban un 100% de probabilidad llovía aproximadamente el 70% de las veces.",
+   "campo": "cuerpo",
+   "id": "7c08fa68-6e16-4bc3-8192-86e420341e5f",
+   "evidencia": "Wikipedia «Wet bias» y reseñas del cap. 4: TV local 100% -> ~70%; NWS bien calibrado. Cifra 60/40 no aparece en ninguna fuente."
+  },
+  {
+   "donde": "lección 3 · cuerpo",
+   "severidad": "DUDA",
+   "problema": "Los intervalos fallidos que cita Silver son los de la Survey of Professional Forecasters (economistas profesionales), no «modelos econométricos de bancos centrales y de inversión». Silver dice que los intervalos del 90% contienen el valor real aproximadamente la mitad de las veces.",
+   "texto_exacto_a_sustituir": "Los modelos econométricos de los bancos centrales y los bancos de inversión predicen el crecimiento del PIB con intervalos de confianza que, examinados retrospectivamente, contienen el valor real mucho menos frecuentemente de lo que deberían.",
+   "sustitucion": "Los economistas profesionales (por ejemplo, los de la Survey of Professional Forecasters) publican previsiones del PIB con intervalos de confianza que, según Silver, contienen el valor real bastante menos veces de lo que deberían: aproximadamente la mitad de las veces en el caso de intervalos del 90%.",
+   "campo": "cuerpo",
+   "id": "7c08fa68-6e16-4bc3-8192-86e420341e5f",
+   "evidencia": "Entrevistas y reseñas: «un intervalo que debería cubrir el 90% suele cubrir ~50%». No hallé confirmación web de la cifra exacta (53%), por eso «aproximadamente»."
+  },
+  {
+   "donde": "lección 3 · cuerpo",
+   "severidad": "DUDA",
+   "problema": "Lista de mecanismos presentada como identificada por Silver; hindsight bias no es un mecanismo que él desarrolle de ese modo.",
+   "texto_exacto_a_sustituir": "Silver identifica varios mecanismos que la producen:",
+   "sustitucion": "Entre los mecanismos que contribuyen a la sobreconfianza (varios de ellos tratados por Silver) se citan:",
+   "campo": "cuerpo",
+   "id": "7c08fa68-6e16-4bc3-8192-86e420341e5f",
+   "evidencia": "No verificable punto por punto."
+  },
+  {
+   "donde": "lección 4 · cuerpo",
+   "severidad": "DUDA",
+   "problema": "En el capítulo de 2008 Silver explica el fallo de las agencias de calificación por supuestos (baja correlación entre impagos, precios de la vivienda que no caerían a escala nacional) y extrapolación fuera de muestra; el overfitting lo desarrolla sobre todo en otros capítulos (economía, terremotos). La descripción de «50 variables de entrenamiento» y modelos «con gran precisión» no está respaldada.",
+   "texto_exacto_a_sustituir": "Silver documenta el overfitting en los modelos de riesgo financiero que fallaron en la crisis de 2008: modelos extraordinariamente sofisticados que ajustaban los datos históricos de mercado con gran precisión no contenían variables para escenarios que no habían ocurrido en el período de entrenamiento.",
+   "sustitucion": "Silver analiza el fallo de las agencias de calificación en la crisis de 2008 (sus modelos asumían, por ejemplo, poca correlación entre impagos hipotecarios y que los precios de la vivienda no caerían a escala nacional) como un caso de modelos apoyados en datos del pasado que no contemplaban escenarios nunca observados; el overfitting propiamente dicho aparece con más claridad en otros capítulos del libro, como los de economía y terremotos.",
+   "campo": "cuerpo",
+   "id": "ede64053-9a5d-4b58-a299-7185c7a8b53c",
+   "evidencia": "Reseñas del cap. 1 (S&P y CDO) y caps. 5-6. Contraste web limitado; se suaviza."
+  },
+  {
+   "donde": "lección 4 · conexion_cruzada",
+   "severidad": "DUDA",
+   "problema": "Errata «fragililidad».",
+   "texto_exacto_a_sustituir": "fragililidad",
+   "sustitucion": "fragilidad",
+   "campo": "conexion_cruzada",
+   "id": "ede64053-9a5d-4b58-a299-7185c7a8b53c",
+   "evidencia": "Errata."
+  },
+  {
+   "donde": "lección 5 · cuerpo",
+   "severidad": "ERROR",
+   "problema": "Falsa descripción del libro: Silver NO concluye que los scouts sufrieran sistemáticamente sesgos que las estadísticas corrigen; compara PECOTA con las listas de prospectos de Baseball America y encuentra que las valoraciones de los scouts aportan valor (incluso superaron a PECOTA en prospectos, sobre todo lanzadores), de modo que ambos enfoques se complementan.",
+   "texto_exacto_a_sustituir": "Silver descubre que los scouts de béisbol sufrían sistemáticamente los mismos sesgos que los pronosticadores en otros dominios: sobrereaccionaban a la actuación reciente, ignoraban la regresión a la media, y construían narrativas sobre jugadores que no estaban soportadas por los datos históricos de jugadores comparables.",
+   "sustitucion": "Silver no concluye que los scouts fueran sistemáticamente peores que las estadísticas: en el libro compara las proyecciones de PECOTA con las listas de prospectos de los scouts (Baseball America) y encuentra que las valoraciones de los scouts aportan información valiosa, de modo que lo más sensato es combinar ambos enfoques.",
+   "campo": "cuerpo",
+   "id": "c63aaa9d-28c7-4009-b7f1-4da98c439c78",
+   "evidencia": "ESPN, entrevista a Silver (jugadores top de Baseball America ~630 victorias vs ~546 de los top PECOTA); Baseball Prospectus: las listas basadas en scouts rindieron algo mejor, sobre todo en lanzadores."
+  },
+  {
+   "donde": "lección 5 · cuerpo",
+   "severidad": "DUDA",
+   "problema": "Afirmación sobre eficiencia del mercado de apuestas deportivas atribuida al libro sin respaldo.",
+   "texto_exacto_a_sustituir": "El mercado de apuestas deportivas, con sus mecanismos de corrección de errores por arbitraje, es en algunos sentidos más eficiente que el mercado de evaluación de jugadores porque los errores sistemáticos tienen consecuencias financieras inmediatas que incentivan su corrección.",
+   "sustitucion": "eliminar",
+   "campo": "cuerpo",
+   "id": "c63aaa9d-28c7-4009-b7f1-4da98c439c78",
+   "evidencia": "No verificable."
+  },
+  {
+   "donde": "lección 5 · conexion_cruzada",
+   "severidad": "ERROR",
+   "problema": "Peak (2016) es posterior al libro de Silver (2012) y no trata a los scouts de béisbol; se inventa que Silver documentó «décadas de evaluación de scouts sin feedback».",
+   "texto_exacto_a_sustituir": "Ericsson en Peak describe las representaciones mentales de los scouts de béisbol como patrones reconocidos mediante miles de evaluaciones.",
+   "sustitucion": "Ericsson, en Peak (2016, posterior al libro de Silver), describe las representaciones mentales de los expertos como patrones construidos mediante miles de horas de práctica con feedback.",
+   "campo": "conexion_cruzada",
+   "id": "c63aaa9d-28c7-4009-b7f1-4da98c439c78",
+   "evidencia": "Cronología y contenido de Peak; conocimiento sólido."
+  },
+  {
+   "donde": "lección 5 · conexion_cruzada",
+   "severidad": "ERROR",
+   "problema": "Atribución falsa a Silver (demostrar que las representaciones de los scouts son erróneas por feedback sesgado).",
+   "texto_exacto_a_sustituir": "Silver demuestra que esas representaciones pueden ser sistemáticamente erróneas si el feedback que las construyó estaba sesgado.",
+   "sustitucion": "Silver no desarrolla este argumento; es una lectura de la app: esas representaciones solo son fiables si el feedback que las construyó era válido.",
+   "campo": "conexion_cruzada",
+   "id": "c63aaa9d-28c7-4009-b7f1-4da98c439c78",
+   "evidencia": "Ver lección 5 · cuerpo."
+  },
+  {
+   "donde": "lección 5 · conexion_cruzada",
+   "severidad": "ERROR",
+   "problema": "Atribución falsa: Silver no documenta décadas de evaluación de scouts sin feedback.",
+   "texto_exacto_a_sustituir": " feedback válido — y Silver documenta en el béisbol cómo décadas de evaluación de scouts sin feedback sistemático sobre sus errores producía expertise en apariencia sin mejora real en calibración.",
+   "sustitucion": " feedback válido.",
+   "campo": "conexion_cruzada",
+   "id": "c63aaa9d-28c7-4009-b7f1-4da98c439c78",
+   "evidencia": "Ver lección 5 · cuerpo."
+  },
+  {
+   "donde": "lección 5 · aplicacion_practica",
+   "severidad": "DUDA",
+   "problema": "Predicción atribuida a Silver sin respaldo.",
+   "texto_exacto_a_sustituir": "Silver predice que los pronosticadores que establecen el prior histórico antes de analizar el caso específico son sistemáticamente mejor calibrados que los que analizan el caso específico primero.",
+   "sustitucion": "Establecer el prior histórico antes de analizar el caso específico es una práctica coherente con el enfoque de Silver, aunque el libro no demuestra que mejore la calibración.",
+   "campo": "aplicacion_practica",
+   "id": "c63aaa9d-28c7-4009-b7f1-4da98c439c78",
+   "evidencia": "No verificable."
+  },
+  {
+   "donde": "lección 6 · cuerpo",
+   "severidad": "DUDA",
+   "problema": "Sobreafirmación: que Silver considere el póker «el modelo más puro» y el proceso/resultado «la competencia más importante».",
+   "texto_exacto_a_sustituir": "porque lo considera el modelo más puro disponible de toma de decisiones bajo incertidumbre",
+   "sustitucion": "porque lo usa como un ejemplo claro de toma de decisiones bajo incertidumbre",
+   "campo": "cuerpo",
+   "id": "e5c70041-da9f-4350-b105-4a55ecac9384",
+   "evidencia": "Cap. 10 del libro (póker); formulación superlativa no verificable."
+  },
+  {
+   "donde": "lección 6 · cuerpo",
+   "severidad": "DUDA",
+   "problema": "Superlativo atribuido a Silver.",
+   "texto_exacto_a_sustituir": "que Silver considera la competencia cognitiva más importante para el pronóstico en dominios ruidosos",
+   "sustitucion": "que Silver destaca como una competencia clave para el pronóstico en dominios ruidosos",
+   "campo": "cuerpo",
+   "id": "e5c70041-da9f-4350-b105-4a55ecac9384",
+   "evidencia": "No verificable."
+  },
+  {
+   "donde": "lección 6 · conexion_cruzada",
+   "severidad": "DUDA",
+   "problema": "La ergodicidad es un énfasis de Taleb en obras posteriores (Skin in the Game), no del Cisne Negro; y la afirmación de que Silver «asume ergodicidad» es inventada.",
+   "texto_exacto_a_sustituir": "Taleb distingue entre domains where outcomes are ergodic (el promedio de muchas muestras converge al valor esperado) y domains where they are not.",
+   "sustitucion": "Taleb insiste en que, en dominios con riesgo de ruina, el promedio de muchas repeticiones no basta: una sola pérdida catastrófica puede impedir seguir jugando.",
+   "campo": "conexion_cruzada",
+   "id": "e5c70041-da9f-4350-b105-4a55ecac9384",
+   "evidencia": "Taleb, Fooled by Randomness / Skin in the Game; la frase mezcla inglés y español."
+  },
+  {
+   "donde": "lección 6 · conexion_cruzada",
+   "severidad": "DUDA",
+   "problema": "Uso del término «ergódico» impropio para el póker.",
+   "texto_exacto_a_sustituir": "El poker, con su estructura de información y valor esperado calculable en cada mano, es ergódico en el largo plazo — el proceso correcto converge al resultado correcto con suficientes manos.",
+   "sustitucion": "En el póker, con valor esperado calculable en cada mano, el proceso correcto tiende a imponerse con suficientes manos (siempre que el jugador no se arruine antes).",
+   "campo": "conexion_cruzada",
+   "id": "e5c70041-da9f-4350-b105-4a55ecac9384",
+   "evidencia": "Conocimiento sólido."
+  },
+  {
+   "donde": "lección 6 · conexion_cruzada",
+   "severidad": "ERROR",
+   "problema": "Atribución falsa: no consta que Silver «asuma ergodicidad».",
+   "texto_exacto_a_sustituir": "Silver implícitamente asume ergodicidad en los dominios que analiza, pero Taleb señalaría que los mercados financieros no son ergódicos porque una sola pérdida catastrófica puede eliminar la posibilidad de jugar las manos futuras.",
+   "sustitucion": "Es una lectura de la app, no una tesis de Silver, que en los mercados financieros una sola pérdida catastrófica puede eliminar la posibilidad de jugar las manos futuras, un punto que Taleb subraya.",
+   "campo": "conexion_cruzada",
+   "id": "e5c70041-da9f-4350-b105-4a55ecac9384",
+   "evidencia": "No verificable en el libro."
+  },
+  {
+   "donde": "lección 6 · conexion_cruzada",
+   "severidad": "DUDA",
+   "problema": "Ajuste coherente con el cambio anterior.",
+   "texto_exacto_a_sustituir": "La lección del poker sobre proceso versus resultado aplica plenamente en dominios ergódicos pero necesita modificación en dominios con riesgo de ruina.",
+   "sustitucion": "La lección del póker sobre proceso versus resultado necesita matizarse en dominios con riesgo de ruina.",
+   "campo": "conexion_cruzada",
+   "id": "e5c70041-da9f-4350-b105-4a55ecac9384",
+   "evidencia": "—"
+  },
+  {
+   "donde": "lección 6 · autocorreccion",
+   "severidad": "DUDA",
+   "problema": "Afirmación de idealización sin respaldo.",
+   "texto_exacto_a_sustituir": "Silver idealiza el poker como modelo de decisión bajo incertidumbre más de lo que la evidencia justifica.",
+   "sustitucion": "El póker es un modelo útil de decisión bajo incertidumbre, pero conviene no idealizarlo.",
+   "campo": "autocorreccion",
+   "id": "e5c70041-da9f-4350-b105-4a55ecac9384",
+   "evidencia": "Opinión de la app."
+  },
+  {
+   "donde": "lección 6 · aplicacion_practica",
+   "severidad": "DUDA",
+   "problema": "Predicción atribuida a Silver.",
+   "texto_exacto_a_sustituir": "Silver predice que tus mejoras vendrán de mejorar la puntuación de proceso, no de sacar conclusiones de cada resultado individual.",
+   "sustitucion": "La idea es que la mejora venga de perfeccionar el proceso y no de sacar conclusiones de cada resultado individual.",
+   "campo": "aplicacion_practica",
+   "id": "e5c70041-da9f-4350-b105-4a55ecac9384",
+   "evidencia": "No verificable."
+  },
+  {
+   "donde": "lección 7 · cuerpo",
+   "severidad": "DUDA",
+   "problema": "Silver no desarrolla la utilidad de los mercados de opciones como en el texto; el historial de Intrade se presenta como claramente favorable, cuando Silver lo valora de forma más matizada.",
+   "texto_exacto_a_sustituir": "predecían resultados electorales con mayor precisión que la mayoría de los analistas individuales, y los mercados de opciones financieras contienen información sobre la distribución de probabilidades de resultados futuros que los modelos econométricos raramente capturan mejor.",
+   "sustitucion": "tuvieron en general un buen historial en elecciones, aunque desigual y sin superar siempre a las encuestas bien agregadas.",
+   "campo": "cuerpo",
+   "id": "ebd14a7a-04c6-449c-b870-ddf85d278962",
+   "evidencia": "No hallé confirmación; Intrade existía (cerró en 2013). Se suaviza."
+  },
+  {
+   "donde": "lección 7 · cuerpo",
+   "severidad": "DUDA",
+   "problema": "Sobregeneralización: «todos los modelos de todos los participantes».",
+   "texto_exacto_a_sustituir": "La crisis de 2008 fue el caso de estudio de mercado con error correlacionado masivo: todos los modelos de riesgo de todos los participantes estaban basados en las mismas distribuciones históricas y cometieron el mismo error simultáneamente.",
+   "sustitucion": "La crisis de 2008 se suele presentar como un caso de error correlacionado masivo: muchos participantes compartían supuestos similares (por ejemplo, que los precios de la vivienda no caerían a la vez en todo el país) y cometieron el mismo error.",
+   "campo": "cuerpo",
+   "id": "ebd14a7a-04c6-449c-b870-ddf85d278962",
+   "evidencia": "Cap. 1 y 11 del libro; formulación absoluta no verificable."
+  },
+  {
+   "donde": "lección 7 · conexion_cruzada",
+   "severidad": "ERROR",
+   "problema": "The Sensory Order (1952) es un libro de psicología/neurociencia de Hayek; la obra sobre precios e información es «El uso del conocimiento en la sociedad» (1945).",
+   "texto_exacto_a_sustituir": "Hayek en The Sensory Order y en su trabajo sobre los precios como mecanismo de información describe",
+   "sustitucion": "Hayek en «El uso del conocimiento en la sociedad» (1945) describe",
+   "campo": "conexion_cruzada",
+   "id": "ebd14a7a-04c6-449c-b870-ddf85d278962",
+   "evidencia": "Obra bibliográfica de Hayek; conocimiento sólido."
+  },
+  {
+   "donde": "lección 7 · conexion_cruzada",
+   "severidad": "DUDA",
+   "problema": "Sobreafirmación: Silver no «proporciona la evidencia empírica moderna de que los mercados funcionan como Hayek predijo»; no consta que cite a Hayek.",
+   "texto_exacto_a_sustituir": "Silver proporciona la evidencia empírica moderna de que los mercados de predicción funcionan como Hayek predijo y documenta los casos donde fallan",
+   "sustitucion": "Silver examina la evidencia sobre el funcionamiento de los mercados de predicción y los casos en que fallan",
+   "campo": "conexion_cruzada",
+   "id": "ebd14a7a-04c6-449c-b870-ddf85d278962",
+   "evidencia": "No verificable."
+  },
+  {
+   "donde": "lección 7 · autocorreccion",
+   "severidad": "DUDA",
+   "problema": "Silver es más cauto que «demasiado optimista» sobre la eficiencia; y la agrupación de volatility clustering como anomalía de eficiencia es incorrecta.",
+   "texto_exacto_a_sustituir": "Silver es demasiado optimista sobre la eficiencia de los mercados de predicción en dominios complejos.",
+   "sustitucion": "Conviene no sobreestimar la eficiencia de los mercados de predicción en dominios complejos.",
+   "campo": "autocorreccion",
+   "id": "ebd14a7a-04c6-449c-b870-ddf85d278962",
+   "evidencia": "Conocimiento sólido."
+  },
+  {
+   "donde": "lección 7 · autocorreccion",
+   "severidad": "ERROR",
+   "problema": "El «volatility clustering» es un hecho estilizado de los retornos, no una anomalía contraria a la eficiencia.",
+   "texto_exacto_a_sustituir": "exhiben anomalías persistentes (momentum, value premium, volatility clustering) que son difícilmente consistentes con la plena eficiencia",
+   "sustitucion": "exhiben anomalías documentadas (por ejemplo, momentum o value premium) que algunos autores consideran difíciles de reconciliar con la plena eficiencia",
+   "campo": "autocorreccion",
+   "id": "ebd14a7a-04c6-449c-b870-ddf85d278962",
+   "evidencia": "Literatura de finanzas; conocimiento sólido."
+  },
+  {
+   "donde": "lección 7 · aplicacion_practica",
+   "severidad": "DUDA",
+   "problema": "«La pregunta de Silver» no es una cita ni una pregunta literal del libro.",
+   "texto_exacto_a_sustituir": "hazte la pregunta de Silver:",
+   "sustitucion": "hazte esta pregunta:",
+   "campo": "aplicacion_practica",
+   "id": "ebd14a7a-04c6-449c-b870-ddf85d278962",
+   "evidencia": "No verificable."
+  },
+  {
+   "donde": "lección 8 · cuerpo",
+   "severidad": "ERROR",
+   "problema": "Silver es más matizado: confía en el efecto invernadero por su base física, pero las proyecciones concretas del IPCC (p. ej. 1990) han acertado la dirección y no siempre la magnitud; decir que los modelos están «bien calibrados» sin más es una simplificación no respaldada.",
+   "texto_exacto_a_sustituir": "El cambio climático es lo opuesto: la señal de calentamiento antropogénico es extraordinariamente robusta y los modelos climáticos globales, que operan en escalas de décadas, son bien calibrados.",
+   "sustitucion": "El cambio climático es lo opuesto: la señal de calentamiento por gases de efecto invernadero está sólidamente respaldada por la física básica, aunque las proyecciones concretas de los modelos han acertado la dirección y no siempre la magnitud, y la incertidumbre sobre esta es considerable.",
+   "campo": "cuerpo",
+   "id": "f116142f-4e4a-4303-8ebc-ae22e3a63829",
+   "evidencia": "Frame y Stone (Nature Climate Change); Skeptical Science sobre IPCC 1990 (0,25 ºC/década proyectados). Las fuentes discrepan sobre la magnitud; se suaviza."
+  },
+  {
+   "donde": "lección 8 · cuerpo",
+   "severidad": "DUDA",
+   "problema": "Silver muestra que el valor de los pronósticos meteorológicos sobre el promedio climático se agota en torno al octavo día; «3-5 días» infravalora la primera semana.",
+   "texto_exacto_a_sustituir": "(buenas a 3-5 días, rápida degradación después)",
+   "sustitucion": "(razonablemente buenas durante la primera semana y con rápida degradación después, hasta apenas mejorar el promedio climático hacia el octavo día aproximadamente)",
+   "campo": "cuerpo",
+   "id": "f116142f-4e4a-4303-8ebc-ae22e3a63829",
+   "evidencia": "Reseña del libro (blog de Jason Collins): hacia el día 8 la ventaja sobre el promedio climático es marginal."
+  },
+  {
+   "donde": "lección 8 · conexion_cruzada",
+   "severidad": "ERROR",
+   "problema": "Se atribuye a Silver que los terremotos son impredecibles por sensibilidad a condiciones iniciales (caos). Silver sostiene que no entendemos los procesos geológicos ni disponemos de datos para predecir fecha y lugar; el caos lo aplica al tiempo atmosférico. Deutsch tampoco trata la predicción sísmica.",
+   "texto_exacto_a_sustituir": "Silver complementa esto con el argumento opuesto: hay límites al conocimiento predictivo que no son consecuencia de ignorancia corregible sino de la naturaleza caótica de ciertos sistemas. Los terremotos específicos pueden ser impredecibles no porque no tengamos suficientes datos sino porque el sistema sísmico es sensible a condiciones iniciales con tanta precisión que la predicción específica viola límites fundamentales. La visión de Deutsch sobre el conocimiento potencialmente ilimitado necesita la distinción de Silver sobre predictibilidad estructural para evitar el optimismo epistemológico ingenuo.",
+   "sustitucion": "Silver añade un matiz: predecir con detalle no es lo mismo que comprender, y en sistemas como el tiempo atmosférico el caos impone límites prácticos a la predicción detallada aunque se conozcan las ecuaciones. En el caso de los terremotos, Silver subraya sobre todo que la teoría y los datos disponibles son insuficientes para predecir fecha y lugar, sin afirmar que sea imposible en principio. (Conexión interpretativa de la app: Deutsch no trata la predicción sísmica.)",
+   "campo": "conexion_cruzada",
+   "id": "f116142f-4e4a-4303-8ebc-ae22e3a63829",
+   "evidencia": "Reseña del cap. 5 (moontowermeta): no entendemos los procesos geológicos lo suficiente para modelos predictivos; Gutenberg-Richter da frecuencias, no momentos."
+  },
+  {
+   "donde": "lección 8 · autocorreccion",
+   "severidad": "DUDA",
+   "problema": "Afirmación de que Silver subestima el cambio de régimen y de que los modelos climáticos asumen regularidades estadísticas pasadas: los modelos climáticos son físicos, no extrapolaciones estadísticas.",
+   "texto_exacto_a_sustituir": "Silver subestima el grado en que los sistemas complejos cambian sus propiedades con el tiempo.",
+   "sustitucion": "Los sistemas complejos pueden cambiar sus propiedades con el tiempo, un matiz que el libro trata solo parcialmente.",
+   "campo": "autocorreccion",
+   "id": "f116142f-4e4a-4303-8ebc-ae22e3a63829",
+   "evidencia": "Conocimiento sólido."
+  },
+  {
+   "donde": "lección 8 · autocorreccion",
+   "severidad": "ERROR",
+   "problema": "Los modelos climáticos globales se basan en la física del sistema, no en regularidades estadísticas del pasado.",
+   "texto_exacto_a_sustituir": "El cambio climático es el ejemplo más obvio: el sistema climático que los modelos han calibrado está siendo perturbado por el cambio antropogénico, lo que significa que las regularidades estadísticas del pasado son menos confiables como base para proyecciones que los modelos asumen.",
+   "sustitucion": "Los modelos climáticos, a diferencia de las extrapolaciones puramente estadísticas, se basan en la física del sistema, pero el clima se está saliendo del rango de variación histórico, por lo que las proyecciones conllevan una incertidumbre real que conviene no minimizar.",
+   "campo": "autocorreccion",
+   "id": "f116142f-4e4a-4303-8ebc-ae22e3a63829",
+   "evidencia": "Conocimiento sólido."
+  },
+  {
+   "donde": "lección 8 · aplicacion_practica",
+   "severidad": "DUDA",
+   "problema": "Predicción atribuida a Silver.",
+   "texto_exacto_a_sustituir": "Silver predice que la mayoría de los pronosticadores operan",
+   "sustitucion": "Es posible que muchos pronosticadores operen",
+   "campo": "aplicacion_practica",
+   "id": "f116142f-4e4a-4303-8ebc-ae22e3a63829",
+   "evidencia": "No verificable."
+  },
+  {
+   "donde": "lección 9 · cuerpo",
+   "severidad": "DUDA",
+   "problema": "Atribución: la distinción precisión/calibración no es una distinción nítida de Silver (sigue a Murphy: precisión, honestidad y valor económico).",
+   "texto_exacto_a_sustituir": "Silver distingue entre dos dimensiones del pronóstico que frecuentemente se confunden:",
+   "sustitucion": "Siguiendo la tradición de la meteorología, se distinguen dos dimensiones del pronóstico que frecuentemente se confunden:",
+   "campo": "cuerpo",
+   "id": "0824a9bd-d49a-4c91-ac72-fdf49304fe16",
+   "evidencia": "Murphy 1993 «What is a good forecast?» (consistencia, calidad, valor)."
+  },
+  {
+   "donde": "lección 9 · cuerpo",
+   "severidad": "ERROR",
+   "problema": "Falso que la calibración sea «más fundamental» y que implique por sí sola un proceso informativo: un pronóstico que siempre repite la frecuencia histórica está calibrado y no informa. La calibración es necesaria pero no suficiente.",
+   "texto_exacto_a_sustituir": "La calibración es más fundamental que la precisión en dominios estocásticos porque la precisión en cualquier predicción individual puede ser consecuencia del azar, mientras que la calibración sistemática solo puede ser consecuencia de un proceso genuinamente informativo.",
+   "sustitucion": "En dominios estocásticos la calibración es una condición necesaria: la precisión de una predicción individual puede ser fruto del azar, y la calibración solo se aprecia a lo largo de muchas predicciones. No es suficiente: un pronóstico que siempre repite la frecuencia histórica está calibrado pero no aporta información.",
+   "campo": "cuerpo",
+   "id": "0824a9bd-d49a-4c91-ac72-fdf49304fe16",
+   "evidencia": "Teoría de verificación de pronósticos probabilísticos (Murphy); conocimiento sólido."
+  },
+  {
+   "donde": "lección 9 · cuerpo",
+   "severidad": "ERROR",
+   "problema": "Silver destaca la calibración del Servicio Meteorológico Nacional; los meteorólogos de TV locales, en cambio, están sesgados (wet bias). «Los mejor calibrados de cualquier dominio estudiado» es un superlativo no verificable.",
+   "texto_exacto_a_sustituir": "Silver documenta que los meteorólogos estadounidenses son los pronosticadores mejor calibrados de cualquier dominio estudiado",
+   "sustitucion": "Silver destaca que los pronosticadores del Servicio Meteorológico Nacional de EE. UU. están bien calibrados (a diferencia de algunos meteorólogos de televisión locales, que exageran la probabilidad de lluvia) y los cita como uno de los mejores ejemplos de pronóstico",
+   "campo": "cuerpo",
+   "id": "0824a9bd-d49a-4c91-ac72-fdf49304fe16",
+   "evidencia": "Wikipedia «Wet bias»; reseñas del cap. 4."
+  },
+  {
+   "donde": "lección 9 · cuerpo",
+   "severidad": "DUDA",
+   "problema": "No consta que Silver proponga el Brier Score como métrica estándar.",
+   "texto_exacto_a_sustituir": "y Silver argumenta que debería ser la métrica estándar de evaluación de cualquier sistema de pronóstico",
+   "sustitucion": "y es una forma habitual de evaluar sistemas de pronóstico probabilístico",
+   "campo": "cuerpo",
+   "id": "0824a9bd-d49a-4c91-ac72-fdf49304fe16",
+   "evidencia": "No verificable."
+  },
+  {
+   "donde": "lección 9 · conexion_cruzada",
+   "severidad": "ERROR",
+   "problema": "Frase sin sentido («los superpronosticadores son los meteorólogos de Tetlock»).",
+   "texto_exacto_a_sustituir": "Los superpronosticadores de Tetlock son los meteorólogos de Tetlock — personas que han desarrollado la disciplina",
+   "sustitucion": "Los superpronosticadores de Tetlock son personas que han desarrollado la disciplina",
+   "campo": "conexion_cruzada",
+   "id": "0824a9bd-d49a-4c91-ac72-fdf49304fe16",
+   "evidencia": "Superforecasting (2015)."
+  },
+  {
+   "donde": "lección 9 · conexion_cruzada",
+   "severidad": "DUDA",
+   "problema": "Superforecasting (2015) es posterior a Silver; Tetlock destaca además otros rasgos (apertura mental, trabajo en equipo), no solo calibración.",
+   "texto_exacto_a_sustituir": "usa exactamente las mismas métricas de calibración que Silver describe y llega a las mismas conclusiones sobre qué diferencia a los buenos pronosticadores: no es que tengan más conocimiento sino que están mejor calibrados.",
+   "sustitucion": "(2015, posterior al libro de Silver) evalúa a los pronosticadores con el Brier Score y destaca, como Silver, la importancia de la calibración y de actualizar creencias; Tetlock subraya además rasgos como la apertura mental y el trabajo en equipo.",
+   "campo": "conexion_cruzada",
+   "id": "0824a9bd-d49a-4c91-ac72-fdf49304fe16",
+   "evidencia": "Tetlock & Gardner, Superforecasting (2015); conocimiento sólido."
+  },
+  {
+   "donde": "lección 9 · aplicacion_practica",
+   "severidad": "DUDA",
+   "problema": "Predicción atribuida a Silver.",
+   "texto_exacto_a_sustituir": "Silver predice que la mayoría de los pronosticadores descubrirán que sus predicciones de alta confianza se materializan con menor frecuencia de la que su confianza sugeriría.",
+   "sustitucion": "Es frecuente que quien hace este ejercicio descubra que sus predicciones de alta confianza se materializan con menor frecuencia de la que su confianza sugeriría (sobreconfianza).",
+   "campo": "aplicacion_practica",
+   "id": "0824a9bd-d49a-4c91-ac72-fdf49304fe16",
+   "evidencia": "Literatura sobre sobreconfianza."
+  },
+  {
+   "donde": "lección 10 · cuerpo",
+   "severidad": "DUDA",
+   "problema": "No consta que Silver sostenga explícitamente que el cambio empieza por el consumidor.",
+   "texto_exacto_a_sustituir": "Silver argumenta que el cambio empieza por el consumidor de pronósticos: si los consumidores aprendieran a evaluar",
+   "sustitucion": "Una consecuencia razonable de este planteamiento (no una tesis explícita de Silver) es que el cambio empiece por el consumidor de pronósticos: si los consumidores aprendieran a evaluar",
+   "campo": "cuerpo",
+   "id": "59f445be-1e54-40a8-afe9-ba13d38abdd5",
+   "evidencia": "No verificable."
+  },
+  {
+   "donde": "lección 10 · conexion_cruzada",
+   "severidad": "DUDA",
+   "problema": "Analogía presentada como contenido de Silver.",
+   "texto_exacto_a_sustituir": "El pronosticador sobreconfiado que Silver critica es la versión epistémica del hemisferio izquierdo en control total",
+   "sustitucion": "Por analogía (lectura de la app, no de Silver), el pronosticador sobreconfiado sería la versión epistémica del hemisferio izquierdo en control total",
+   "campo": "conexion_cruzada",
+   "id": "59f445be-1e54-40a8-afe9-ba13d38abdd5",
+   "evidencia": "Interpretación."
+  },
+  {
+   "donde": "lección 10 · conexion_cruzada",
+   "severidad": "DUDA",
+   "problema": "La «capacidad negativa» es un concepto de Keats; no consta que McGilchrist la use con ese sentido ni Silver.",
+   "texto_exacto_a_sustituir": "exactamente lo que McGilchrist llama la capacidad negativa de Keats",
+   "sustitucion": "algo cercano a lo que Keats llamó «capacidad negativa»",
+   "campo": "conexion_cruzada",
+   "id": "59f445be-1e54-40a8-afe9-ba13d38abdd5",
+   "evidencia": "Carta de Keats a sus hermanos (1817)."
+  },
+  {
+   "donde": "lección 10 · aplicacion_practica",
+   "severidad": "DUDA",
+   "problema": "Predicción atribuida a Silver.",
+   "texto_exacto_a_sustituir": "Silver predice que descubrirás que las fuentes más seguidas y más confiadas tienen la peor calibración histórica, y que fuentes menos populares pero más hedgeadas tienen mejor historial predictivo.",
+   "sustitucion": "Es una hipótesis razonable (apoyada por el trabajo de Tetlock sobre expertos mediáticos), pero no una predicción de Silver, que las fuentes más seguidas y más confiadas tengan peor calibración que otras menos populares y más prudentes.",
+   "campo": "aplicacion_practica",
+   "id": "59f445be-1e54-40a8-afe9-ba13d38abdd5",
+   "evidencia": "Tetlock, Expert Political Judgment."
+  },
+  {
+   "donde": "pregunta 025487a4-cea0-4228-9cc9-720997983b2c",
+   "severidad": "ERROR",
+   "problema": "La opción marcada como correcta no es la correcta: la correcta es la 0 (modelo bayesiano que agrega y pondera encuestas); la 1 (datos privados) es falsa.",
+   "sustitucion": "cambiar clave",
+   "campo": "clave",
+   "id": "025487a4-cea0-4228-9cc9-720997983b2c",
+   "evidencia": "Silver usó encuestas públicas (FiveThirtyEight). 2008: 49/50 estados; 2012: 50/50 (fox6now, TPM).",
+   "nueva_correcta": 0
+  },
+  {
+   "donde": "pregunta 138e787d-64af-4fc2-8485-fbce8b991954",
+   "severidad": "ERROR",
+   "problema": "La opción marcada como correcta no es la correcta: la correcta es la 3; la 2 («Silver no distingue») no es la respuesta. Además la terminología «ruido por azar/complejidad» no es literal de Silver (DUDA).",
+   "sustitucion": "cambiar clave",
+   "campo": "clave",
+   "id": "138e787d-64af-4fc2-8485-fbce8b991954",
+   "evidencia": "Revisión del texto de las opciones.",
+   "nueva_correcta": 3
+  },
+  {
+   "donde": "pregunta 1599c76e-70ab-40dc-beaa-163718823084",
+   "severidad": "ERROR",
+   "problema": "La opción marcada como correcta no es la correcta: la correcta es la 1 (definición erizo/zorro); la 3 (largo/corto plazo) es falsa.",
+   "sustitucion": "cambiar clave",
+   "campo": "clave",
+   "id": "1599c76e-70ab-40dc-beaa-163718823084",
+   "evidencia": "Tetlock, Expert Political Judgment; Berlin; Silver cap. 2.",
+   "nueva_correcta": 1
+  },
+  {
+   "donde": "pregunta 15bc26c2-546a-420c-8916-8b432b3c9bf5",
+   "severidad": "ERROR",
+   "problema": "Clave mala (la correcta sería la 0, no la 1, que dice que los derivados no contienen información) y además la pregunta atribuye a Silver una «lección» sobre volatilidad implícita de opciones que no consta en el libro.",
+   "sustitucion": "desactivar",
+   "campo": "desactivar",
+   "id": "15bc26c2-546a-420c-8916-8b432b3c9bf5",
+   "evidencia": "Capítulos del libro no desarrollan volatilidad implícita; no verificable."
+  },
+  {
+   "donde": "pregunta 18fb0822-2ff8-4659-a039-e0750e4a0fd2",
+   "severidad": "ERROR",
+   "problema": "La opción marcada como correcta no es la correcta: la correcta es la 3; la 1 (excluir eventos de cola) es falsa.",
+   "sustitucion": "cambiar clave",
+   "campo": "clave",
+   "id": "18fb0822-2ff8-4659-a039-e0750e4a0fd2",
+   "evidencia": "Revisión del texto de las opciones.",
+   "nueva_correcta": 3
+  },
+  {
+   "donde": "pregunta 24779bb1-5aa7-4581-ab06-5456c464069e",
+   "severidad": "ERROR",
+   "problema": "La opción marcada como correcta no es la correcta: la correcta es la 2 (especificar prior y verosimilitud); la 0 (computacional) no es la limitación señalada.",
+   "sustitucion": "cambiar clave",
+   "campo": "clave",
+   "id": "24779bb1-5aa7-4581-ab06-5456c464069e",
+   "evidencia": "Revisión del texto de las opciones.",
+   "nueva_correcta": 2
+  },
+  {
+   "donde": "pregunta 352f3fc3-aeeb-44b1-a978-1abde2e8aedf",
+   "severidad": "ERROR",
+   "problema": "La opción marcada como correcta no es la correcta: la correcta es la 0 (base rate neglect vs conservadurismo); la 1 dice que los dos errores van en la misma dirección.",
+   "sustitucion": "cambiar clave",
+   "campo": "clave",
+   "id": "352f3fc3-aeeb-44b1-a978-1abde2e8aedf",
+   "evidencia": "Además, que sea formulación de Silver es DUDA (término «conservadurismo bayesiano» no es de Silver).",
+   "nueva_correcta": 0
+  },
+  {
+   "donde": "pregunta 3bc484b8-034f-4502-a3eb-0ac7a03f31db",
+   "severidad": "ERROR",
+   "problema": "La opción marcada como correcta no es la correcta: la correcta es la 3; la 0 («overfitting estadísticamente imposible en béisbol») es absurda. Además, la comparación finanzas/béisbol no es una tesis de Silver (DUDA).",
+   "sustitucion": "cambiar clave",
+   "campo": "clave",
+   "id": "3bc484b8-034f-4502-a3eb-0ac7a03f31db",
+   "evidencia": "Revisión del texto de las opciones.",
+   "nueva_correcta": 3
+  },
+  {
+   "donde": "pregunta 3fe0dabe-4bc6-4a33-880e-3e71eb57b562",
+   "severidad": "ERROR",
+   "problema": "La opción marcada como correcta no es la correcta: la correcta es la 1; la 3 (el clima a largo plazo es más incierto que el tiempo) contradice la lección. La opción 1 usa «10-14 días»: Silver sitúa el límite útil en torno a una semana (DUDA menor).",
+   "sustitucion": "cambiar clave",
+   "campo": "clave",
+   "id": "3fe0dabe-4bc6-4a33-880e-3e71eb57b562",
+   "evidencia": "Revisión del texto de las opciones.",
+   "nueva_correcta": 1
+  },
+  {
+   "donde": "pregunta 443dade6-46ef-4833-9fe5-643c156c9338",
+   "severidad": "ERROR",
+   "problema": "La opción marcada como correcta no es la correcta: la correcta es la 0; la 1 (ignorar evidencia contradictoria aislada) es incorrecta.",
+   "sustitucion": "cambiar clave",
+   "campo": "clave",
+   "id": "443dade6-46ef-4833-9fe5-643c156c9338",
+   "evidencia": "Revisión del texto de las opciones.",
+   "nueva_correcta": 0
+  },
+  {
+   "donde": "pregunta 46210b96-31d1-41d0-8667-7465a120f708",
+   "severidad": "ERROR",
+   "problema": "La opción marcada como correcta no es la correcta: la correcta es la 2 (definición funcional señal/ruido); la 0 (cuantitativa vs cualitativa) es falsa.",
+   "sustitucion": "cambiar clave",
+   "campo": "clave",
+   "id": "46210b96-31d1-41d0-8667-7465a120f708",
+   "evidencia": "Revisión del texto de las opciones.",
+   "nueva_correcta": 2
+  },
+  {
+   "donde": "pregunta 54bcac39-af92-4786-9d7c-9c1a1d5f4077",
+   "severidad": "DUDA",
+   "problema": "Duplicado casi literal de 46210b96 y con la clave mala (la correcta es la 1, no la 0).",
+   "sustitucion": "desactivar",
+   "campo": "desactivar",
+   "id": "54bcac39-af92-4786-9d7c-9c1a1d5f4077",
+   "evidencia": "Preguntas 46210b96 y 54bcac39 comparten enunciado y opciones."
+  },
+  {
+   "donde": "pregunta 4f293fd1-f713-47b3-ad6b-2be61761a16d",
+   "severidad": "ERROR",
+   "problema": "La opción marcada como correcta no es la correcta: la correcta es la 3; la 2 («Silver no identifica condiciones de ineficiencia») es falsa.",
+   "sustitucion": "cambiar clave",
+   "campo": "clave",
+   "id": "4f293fd1-f713-47b3-ad6b-2be61761a16d",
+   "evidencia": "Silver (cap. 11) sí discute límites de los mercados; formulación exacta de condiciones es DUDA.",
+   "nueva_correcta": 3
+  },
+  {
+   "donde": "pregunta 53ce0c0e-8da1-467c-9fe1-1f42850fbfe1",
+   "severidad": "ERROR",
+   "problema": "Clave mala (correcta = 2, no 1) y la pregunta atribuye a Silver un «argumento sobre la tasa base» aplicado a evaluar el rendimiento de apostadores/inversores que no consta en el libro.",
+   "sustitucion": "desactivar",
+   "campo": "desactivar",
+   "id": "53ce0c0e-8da1-467c-9fe1-1f42850fbfe1",
+   "evidencia": "No verificable en el libro."
+  },
+  {
+   "donde": "pregunta 599cf376-02a6-4ecb-b880-bbdc2c3c1bab",
+   "severidad": "ERROR",
+   "problema": "Premisa falsa para Silver: no sostiene que los modelos simples superen en general a los expertos (en el tiempo atmosférico los humanos mejoran las salidas de los modelos; defiende combinar juicio y modelos). El argumento de Meehl no es de Silver. Clave además mala (correcta = 3, no 1).",
+   "sustitucion": "desactivar",
+   "campo": "desactivar",
+   "id": "599cf376-02a6-4ecb-b880-bbdc2c3c1bab",
+   "evidencia": "Silver, cap. 4 (humanos añaden valor al pronóstico meteorológico por ordenador); Meehl no figura como fuente de Silver."
+  },
+  {
+   "donde": "pregunta 5dc2b596-5af0-4830-b613-8c03a293b9e1",
+   "severidad": "ERROR",
+   "problema": "La opción marcada como correcta no es la correcta: la correcta es la 0; la 1 («los resultados nunca contienen información») es falsa.",
+   "sustitucion": "cambiar clave",
+   "campo": "clave",
+   "id": "5dc2b596-5af0-4830-b613-8c03a293b9e1",
+   "evidencia": "Revisión del texto de las opciones.",
+   "nueva_correcta": 0
+  },
+  {
+   "donde": "pregunta 5ed89541-738f-469c-a319-dd1164575011",
+   "severidad": "ERROR",
+   "problema": "La opción «correcta» atribuye la impredecibilidad de los terremotos al caos y a límites de principio; Silver sostiene que se debe a que no entendemos los procesos geológicos ni tenemos datos suficientes, mientras que el caos lo aplica al tiempo atmosférico. Además la explicación dice que el tiempo a >10-14 días tiene «los mismos problemas que los terremotos», lo cual es erróneo.",
+   "sustitucion": "desactivar",
+   "campo": "desactivar",
+   "id": "5ed89541-738f-469c-a319-dd1164575011",
+   "evidencia": "Reseña del cap. 5 del libro (moontowermeta): sin modelos de abajo arriba solo quedan estadísticas pasadas."
+  },
+  {
+   "donde": "pregunta 6175be69-62b3-4198-b9c0-a6d21fe37b76",
+   "severidad": "ERROR",
+   "problema": "La opción marcada como correcta no es la correcta: la correcta es la 3 (overfitting/parsimonia); la 1 (datos) no es el argumento de Silver.",
+   "sustitucion": "cambiar clave",
+   "campo": "clave",
+   "id": "6175be69-62b3-4198-b9c0-a6d21fe37b76",
+   "evidencia": "Revisión del texto de las opciones.",
+   "nueva_correcta": 3
+  },
+  {
+   "donde": "pregunta 682f6311-770c-4329-8642-0dc78d84a004",
+   "severidad": "ERROR",
+   "problema": "La opción marcada como correcta no es la correcta: la correcta es la 1; la 0 (Silver defiende la forma fuerte de la EMH) es falsa.",
+   "sustitucion": "cambiar clave",
+   "campo": "clave",
+   "id": "682f6311-770c-4329-8642-0dc78d84a004",
+   "evidencia": "Silver acepta una eficiencia aproximada («no free lunch») con matices, no la forma fuerte.",
+   "nueva_correcta": 1
+  },
+  {
+   "donde": "pregunta 836c2638-eac3-4d16-bbbd-5956a6f9a782",
+   "severidad": "ERROR",
+   "problema": "La opción marcada como correcta no es la correcta: la correcta es la 0; la 1 (el tiempo es más fiable que el clima) contradice la lección. «10-14 días» es DUDA menor (Silver ~8 días).",
+   "sustitucion": "cambiar clave",
+   "campo": "clave",
+   "id": "836c2638-eac3-4d16-bbbd-5956a6f9a782",
+   "evidencia": "Revisión del texto de las opciones.",
+   "nueva_correcta": 0
+  },
+  {
+   "donde": "pregunta 999cb9e5-ec87-4321-b32f-9e34a6eb9871",
+   "severidad": "ERROR",
+   "problema": "Clave mala (correcta = 0, no 1) y la pregunta atribuye a Silver la aplicación del bayesianismo a teorías conspirativas/pseudocientíficas con máxima de Sagan; el libro usa el 11-S como ejemplo de probabilidad de un atentado, no esto.",
+   "sustitucion": "desactivar",
+   "campo": "desactivar",
+   "id": "999cb9e5-ec87-4321-b32f-9e34a6eb9871",
+   "evidencia": "Cap. 8 del libro (Bayes, 11-S); no consta aplicación a conspiraciones."
+  },
+  {
+   "donde": "pregunta 9ababcef-c050-4266-aad2-468a71bbad4b",
+   "severidad": "ERROR",
+   "problema": "La opción marcada como correcta no es la correcta: la correcta es la 0; la 1 («posiciones contradictorias») es falsa.",
+   "sustitucion": "cambiar clave",
+   "campo": "clave",
+   "id": "9ababcef-c050-4266-aad2-468a71bbad4b",
+   "evidencia": "Revisión del texto de las opciones.",
+   "nueva_correcta": 0
+  },
+  {
+   "donde": "pregunta a0bbade8-62ab-4f35-bd96-9dab02929da7",
+   "severidad": "ERROR",
+   "problema": "La opción marcada como correcta no es la correcta: la correcta es la 1 (error cuadrático); la 3 (porcentaje de aciertos) es falsa. Que Silver lo considere «la métrica correcta» es DUDA (no verificado).",
+   "sustitucion": "cambiar clave",
+   "campo": "clave",
+   "id": "a0bbade8-62ab-4f35-bd96-9dab02929da7",
+   "evidencia": "Brier 1950, Monthly Weather Review. Conocimiento sólido.",
+   "nueva_correcta": 1
+  },
+  {
+   "donde": "pregunta ac794a0d-67f5-4923-a4d0-3e8b2d36e808",
+   "severidad": "ERROR",
+   "problema": "La opción marcada como correcta no es la correcta: la correcta es la 1; la 2 («todos sus patrones son ruido sin excepción») es absolutista. Que Silver trate el análisis técnico es DUDA.",
+   "sustitucion": "cambiar clave",
+   "campo": "clave",
+   "id": "ac794a0d-67f5-4923-a4d0-3e8b2d36e808",
+   "evidencia": "Revisión del texto de las opciones.",
+   "nueva_correcta": 1
+  },
+  {
+   "donde": "pregunta b84bbe60-fcd3-48fe-ac43-a273c15dfe86",
+   "severidad": "ERROR",
+   "problema": "La opción marcada como correcta no es la correcta: la correcta es la 1; la 0 es absolutista y falsa. La conexión «Silver-Ericsson» es DUDA.",
+   "sustitucion": "cambiar clave",
+   "campo": "clave",
+   "id": "b84bbe60-fcd3-48fe-ac43-a273c15dfe86",
+   "evidencia": "Revisión del texto de las opciones.",
+   "nueva_correcta": 1
+  },
+  {
+   "donde": "pregunta caac5c1d-83c4-47dd-a06d-9f1413f10691",
+   "severidad": "ERROR",
+   "problema": "La opción marcada como correcta no es la correcta: la correcta es la 2; la 3 (publicar modelos) no es la implicación. La atribución a Silver de estas prácticas es DUDA.",
+   "sustitucion": "cambiar clave",
+   "campo": "clave",
+   "id": "caac5c1d-83c4-47dd-a06d-9f1413f10691",
+   "evidencia": "Revisión del texto de las opciones.",
+   "nueva_correcta": 2
+  },
+  {
+   "donde": "pregunta d6ff3e87-57cc-42d8-84c7-099dce19c89f",
+   "severidad": "ERROR",
+   "problema": "Clave mala (la marcada, la 3, dice que los analistas de Wall Street son los mejor calibrados; la lógica apunta a la 0) y no consta que Silver analice las previsiones de beneficios de analistas sell-side.",
+   "sustitucion": "desactivar",
+   "campo": "desactivar",
+   "id": "d6ff3e87-57cc-42d8-84c7-099dce19c89f",
+   "evidencia": "No verificable en el libro."
+  },
+  {
+   "donde": "pregunta d75b5547-49f1-48c2-b016-5b4547b182df",
+   "severidad": "ERROR",
+   "problema": "La opción marcada como correcta no es la correcta: la correcta es la 1; la 0 («la regresión a la media no ocurre con skill») es falsa.",
+   "sustitucion": "cambiar clave",
+   "campo": "clave",
+   "id": "d75b5547-49f1-48c2-b016-5b4547b182df",
+   "evidencia": "Revisión del texto de las opciones.",
+   "nueva_correcta": 1
+  },
+  {
+   "donde": "pregunta d9ed5f87-6225-4e0d-965e-426875a5aa00",
+   "severidad": "ERROR",
+   "problema": "La opción marcada como correcta no es la correcta: la correcta es la 2; la 1 es falsa.",
+   "sustitucion": "cambiar clave",
+   "campo": "clave",
+   "id": "d9ed5f87-6225-4e0d-965e-426875a5aa00",
+   "evidencia": "Revisión del texto de las opciones.",
+   "nueva_correcta": 2
+  },
+  {
+   "donde": "pregunta e01865fd-e09f-4335-8335-5d8ec42b5871",
+   "severidad": "ERROR",
+   "problema": "La opción marcada como correcta no es la correcta: la correcta es la 3 (teoría y datos); la 0 (empirista estricto) es falsa.",
+   "sustitucion": "cambiar clave",
+   "campo": "clave",
+   "id": "e01865fd-e09f-4335-8335-5d8ec42b5871",
+   "evidencia": "Silver defiende combinar teoría y datos (p. ej. física del efecto invernadero).",
+   "nueva_correcta": 3
+  },
+  {
+   "donde": "pregunta ecd4612e-16a1-4af5-baf7-d1eb86704048",
+   "severidad": "ERROR",
+   "problema": "La opción marcada como correcta no es la correcta: la correcta es la 2; la 1 («incompatibles») contradice la propia explicación.",
+   "sustitucion": "cambiar clave",
+   "campo": "clave",
+   "id": "ecd4612e-16a1-4af5-baf7-d1eb86704048",
+   "evidencia": "Revisión del texto de las opciones.",
+   "nueva_correcta": 2
+  },
+  {
+   "donde": "pregunta f6a28e0a-ebf4-465c-a721-0cf889bb5ed0",
+   "severidad": "ERROR",
+   "problema": "La opción marcada como correcta no es la correcta: la correcta es la 0; la 1 es falsa.",
+   "sustitucion": "cambiar clave",
+   "campo": "clave",
+   "id": "f6a28e0a-ebf4-465c-a721-0cf889bb5ed0",
+   "evidencia": "Revisión del texto de las opciones.",
+   "nueva_correcta": 0
+  },
+  {
+   "donde": "pregunta f9eba060-72f2-45b7-91a3-fcbb1d70ad72",
+   "severidad": "ERROR",
+   "problema": "Clave mala (la marcada, la 2, es falsa; la mejor sería la 1) y la premisa «Silver argumenta que la regresión a la media se aplica mal» no está respaldada.",
+   "sustitucion": "desactivar",
+   "campo": "desactivar",
+   "id": "f9eba060-72f2-45b7-91a3-fcbb1d70ad72",
+   "evidencia": "No verificable en el libro."
+  },
+  {
+   "donde": "pregunta b7f57511-509d-4b3e-8d87-23ca8bc262a1",
+   "severidad": "DUDA",
+   "problema": "Dos opciones defendibles (2 por prior mal especificado y 3 por escasez muestral de crisis); la explicación atribuye a «practicantes» priors gaussianas, no es tesis de Silver.",
+   "sustitucion": "desactivar",
+   "campo": "desactivar",
+   "id": "b7f57511-509d-4b3e-8d87-23ca8bc262a1",
+   "evidencia": "Ambigüedad de las opciones 2 y 3."
+  },
+  {
+   "donde": "pregunta 221ca83b-4046-4764-8115-e3d2c806f63d",
+   "severidad": "ERROR",
+   "problema": "Hechos incorrectos: los científicos de L'Aquila no fueron condenados por no predecir el terremoto sino por evaluar mal el riesgo y tranquilizar falsamente a la población; fueron absueltos en apelación (2014) salvo De Bernardinis. La opción 2 afirma que comunicaron correctamente y que el sistema judicial no lo entendió, lo cual es una interpretación discutible, y contradice la otra pregunta sobre L'Aquila. El libro (2012) es anterior a la sentencia (octubre 2012).",
+   "sustitucion": "desactivar",
+   "campo": "desactivar",
+   "id": "221ca83b-4046-4764-8115-e3d2c806f63d",
+   "evidencia": "Eos «L'Aquila seven acquitted»; ANSA 10-11-2014; Scientific American. Los fiscales no acusaron de no predecir."
+  },
+  {
+   "donde": "pregunta a252ee06-7ba4-465e-834b-faa2059f5876",
+   "severidad": "ERROR",
+   "problema": "Enunciado erróneo («sistemas de alerta temprana de terremotos en Italia»: L'Aquila no fue un fallo de un sistema de alerta) y la lección se atribuye a Silver sin respaldo; se contradice con 221ca83b (aquí los científicos comunican con exceso de certeza, allí comunican correctamente).",
+   "sustitucion": "desactivar",
+   "campo": "desactivar",
+   "id": "a252ee06-7ba4-465e-834b-faa2059f5876",
+   "evidencia": "Eos; ANSA; Scientific American."
+  },
+  {
+   "donde": "pregunta af506f06-aac3-4015-86fa-9af425a8eff2",
+   "severidad": "DUDA",
+   "problema": "Explicación: la «antifragilidad» de Taleb (Antifragile, nov. 2012, posterior al libro) no equivale a estrategias robustas ante varios escenarios.",
+   "sustitucion": "exactamente lo que Taleb llama antifragilidad → una idea cercana a la robustez que defiende Taleb",
+   "campo": "explicacion",
+   "id": "af506f06-aac3-4015-86fa-9af425a8eff2",
+   "evidencia": "Conocimiento sólido.",
+   "texto_exacto_a_sustituir": "exactamente lo que Taleb llama antifragilidad"
+  },
+  {
+   "donde": "pregunta 32e55876-a8cc-40c5-8ded-f3a0d9e565eb",
+   "severidad": "DUDA",
+   "problema": "Explicación con detalles no verificables (Goldman, Lehman, Bear Stearns usaban variantes del mismo modelo).",
+   "sustitucion": "Cuando las instituciones financieras compartían supuestos de riesgo similares (por ejemplo, que los precios de la vivienda no caerían a la vez en todo el país), el mercado perdió capacidad de agregar perspectivas diversas.",
+   "campo": "explicacion",
+   "id": "32e55876-a8cc-40c5-8ded-f3a0d9e565eb",
+   "evidencia": "No verificable.",
+   "texto_exacto_a_sustituir": "Cuando Goldman, Lehman, Bear Stearns y los demás usaban todos variantes del mismo modelo de riesgo con los mismos supuestos de correlación, el mercado perdió su capacidad de agregar perspectivas diversas."
+  },
+  {
+   "donde": "pregunta 5954e6b4-cabd-4fa8-b5d3-1da91a7179ae",
+   "severidad": "DUDA",
+   "problema": "Explicación: Silver analiza la Survey of Professional Forecasters, no la Reserva Federal, el FMI y bancos de inversión.",
+   "sustitucion": "Silver analiza las previsiones del PIB de los economistas profesionales de la Survey of Professional Forecasters y encuentra",
+   "campo": "explicacion",
+   "id": "5954e6b4-cabd-4fa8-b5d3-1da91a7179ae",
+   "evidencia": "Reseñas del cap. 6.",
+   "texto_exacto_a_sustituir": "Silver analiza las predicciones del PIB de la Reserva Federal, el FMI y bancos de inversión y encuentra"
+  },
+  {
+   "donde": "pregunta 895c5eb0-023c-4c9a-8cfa-21fc62320aa0",
+   "severidad": "ERROR",
+   "problema": "Explicación errónea: Silver destaca el Servicio Meteorológico Nacional; los meteorólogos comerciales/de TV están sesgados (wet bias), no «notablemente bien calibrados».",
+   "sustitucion": "Silver cita la evidencia de que los pronosticadores del Servicio Meteorológico Nacional de EE. UU. están bien calibrados: cuando dicen 70% de probabilidad de lluvia, llueve aproximadamente el 70% de las veces (a diferencia de algunos meteorólogos de televisión locales, que exageran la probabilidad de lluvia).",
+   "campo": "explicacion",
+   "id": "895c5eb0-023c-4c9a-8cfa-21fc62320aa0",
+   "evidencia": "Wikipedia «Wet bias»; reseñas del cap. 4.",
+   "texto_exacto_a_sustituir": "Silver cita la evidencia de que los meteorólogos comerciales en EE.UU. están notablemente bien calibrados: cuando dicen 70% de probabilidad de lluvia, llueve aproximadamente el 70% de las veces."
+  },
+  {
+   "donde": "pregunta 8e1fd5b4-2748-40b3-8ed8-3ea54869a7c5",
+   "severidad": "DUDA",
+   "problema": "Duplica en contenido a 6175be69 (complejidad del modelo/overfitting); conviene desactivar una de las dos.",
+   "sustitucion": "desactivar",
+   "campo": "desactivar",
+   "id": "8e1fd5b4-2748-40b3-8ed8-3ea54869a7c5",
+   "evidencia": "Preguntas 6175be69 y 8e1fd5b4."
+  },
+  {
+   "donde": "pregunta 5e370f4b-955b-4add-b10a-ac68733568d8",
+   "severidad": "DUDA",
+   "problema": "Duplica a 2122ab43 (PECOTA).",
+   "sustitucion": "desactivar",
+   "campo": "desactivar",
+   "id": "5e370f4b-955b-4add-b10a-ac68733568d8",
+   "evidencia": "Preguntas 2122ab43 y 5e370f4b."
+  }
+ ],
+ "resumen": "Libro con graves problemas: 50 ERROR y 41 DUDA. 32 de las 53 preguntas activas tienen la clave `correcta` mal marcada (25 se corrigen con nueva_correcta y 7 van a desactivar), en total 13 preguntas se proponen desactivar (atribuciones/hechos no respaldados o duplicados) y varias dependen de atribuciones o hechos no respaldados (L'Aquila x2, terremotos como caos, expertos vs modelos simples, derivados/opciones, conspiraciones, tasa base de inversores, analistas de Wall Street, regresión a la media) y se proponen desactivar, y varias son duplicados. En lecciones: ejemplo de TV 60%->40% inventado (Silver: wet bias, 100%->~70%), scouts descritos como sesgados (Silver encuentra que aportan valor), Hayek 'Sensory Order' mal citado, conexión Ericsson/scouts y Silver-ergodicidad inventadas, terremotos como caos atribuido a Silver, climáticos 'bien calibrados' simplificado, y muchas frases 'Silver predice/argumenta' sin respaldo. Verificado con web: wet bias TV, L'Aquila (acusación, absolución 2014, 309 muertos), 2008 49/50 y 2012 50/50, Brier 1950, ESPN/BP sobre scouts vs PECOTA; no confirmado en web: cifra 53% de intervalos del PIB (solo 'aproximadamente la mitad'), horizonte meteorológico exacto, Intrade/Hayek en el libro, Brier en el libro. Varias comprobaciones se apoyan en memoria porque el acceso web a algunos sitios estaba bloqueado."
+}

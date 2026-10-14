@@ -1,0 +1,336 @@
+{
+ "lecciones": [
+  {
+   "orden": 1,
+   "id": "4c906303-74d2-421a-985e-8884d97040af",
+   "idea_clave": "En todo pronóstico los datos mezclan señal y ruido, y el problema es que los humanos vemos patrones donde no los hay; la solución es pensar en probabilidades.",
+   "cita_memorable": "Más datos no bastan: lo difícil es saber cuáles de ellos significan algo y cuáles solo hacen ruido."
+  },
+  {
+   "orden": 2,
+   "id": "881be665-28c6-42fd-9185-2645120b6f26",
+   "idea_clave": "Pensar como un bayesiano es partir de una probabilidad previa y actualizarla en proporción a la fuerza de la nueva evidencia, sin ignorar ni la tasa base ni los datos nuevos.",
+   "cita_memorable": "Creer más no es lo mismo que saber más: cada prueba nueva solo debe mover la creencia lo que realmente informa."
+  },
+  {
+   "orden": 3,
+   "id": "7c08fa68-6e16-4bc3-8192-86e420341e5f",
+   "idea_clave": "La sobreconfianza es el sesgo más costoso del pronóstico: los modelos producen intervalos demasiado estrechos y la presión social premia la certeza sobre la precisión.",
+   "cita_memorable": "Quien dice saber exactamente el futuro suele estar contando una historia, no midiendo su ignorancia."
+  },
+  {
+   "orden": 4,
+   "id": "ede64053-9a5d-4b58-a299-7185c7a8b53c",
+   "idea_clave": "El overfitting ocurre cuando un modelo aprende el ruido además de la señal: ajusta perfecto el pasado pero falla con datos nuevos, y por eso conviene la parsimonia.",
+   "cita_memorable": "Un modelo que explica todo el pasado puede estar memorizándolo en vez de entenderlo."
+  },
+  {
+   "orden": 5,
+   "id": "c63aaa9d-28c7-4009-b7f1-4da98c439c78",
+   "idea_clave": "En el deporte la señal es más limpia y el feedback rápido; PECOTA usa jugadores comparables como prior y corrige los sesgos de los scouts, como la regresión a la media.",
+   "cita_memorable": "Para predecir a alguien, mira primero cómo les fue a los que se le parecen, no solo cómo le fue a él."
+  },
+  {
+   "orden": 6,
+   "id": "e5c70041-da9f-4350-b105-4a55ecac9384",
+   "idea_clave": "El poker enseña a separar la calidad de la decisión del resultado obtenido: con azar de por medio se puede decidir bien y perder, o decidir mal y ganar.",
+   "cita_memorable": "Una buena decisión puede salir mal y una mala puede salir bien; juzga el proceso, no el desenlace."
+  },
+  {
+   "orden": 7,
+   "id": "ebd14a7a-04c6-449c-b870-ddf85d278962",
+   "idea_clave": "Los mercados de predicción agregan información dispersa mejor que un experto solo, pero fallan cuando los errores están correlacionados, hay poca liquidez o incentivos torcidos.",
+   "cita_memorable": "La multitud solo es sabia si cada uno se equivoca a su manera; si todos copian el modelo, se equivocan juntos."
+  },
+  {
+   "orden": 8,
+   "id": "f116142f-4e4a-4303-8ebc-ae22e3a63829",
+   "idea_clave": "La predictibilidad depende de la escala: los terremotos concretos son impredecibles, el clima a largo plazo es robusto, y lo agregado puede predecirse sin que lo específico lo sea.",
+   "cita_memorable": "Que no se pueda predecir el día exacto no significa que no se pueda saber nada del conjunto."
+  },
+  {
+   "orden": 9,
+   "id": "0824a9bd-d49a-4c91-ac72-fdf49304fe16",
+   "idea_clave": "La calibración, que la confianza expresada coincida con la frecuencia real de acierto, importa más que la precisión puntual y debería ser la métrica estándar para evaluar pronosticadores.",
+   "cita_memorable": "Acertar una vez puede ser suerte; estar bien calibrado durante años solo puede ser buen método."
+  },
+  {
+   "orden": 10,
+   "id": "59f445be-1e54-40a8-afe9-ba13d38abdd5",
+   "idea_clave": "El pronosticador honesto expresa la incertidumbre en probabilidades, actualiza con la evidencia y se evalúa con rigor; el cambio debe empezar por quienes consumen los pronósticos.",
+   "cita_memorable": "Los pronosticadores peores tienen más público porque dicen lo que se quiere oír; premiar la calibración cambiaría eso."
+  }
+ ],
+ "preguntas": [
+  {
+   "id": "025487a4-cea0-4228-9cc9-720997983b2c",
+   "leccion_orden": 2,
+   "confianza": "media"
+  },
+  {
+   "id": "138e787d-64af-4fc2-8485-fbce8b991954",
+   "leccion_orden": 1,
+   "confianza": "alta"
+  },
+  {
+   "id": "1599c76e-70ab-40dc-beaa-163718823084",
+   "leccion_orden": null,
+   "confianza": "baja"
+  },
+  {
+   "id": "15bc26c2-546a-420c-8916-8b432b3c9bf5",
+   "leccion_orden": 7,
+   "confianza": "media"
+  },
+  {
+   "id": "18fb0822-2ff8-4659-a039-e0750e4a0fd2",
+   "leccion_orden": 7,
+   "confianza": "baja"
+  },
+  {
+   "id": "19b58a60-c84f-42ae-b8ee-7ee2c821e666",
+   "leccion_orden": 9,
+   "confianza": "media"
+  },
+  {
+   "id": "2122ab43-e00b-4cd2-9ee8-a55e5fece311",
+   "leccion_orden": 5,
+   "confianza": "alta"
+  },
+  {
+   "id": "221ca83b-4046-4764-8115-e3d2c806f63d",
+   "leccion_orden": 8,
+   "confianza": "media"
+  },
+  {
+   "id": "24779bb1-5aa7-4581-ab06-5456c464069e",
+   "leccion_orden": 2,
+   "confianza": "media"
+  },
+  {
+   "id": "32ab800d-e71c-45a4-87d2-665a17a95a83",
+   "leccion_orden": 3,
+   "confianza": "media"
+  },
+  {
+   "id": "32e55876-a8cc-40c5-8ded-f3a0d9e565eb",
+   "leccion_orden": 7,
+   "confianza": "alta"
+  },
+  {
+   "id": "352f3fc3-aeeb-44b1-a978-1abde2e8aedf",
+   "leccion_orden": 2,
+   "confianza": "alta"
+  },
+  {
+   "id": "3bc484b8-034f-4502-a3eb-0ac7a03f31db",
+   "leccion_orden": 4,
+   "confianza": "alta"
+  },
+  {
+   "id": "3fe0dabe-4bc6-4a33-880e-3e71eb57b562",
+   "leccion_orden": 8,
+   "confianza": "alta"
+  },
+  {
+   "id": "443dade6-46ef-4833-9fe5-643c156c9338",
+   "leccion_orden": 2,
+   "confianza": "alta"
+  },
+  {
+   "id": "46210b96-31d1-41d0-8667-7465a120f708",
+   "leccion_orden": 1,
+   "confianza": "alta"
+  },
+  {
+   "id": "47cad194-cd29-4c4d-9afd-3750955c01cd",
+   "leccion_orden": 7,
+   "confianza": "media"
+  },
+  {
+   "id": "4f293fd1-f713-47b3-ad6b-2be61761a16d",
+   "leccion_orden": 7,
+   "confianza": "alta"
+  },
+  {
+   "id": "53ce0c0e-8da1-467c-9fe1-1f42850fbfe1",
+   "leccion_orden": 2,
+   "confianza": "baja"
+  },
+  {
+   "id": "54bcac39-af92-4786-9d7c-9c1a1d5f4077",
+   "leccion_orden": 1,
+   "confianza": "alta"
+  },
+  {
+   "id": "5954e6b4-cabd-4fa8-b5d3-1da91a7179ae",
+   "leccion_orden": 3,
+   "confianza": "alta"
+  },
+  {
+   "id": "599cf376-02a6-4ecb-b880-bbdc2c3c1bab",
+   "leccion_orden": 5,
+   "confianza": "media"
+  },
+  {
+   "id": "5d68c713-17e5-4f42-b453-e4cb7d457317",
+   "leccion_orden": 10,
+   "confianza": "media"
+  },
+  {
+   "id": "5dc2b596-5af0-4830-b613-8c03a293b9e1",
+   "leccion_orden": 6,
+   "confianza": "alta"
+  },
+  {
+   "id": "5e370f4b-955b-4add-b10a-ac68733568d8",
+   "leccion_orden": 5,
+   "confianza": "alta"
+  },
+  {
+   "id": "5ed89541-738f-469c-a319-dd1164575011",
+   "leccion_orden": 8,
+   "confianza": "alta"
+  },
+  {
+   "id": "6175be69-62b3-4198-b9c0-a6d21fe37b76",
+   "leccion_orden": 4,
+   "confianza": "alta"
+  },
+  {
+   "id": "63a9e23a-9c63-4bd5-ba1f-222a88eff4a2",
+   "leccion_orden": 6,
+   "confianza": "baja"
+  },
+  {
+   "id": "682f6311-770c-4329-8642-0dc78d84a004",
+   "leccion_orden": 7,
+   "confianza": "baja"
+  },
+  {
+   "id": "6a4f43ab-e629-4507-89cf-ea0918a2d782",
+   "leccion_orden": 9,
+   "confianza": "media"
+  },
+  {
+   "id": "6eb223b6-f80f-4621-b661-8596eb45292f",
+   "leccion_orden": 10,
+   "confianza": "baja"
+  },
+  {
+   "id": "76412255-efa3-496a-9def-9ab5142b2a6b",
+   "leccion_orden": 4,
+   "confianza": "baja"
+  },
+  {
+   "id": "836c2638-eac3-4d16-bbbd-5956a6f9a782",
+   "leccion_orden": 8,
+   "confianza": "alta"
+  },
+  {
+   "id": "895c5eb0-023c-4c9a-8cfa-21fc62320aa0",
+   "leccion_orden": 9,
+   "confianza": "alta"
+  },
+  {
+   "id": "8e1fd5b4-2748-40b3-8ed8-3ea54869a7c5",
+   "leccion_orden": 4,
+   "confianza": "alta"
+  },
+  {
+   "id": "999cb9e5-ec87-4321-b32f-9e34a6eb9871",
+   "leccion_orden": 2,
+   "confianza": "media"
+  },
+  {
+   "id": "9ababcef-c050-4266-aad2-468a71bbad4b",
+   "leccion_orden": 10,
+   "confianza": "baja"
+  },
+  {
+   "id": "a0641252-b4af-4e6c-b6a8-7e36e267ff4a",
+   "leccion_orden": 7,
+   "confianza": "baja"
+  },
+  {
+   "id": "a0bbade8-62ab-4f35-bd96-9dab02929da7",
+   "leccion_orden": 9,
+   "confianza": "alta"
+  },
+  {
+   "id": "a252ee06-7ba4-465e-834b-faa2059f5876",
+   "leccion_orden": 8,
+   "confianza": "media"
+  },
+  {
+   "id": "ac794a0d-67f5-4923-a4d0-3e8b2d36e808",
+   "leccion_orden": 1,
+   "confianza": "baja"
+  },
+  {
+   "id": "af506f06-aac3-4015-86fa-9af425a8eff2",
+   "leccion_orden": 10,
+   "confianza": "media"
+  },
+  {
+   "id": "b7f57511-509d-4b3e-8d87-23ca8bc262a1",
+   "leccion_orden": 2,
+   "confianza": "baja"
+  },
+  {
+   "id": "b84bbe60-fcd3-48fe-ac43-a273c15dfe86",
+   "leccion_orden": 9,
+   "confianza": "media"
+  },
+  {
+   "id": "caac5c1d-83c4-47dd-a06d-9f1413f10691",
+   "leccion_orden": 10,
+   "confianza": "baja"
+  },
+  {
+   "id": "d2f70636-8e1e-43e1-9de7-bee6b8c61e9f",
+   "leccion_orden": 7,
+   "confianza": "alta"
+  },
+  {
+   "id": "d6ff3e87-57cc-42d8-84c7-099dce19c89f",
+   "leccion_orden": 9,
+   "confianza": "media"
+  },
+  {
+   "id": "d75b5547-49f1-48c2-b016-5b4547b182df",
+   "leccion_orden": 5,
+   "confianza": "media"
+  },
+  {
+   "id": "d9ed5f87-6225-4e0d-965e-426875a5aa00",
+   "leccion_orden": 6,
+   "confianza": "baja"
+  },
+  {
+   "id": "e01865fd-e09f-4335-8335-5d8ec42b5871",
+   "leccion_orden": null,
+   "confianza": "baja"
+  },
+  {
+   "id": "e1594397-a2c1-4989-8881-268bc079b794",
+   "leccion_orden": 2,
+   "confianza": "alta"
+  },
+  {
+   "id": "ecd4612e-16a1-4af5-baf7-d1eb86704048",
+   "leccion_orden": 7,
+   "confianza": "baja"
+  },
+  {
+   "id": "f6a28e0a-ebf4-465c-a721-0cf889bb5ed0",
+   "leccion_orden": 10,
+   "confianza": "baja"
+  },
+  {
+   "id": "f9eba060-72f2-45b7-91a3-fcbb1d70ad72",
+   "leccion_orden": 5,
+   "confianza": "media"
+  }
+ ]
+}
