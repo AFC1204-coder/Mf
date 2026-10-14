@@ -43,7 +43,7 @@
     const L = paq && paq.libro;
     if (!L) return { errores: ['falta «libro»'], avisos };
     if (!L.autor || !L.titulo) err('libro', 'faltan autor o título');
-    if (!Number.isInteger(L.año) || L.año < 1500 || L.año > 2026) err('libro', 'año no válido');
+    if (!Number.isInteger(L.año) || L.año < -800 || L.año > 2026) err('libro', 'año no válido');
     if (!EJES.includes(L.eje_principal)) err('libro', 'eje_principal no es uno de los cinco del corpus');
     if (!L.sub_eje) err('libro', 'falta sub_eje');
     if (!entre(L.descripcion_breve, 60, 400)) err('libro', 'descripcion_breve debe medir 60–400 caracteres');
