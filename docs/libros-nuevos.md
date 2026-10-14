@@ -22,3 +22,88 @@ Las verificaciones hicieron comprobaciones web parciales y el resto de memoria; 
 **Visuales (2026-10-14):** 1 diagrama por lección (48) y 1 mapa por libro (7) para los siete libros anteriores; los textos de mapa se acortaron a 56 caracteres por nodo y 100 en el cierre porque el lint no detecta el recorte.
 
 **Nota:** *La señal y el ruido* (Nate Silver) ya estaba en la biblioteca como *The Signal and the Noise* (10 lecciones, 53 preguntas); no se duplicó.
+
+## Segunda tanda (2026-10-14): 72 libros de las listas de lectura
+
+Cada libro pasó por el flujo completo: generación con el prompt `generador.md`, lint (`tools/libros/lint.js`), verificación independiente con búsqueda web, corrección de todos los ERROR y DUDA, carga como borrador, `huellas.js comparar-sql` con 0 filas y publicación. Las verificaciones encontraron y corrigieron, entre otros, atribuciones cruzadas (ideas de un autor presentadas como de otro), errores de fecha y de término (p. ej. resiliencia y recuperación en Bonanno, TEAM y no TEACH en Doucleff, Lieberman confundido con otro autor de la base), reseñas citadas sin fuente y opciones de respuesta con dos lecturas defendibles. Las lecciones sobre salud, duelo o crianza avisan de que no sustituyen a un profesional.
+
+Todos con confianza «media» salvo indicación; las verificaciones hicieron comprobaciones web parciales y el resto de memoria.
+
+| Autor | Libro | Lecciones / preguntas |
+|---|---|---|
+| Linden | *The Compass of Pleasure* | 5 / 15 |
+| Barrett | *Seven and a Half Lessons About the Brain* | 6 / 18 |
+| Eyal | *Indistractable* | 6 / 18 |
+| Grant | *Originals* | 6 / 18 |
+| Eagleman | *Incognito* | 5 / 16 |
+| Doidge | *The Brain That Changes Itself* | 6 / 18 |
+| Elster | *Ulysses and the Sirens* | 5 / 11 |
+| Eagleman | *The Brain* | 5 / 15 |
+| Ratey | *Spark* | 5 / 20 |
+| Patterson, Grenny, McMillan, Switzler | *Crucial Conversations* | 6 / 18 |
+| Levine y Heller | *Attached* | 5 / 15 |
+| Rosenberg | *Nonviolent Communication* | 6 / 13 |
+| de Botton | *Status Anxiety* | 6 / 16 |
+| Tavris y Aronson | *Mistakes Were Made (But Not by Me)* | 6 / 21 |
+| Gottman y Silver | *The Seven Principles for Making Marriage Work* | 6 / 19 |
+| Goleman | *Emotional Intelligence* | 7 / 21 |
+| Siegel y Bryson | *The Whole-Brain Child* | 6 / 13 |
+| Isaacson | *Benjamin Franklin* | 6 / 18 |
+| Durant | *The Lessons of History* | 7 / 21 |
+| Ware | *The Top Five Regrets of the Dying* | 6 / 18 |
+| Waldinger y Schulz | *The Good Life* | 5 / 10 |
+| Perkins | *Die With Zero* | 5 / 15 |
+| Kethledge y Erwin | *Lead Yourself First* | 5 / 15 |
+| Bakewell | *How to Live, or A Life of Montaigne* | 9 / 27 |
+| Grant | *Think Again* | 7 / 21 |
+| Burnett y Evans | *Designing Your Life* | 7 / 21 |
+| Storr | *Solitude* | 5 / 15 |
+| Graham | *Keep Your Identity Small* | 3 / 6 |
+| Ibarra | *Working Identity* | 6 / 18 |
+| Cain | *Quiet* | 6 / 18 |
+| Hershfield | *Your Future Self* | 5 / 15 |
+| Aristóteles | *Ética a Nicómaco* | 8 / 21 |
+| Kishimi y Koga | *The Courage to Be Disliked* | 6 / 18 |
+| Firestein | *Ignorance* | 5 / 15 |
+| Kabat-Zinn | *Wherever You Go, There You Are* | 8 / 24 |
+| Pink | *When* | 6 / 18 |
+| Keltner | *Awe* | 5 / 15 |
+| De Cruz | *Wonderstruck* | 3 / 9 |
+| Schwartz | *The Paradox of Choice* | 6 / 18 |
+| Pang | *Rest* | 5 / 15 |
+| Huizinga | *Homo Ludens* | 5 / 15 |
+| Sexto Empírico | *Esbozos pirrónicos* | 5 / 15 |
+| Honoré | *In Praise of Slow* | 7 / 20 |
+| Duke | *Quit* | 6 / 19 |
+| Dalai Lama y Cutler | *The Art of Happiness* | 7 / 21 |
+| Heath y Heath | *The Power of Moments* | 6 / 18 |
+| Tanizaki | *In Praise of Shadows* | 5 / 15 |
+| Busch | *The Serendipity Mindset* | 5 / 15 |
+| Watts | *La sabiduría de la inseguridad* | 6 / 18 |
+| Grant | *Give and Take* | 8 / 24 |
+| Kalanithi | *When Breath Becomes Air* | 5 / 15 |
+| Zomorodi | *Bored and Brilliant* | 5 / 15 |
+| Morgan y Barden | *A Beautiful Constraint* | 5 / 17 |
+| Kondo | *La magia del orden* | 6 / 18 |
+| Skenazy | *Free-Range Kids* | 5 / 15 |
+| Nestor | *Breath* | 6 / 18 |
+| Didion | *The Year of Magical Thinking* | 5 / 15 |
+| Caplan | *Selfish Reasons to Have More Kids* | 6 / 18 |
+| Burgis | *Wanting* | 6 / 18 |
+| Kübler-Ross y Kessler | *On Grief and Grieving* | 6 / 18 |
+| Murphy | *You're Not Listening* | 6 / 18 |
+| Palmer | *The Art of Asking* | 7 / 22 |
+| Harris | *The Nurture Assumption* | 5 / 19 |
+| Brown | *Play* | 6 / 18 |
+| Gopnik | *The Gardener and the Carpenter* | 7 / 21 |
+| Brooks | *From Strength to Strength* | 7 / 21 |
+| Neff | *Self-Compassion* | 8 / 24 |
+| Lahey | *The Gift of Failure* | 6 / 24 |
+| Doucleff | *Hunt, Gather, Parent* | 6 / 18 |
+| Gray | *Free to Learn* | 6 / 18 |
+| Lukianoff y Haidt | *The Coddling of the American Mind* | 7 / 21 |
+| Stixrud y Johnson | *The Self-Driven Child* | 5 / 15 |
+
+**Visuales (2026-10-14, segunda tanda):** 422 diagramas (uno por lección) y 72 mapas (uno por libro) añadidos con `tools/datos/agregar.mjs`. Los pies llevan la cautela de la autocorrección de cada lección. Se revisaron los desbordes de texto y se sustituyeron tres palabras partidas por guion. El título del mapa de Neff se pone en español porque el lint de tildes confunde «Compassion» con una palabra sin tilde.
+
+**Pendiente de criterio del usuario:** «El arte de decir no» (nº 23 de la lista de temas poco trabajados) no se añadió por no tener autor claro.

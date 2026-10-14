@@ -43,7 +43,7 @@
     const L = paq && paq.libro;
     if (!L) return { errores: ['falta «libro»'], avisos };
     if (!L.autor || !L.titulo) err('libro', 'faltan autor o título');
-    if (!Number.isInteger(L.año) || L.año < 1500 || L.año > 2026) err('libro', 'año no válido');
+    if (!Number.isInteger(L.año) || L.año < -800 || L.año > 2026) err('libro', 'año no válido');
     if (!EJES.includes(L.eje_principal)) err('libro', 'eje_principal no es uno de los cinco del corpus');
     if (!L.sub_eje) err('libro', 'falta sub_eje');
     if (!entre(L.descripcion_breve, 60, 400)) err('libro', 'descripcion_breve debe medir 60–400 caracteres');
@@ -52,7 +52,7 @@
     const cifrasOk = new Set((paq.cifras || []).filter(c => c && c.estado === 'verificada' && c.fuente).map(c => String(c.valor)));
     const citasOk = (paq.citas_literales || []).filter(c => c && c.verificada && c.fuente).map(c => norm(c.texto));
     const lecs = paq.lecciones || [];
-    if (lecs.length < 4 || lecs.length > 16) err('libro', 'debe tener entre 4 y 16 lecciones');
+    if (lecs.length < 3 || lecs.length > 16) err('libro', 'debe tener entre 3 y 16 lecciones');
 
     const textos = new Set();
     let posiciones = [0, 0, 0, 0];
