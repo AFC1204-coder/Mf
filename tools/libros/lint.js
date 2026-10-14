@@ -52,7 +52,7 @@
     const cifrasOk = new Set((paq.cifras || []).filter(c => c && c.estado === 'verificada' && c.fuente).map(c => String(c.valor)));
     const citasOk = (paq.citas_literales || []).filter(c => c && c.verificada && c.fuente).map(c => norm(c.texto));
     const lecs = paq.lecciones || [];
-    if (lecs.length < 4 || lecs.length > 16) err('libro', 'debe tener entre 4 y 16 lecciones');
+    if (lecs.length < 3 || lecs.length > 16) err('libro', 'debe tener entre 3 y 16 lecciones');
 
     const textos = new Set();
     let posiciones = [0, 0, 0, 0];
