@@ -926,6 +926,7 @@ function isNocheCerrada(){
 }
 function setNocheCerrada(lecId){
   LS.set(NOCHE_K, { date: hoyISO(), lecId: lecId || null, closed: true });
+  if (typeof actualizarInsigniaApp === 'function') actualizarInsigniaApp();
 }
 function pickNocheLeccion(){
   const comp = completadasSet();

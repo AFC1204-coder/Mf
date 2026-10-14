@@ -363,7 +363,7 @@ function checkPushPermission() {
   // permission === 'default' — show banner
   area.innerHTML = '<div class="push-banner">' +
     '<div class="push-banner-icon">🔔</div>' +
-    '<div class="push-banner-text"><strong>Notificaciones push</strong><br>Recibe alertas de racha, repasos pendientes y logros incluso con la pestaña en segundo plano.</div>' +
+    '<div class="push-banner-text"><strong>Notificaciones push</strong><br>Un aviso al día con la idea de hoy, solo si aún no has hecho la sesión. Nada de rachas ni urgencia.</div>' +
     '<button class="push-banner-btn" onclick="reqPushPerm()">Activar</button>' +
     '<button class="push-banner-dismiss" onclick="this.parentElement.remove()">✕</button>' +
   '</div>';
@@ -375,7 +375,7 @@ async function reqPushPerm() {
     if (p === 'granted') {
       toast('Notificaciones push activadas ✓');
       checkPushPermission(); // refresh banner
-      sendPushNotif('🔔 Notificaciones activas', 'Recibirás alertas de racha, repasos y logros de Mente fría.');
+      sendPushNotif('🔔 Notificaciones activas', 'Recibirás como mucho un aviso al día, con la idea de hoy.');
     } else {
       checkPushPermission();
     }
@@ -430,7 +430,7 @@ let notifConfig = {
   quiz: true,
   sistema: true,
   reminderOn: false,
-  reminderTime: '09:00',
+  reminderTime: '21:30',
   sound: false
 };
 
@@ -535,10 +535,9 @@ function scheduleReminder() {
   console.log('SCS reminder scheduled in', Math.round(ms / 60000), 'min');
 
   reminderTimer = setTimeout(() => {
-    // Only fire if user hasn't studied today
-    const lastStudy = localStorage.getItem('scs_last_study_date');
-    const today = (window.Dia ? Dia.hoy() : new Date().toISOString().slice(0, 10));
-    if (lastStudy !== today) {
+    // Solo si la sesión de hoy no está hecha
+    const hecha = (typeof isNocheCerrada === 'function') && isNocheCerrada();
+    if (!hecha) {
       showAchievement('§', 'El atril está puesto', 'Una lección de pocos minutos, cuando quieras.', 'sistema');
     }
     // Reschedule for next day
@@ -562,9 +561,21 @@ async function clearAllNotifications() {
   } catch (e) { toast('Error al eliminar'); }
 }
 
+/* ── INSIGNIA EN EL ICONO (PWA instalada, Android/Chrome) ──
+   Un punto mientras la sesión de hoy está pendiente; se quita al cerrarla. */
+function actualizarInsigniaApp() {
+  try {
+    if (!('setAppBadge' in navigator)) return;
+    const hecha = (typeof isNocheCerrada === 'function') && isNocheCerrada();
+    if (hecha) { if ('clearAppBadge' in navigator) navigator.clearAppBadge().catch(() => {}); }
+    else navigator.setAppBadge(1).catch(() => {});
+  } catch (e) { /* silent */ }
+}
+
 // Load config on startup
 loadNotifConfig();
 scheduleReminder();
+setTimeout(actualizarInsigniaApp, 3000);
 
 /* ── SMART POLLING ── */
 // Initial check after page load
@@ -579,6 +590,7 @@ window._notifPollInterval = setInterval(() => {
 // Restart polling when tab becomes visible
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden) {
+    actualizarInsigniaApp();
     checkForNewNotifications();
   }
 });

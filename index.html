@@ -421,18 +421,6 @@
 
       <div class="notif-settings-section">Tipos de alerta</div>
       <label class="notif-toggle-row">
-        <span class="notif-toggle-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg> Alertas de racha</span>
-        <span class="notif-toggle-sub">Aviso cuando pierdes días sin estudiar</span>
-        <input type="checkbox" id="ncfg-racha" checked onchange="saveNotifConfig()">
-        <span class="notif-toggle-slider"></span>
-      </label>
-      <label class="notif-toggle-row">
-        <span class="notif-toggle-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg> Repasos pendientes</span>
-        <span class="notif-toggle-sub">Recordatorio de tarjetas por repasar (Leitner)</span>
-        <input type="checkbox" id="ncfg-repaso" checked onchange="saveNotifConfig()">
-        <span class="notif-toggle-slider"></span>
-      </label>
-      <label class="notif-toggle-row">
         <span class="notif-toggle-label">🏆 Logros</span>
         <span class="notif-toggle-sub">Milestones de progreso y nuevas marcas</span>
         <input type="checkbox" id="ncfg-logro" checked onchange="saveNotifConfig()">
@@ -453,15 +441,15 @@
 
       <div class="notif-settings-section" style="margin-top:1.2rem;">Recordatorio diario</div>
       <label class="notif-toggle-row">
-        <span class="notif-toggle-label">⏰ Recordatorio programado</span>
-        <span class="notif-toggle-sub">Notificación push a la hora elegida</span>
+        <span class="notif-toggle-label">⏰ Recordatorio diario</span>
+        <span class="notif-toggle-sub">Un aviso al día con la idea de hoy</span>
         <input type="checkbox" id="ncfg-reminder-on" onchange="saveNotifConfig()">
         <span class="notif-toggle-slider"></span>
       </label>
       <div class="notif-reminder-time" id="notif-reminder-time-row">
         <label class="notif-time-label">Hora:</label>
-        <input type="time" id="ncfg-reminder-time" value="09:00" onchange="saveNotifConfig()" class="notif-time-input">
-        <span class="notif-time-hint">Se enviará una push si no has estudiado hoy</span>
+        <input type="time" id="ncfg-reminder-time" value="21:30" onchange="saveNotifConfig()" class="notif-time-input">
+        <span class="notif-time-hint">Solo si aún no has hecho la sesión de hoy</span>
       </div>
 
       <div class="notif-settings-section" style="margin-top:1.2rem;">Sonido y vibración</div>
@@ -478,8 +466,6 @@
     <div class="notif-filters" id="notif-filters">
       <button class="notif-filter-btn active" data-filter="all" onclick="filterNotifs('all',this)">Todas</button>
       <button class="notif-filter-btn" data-filter="logro" onclick="filterNotifs('logro',this)">🏆 Logros</button>
-      <button class="notif-filter-btn" data-filter="racha" onclick="filterNotifs('racha',this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg> Racha</button>
-      <button class="notif-filter-btn" data-filter="repaso" onclick="filterNotifs('repaso',this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg> Repaso</button>
       <button class="notif-filter-btn" data-filter="quiz" onclick="filterNotifs('quiz',this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg> Quiz</button>
       <button class="notif-filter-btn" data-filter="sistema" onclick="filterNotifs('sistema',this)">⚙ Sistema</button>
     </div>
