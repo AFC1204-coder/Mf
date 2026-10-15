@@ -100,17 +100,32 @@ self.addEventListener('message', (event) => {
   }
 });
 
+// Web Push real (lo envía supabase/functions/enviar-recordatorios): título = idea del día, cuerpo = lección que toca.
+self.addEventListener('push', (event) => {
+  let d = {};
+  try { d = event.data ? event.data.json() : {}; } catch (e) { d = {}; }
+  event.waitUntil(self.registration.showNotification(d.title || 'Mente fría', {
+    body: d.body || '',
+    icon: SCS_ICON,
+    badge: SCS_ICON,
+    tag: d.tag || 'scs-diario',
+    data: { url: d.url || '/Mf/' }
+  }));
+});
+
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   if (event.action === 'dismiss') return;
+  const url = (event.notification.data && event.notification.data.url) || '/Mf/';
   event.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clients) => {
       for (const client of clients) {
         if (client.url.includes('/Mf/') && 'focus' in client) {
+          if ('navigate' in client && url.includes('aviso=')) return client.navigate(url).then(c => c && c.focus());
           return client.focus();
         }
       }
-      return self.clients.openWindow('/Mf/');
+      return self.clients.openWindow(url);
     })
   );
 });
