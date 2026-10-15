@@ -1,21 +1,26 @@
 // Edge Function «enviar-recordatorios»: la llama pg_cron cada 15 min (ver supabase/push_cron.sql).
 // Decide a quién toca avisar (logica.js, con tests), envía Web Push y deja constancia en push_avisos.
-// Secretos necesarios: VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, VAPID_SUBJECT (mailto:…), CRON_SECRET.
+// Secretos (Vault de Supabase, nombres: vapid_publica, vapid_privada, vapid_subject, cron_secret):
+// se leen con la función SQL push_secreto(), que solo puede ejecutar service_role. Respaldo: variables de entorno.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import webpush from 'npm:web-push@3.6.7';
-import { debeAvisar, diaLogico, evaluarAviso, actualizarContadores, textoAviso } from './logica.js';
+import { debeAvisar, diaLogico, evaluarAviso, actualizarContadores, textoAviso, MAX_IGNORADOS } from './logica.js';
 
 const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!);
-webpush.setVapidDetails(
-  Deno.env.get('VAPID_SUBJECT') ?? 'mailto:admin@example.com',
-  Deno.env.get('VAPID_PUBLIC_KEY')!,
-  Deno.env.get('VAPID_PRIVATE_KEY')!,
-);
+
+async function secreto(nombre: string): Promise<string | null> {
+  const { data } = await db.rpc('push_secreto', { nombre });
+  return (data as string | null) ?? Deno.env.get(nombre.toUpperCase()) ?? null;
+}
 
 Deno.serve(async (req) => {
-  if (req.headers.get('x-cron-secret') !== Deno.env.get('CRON_SECRET')) {
+  const esperado = await secreto('cron_secret');
+  if (!esperado || req.headers.get('x-cron-secret') !== esperado) {
     return new Response('no autorizado', { status: 401 });
   }
+  const [pub, priv, subject] = await Promise.all([secreto('vapid_publica'), secreto('vapid_privada'), secreto('vapid_subject')]);
+  if (!pub || !priv) return new Response('faltan las claves VAPID', { status: 500 });
+  webpush.setVapidDetails(subject ?? 'https://afc1204-coder.github.io/Mf/', pub, priv);
   const dryRun = new URL(req.url).searchParams.get('dry') === '1';   // ?dry=1: decide, no envía
   const ahora = new Date();
   const hoy = diaLogico(ahora);
@@ -29,13 +34,11 @@ Deno.serve(async (req) => {
     const { data: pend } = await db.from('push_avisos').select('*')
       .eq('suscripcion_id', s.id).eq('evaluado', false).lt('dia', hoy).order('enviado');
     let cont = { ignorados: s.avisos_ignorados as number, frecuencia: s.frecuencia as string };
-    let nota: string | null = null;
     for (const a of pend ?? []) {
       const { data: ev } = await db.from('eventos').select('ts')
         .eq('usuario_id', s.usuario_id).eq('dia', a.dia).eq('tipo', 'sesion_cerrada');
       const r = evaluarAviso({ enviado: a.enviado, sesiones: (ev ?? []).map((e) => e.ts) });
       const nuevo = actualizarContadores(cont, r.respondido);
-      if (nuevo.cambio) nota = nuevo.cambio;
       cont = nuevo;
       if (!dryRun) await db.from('push_avisos').update({ evaluado: true, respondido: r.respondido, sesion_en_2h: r.en2h }).eq('id', a.id);
     }
@@ -59,6 +62,8 @@ Deno.serve(async (req) => {
     // 3) Enviar
     const { data: aviso } = await db.from('push_avisos')
       .insert({ suscripcion_id: s.id, dia: hoy, leccion_id: s.proxima_leccion_id }).select('id').single();
+    // El primer aviso semanal (3 ignorados, aún sin evaluar) explica el cambio una sola vez.
+    const nota = cont.frecuencia === 'semanal' && cont.ignorados === MAX_IGNORADOS ? 'semanal' : null;
     const { title, body } = textoAviso({ idea: s.proxima_idea, titulo: s.proxima_titulo, nota });
     try {
       await webpush.sendNotification(

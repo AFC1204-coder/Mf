@@ -30,11 +30,11 @@ Un aviso al día, a la hora que elijas, **solo si la sesión de hoy no está hec
 ## Aplicar el servidor (en este orden)
 
 1. **Migración**: ejecutar `supabase/migrations/20261014_push_recordatorios.sql`.
-2. **Secretos de la función**: `VAPID_PUBLIC_KEY` (la misma que `VAPID_PUBLIC` en `notifications.js`), `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` (`mailto:tu@correo`) y `CRON_SECRET` (cadena aleatoria larga). La clave privada **no está en el repositorio**.
+2. **Secretos**: se guardan en el Vault de Supabase (`vapid_publica`, `vapid_privada`, `vapid_subject`, `cron_secret`, `proyecto_url`); la función los lee con `push_secreto()`, que solo puede ejecutar `service_role`. La clave pública es la misma que `VAPID_PUBLIC` en `notifications.js`. La privada **no está en el repositorio**.
 3. **Desplegar** `enviar-recordatorios` con `verify_jwt: false` (la protege `x-cron-secret`, no un JWT, porque la llama `pg_cron`).
 4. **Activar en el móvil**: ajustes de notificaciones → «Recordatorio diario» → aceptar el permiso. Comprobar que aparece la fila en `push_suscripciones`.
 5. **Probar sin enviar**: llamar a la función con `?dry=1` y la cabecera `x-cron-secret`; devuelve qué haría (`tocaria`, `sesion_hecha`, `aun_no_es_la_hora`…).
-6. **Programar**: guardar en Vault `proyecto_url` y `cron_secret` y ejecutar `supabase/push_cron.sql`.
+6. **Programar**: ejecutar `supabase/push_cron.sql` (el cron lee `proyecto_url` y `cron_secret` del Vault).
 
 Para quitarlo todo: `select cron.unschedule('enviar-recordatorios');` y desactivar el recordatorio en la app.
 

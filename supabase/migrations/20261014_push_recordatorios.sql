@@ -58,3 +58,12 @@ create or replace view v_avisos_eficacia as
          count(*) filter (where sesion_en_2h) con_sesion_en_2h,
          round(100.0 * count(*) filter (where sesion_en_2h) / nullif(count(*) filter (where evaluado), 0)) pct_en_2h
   from push_avisos group by 1 order by 1;
+
+-- Lectura de secretos del Vault para la Edge Function (claves VAPID y secreto del cron).
+-- Solo la puede ejecutar service_role; la app (anon) no tiene acceso.
+create or replace function public.push_secreto(nombre text) returns text
+language sql security definer set search_path = '' as $$
+  select decrypted_secret from vault.decrypted_secrets where name = nombre limit 1
+$$;
+revoke all on function public.push_secreto(text) from public, anon, authenticated;
+grant execute on function public.push_secreto(text) to service_role;
