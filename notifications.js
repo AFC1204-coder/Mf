@@ -363,7 +363,7 @@ function checkPushPermission() {
   // permission === 'default' — show banner
   area.innerHTML = '<div class="push-banner">' +
     '<div class="push-banner-icon">🔔</div>' +
-    '<div class="push-banner-text"><strong>Notificaciones push</strong><br>Recibe alertas de racha, repasos pendientes y logros incluso con la pestaña en segundo plano.</div>' +
+    '<div class="push-banner-text"><strong>Notificaciones push</strong><br>Un aviso al día con la idea de hoy, solo si aún no has hecho la sesión. Nada de rachas ni urgencia.</div>' +
     '<button class="push-banner-btn" onclick="reqPushPerm()">Activar</button>' +
     '<button class="push-banner-dismiss" onclick="this.parentElement.remove()">✕</button>' +
   '</div>';
@@ -375,7 +375,7 @@ async function reqPushPerm() {
     if (p === 'granted') {
       toast('Notificaciones push activadas ✓');
       checkPushPermission(); // refresh banner
-      sendPushNotif('🔔 Notificaciones activas', 'Recibirás alertas de racha, repasos y logros de Mente fría.');
+      sendPushNotif('🔔 Notificaciones activas', 'Recibirás como mucho un aviso al día, con la idea de hoy.');
     } else {
       checkPushPermission();
     }
@@ -430,7 +430,7 @@ let notifConfig = {
   quiz: true,
   sistema: true,
   reminderOn: false,
-  reminderTime: '09:00',
+  reminderTime: '21:30',
   sound: false
 };
 
@@ -459,11 +459,22 @@ function saveNotifConfig() {
   notifConfig.logro = el('ncfg-logro')?.checked ?? true;
   notifConfig.quiz = el('ncfg-quiz')?.checked ?? true;
   notifConfig.sistema = el('ncfg-sistema')?.checked ?? true;
+  const estabaOn = notifConfig.reminderOn, horaAntes = notifConfig.reminderTime;
   notifConfig.reminderOn = el('ncfg-reminder-on')?.checked ?? false;
-  notifConfig.reminderTime = el('ncfg-reminder-time')?.value || '09:00';
+  notifConfig.reminderTime = el('ncfg-reminder-time')?.value || '21:30';
   notifConfig.sound = el('ncfg-sound')?.checked ?? false;
   localStorage.setItem(NOTIF_CONFIG_KEY, JSON.stringify(notifConfig));
   updateReminderTimeVisibility();
+  if (notifConfig.reminderOn && !estabaOn) {
+    // Push real desde el servidor: el permiso se pide aquí, al activar el recordatorio.
+    pushActivar().then(ok => {
+      if (!ok) { notifConfig.reminderOn = false; localStorage.setItem(NOTIF_CONFIG_KEY, JSON.stringify(notifConfig)); loadNotifConfig(); }
+      scheduleReminder();
+    });
+    return;
+  }
+  if (!notifConfig.reminderOn && estabaOn) pushDesactivar();
+  else if (notifConfig.reminderOn && notifConfig.reminderTime !== horaAntes) pushSincronizar();
   scheduleReminder();
 }
 
@@ -523,6 +534,7 @@ let reminderTimer = null;
 function scheduleReminder() {
   if (reminderTimer) clearTimeout(reminderTimer);
   if (!notifConfig.reminderOn) return;
+  if (localStorage.getItem(PUSH_FLAG)) return;   // el servidor ya avisa; evita duplicados
 
   const [h, m] = notifConfig.reminderTime.split(':').map(Number);
   const now = new Date();
@@ -535,10 +547,9 @@ function scheduleReminder() {
   console.log('SCS reminder scheduled in', Math.round(ms / 60000), 'min');
 
   reminderTimer = setTimeout(() => {
-    // Only fire if user hasn't studied today
-    const lastStudy = localStorage.getItem('scs_last_study_date');
-    const today = (window.Dia ? Dia.hoy() : new Date().toISOString().slice(0, 10));
-    if (lastStudy !== today) {
+    // Solo si la sesión de hoy no está hecha
+    const hecha = (typeof isNocheCerrada === 'function') && isNocheCerrada();
+    if (!hecha) {
       showAchievement('§', 'El atril está puesto', 'Una lección de pocos minutos, cuando quieras.', 'sistema');
     }
     // Reschedule for next day
@@ -562,9 +573,109 @@ async function clearAllNotifications() {
   } catch (e) { toast('Error al eliminar'); }
 }
 
+/* ── INSIGNIA EN EL ICONO (PWA instalada, Android/Chrome) ──
+   Un punto mientras la sesión de hoy está pendiente; se quita al cerrarla. */
+function actualizarInsigniaApp() {
+  try {
+    if (!('setAppBadge' in navigator)) return;
+    const hecha = (typeof isNocheCerrada === 'function') && isNocheCerrada();
+    if (hecha) { if ('clearAppBadge' in navigator) navigator.clearAppBadge().catch(() => {}); }
+    else navigator.setAppBadge(1).catch(() => {});
+  } catch (e) { /* silent */ }
+}
+
+/* ── WEB PUSH REAL: el recordatorio diario lo envía el servidor (supabase/functions/enviar-recordatorios) ──
+   Funciona con la app cerrada. El servidor decide si toca (hora, sesión ya hecha, frecuencia). */
+const VAPID_PUBLIC = 'BAfu2l74SEKwQaKdOlXAMQYvaW0yBJ6Kgr3ga4eyJ7cwnMIP0EtSzN_GcWLXaetbf6YXykLUi6_rL5v9zg7no5M';
+const PUSH_FLAG = 'scs_push_activo';
+
+function vapidBytes(b64) {
+  const pad = '='.repeat((4 - b64.length % 4) % 4);
+  const raw = atob((b64 + pad).replace(/-/g, '+').replace(/_/g, '/'));
+  return Uint8Array.from(raw, c => c.charCodeAt(0));
+}
+const pushHeaders = extra => Object.assign({ 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' }, extra || {});
+
+/** Lección que toca hoy (la calcula la app); el aviso lleva su idea y título. */
+function proximaLeccionPush() {
+  try {
+    const l = (typeof pickNocheLeccion === 'function') ? pickNocheLeccion() : null;
+    return l ? { proxima_leccion_id: l.id, proxima_titulo: l.titulo || null, proxima_idea: l.idea_clave || null } : {};
+  } catch (e) { return {}; }
+}
+
+async function pushActivar() {
+  try {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) { toast('Este navegador no admite notificaciones push'); return false; }
+    const perm = Notification.permission === 'granted' ? 'granted' : await Notification.requestPermission();
+    if (perm !== 'granted') { toast('Sin permiso de notificaciones: no se activa el recordatorio'); return false; }
+    const reg = await navigator.serviceWorker.ready;
+    let sub = await reg.pushManager.getSubscription();
+    if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: vapidBytes(VAPID_PUBLIC) });
+    const j = sub.toJSON();
+    const fila = Object.assign({
+      endpoint: j.endpoint, p256dh: j.keys.p256dh, auth: j.keys.auth,
+      hora: notifConfig.reminderTime, activo: true,
+      user_agent: (navigator.userAgent || '').slice(0, 200), actualizada: new Date().toISOString()
+    }, proximaLeccionPush());
+    const r = await fetch(SB_URL + '/rest/v1/push_suscripciones?on_conflict=endpoint', {
+      method: 'POST', headers: pushHeaders({ 'Prefer': 'resolution=merge-duplicates,return=minimal' }), body: JSON.stringify(fila)
+    });
+    if (!r.ok) throw new Error('registro ' + r.status);
+    localStorage.setItem(PUSH_FLAG, '1');
+    toast('Recordatorio activado: un aviso al día, a las ' + notifConfig.reminderTime);
+    return true;
+  } catch (e) {
+    console.error('Push:', e); toast('No se pudo activar el recordatorio'); return false;
+  }
+}
+
+async function pushDesactivar() {
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    const sub = await reg.pushManager.getSubscription();
+    if (sub) {
+      await fetch(SB_URL + '/rest/v1/push_suscripciones?endpoint=eq.' + encodeURIComponent(sub.endpoint), {
+        method: 'PATCH', headers: pushHeaders({ 'Prefer': 'return=minimal' }), body: JSON.stringify({ activo: false, actualizada: new Date().toISOString() })
+      });
+      await sub.unsubscribe();
+    }
+  } catch (e) { /* silent */ }
+  localStorage.removeItem(PUSH_FLAG);
+}
+
+/** Mantiene en el servidor la hora y la lección de hoy. Barato: un PATCH al abrir y al cerrar la sesión. */
+async function pushSincronizar() {
+  try {
+    if (!localStorage.getItem(PUSH_FLAG) || !('serviceWorker' in navigator)) return;
+    const reg = await navigator.serviceWorker.ready;
+    const sub = await reg.pushManager.getSubscription();
+    if (!sub) { localStorage.removeItem(PUSH_FLAG); return; }
+    await fetch(SB_URL + '/rest/v1/push_suscripciones?endpoint=eq.' + encodeURIComponent(sub.endpoint), {
+      method: 'PATCH', headers: pushHeaders({ 'Prefer': 'return=minimal' }),
+      body: JSON.stringify(Object.assign({ hora: notifConfig.reminderTime, actualizada: new Date().toISOString() }, proximaLeccionPush()))
+    });
+  } catch (e) { /* silent */ }
+}
+
+/** Si la app se abre desde un aviso (?aviso=<id>), lo deja anotado para medir cuántos avisos sirven. */
+function pushMarcarAbierto() {
+  try {
+    const u = new URL(location.href), id = u.searchParams.get('aviso');
+    if (!id || !/^[0-9a-f-]{36}$/i.test(id)) return;
+    fetch(SB_URL + '/rest/v1/push_avisos?id=eq.' + id + '&abierto=is.null', {
+      method: 'PATCH', headers: pushHeaders({ 'Prefer': 'return=minimal' }), body: JSON.stringify({ abierto: new Date().toISOString() })
+    }).catch(() => {});
+    u.searchParams.delete('aviso'); history.replaceState(null, '', u.pathname + u.search + u.hash);
+  } catch (e) { /* silent */ }
+}
+
 // Load config on startup
 loadNotifConfig();
 scheduleReminder();
+setTimeout(actualizarInsigniaApp, 3000);
+setTimeout(pushSincronizar, 3500);
+pushMarcarAbierto();
 
 /* ── SMART POLLING ── */
 // Initial check after page load
@@ -579,6 +690,7 @@ window._notifPollInterval = setInterval(() => {
 // Restart polling when tab becomes visible
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden) {
+    actualizarInsigniaApp();
     checkForNewNotifications();
   }
 });
