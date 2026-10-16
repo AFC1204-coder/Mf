@@ -351,7 +351,10 @@ function checkPushPermission() {
   }
 
   if (Notification.permission === 'granted') {
-    area.innerHTML = '<div style="padding:0.6rem 1.1rem;font-size:0.68rem;color:var(--success);font-family:var(--font-mono);display:flex;align-items:center;gap:0.4rem;">✓ Push activas</div>';
+    const ok = !!localStorage.getItem(PUSH_FLAG);
+    area.innerHTML = ok
+      ? '<div style="padding:0.6rem 1.1rem;font-size:0.68rem;color:var(--success);font-family:var(--font-mono);display:flex;align-items:center;gap:0.4rem;">✓ Recordatorio activo en este móvil</div>'
+      : '<div class="push-banner"><div class="push-banner-icon">🔔</div><div class="push-banner-text"><strong>Falta un paso</strong><br>El permiso está concedido, pero este móvil aún no está registrado para recibir el recordatorio.</div><button class="push-banner-btn" onclick="pushActivarManual()">Registrar</button></div>';
     return;
   }
 
@@ -369,20 +372,7 @@ function checkPushPermission() {
   '</div>';
 }
 
-async function reqPushPerm() {
-  try {
-    const p = await Notification.requestPermission();
-    if (p === 'granted') {
-      toast('Notificaciones push activadas ✓');
-      checkPushPermission(); // refresh banner
-      sendPushNotif('🔔 Notificaciones activas', 'Recibirás como mucho un aviso al día, con la idea de hoy.');
-    } else {
-      checkPushPermission();
-    }
-  } catch (e) {
-    console.error('Push permission error:', e);
-  }
-}
+async function reqPushPerm() { return pushActivarManual(); }
 
 function sendPushNotif(title, body) {
   // ANTI-SPAM PROTECCIÓN: ¡Nunca lanzar un cartel al SO Android si el usuario ya está viendo la app!
@@ -450,6 +440,7 @@ function loadNotifConfig() {
   if (el('ncfg-reminder-time')) el('ncfg-reminder-time').value = notifConfig.reminderTime;
   if (el('ncfg-sound')) el('ncfg-sound').checked = notifConfig.sound;
   updateReminderTimeVisibility();
+  pushPintarEstado();
 }
 
 function saveNotifConfig() {
@@ -469,11 +460,11 @@ function saveNotifConfig() {
     // Push real desde el servidor: el permiso se pide aquí, al activar el recordatorio.
     pushActivar().then(ok => {
       if (!ok) { notifConfig.reminderOn = false; localStorage.setItem(NOTIF_CONFIG_KEY, JSON.stringify(notifConfig)); loadNotifConfig(); }
-      scheduleReminder();
+      scheduleReminder(); pushPintarEstado(); checkPushPermission();
     });
     return;
   }
-  if (!notifConfig.reminderOn && estabaOn) pushDesactivar();
+  if (!notifConfig.reminderOn && estabaOn) pushDesactivar().then(() => { pushPintarEstado(); checkPushPermission(); });
   else if (notifConfig.reminderOn && notifConfig.reminderTime !== horaAntes) pushSincronizar();
   scheduleReminder();
 }
@@ -588,6 +579,7 @@ function actualizarInsigniaApp() {
    Funciona con la app cerrada. El servidor decide si toca (hora, sesión ya hecha, frecuencia). */
 const VAPID_PUBLIC = 'BAfu2l74SEKwQaKdOlXAMQYvaW0yBJ6Kgr3ga4eyJ7cwnMIP0EtSzN_GcWLXaetbf6YXykLUi6_rL5v9zg7no5M';
 const PUSH_FLAG = 'scs_push_activo';
+const PUSH_ERR = 'scs_push_error';
 
 function vapidBytes(b64) {
   const pad = '='.repeat((4 - b64.length % 4) % 4);
@@ -606,10 +598,10 @@ function proximaLeccionPush() {
 
 async function pushActivar() {
   try {
-    if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) { toast('Este navegador no admite notificaciones push'); return false; }
+    if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) { pushError('Este navegador no admite notificaciones push'); return false; }
     const perm = Notification.permission === 'granted' ? 'granted' : await Notification.requestPermission();
-    if (perm !== 'granted') { toast('Sin permiso de notificaciones: no se activa el recordatorio'); return false; }
-    const reg = await navigator.serviceWorker.ready;
+    if (perm !== 'granted') { pushError('Sin permiso de notificaciones'); return false; }
+    const reg = await Promise.race([navigator.serviceWorker.ready, new Promise((_, rej) => setTimeout(() => rej(new Error('el service worker no está listo (cierra y abre la app)')), 8000))]);
     let sub = await reg.pushManager.getSubscription();
     if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: vapidBytes(VAPID_PUBLIC) });
     const j = sub.toJSON();
@@ -621,13 +613,43 @@ async function pushActivar() {
     const r = await fetch(SB_URL + '/rest/v1/push_suscripciones?on_conflict=endpoint', {
       method: 'POST', headers: pushHeaders({ 'Prefer': 'resolution=merge-duplicates,return=minimal' }), body: JSON.stringify(fila)
     });
-    if (!r.ok) throw new Error('registro ' + r.status);
-    localStorage.setItem(PUSH_FLAG, '1');
+    if (!r.ok) throw new Error('registro en el servidor: ' + r.status);
+    localStorage.setItem(PUSH_FLAG, '1'); localStorage.removeItem(PUSH_ERR);
     toast('Recordatorio activado: un aviso al día, a las ' + notifConfig.reminderTime);
     return true;
   } catch (e) {
-    console.error('Push:', e); toast('No se pudo activar el recordatorio'); return false;
+    console.error('Push:', e); pushError((e && e.name ? e.name + ': ' : '') + ((e && e.message) || 'error desconocido')); return false;
   }
+}
+
+/** Guarda y muestra el motivo si no se pudo activar, para no tener que adivinar. */
+function pushError(msg) {
+  try { localStorage.setItem(PUSH_ERR, msg); } catch (e) { /* silent */ }
+  toast('No se pudo activar el recordatorio: ' + msg);
+}
+
+/** Línea de estado bajo el recordatorio: activo / sin activar / bloqueado, con botón si falta el registro. */
+function pushPintarEstado() {
+  const el = document.getElementById('push-estado');
+  if (!el) return;
+  if (!('Notification' in window) || !('PushManager' in window)) { el.textContent = 'Este navegador no admite notificaciones push.'; return; }
+  const err = localStorage.getItem(PUSH_ERR);
+  if (Notification.permission === 'denied') { el.textContent = 'Estado: permiso bloqueado. Actívalo en los ajustes del navegador para este sitio.'; return; }
+  if (localStorage.getItem(PUSH_FLAG)) { el.innerHTML = 'Estado: <strong style="color:var(--success)">activo en este móvil</strong> (' + escH(notifConfig.reminderTime) + ').'; return; }
+  el.innerHTML = 'Estado: <strong>sin activar en este móvil</strong>.' + (err ? ' Último error: ' + escH(err) + '.' : '') +
+    ' <button class="push-banner-btn" style="margin-left:0.4rem" onclick="pushActivarManual()">Activar ahora</button>';
+}
+
+/** Activa el recordatorio con un gesto del usuario (botones «Activar ahora» / «Registrar» / banner). */
+async function pushActivarManual() {
+  const ok = await pushActivar();
+  if (ok) {
+    notifConfig.reminderOn = true;
+    try { localStorage.setItem(NOTIF_CONFIG_KEY, JSON.stringify(notifConfig)); } catch (e) { /* silent */ }
+    loadNotifConfig();
+  }
+  pushPintarEstado(); checkPushPermission();
+  return ok;
 }
 
 async function pushDesactivar() {
@@ -674,7 +696,10 @@ function pushMarcarAbierto() {
 loadNotifConfig();
 scheduleReminder();
 setTimeout(actualizarInsigniaApp, 3000);
-setTimeout(pushSincronizar, 3500);
+setTimeout(() => {
+  if (notifConfig.reminderOn && !localStorage.getItem(PUSH_FLAG) && 'Notification' in window && Notification.permission === 'granted') pushActivar().then(pushPintarEstado);
+  else pushSincronizar();
+}, 3500);
 pushMarcarAbierto();
 
 /* ── SMART POLLING ── */
