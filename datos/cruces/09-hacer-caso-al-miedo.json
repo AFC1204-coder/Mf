@@ -1,0 +1,300 @@
+{
+ "titulo": "¿Hay que hacer caso al miedo?",
+ "pregunta_generadora": "¿Cuándo tu miedo es una alarma fiable que debes obedecer y cuándo es una percepción distorsionada del riesgo que deberías cuestionar?",
+ "tipo": "tension",
+ "autores_convocados": [
+  "Gavin de Becker",
+  "Paul Slovic",
+  "Lenore Skenazy",
+  "Gerd Gigerenzer"
+ ],
+ "libros_referenciados": [
+  "The Gift of Fear",
+  "The Perception of Risk",
+  "Free-Range Kids",
+  "Risk Savvy"
+ ],
+ "cuerpo": "Ante un miedo solemos oír dos consejos opuestos: hazle caso, o desconfía de él. Los cuatro libros que se cruzan aquí no se reparten limpiamente en dos bandos, pero tiran en direcciones distintas.\n\nDe Becker sostiene que el cerebro detecta el peligro antes de que la mente sepa explicarlo. Según su lección, el sistema intuitivo integra a la vez muchas variables del entorno, como la expresión de una cara, el tono de voz o las incongruencias entre lo que alguien dice y cómo lo dice, y las entrega en forma de sensación, no de argumento. Su aviso es que la presión para justificar cada incomodidad actúa como una forma de apagar la alarma: si no podemos formularla, la descartamos como irracional. Pero precisa algo importante: confiar en la intuición no significa actuar ante cualquier incomodidad, sino aprender a leer qué mensaje concreto contiene.\n\nLos otros tres no hablan de la alarma ante una situación concreta. Slovic sitúa los riesgos en un plano de pavor y desconocimiento, y afirma que esa posición predice la respuesta política y social a la regulación mejor que la probabilidad del daño; en lectura nuestra, lo que más reacción provoca no es necesariamente lo más probable. Skenazy describe un hábito, el del peor caso primero, que convierte el desenlace más terrible en esperable y desplaza la pregunta por la probabilidad. Y Gigerenzer muestra el precio de la sobreprotección en la crianza, que su lección presenta sobre todo como respuesta a la presión cultural y legal sobre los padres: priva a los niños de la práctica con la que se aprende a calibrar el riesgo.\n\nLeídos juntos, los textos no se contradicen tanto como parece. Una forma de ordenarlo, que es lectura nuestra, es notar que De Becker habla de una sensación ante señales de una situación concreta, mientras que Slovic y Skenazy hablan de miedos que se forman en torno a un tipo de riesgo: en Slovic, según su pavor y su novedad; en Skenazy, según el peor desenlace imaginado y el caso raro y espantoso que difunden las noticias. Lo que sugiere verlos juntos, en lectura nuestra, es que la pregunta útil no es si hacer caso o no al miedo, sino de qué clase de señal se trata. Y ninguna de las dos mitades del cruce queda libre de matices: la nota crítica de la lección de De Becker señala que parte de la intuición de peligro puede estar contaminada por prejuicios, y la de Skenazy, que el razonamiento desde el peor caso es útil cuando el daño es grave e irreversible.",
+ "convergencias": "De Becker y Skenazy describen reacciones rápidas, pero distintas: en De Becker, una sensación que llega antes que el argumento ante señales de una situación; en Skenazy, un salto inmediato al peor desenlace que desplaza la pregunta por la probabilidad. Slovic y Skenazy coinciden en que la reacción ante un riesgo no sigue bien la frecuencia de los daños: en Slovic, lo que pesa es lo catastrófico y lo desconocido; en Skenazy, el caso raro y espantoso que cuentan las noticias. Gigerenzer añade el coste de la sobreprotección infantil, que su lección presenta sobre todo como respuesta a la presión cultural y legal. Y ambos apuntan a la proporción: en Skenazy, ni negar que lo terrible existe ni dejar que la imagen más dramática decida sola; en Slovic, equilibrar la probabilidad con dimensiones legítimas como la irreversibilidad.",
+ "divergencias": "De Becker trata la sensación de alarma como información valiosa que no conviene suprimir, mientras que Slovic y Skenazy describen cómo los miedos a categorías de riesgo pueden desplazar la valoración de la probabilidad (sin reducirlos por ello a un simple error). Gigerenzer se ocupa de otra cosa: del daño que causa la sobreprotección infantil. No hablan exactamente de lo mismo: De Becker se ocupa de señales de personas y situaciones concretas, y los otros de miedos a categorías de riesgo o a lo que se imagina que puede pasar. Las notas críticas de las propias lecciones matizan cada postura: advierten de que la intuición de peligro puede estar contaminada por prejuicios, de que el razonamiento desde el peor caso es útil cuando el daño es grave e irreversible y de que la autonomía calibrada no es desatención.",
+ "lectura_cruzada": "Una forma de ordenarlo, que es nuestra y no de ningún autor, es preguntarse qué tipo de señal es cada miedo. Si responde a conductas observables en una situación concreta, la lección de De Becker invita a escucharlo y a averiguar qué contiene. Si responde a una imagen vívida de un riesgo raro o novedoso, la lección de Skenazy invita a compararlo con la probabilidad y con el coste de no actuar, y la de Slovic recuerda que lo que provoca más reacción no coincide con lo más frecuente, aunque sus dimensiones también recogen cosas legítimas, como la irreversibilidad. Y si lo que se activa es un estereotipo, la nota crítica de la lección de De Becker plantea separarlo de la conducta real.",
+ "aplicacion": "En la práctica, ante un miedo puede ayudar detenerse a preguntar qué señales concretas lo disparan, qué imagen domina en la cabeza y qué cuesta no hacer nada. Con la crianza, el cruce sugiere graduar la autonomía según la edad y el entorno en lugar de elegir entre vigilancia total y dejar hacer. No es un procedimiento que garantice acertar: sirve para que la decisión no la tome sola la intensidad de la sensación, y deja sitio a la prudencia cuando el daño posible es grave.",
+ "cautelas": "Varias tesis son discutibles. Según las notas críticas de las lecciones, la intuición de peligro puede estar contaminada por sesgos raciales y de clase, el mapa de Slovic simplifica y la etiqueta del peor caso es retórica, no una variable medida; la explicación psicológica que se le añade en la lección es una lectura, no una tesis de Skenazy. Según la lección, lo que cita Gigerenzer es una comparación entre cohortes de países nórdicos y anglosajones: un experimento natural, no un ensayo controlado (cautela nuestra). La defensa de la autonomía puede usarse para justificar negligencia real. Si el miedo es intenso, persistente o limita tu vida, este texto no sustituye a un profesional de la salud.",
+ "esquemas": [
+  {
+   "tipo": "diagrama",
+   "plantilla": "comparar",
+   "titulo": "Dos clases de señal de miedo",
+   "pie": "Ordenación nuestra: los libros no plantean esta división tal cual.",
+   "datos": {
+    "izq": {
+     "t": "Sensación ante señales",
+     "tono": "ok",
+     "items": [
+      "Integra muchas señales de una situación a la vez (De Becker)",
+      "Llega como sensación antes que como argumento",
+      "Pide leer qué mensaje concreto contiene"
+     ]
+    },
+    "der": {
+     "t": "Miedo a un tipo de riesgo",
+     "tono": "info",
+     "items": [
+      "Se ubica según el pavor y el desconocimiento del riesgo (Slovic)",
+      "Imagina el peor desenlace como esperable (Skenazy)",
+      "No siempre sigue la probabilidad del daño"
+     ]
+    }
+   }
+  },
+  {
+   "tipo": "diagrama",
+   "plantilla": "matriz",
+   "titulo": "El mapa de Slovic (ejemplos de la lección)",
+   "pie": "Mapa simplificado: estudios posteriores añaden otras dimensiones; los ejemplos son los de la lección.",
+   "datos": {
+    "ejeX": {
+     "izq": "Familiar",
+     "der": "Novedoso",
+     "nombre": "Desconocimiento"
+    },
+    "ejeY": {
+     "arriba": "Catastrófico",
+     "abajo": "Controlable",
+     "nombre": "Pavor"
+    },
+    "celdas": [
+     {
+      "t": "Pavor alto, conocido",
+      "d": "Tabaco, alcohol, conducción peligrosa: peligro aceptado",
+      "tono": "mal"
+     },
+     {
+      "t": "Pavor alto, desconocido",
+      "d": "Nuclear, ingeniería genética: máxima oposición",
+      "tono": "mal"
+     },
+     {
+      "t": "Pavor bajo, familiar",
+      "d": "Caminar, comida común: poca demanda de regulación",
+      "tono": "ok"
+     },
+     {
+      "t": "Pavor bajo, desconocido",
+      "d": "IA, materiales nuevos: curiosidad y precaución",
+      "tono": "info"
+     }
+    ]
+   }
+  },
+  {
+   "tipo": "diagrama",
+   "plantilla": "pasos",
+   "titulo": "Preguntas ante un miedo (lectura nuestra)",
+   "pie": "Ordenación nuestra; ningún autor propone este orden.",
+   "datos": {
+    "pasos": [
+     {
+      "t": "¿Hay señales concretas?",
+      "d": "Conducta observable, no solo un tipo de persona o lugar"
+     },
+     {
+      "t": "¿Qué imagen domina?",
+      "d": "El peor desenlace puede estar desplazando a la probabilidad",
+      "tono": "info"
+     },
+     {
+      "t": "¿Es grave e irreversible?",
+      "d": "Si lo es, cabe más prudencia, en proporción"
+     },
+     {
+      "t": "¿Qué cuesta no actuar?",
+      "d": "La alternativa también tiene costes, como la práctica perdida",
+      "tono": "ok"
+     }
+    ]
+   }
+  },
+  {
+   "tipo": "diagrama",
+   "plantilla": "espectro",
+   "titulo": "Entre la sobreprotección y la desatención",
+   "pie": "La nota crítica de la lección de Gigerenzer distingue autonomía calibrada de desatención; el punto depende del niño y del entorno.",
+   "datos": {
+    "polos": [
+     "Sobreprotección",
+     "Desatención"
+    ],
+    "tonoA": "mal",
+    "tonoB": "mal",
+    "marcas": [
+     {
+      "pos": 0.08,
+      "t": "Vigilancia constante",
+      "d": "Menos práctica para calibrar el riesgo",
+      "tono": "mal"
+     },
+     {
+      "pos": 0.5,
+      "t": "Autonomía calibrada",
+      "d": "Adaptada al desarrollo y con escalada gradual",
+      "tono": "ok"
+     },
+     {
+      "pos": 0.92,
+      "t": "Desatención",
+      "d": "Falta de supervisión donde es necesaria",
+      "tono": "mal"
+     }
+    ]
+   }
+  }
+ ],
+ "capsulas": [
+  {
+   "titulo": "Alarma rápida frente a miedo a un tipo de riesgo",
+   "texto": "De Becker describe un sistema que integra a la vez muchas variables del entorno y las entrega como sensación antes de que haya argumento. Slovic y Skenazy describen otra cosa: miedos organizados en torno a un tipo de riesgo, según su pavor, su novedad o el desenlace que se imagina. Una forma de ordenarlo, que es lectura nuestra, es distinguir si el miedo responde a señales de una situación concreta o a la imagen de una categoría de peligro. Esa pregunta evita elegir entre obedecer siempre o descartar siempre, algo que ninguna de las lecciones propone.",
+   "esquema": 0,
+   "fuentes": [
+    "2f34b031-d339-4759-a20e-1755fcf79739",
+    "b7f2fd7d-bb91-4e4f-bac6-6b85f9006f12",
+    "efd660ff-f616-4364-8ba4-6ee20c7be502"
+   ]
+  },
+  {
+   "titulo": "Lo que provoca más reacción no es lo más probable",
+   "texto": "Slovic propone ubicar cada riesgo en un plano con dos ejes: pavor, desde lo controlable hasta lo catastrófico, y desconocimiento, desde lo familiar hasta lo novedoso. Según su lección, esa posición predice la respuesta política y social a la regulación mejor que la probabilidad del daño. Skenazy describe, en la vida de las familias, un hábito que se parece: la imaginación del peor desenlace desplaza a la comparación de probabilidades y costes. Que ambos casos compartan una causa es lectura nuestra. Leídos juntos, sugieren que la intensidad del miedo puede decir más sobre cómo es el riesgo que sobre cuánto se repite. Esa diferencia no vuelve ilegítimo el miedo, pero sí discutible su peso en la decisión.",
+   "esquema": 1,
+   "fuentes": [
+    "b7f2fd7d-bb91-4e4f-bac6-6b85f9006f12",
+    "efd660ff-f616-4364-8ba4-6ee20c7be502"
+   ]
+  },
+  {
+   "titulo": "Cuatro preguntas antes de obedecer o descartar",
+   "texto": "Esta secuencia es una ordenación nuestra, no un método de ningún autor. Primero, si hay señales concretas, porque la lección de De Becker pide leer el mensaje específico de la incomodidad, y la nota crítica de esa lección avisa de que los estereotipos pueden hacerse pasar por intuición. Segundo, qué imagen domina, algo que Skenazy asocia al peor caso. Tercero, si el daño sería grave e irreversible, caso en que la nota crítica de la lección de Skenazy señala que el razonamiento desde el peor caso es útil, y que la diferencia entre prudencia y miedo está en la proporción. Cuarto, qué cuesta no actuar. Sirve para frenar una decisión automática, no para garantizar un acierto.",
+   "esquema": 2,
+   "fuentes": [
+    "2f34b031-d339-4759-a20e-1755fcf79739",
+    "efd660ff-f616-4364-8ba4-6ee20c7be502"
+   ]
+  },
+  {
+   "titulo": "Proteger también puede costar: autonomía calibrada",
+   "texto": "Gigerenzer sostiene que la calibración del riesgo se desarrolla con práctica, como cualquier habilidad, y que la protección excesiva de los niños tiene su propio daño. Skenazy coincide en que la opción de no hacer nada tampoco sale gratis: si el niño no hace por su cuenta, pierde práctica. Pero la nota crítica de la lección de Gigerenzer añade un límite: autonomía calibrada no es desatención, y las edades y los contextos dependen del niño, del entorno y de las redes de apoyo. Según la lección, su apoyo empírico es una comparación entre cohortes de países, un experimento natural; como cautela nuestra, no equivale a un ensayo controlado. Por eso el esquema sitúa la autonomía calibrada en una zona intermedia cuyo punto exacto se juzga caso por caso.",
+   "esquema": 3,
+   "fuentes": [
+    "5a23f71c-adc9-4cc3-89a8-6814d355439d",
+    "efd660ff-f616-4364-8ba4-6ee20c7be502"
+   ]
+  }
+ ],
+ "fuentes": [
+  {
+   "leccion_id": "2f34b031-d339-4759-a20e-1755fcf79739",
+   "libro": "The Gift of Fear",
+   "autor": "Gavin de Becker",
+   "aporta": "El cerebro integra señales del entorno y avisa de un peligro como sensación antes que como argumento, aunque conviene leer su mensaje concreto."
+  },
+  {
+   "leccion_id": "b7f2fd7d-bb91-4e4f-bac6-6b85f9006f12",
+   "libro": "The Perception of Risk",
+   "autor": "Paul Slovic",
+   "aporta": "Los riesgos se perciben según su pavor y su desconocimiento, y esa posición predice la respuesta social a la regulación mejor que la probabilidad."
+  },
+  {
+   "leccion_id": "efd660ff-f616-4364-8ba4-6ee20c7be502",
+   "libro": "Free-Range Kids",
+   "autor": "Lenore Skenazy",
+   "aporta": "El peor caso primero convierte el desenlace más terrible en esperable y desplaza la estimación de probabilidades y costes."
+  },
+  {
+   "leccion_id": "5a23f71c-adc9-4cc3-89a8-6814d355439d",
+   "libro": "Risk Savvy",
+   "autor": "Gerd Gigerenzer",
+   "aporta": "La protección excesiva de los niños, que la lección presenta como respuesta a la presión cultural y legal, tiene su propio daño, y el riesgo se calibra practicando."
+  }
+ ],
+ "preguntas": [
+  {
+   "texto": "En la lectura cruzada, ¿qué diferencia ayuda a ordenar la alarma que describe De Becker y los miedos que estudia Slovic?",
+   "opciones": [
+    "La primera depende de la cultura de cada sociedad y los segundos de la biología, según el origen que tenga el miedo",
+    "La primera es una reacción propia de adultos y los segundos son reacciones propias de niños, según la edad de la persona que siente miedo",
+    "La primera nace de señales de una situación concreta y los segundos se organizan según el pavor y la novedad de un tipo de riesgo",
+    "La primera es siempre acertada y los segundos siempre erróneos, porque el cerebro rápido nunca se equivoca en el peligro"
+   ],
+   "correcta": 2,
+   "explicacion": "Es una ordenación nuestra: De Becker habla de integrar señales de una situación concreta y Slovic de cómo el pavor y el desconocimiento colocan un tipo de riesgo. Ningún libro afirma que una sea siempre acertada y la otra siempre errónea.",
+   "dificultad": 2,
+   "fuentes": [
+    "2f34b031-d339-4759-a20e-1755fcf79739",
+    "b7f2fd7d-bb91-4e4f-bac6-6b85f9006f12"
+   ]
+  },
+  {
+   "texto": "En la lectura cruzada, ¿qué punto en común se puede ver entre el mapa de Slovic y el pensamiento del peor caso de Skenazy sobre lo que tememos?",
+   "opciones": [
+    "Que lo que más reacción provoca, por su pavor, su novedad o el desenlace que se imagina, puede no coincidir con lo más probable",
+    "Que el miedo es siempre un error cognitivo y que, por eso, conviene descartarlo sin más preámbulos",
+    "Que las señales de peligro siempre llegan como sensación y nunca como argumento, por lo que conviene obedecerlas en toda situación",
+    "Que los riesgos más cotidianos y familiares son los que más alarma social provocan en cualquier sociedad"
+   ],
+   "correcta": 0,
+   "explicacion": "Es una lectura nuestra del cruce: Slovic sitúa los riesgos según pavor y desconocimiento, y eso predice la respuesta política y social mejor que la probabilidad; Skenazy describe cómo la imaginación del peor desenlace desplaza a esa probabilidad. Las señales que llegan antes de formularse son la tesis de De Becker, y que lo familiar alarme más contradice a Slovic, para quien lo cotidiano genera poca demanda de regulación aunque cause más muertes.",
+   "dificultad": 2,
+   "fuentes": [
+    "b7f2fd7d-bb91-4e4f-bac6-6b85f9006f12",
+    "efd660ff-f616-4364-8ba4-6ee20c7be502"
+   ]
+  },
+  {
+   "texto": "Según Skenazy y Gigerenzer, ¿qué tienen en común sus argumentos sobre cuánta libertad dar a un niño?",
+   "opciones": [
+    "Que ambos señalan un coste de la opción aparentemente segura: sin práctica por su cuenta, el niño pierde ocasiones de aprender (en Gigerenzer, a calibrar el riesgo)",
+    "Que ambos consideran que no actuar es siempre la opción más segura, porque protege al niño frente al peor desenlace imaginado",
+    "Que ambos recomiendan una vigilancia permanente con tecnologías de seguimiento, para que el niño no tenga que practicar solo",
+    "Que ambos sostienen que los costes de la inacción no se pueden medir, así que solo cuentan los riesgos de actuar por su cuenta"
+   ],
+   "correcta": 0,
+   "explicacion": "Skenazy señala que no dejar al niño hacer cosas por su cuenta tampoco sale gratis: pierde práctica, y los adultos pierden tiempo y energía; Gigerenzer explica que el riesgo se calibra practicando. La vigilancia permanente aparece en su lección como parte de la sobreprotección, no como solución.",
+   "dificultad": 2,
+   "fuentes": [
+    "efd660ff-f616-4364-8ba4-6ee20c7be502",
+    "5a23f71c-adc9-4cc3-89a8-6814d355439d"
+   ]
+  },
+  {
+   "texto": "Atendiendo a las notas críticas de las lecciones de De Becker y de Skenazy, ¿qué matiz muestran para no tomar el miedo como prueba de peligro ni descartarlo en bloque?",
+   "opciones": [
+    "Solo los profesionales de la seguridad pueden distinguir un miedo útil de uno distorsionado, así que conviene delegar",
+    "Basta con consultar la estadística, porque el miedo desaparece en cuanto se conoce la probabilidad real de un daño",
+    "El miedo es siempre fiable en entornos urbanos y siempre erróneo en el cuidado de los niños, por lo que cada caso se separa",
+    "Parte de la intuición puede nacer de estereotipos, pero pensar en el peor caso sirve ante un daño grave e irreversible"
+   ],
+   "correcta": 3,
+   "explicacion": "La nota crítica de la lección de De Becker señala que la intuición de peligro puede estar contaminada por sesgos raciales y de clase; la de la lección de Skenazy, que el razonamiento desde el peor caso es útil con daños graves e irreversibles. Ninguna lleva a obedecer siempre ni a descartar siempre.",
+   "dificultad": 3,
+   "fuentes": [
+    "2f34b031-d339-4759-a20e-1755fcf79739",
+    "efd660ff-f616-4364-8ba4-6ee20c7be502"
+   ]
+  },
+  {
+   "texto": "Una familia evita casi cualquier riesgo infantil por el pavor que le producen sucesos raros y espectaculares. En una lectura nuestra del cruce de Slovic y Gigerenzer, ¿qué cabría pensar?",
+   "opciones": [
+    "Que el pavor es la mejor guía posible, porque la intuición de peligro nunca está contaminada por sesgos ni por prejuicios",
+    "Que ese pavor puede guiar la decisión más que la probabilidad, con el coste de privar al niño de práctica para calibrar el riesgo",
+    "Que lo correcto es dejar al niño sin supervisión alguna, ya que la autonomía siempre supera a la protección en cualquier contexto",
+    "Que debe ignorarse el pavor y decidir solo con la probabilidad, sin tener en cuenta la gravedad ni la irreversibilidad del daño"
+   ],
+   "correcta": 1,
+   "explicacion": "Slovic muestra que el pavor ante lo catastrófico pesa en la reacción social más que la probabilidad, y Gigerenzer que la sobreprotección tiene su propio daño. Aplicarlo a una familia es lectura nuestra del cruce. La nota crítica de la lección de Gigerenzer distingue autonomía calibrada de desatención, así que ninguno de los dos justifica dejar al niño sin supervisión.",
+   "dificultad": 3,
+   "fuentes": [
+    "b7f2fd7d-bb91-4e4f-bac6-6b85f9006f12",
+    "5a23f71c-adc9-4cc3-89a8-6814d355439d"
+   ]
+  }
+ ]
+}

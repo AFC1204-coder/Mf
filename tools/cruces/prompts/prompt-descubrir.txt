@@ -1,0 +1,15 @@
+Tarea: proponer CANDIDATOS DE CRUCE entre libros para la app «Mente fría» (repo /home/user/Mf). Un cruce es una pregunta que varios libros de la biblioteca responden desde ángulos distintos, de modo que ver sus lecciones juntas enseña algo que ningún libro enseña solo (convergencia sorprendente, tensión real entre autores, o piezas complementarias de un mismo mecanismo).
+
+Cómo trabajar:
+1. Con mcp__Supabase__execute_sql (ToolSearch "select:mcp__Supabase__execute_sql"; proyecto aduizdiiacrvpoavjmab; SOLO lectura; cada llamada tiene 60 s: pagina con limit/offset) lee las lecciones activas del área que te toca: `select l.id, l.orden, l.titulo, l.idea_clave, b.id libro_id, b.autor, b.titulo libro from lecciones l join libros b on b.id=l.libro_id where l.activa and b.publico and b.eje_principal='<AREA>' order by b.titulo, l.orden limit 200 offset N`. Lee todas las del área (idea_clave y títulos bastan para descubrir; para dudar entre dos lecciones puedes leer su `cuerpo` y `autocorreccion`).
+2. Opcionalmente consulta también otras áreas (mismas columnas) para sumar 1-2 lecciones de fuera cuando el cruce lo gane de verdad.
+3. Propón 12 candidatos. Reglas de calidad (más importantes que la cantidad):
+   - Mínimo 3 libros distintos y, salvo excepción justificada, 3 autores distintos; 4-6 lecciones en total. Nunca dos lecciones del mismo libro si no aportan algo distinto.
+   - La pregunta debe ser concreta y respondible (no «¿qué es la felicidad?»), y el cruce debe aportar algo no obvio: una tensión real (autores que se contradicen o se matizan), una convergencia entre disciplinas lejanas, o mecanismos complementarios que juntos explican un fenómeno.
+   - Descarta cruces que solo comparten una palabra clave.
+   - Fíjate en las `autocorreccion` de las lecciones: si una tesis está muy discutida, el cruce debe poder presentarla como tal, no como hecho. Marca el riesgo en `riesgos`.
+   - Prefiere temas que sirvan en la vida real (decidir, relacionarse, aprender, descansar, entender la sociedad) y repartidos entre temas distintos.
+4. Escribe el resultado en /tmp/claude-0/cruces/cand-<slug-del-area>.json como array de objetos:
+   {"titulo_provisional": "...", "pregunta": "...", "tipo": "convergencia|tension|complementariedad", "por_que_merece": "1-2 frases", "riesgos": "qué podría salir mal o estar discutido", "lecciones": [{"id": "<uuid de la lección>", "libro": "Autor — Título", "aporta": "una frase: qué pone esta lección en el cruce"}]}
+   Los id deben ser reales (compruébalos con una consulta). No inventes lecciones ni atribuyas a un libro lo que su lección no dice.
+5. No modifiques el repo ni la BD. Informa en pocas líneas: nº de candidatos, y los 5 que consideras más fuertes con una línea cada uno.
