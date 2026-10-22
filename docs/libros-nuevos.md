@@ -107,3 +107,70 @@ Todos con confianza «media» salvo indicación; las verificaciones hicieron com
 **Visuales (2026-10-14, segunda tanda):** 422 diagramas (uno por lección) y 72 mapas (uno por libro) añadidos con `tools/datos/agregar.mjs`. Los pies llevan la cautela de la autocorrección de cada lección. Se revisaron los desbordes de texto y se sustituyeron tres palabras partidas por guion. El título del mapa de Neff se pone en español porque el lint de tildes confunde «Compassion» con una palabra sin tilde.
 
 **Pendiente de criterio del usuario:** «El arte de decir no» (nº 23 de la lista de temas poco trabajados) no se añadió por no tener autor claro.
+
+## Tercera tanda (2026-10-22): 40 libros de la lista «libros_ideas_tanda2»
+
+Cada libro pasó por el flujo completo: generación (`generador.md`), lint, verificación independiente con búsqueda web, corrección de todos los ERROR y DUDA, y, cuando hubo ERROR de contenido o reescritura grande, segunda (a veces tercera) verificación con un verificador nuevo. La carga la hizo un agente transcribiendo el SQL y **cada libro se comprobó con huellas** (md5 de los campos de lección y de pregunta frente al paquete verificado) antes de publicarse: 0 diferencias en los 40. Total: 40 libros, 321 lecciones, 1004 preguntas.
+
+De la lista de 61 propuestos: 41 entraron en esta tanda (el 41.º, *Built from Broken*, se descartó: el agente no pudo leer el libro, el autor real es Scott Hogan (2021) y no Scott Meyers, y el paquete quedó con confianza baja y material de reseñas de terceros, demasiado arriesgado en un tema de salud); 16 quedan para una tanda B con cautelas fuertes (salud, dieta, negocios con base anecdótica); 4 se descartaron (*Deep Nutrition*, *Jaws*, *The Five Love Languages*, *Models*) y *Ego Is the Enemy* se omitió por redundante.
+
+| Autor | Libro | Lecciones / preguntas | Confianza |
+|---|---|---|---|
+| Austin Kleon | *Steal Like an Artist* (2012) | 10 / 30 | media |
+| Benedict Carey | *How We Learn* (2014) | 9 / 27 | media |
+| Bill Bryson | *A Short History of Nearly Everything* (2003) | 10 / 30 | media |
+| Cal Newport | *So Good They Can't Ignore You* (2012) | 8 / 24 | media |
+| Carlo Rovelli | *Seven Brief Lessons on Physics* (2014) | 7 / 21 | media |
+| Charles Duhigg | *Supercommunicators* (2024) | 7 / 21 | media |
+| Chris Bailey | *Hyperfocus* (2018) | 6 / 18 | media |
+| David Brooks | *The Road to Character* (2015) | 12 / 37 | media |
+| Douglas Stone, Bruce Patton, Sheila Heen | *Difficult Conversations* (1999) | 7 / 21 | alta |
+| Ed Catmull con Amy Wallace | *Creativity, Inc.* (2014) | 10 / 30 | media |
+| Edward R. Tufte | *Visual Explanations* (1997) | 8 / 24 | media |
+| Epicteto | *Discourses* (108) | 8 / 24 | media |
+| Eric Ries | *The Lean Startup* (2011) | 7 / 27 | alta |
+| Gabriel Weinberg y Justin Mares | *Traction* (2014) | 6 / 18 | media |
+| Gabriel Weinberg y Lauren McCann | *Super Thinking* (2019) | 11 / 33 | media |
+| Henry David Thoreau | *Walden* (1854) | 12 / 36 | alta |
+| Howard Marks | *Mastering the Market Cycle* (2018) | 9 / 27 | media |
+| Jay Heinrichs | *Thank You for Arguing* (2007) | 8 / 24 | media |
+| JL Collins | *The Simple Path to Wealth* (2016) | 7 / 21 | media |
+| John Maeda | *The Laws of Simplicity* (2006) | 9 / 27 | media |
+| John Wooden y Steve Jamison | *Wooden* (1997) | 6 / 24 | media |
+| Josh Waitzkin | *The Art of Learning* (2007) | 6 / 18 | media |
+| Joshua Foer | *Moonwalking with Einstein* (2011) | 6 / 22 | media |
+| Mark Rippetoe | *Starting Strength* (2011) | 6 / 18 | media |
+| Matthew B. Crawford | *Shop Class as Soulcraft* (2009) | 8 / 24 | media |
+| Nick Lane | *The Vital Question* (2015) | 8 / 28 | media |
+| Peter M. Senge | *The Fifth Discipline* (1990) | 10 / 30 | media |
+| Peter Thiel y Blake Masters | *Zero to One* (2014) | 8 / 24 | media |
+| Platón | *La República* (-375) | 10 / 30 | alta |
+| René Descartes | *Meditations on First Philosophy* (1641) | 8 / 24 | alta |
+| Richard P. Rumelt | *Good Strategy Bad Strategy* (2011) | 8 / 27 | media |
+| Rob Fitzpatrick | *The Mom Test* (2013) | 9 / 28 | media |
+| Roger Fisher y William Ury (con Bruce Patton desde la 2.ª ed., 1991) | *Getting to Yes* (1981) | 8 / 24 | alta |
+| Rollo May | *Man's Search for Himself* (1953) | 9 / 31 | media |
+| Seth Godin | *The Practice* (2020) | 6 / 18 | media |
+| Steven Pinker | *The Sense of Style* (2014) | 7 / 28 | media |
+| Steven Pressfield | *The War of Art* (2002) | 8 / 24 | media |
+| Vaclav Smil | *How the World Really Works* (2022) | 7 / 21 | media |
+| William Zinsser | *On Writing Well* (1976) | 7 / 26 | media |
+| William Zinsser | *Writing to Learn* (1988) | 5 / 15 | baja |
+
+**Errores recurrentes que encontraron los verificadores** (conviene vigilarlos en próximas tandas):
+- La `autocorreccion` de una lección es una nota crítica de la biblioteca, no una concesión del autor: hay que rotularla así (varias explicaciones decían «la autocorrección del libro»).
+- `conexion_cruzada` y `aplicacion_practica` no son tesis del libro; las lecturas nuestras van rotuladas («lectura nuestra», «una aplicación nuestra»).
+- Conexiones cruzadas con autores del corpus: comprobar que la tesis atribuida corresponde al libro concreto del corpus (p. ej. Wright: *Nonzero* no está en el corpus; Sinclair: teoría de la información del envejecimiento).
+- Preguntas que se contestan por descarte (distractores absurdos, la correcta siempre la más larga) o sin referencias posicionales a las opciones (se rompen al barajar).
+- Cada cifra o año del texto debe estar declarado en `cifras` con su fuente (el lint lo exige; lee «Trampa-22» como 22).
+- Terminología y atribuciones finas en filosofía y ciencia: Disertaciones frente a Enquiridión (Epicteto), el «cogito» fuera de las Meditaciones, Aristóteles sobre Platón, Hadot sobre los tres campos.
+- En libros de salud (*Starting Strength*): ni pautas médicas ni cargas; términos que el autor no usa («cadena cinética cerrada») no se le atribuyen.
+
+**Notas de proceso:**
+- `tools/libros/a-sql.js` tiene ahora el modo `corregir`: actualiza por id un libro ya cargado en borrador (el alta usa `on conflict do nothing` y no sobrescribe).
+- Con la herramienta `execute_sql` se cuelga cualquier llamada con un `;` dentro de un texto; se sortea sustituyendo cada `;` interno por `'||chr(59)||'` (el contenido guardado es idéntico, comprobado con las huellas).
+- *Writing to Learn* (Zinsser) lo marcó el generador con confianza «baja»; pasó dos verificaciones independientes, pero conviene revisarlo si llega algún aviso.
+- *Walden* necesitó tres rondas de corrección; la última no se volvió a pasar por un verificador (eran correcciones de atribución con el texto exacto propuesto por el informe).
+- *Starting Strength*, *The Fifth Discipline*, *How the World Really Works*, *La República*, *The Vital Question*, *Discourses* y *The War of Art* pasaron por dos verificaciones por haber tenido ERROR de contenido o reescrituras grandes.
+
+**Pendiente de la tanda:** visuales (un diagrama por lección y un mapa por libro) y, aparte, la tanda B.
