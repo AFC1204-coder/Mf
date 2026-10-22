@@ -1,9 +1,11 @@
 /**
  * Paquete de libro (ya verificado) → SQL en dos pasos.
  *   alta:      inserta libro, lecciones y preguntas ocultos (publico=false / activa=false).
+ *   corregir:  actualiza (por id) el texto de un libro ya cargado en borrador; no toca publico/activa. Útil si el paquete
+ *              cambió tras el alta (el alta no sobrescribe: on conflict do nothing).
  *   publicar:  los muestra (publico=true / activa=true) y fija la fecha de alta de hoy, para la etiqueta «Nuevo».
  *
- * Uso:  node tools/libros/a-sql.js paquete.json alta|publicar > salida.sql
+ * Uso:  node tools/libros/a-sql.js paquete.json alta|corregir|publicar > salida.sql
  */
 const crypto = require('crypto');
 const q = s => (s == null ? 'null' : "'" + String(s).replace(/'/g, "''") + "'");
@@ -30,6 +32,20 @@ function alta(paq) {
   return s.join('\n') + '\n';
 }
 
+function corregir(paq) {
+  const I = ids(paq), L = paq.libro, s = [];
+  s.push('begin;');
+  s.push(`update libros set descripcion_breve=${q(L.descripcion_breve)} where id=${q(I.libro)};`);
+  paq.lecciones.forEach(l => {
+    s.push(`update lecciones set titulo=${q(l.titulo)}, cuerpo=${q(l.cuerpo)}, idea_clave=${q(l.idea_clave)}, conexion_cruzada=${q(l.conexion_cruzada)}, autocorreccion=${q(l.autocorreccion)}, aplicacion_practica=${q(l.aplicacion_practica)}, autores_relacionados=${arr(l.autores_relacionados)}, cita_memorable=${q(l.cita_memorable)}, dominio_aplicacion=${arr(l.dominio_aplicacion)} where id=${q(I.lec(l.orden))};`);
+    l.preguntas.forEach((p, j) => {
+      s.push(`update preguntas set texto=${q(p.texto)}, opciones=${q(JSON.stringify(p.opciones))}::jsonb, correcta=${p.correcta}, explicacion=${q(p.explicacion)}, dificultad=${p.dificultad} where id=${q(I.preg(l.orden, j + 1))};`);
+    });
+  });
+  s.push('commit;');
+  return s.join('\n') + '\n';
+}
+
 function publicar(paq) {
   const I = ids(paq);
   return `begin;
@@ -40,10 +56,10 @@ commit;
 `;
 }
 
-module.exports = { alta, publicar, ids };
+module.exports = { alta, corregir, publicar, ids };
 
 if (require.main === module) {
   const [, , f, modo] = process.argv;
   const paq = JSON.parse(require('fs').readFileSync(f, 'utf8'));
-  process.stdout.write(modo === 'publicar' ? publicar(paq) : alta(paq));
+  process.stdout.write(modo === 'publicar' ? publicar(paq) : modo === 'corregir' ? corregir(paq) : alta(paq));
 }
