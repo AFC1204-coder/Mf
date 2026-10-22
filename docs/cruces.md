@@ -14,3 +14,7 @@ señala la nota crítica de la lección y lo que es lectura cruzada nuestra.
 ## Estado
 - `datos/cruces/` guarda los 10 paquetes piloto verificados (00–09).
 - La pantalla Ensayos solo muestra filas con `publico = true`. Los 11 ensayos antiguos (marzo de 2026) están con `publico = false`: no pasaron por esta verificación y alguno afirma que un autor «demuestra» cosas que sus lecciones no sostienen.
+
+## Carga en la base: ids de libros
+
+La columna `articulos.libros_referenciados` es `uuid[]` (ids de la tabla `libros`), no una lista de títulos. `tools/cruces/a-sql.js` exige un mapa `--libros=mapa.json` con `{ "título tal como figura en el paquete": "uuid" }`, y se detiene si falta alguno. El mapa sale de `select id, titulo from libros where titulo in (...)` (en algunos libros el título de la base lleva subtítulo: hay que casar por el título que usa el paquete y comprobar que cada uno devuelve una sola fila). Con la herramienta `execute_sql`, un `;` dentro de un texto cuelga la llamada: se sortea escribiendo cada `;` interno como `'||chr(59)||'` (mismo texto final).
