@@ -173,4 +173,6 @@ De la lista de 61 propuestos: 41 entraron en esta tanda (el 41.º, *Built from B
 - *Walden* necesitó tres rondas de corrección; la última no se volvió a pasar por un verificador (eran correcciones de atribución con el texto exacto propuesto por el informe).
 - *Starting Strength*, *The Fifth Discipline*, *How the World Really Works*, *La República*, *The Vital Question*, *Discourses* y *The War of Art* pasaron por dos verificaciones por haber tenido ERROR de contenido o reescrituras grandes.
 
-**Pendiente de la tanda:** visuales (un diagrama por lección y un mapa por libro) y, aparte, la tanda B.
+**Visuales (2026-10-22):** 321 diagramas (uno por lección) y 40 mapas (uno por libro) añadidos con `tools/datos/agregar.mjs` (0 rechazados por el lint). Los pies llevan la cautela de la `autocorreccion` de cada lección y lo que la lección marca como lectura nuestra va rotulado como tal en el propio diagrama. Se revisó una muestra renderizada con la hoja de estilos de la app (25 diagramas y 6 mapas) y se suavizaron dos textos del mapa de *How the World Really Works* que presentaban como de Smil lo que es lectura nuestra. Versión de caché del service worker: v70.
+
+**Pendiente:** la tanda B (16 libros con cautelas fuertes).
