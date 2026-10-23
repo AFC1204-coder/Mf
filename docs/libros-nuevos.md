@@ -107,3 +107,19 @@ Todos con confianza «media» salvo indicación; las verificaciones hicieron com
 **Visuales (2026-10-14, segunda tanda):** 422 diagramas (uno por lección) y 72 mapas (uno por libro) añadidos con `tools/datos/agregar.mjs`. Los pies llevan la cautela de la autocorrección de cada lección. Se revisaron los desbordes de texto y se sustituyeron tres palabras partidas por guion. El título del mapa de Neff se pone en español porque el lint de tildes confunde «Compassion» con una palabra sin tilde.
 
 **Pendiente de criterio del usuario:** «El arte de decir no» (nº 23 de la lista de temas poco trabajados) no se añadió por no tener autor claro.
+
+## Tercera tanda (2026-10-23): 7 libros de persuasión, influencia y comunicación
+
+Incorporados los 7 libros pendientes de la lista solicitada (los 3 restantes de la lista original ya estaban en el corpus: *Pre-suasión*, *The Dictator's Handbook* y *How Minds Change*). Cada libro cuenta con su paquete JSON validado por `lint.js`, carga determinista en Supabase (`cargar.cjs alta` y comprobación con 0 diferencias antes de publicar), mapas conceptuales en `datos/mapas.json` y diagramas visuales por lección en `datos/diagramas.json`.
+
+| Autor | Libro | Lecciones / preguntas |
+|---|---|---|
+| Jeffrey Pfeffer | *Power: Why Some People Have It—and Others Don't* (2010) | 4 / 10 |
+| Claude C. Hopkins | *Scientific Advertising* (1923) | 4 / 9 |
+| Jonah Berger | *The Catalyst: How to Change Anyone's Mind* (2020) | 5 / 15 |
+| William R. Miller y Stephen Rollnick | *Motivational Interviewing: Helping People Change* (2012) | 6 / 16 |
+| Peter Boghossian y James Lindsay | *How to Have Impossible Conversations* (2019) | 5 / 15 |
+| Zoe Chance | *Influence Is Your Superpower* (2022) | 4 / 12 |
+| Noah J. Goldstein, Steve J. Martin y Robert B. Cialdini | *Yes! 50 Scientifically Proven Ways to Be Persuasive* (2008) | 5 / 16 |
+
+**Visuales (2026-10-23):** 33 diagramas visuales (uno por lección) y 7 mapas conceptuales (uno por libro) integrados en `datos/diagramas.json` y `datos/mapas.json` con `tools/datos/agregar.mjs` (0 errores de validación).
