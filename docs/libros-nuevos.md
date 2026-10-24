@@ -251,3 +251,24 @@ Triage de 136 libros de las dos listas del usuario: 52 ya estaban en la bibliote
 **Patrón repetido (otra vez):** en 8 de 10 borradores la opción correcta era la más larga en muchas preguntas (el lint no lo detecta del todo) y los distractores llevaban absolutos o se descartaban por sentido común; las notas de la biblioteca se presentaban a veces como críticas ya conocidas del libro.
 
 **Visuales:** 57 diagramas (uno por lección) y 10 mapas; caché del service worker v75.
+
+## Séptima entrega (2026-10-24): segunda tanda de las listas del usuario
+
+| Autor | Libro | Eje / sub_eje | Lecc. / preg. |
+|---|---|---|---|
+| Housel | *Same as Ever* | Economía y Mercados / Economía | 5 / 15 |
+| Klein | *Seeing What Others Don't* | Psicología y Conducta / Cognitiva | 5 / 15 |
+| Mandelbrot y Hudson | *The (Mis)Behavior of Markets* | Economía y Mercados / Economía | 5 / 15 |
+| Parrish | *Clear Thinking* | Pensamiento y Civilización / Epistemología | 6 / 18 |
+| Kindleberger | *Manias, Panics, and Crashes* | Economía y Mercados / Economía | 6 / 18 |
+| Perrow | *Normal Accidents* | Pensamiento y Civilización / Epistemología | 6 / 18 |
+| Konnikova | *The Confidence Game* | Psicología y Conducta / Social | 5 / 15 |
+| Guyenet | *The Hungry Brain* | Neurociencia y Biología / Neurociencia | 6 / 21 |
+| Yong | *I Contain Multitudes* | Neurociencia y Biología / Biología y Longevidad | 7 / 14 |
+| Goldacre | *Bad Science* | Pensamiento y Civilización / Epistemología | 6 / 18 |
+
+**Hallazgos de los verificadores que cambiaron el contenido** (con segunda verificación cuando hubo ERROR de contenido): *The Confidence Game* atribuía a «reciprocidad» y a un estudio sin identificar lo que es el pie en la puerta (Freedman y Fraser 1966, compromiso y coherencia; el nombre salió mal escrito en la primera corrección) y daba los capítulos como «uno por etapa»; *I Contain Multitudes* atribuía a Turnbaugh 2006 el estudio de 12 obesos (es de Ley, Turnbaugh, Klein y Gordon) y afirmaba que el pulgón eliminó genes duplicados (el genoma muestra complementariedad con *Buchnera*); *The Hungry Brain* atribuía a *Publishers Weekly* «seis indicaciones» sin fuente y tenía vaga la crítica a Walker (Guzey 2019); *Normal Accidents* citaba una crítica a informes del sector eléctrico que ninguna fuente confirma; *Bad Science* daba dos importes incompatibles de las costas del caso Rath y un distractor que imputaba una falsificación a una persona real. *The (Mis)Behavior of Markets*: sin errores de hechos; se precisaron Hurst, GARCH, Lo (1991) y el matiz de media-varianza.
+
+**Patrón repetido (otra vez):** en casi todos los borradores la opción correcta era la más larga y las explicaciones decían «las otras opciones»; hubo que igualar longitudes en todas las preguntas, no solo en las señaladas.
+
+**Visuales:** 57 diagramas (uno por lección) y 10 mapas; caché del service worker v77.
