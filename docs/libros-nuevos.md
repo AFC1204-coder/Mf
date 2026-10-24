@@ -210,3 +210,21 @@ Pedidos por el usuario. Pipeline completo: generador → lint → verificador in
 **Visuales:** 12 diagramas (uno por lección) y 2 mapas (uno por libro); caché del service worker v73.
 
 **Aviso de proceso:** la persuasión (7 libros) la incorporó otra sesión el 2026-10-23 con otra estructura y menos lecciones; mis paquetes verificados de esos 7 no se cargaron (los ids deterministas coinciden y `alta` no sobrescribe). Quedan pendientes de decisión del usuario.
+
+## Auditoría de los 7 libros de persuasión publicados por otra sesión (2026-10-24)
+
+Los 7 libros de la sección «Cuarta tanda, hecha en otra sesión» (*Power*, *Scientific Advertising*, *The Catalyst*, *Motivational Interviewing*, *How to Have Impossible Conversations*, *Influence Is Your Superpower*, *Yes!*) estaban ya publicados cuando se pidió esta auditoría. Se auditaron tal como estaban en la BD con un verificador independiente por libro (búsqueda web; ninguno pudo leer el texto de los libros), se redactaron las correcciones como ediciones por campo (nunca se reescribió un libro entero), se aplicaron con SQL literal y se comprobaron con huellas md5 (0 diferencias) y se repasaron con un segundo verificador distinto, seguido de una última tanda de retoques menores. Ningún libro se ocultó durante el proceso.
+
+| Libro | Hallazgos de la 1.ª auditoría | Lo más relevante que se corrigió |
+|---|---|---|
+| *Power* | 0 ERROR, 10 DUDA | «se apoya sobre todo en casos» (el libro cita también investigación); mecanismos y acumulación del poder rotulados como lectura nuestra; distractores caricaturescos rehechos |
+| *Scientific Advertising* | 5 ERROR, 13 DUDA | título «la especificidad supera **siempre**…»; «introdujo» las pruebas (Hopkins generalizó la práctica de la venta por correo); «precisión matemática/certeza»; conexiones erróneas con Cialdini y Kahneman; caso de la cerveza (Schlitz, *My Life in Advertising*) con fuente |
+| *The Catalyst* | 0 ERROR, 9 DUDA | notas de la biblioteca sin rotular; tensión «fuentes independientes» (Centola) resuelta como lectura nuestra; dos preguntas respondibles sin la lección |
+| *Motivational Interviewing* | 0 ERROR, 12 DUDA | título de L2 decía «compadecer» (*compassion* es «compasión»); absolutos; Cochrane CD008063 (93 estudios, 2023) y Lundahl 2010 (119 estudios) como notas de la biblioteca, certeza «de muy baja a moderada» |
+| *How to Have Impossible Conversations* | 2 ERROR, 18 DUDA | conexión con Popper (contradice lo que Popper decía de las definiciones); frase sin fuente sobre la conducta de los autores; críticas de recepción reducidas a lo respaldado (Perry, The Critic, 2020) |
+| *Influence Is Your Superpower* | 2 ERROR, 18 DUDA | **mecanismo invertido** en L3 y en una pregunta (quien pide subestima lo incómodo que le resulta al otro negarse; Flynn y Lake 2008, Bohns 2016, como nota de la biblioteca); permiso para negarse con evidencia modesta y discutida (Carpenter 2013; metaanálisis posterior de 2023) |
+| *Yes!* | 4 ERROR, 17 DUDA | estudio de Strohmetz mal descrito (chocolate con la cuenta, no «cesta de caramelos a la vista»); miedo que «paraliza» (Witte y Allen 2000; Tannenbaum 2015 no halla circunstancias contraproducentes); descripción del libro con «cada uno apoyado en un experimento» |
+
+**Patrones repetidos** (útiles para el generador): títulos y cuerpos con absolutos («siempre», «nunca»); conexiones cruzadas sin rotular o con tesis ajenas mal atribuidas; notas de la biblioteca presentadas como críticas del libro; distractores con absolutos que permiten acertar sin la lección; correcta más larga (el lint no lo detecta del todo). Los paquetes verificados que preparé antes de saber que ya estaban publicados (`/tmp/…/libros4/`) no se cargaron: los ids deterministas coinciden y `alta` no sobrescribe.
+
+**Pendiente:** los 33 diagramas y 7 mapas de esos libros los hizo la otra sesión sobre el texto anterior a la corrección; se revisan aparte.
