@@ -1,0 +1,282 @@
+{
+  "titulo": "Querer más no es disfrutar más",
+  "pregunta_generadora": "¿Por qué conseguir lo que queremos casi nunca nos deja tan satisfechos como esperábamos, y qué cambia si separamos querer de disfrutar?",
+  "tipo": "complementariedad",
+  "autores_convocados": [
+    "Daniel Z. Lieberman y Michael E. Long",
+    "David J. Linden",
+    "Anna Lembke",
+    "Mihaly Csikszentmihalyi"
+  ],
+  "libros_referenciados": [
+    "The Molecule of More",
+    "The Compass of Pleasure",
+    "Dopamine Nation",
+    "Fluir"
+  ],
+  "cuerpo": "Es una experiencia corriente: llevamos tiempo deseando algo, lo conseguimos y la alegría dura menos de lo previsto. Cuatro libros describen ese desajuste desde ángulos distintos, y cada uno aporta una pieza que los demás no ponen.\n\nLieberman y Long sostienen que la dopamina no es la molécula del placer, sino la de la anticipación. Según el libro, sus neuronas responden sobre todo a la señal que predice una recompensa, no a la recompensa que llega tal y como se esperaba. Por eso el sistema funciona como un motor de búsqueda: cuando la meta se alcanza, la brecha se cierra y se pasa a la siguiente. La satisfacción de tener algo la atribuyen a otras moléculas, las del aquí y ahora.\n\nUna distinción asociada a la investigación de Kent Berridge, y relacionada con las ideas de Linden sobre la dopamina, separa dos procesos: querer, la motivación de buscar, y gustar, el agrado de tener. Suelen ir juntos, pero pueden disociarse. Según ese modelo, la dopamina se vincula más con lo primero, y el agrado depende de otros sistemas, como los opioides y los endocannabinoides.\n\nLembke añade qué ocurre cuando el estímulo placentero abunda. Para ella, placer y dolor comparten circuitos con un equilibrio homeostático: cada activación del lado del placer provoca una respuesta compensatoria del lado del dolor. Con el consumo repetido llega la tolerancia, y en el caso extremo se necesita el estímulo solo para sentirse normal.\n\nCsikszentmihalyi ofrece la otra cara. Su tesis es que la felicidad no se persigue de frente, sino que surge de la absorción en tareas difíciles pero manejables. Sus datos de muestreo de experiencia sitúan los momentos de mayor satisfacción lejos del descanso, del placer pasivo y de la recompensa material.\n\nLinden propone preguntarse si algo nos atrae porque lo queremos o porque lo disfrutamos; leídos juntos, los cuatro invitan además a mirar qué lugar ocupa el proceso frente al premio.",
+  "convergencias": "Lieberman y Long y Linden coinciden en que lo que nos empuja a buscar algo y lo que nos hace sentir bien con ello no son lo mismo: ambos asocian la dopamina más con perseguir que con saborear. Lembke y Csikszentmihalyi pueden leerse como compatibles con ello, por otras vías. Lembke describe, desde la clínica de la adicción, cómo el estímulo repetido deja de dar placer y aun así se sigue necesitando para sentirse normal. Csikszentmihalyi, desde la psicología del bienestar, sitúa los momentos de mayor satisfacción lejos de la recompensa pasiva y de la material. Es una lectura nuestra, no de los autores, que Lieberman y Long y Csikszentmihalyi desplazan el foco de la meta siguiente hacia lo que se vive mientras tanto: los primeros hablan de cultivar experiencias del presente; el segundo, de la absorción en tareas difíciles pero manejables.",
+  "divergencias": "Los libros no nombran lo mismo como fuente del agrado. Lieberman y Long hablan de serotonina, oxitocina y endorfinas; Linden, de opioides y endocannabinoides, y lo presenta como un modelo; el cruce no equipara ambas listas. Tampoco es igual el alcance. Lieberman y Long describen un sistema que busca siempre la meta siguiente sin que sea una patología; Lembke se centra en lo que sucede cuando el estímulo es abundante y repetido, con el balance placer-dolor como eje. Csikszentmihalyi no habla de moléculas, sino de condiciones de la actividad. Y mientras Lieberman y Long no proponen suprimir la dopamina, sino cultivar experiencias del presente, Csikszentmihalyi pone el acento en diseñar actividades con desafío y habilidad equilibrados. Son soluciones cercanas, pero no idénticas. Hay además una tensión que el cruce no resuelve: Lieberman y Long y Linden vinculan la dopamina al querer más que al agrado, mientras que Lembke, en su lección, explica la pérdida de placer por un ajuste a la baja del sistema dopaminérgico.",
+  "lectura_cruzada": "Esta ordenación es nuestra, no de ningún autor. Una forma de ordenarlo es verlo como una cadena en tres tramos. Primero, el sistema del querer apunta hacia delante y la meta lograda deja de empujar (Lieberman y Long). Segundo, si el estímulo se repite mucho, el efecto se desgasta y el querer puede seguir sin agrado (Lembke y Linden). Tercero, lo que parece sostener la satisfacción no es el premio, sino implicarse en lo que se hace (Csikszentmihalyi) o cultivar experiencias del presente (Lieberman y Long); que esto último incluya detenerse a notar lo conseguido es una extensión nuestra. Leídos así, los libros se complementan: unos explican por qué la meta decepciona y otros por dónde mirar. Conviene tomarlo como un mapa para pensar, no como un mecanismo cerrado.",
+  "aplicacion": "Una pregunta útil cuando algo nos arrastra es si lo queremos o lo disfrutamos. Si solo hay querer, como al revisar el teléfono por inercia, el problema parece más de señales y de hábito. Si hay disfrute real, quizá merezca un lugar elegido en la semana. Como extensión nuestra de la idea de cultivar experiencias del presente, tras lograr algo puede ayudar detenerse un momento a notar lo conseguido antes de pasar a lo siguiente. Y entre las actividades de cada día, probar alguna con metas claras y un desafío manejable, sin esperar que produzca un estado concreto. Nada de esto garantiza sentirse mejor, ni exige renunciar a tener ambiciones.",
+  "cautelas": "Son modelos útiles, pero simplificados. Según las lecciones, la dopamina no es una sola vía ni una sola función, y la separación entre querer y gustar nace sobre todo de experimentos con animales. El balance placer-dolor de Lembke varía entre personas, y no todo el mundo responde igual al mismo estímulo. Tampoco se asegura que el flujo sea igual de accesible para todos. Los temas de adicción, ansiedad o malestar persistente requieren a un profesional de la salud; este texto no sustituye su consejo.",
+  "esquemas": [
+    {
+      "tipo": "diagrama",
+      "plantilla": "comparar",
+      "titulo": "Dónde sitúa cada libro el agrado",
+      "pie": "Ambos separan buscar de saborear y citan moléculas distintas para el agrado; no se equiparan. Son modelos simplificados.",
+      "datos": {
+        "izq": {
+          "t": "Lieberman y Long",
+          "tono": "info",
+          "items": [
+            "La dopamina anticipa la recompensa, no sacia",
+            "La satisfacción: serotonina, oxitocina, endorfinas"
+          ]
+        },
+        "der": {
+          "t": "Linden",
+          "tono": "ok",
+          "items": [
+            "La dopamina se vincula más con buscar",
+            "El agrado: opioides y endocannabinoides, según el modelo"
+          ]
+        }
+      }
+    },
+    {
+      "tipo": "diagrama",
+      "plantilla": "pasos",
+      "titulo": "Cómo puede quedarse corta la meta lograda",
+      "pie": "Secuencia nuestra que une tres libros; ningún autor la plantea. La tolerancia de Lembke es del estímulo repetido, no de toda meta.",
+      "datos": {
+        "pasos": [
+          {
+            "t": "Se logra la meta",
+            "d": "Lieberman y Long: la brecha que empujaba se cierra"
+          },
+          {
+            "t": "El querer mira a otra cosa",
+            "d": "Lieberman y Long: el sistema busca la meta siguiente"
+          },
+          {
+            "t": "Lo repetido pierde efecto",
+            "d": "Lembke: la tolerancia desgasta el placer del estímulo",
+            "tono": "info"
+          },
+          {
+            "t": "Querer sin disfrutar",
+            "d": "Linden: el deseo puede crecer cuando el agrado baja",
+            "tono": "mal"
+          }
+        ]
+      }
+    },
+    {
+      "tipo": "diagrama",
+      "plantilla": "comparar",
+      "titulo": "Perseguir el premio o implicarse",
+      "pie": "Contraste nuestro entre libros: Csikszentmihalyi no habla de dopamina ni de tolerancia.",
+      "datos": {
+        "izq": {
+          "t": "Perseguir el premio",
+          "tono": "mal",
+          "items": [
+            "Lieberman y Long: cada meta se sustituye por otra",
+            "Lembke: más estímulo, más tolerancia y malestar",
+            "Csikszentmihalyi: el placer pasivo no era lo más satisfactorio"
+          ]
+        },
+        "der": {
+          "t": "Implicarse en la actividad",
+          "tono": "ok",
+          "items": [
+            "Csikszentmihalyi: tareas difíciles pero manejables",
+            "Metas claras, respuesta inmediata, desafío y habilidad",
+            "Lieberman y Long: cultivar el presente"
+          ]
+        }
+      }
+    },
+    {
+      "tipo": "diagrama",
+      "plantilla": "mapa",
+      "titulo": "Qué límites señalan las lecciones de cada modelo",
+      "pie": "Cada límite procede de la autocorrección de la lección correspondiente.",
+      "datos": {
+        "centro": "Marco, no mecanismo",
+        "nodos": [
+          {
+            "t": "Dopamina: varias vías, no una"
+          },
+          {
+            "t": "Querer y gustar: modelo con animales"
+          },
+          {
+            "t": "Placer-dolor: varía entre personas"
+          },
+          {
+            "t": "Flujo: no igual de accesible a todos"
+          }
+        ]
+      }
+    }
+  ],
+  "capsulas": [
+    {
+      "titulo": "Dos formas de nombrar lo que sentimos al tener",
+      "esquema": 0,
+      "fuentes": [
+        "d2506e5d-5dee-4a90-856f-99530c33afeb",
+        "82af3f9f-891f-4d26-8015-5371b885a932"
+      ],
+      "texto": "Lieberman y Long sostienen que la dopamina responde a la señal que anticipa la recompensa y no a la recompensa recibida según lo previsto, de modo que no es la molécula del placer sino la de la búsqueda. Linden, en su lección, distingue querer y gustar como procesos separables: la dopamina se vincula más con la motivación y, según este modelo, el agrado depende de otros sistemas. Cada uno separa a su manera la búsqueda del agrado y cita moléculas distintas para este último (serotonina, oxitocina y endorfinas en Lieberman y Long; opioides y endocannabinoides en Linden); el cruce no las presenta como equivalentes. Además, las lecciones recuerdan que la dopamina participa en más funciones y que el modelo nació sobre todo de experimentos con animales."
+    },
+    {
+      "titulo": "Cómo puede quedarse corta la meta lograda",
+      "esquema": 1,
+      "fuentes": [
+        "dea179a2-c714-4726-a4b0-1057465845e3",
+        "2b0c7beb-56a7-419f-a332-0f700e603d3b",
+        "82af3f9f-891f-4d26-8015-5371b885a932"
+      ],
+      "texto": "Según Lieberman y Long, al lograr un objetivo la brecha se cierra y el sistema pasa de inmediato al siguiente, de modo que cada meta es reemplazada antes de poder disfrutarla. Lembke describe otro desgaste: el estímulo repetido produce menos placer porque el sistema se ajusta a la baja. Linden señala, a propósito de la adicción, que el deseo puede crecer mientras el agrado se reduce. Unir las tres ideas en una cadena es una lectura nuestra, no una tesis de un autor, pero ayuda a pensar por qué conseguir más no equivale a disfrutar más. La tolerancia de Lembke se refiere al estímulo repetido, no a toda meta lograda."
+    },
+    {
+      "titulo": "Perseguir el premio o implicarse en el proceso",
+      "esquema": 2,
+      "fuentes": [
+        "8eac2573-0126-4f7a-b531-b40567af424b",
+        "dea179a2-c714-4726-a4b0-1057465845e3",
+        "2b0c7beb-56a7-419f-a332-0f700e603d3b"
+      ],
+      "texto": "Lembke y Lieberman y Long describen cómo la búsqueda de más placer o de más logros tiende a decepcionar: por tolerancia en un caso, por sustitución constante de metas en el otro. Csikszentmihalyi propone mirar hacia otro lado. Según su investigación, los momentos de mayor satisfacción no coincidían con el descanso, el placer pasivo ni la recompensa material, sino con la absorción en tareas difíciles pero manejables. Contraponer ambos enfoques es una ordenación nuestra: unos autores explican el desgaste del premio y otro apunta a las condiciones de la actividad."
+    },
+    {
+      "titulo": "Un marco útil, no un mecanismo cerrado",
+      "esquema": 3,
+      "fuentes": [
+        "d2506e5d-5dee-4a90-856f-99530c33afeb",
+        "82af3f9f-891f-4d26-8015-5371b885a932",
+        "2b0c7beb-56a7-419f-a332-0f700e603d3b",
+        "8eac2573-0126-4f7a-b531-b40567af424b"
+      ],
+      "texto": "Cada una de estas lecciones incluye un límite sobre el modelo del autor. En la de Lieberman y Long se advierte que la dopamina no es un sistema único, sino varias vías con funciones distintas. En la de Linden, que la separación entre querer y gustar viene sobre todo de experimentos con animales. En la de Lembke, que el balance placer-dolor varía entre personas. En la de Csikszentmihalyi, que el flujo no es igual de accesible para todos (matiz que viene de Sapolsky, no del autor). Por eso conviene usar estas ideas como una forma de pensar la propia experiencia, no como una explicación completa de lo que pasa en el cerebro."
+    }
+  ],
+  "fuentes": [
+    {
+      "leccion_id": "d2506e5d-5dee-4a90-856f-99530c33afeb",
+      "libro": "The Molecule of More",
+      "autor": "Daniel Z. Lieberman y Michael E. Long",
+      "aporta": "La dopamina anticipa la recompensa y empuja a buscar; la satisfacción de tener depende de otras moléculas."
+    },
+    {
+      "leccion_id": "dea179a2-c714-4726-a4b0-1057465845e3",
+      "libro": "The Molecule of More",
+      "autor": "Daniel Z. Lieberman y Michael E. Long",
+      "aporta": "Al lograr la meta el sistema pasa a la siguiente, y proponen cultivar experiencias del presente."
+    },
+    {
+      "leccion_id": "82af3f9f-891f-4d26-8015-5371b885a932",
+      "libro": "The Compass of Pleasure",
+      "autor": "David J. Linden",
+      "aporta": "Presenta querer y gustar como procesos separables, con el agrado apoyado en otros sistemas."
+    },
+    {
+      "leccion_id": "2b0c7beb-56a7-419f-a332-0f700e603d3b",
+      "libro": "Dopamine Nation",
+      "autor": "Anna Lembke",
+      "aporta": "Muestra cómo el placer abundante genera tolerancia y malestar mediante el balance placer-dolor."
+    },
+    {
+      "leccion_id": "8eac2573-0126-4f7a-b531-b40567af424b",
+      "libro": "Fluir",
+      "autor": "Mihaly Csikszentmihalyi",
+      "aporta": "Propone que la satisfacción surge de implicarse en tareas con desafío, no de perseguirla como meta."
+    }
+  ],
+  "preguntas": [
+    {
+      "texto": "Lieberman y Long y Linden separan el deseo del agrado. ¿Qué tienen en común sus planteamientos, según el cruce?",
+      "opciones": [
+        "La dopamina se liga más a buscar que a saborear, y para el agrado citan moléculas distintas",
+        "La dopamina produce directamente el agrado que sentimos al obtener aquello que veníamos deseando",
+        "Querer y gustar son un único proceso que nunca se separa en ninguna persona ni circunstancia",
+        "El agrado se explica solo por factores sociales y culturales, sin intervención de sistemas cerebrales"
+      ],
+      "correcta": 0,
+      "explicacion": "Lieberman y Long presentan la dopamina como anticipación y Linden la vincula más con la motivación; para el agrado citan listas distintas (serotonina, oxitocina y endorfinas en un libro; opioides y endocannabinoides en el otro), que el cruce no equipara.",
+      "dificultad": 2,
+      "fuentes": [
+        "d2506e5d-5dee-4a90-856f-99530c33afeb",
+        "82af3f9f-891f-4d26-8015-5371b885a932"
+      ]
+    },
+    {
+      "texto": "Alguien desea cada vez más un estímulo repetido y lo disfruta cada vez menos. ¿Cómo lo explica la lectura conjunta de Lembke y Linden?",
+      "opciones": [
+        "La tolerancia desgasta el placer, y el deseo puede seguir creciendo aunque el agrado baje",
+        "Es solo un cansancio pasajero y no hay ningún cambio en el sistema cerebral de recompensa en juego",
+        "El placer crece con la repetición, porque el cerebro aprende a disfrutar más lo que ya conoce",
+        "La dopamina se acumula con cada consumo repetido, por lo que el estímulo satisface cada vez más"
+      ],
+      "correcta": 0,
+      "explicacion": "Lembke describe la tolerancia: el mismo estímulo produce menos placer con la repetición. Linden señala que el deseo puede crecer mientras el placer se reduce. Unirlas es una lectura cruzada nuestra.",
+      "dificultad": 2,
+      "fuentes": [
+        "2b0c7beb-56a7-419f-a332-0f700e603d3b",
+        "82af3f9f-891f-4d26-8015-5371b885a932"
+      ]
+    },
+    {
+      "texto": "¿Qué punto en común tiene, en nuestra lectura, la salida de Lieberman y Long con la de Csikszentmihalyi?",
+      "opciones": [
+        "Las dos piden suprimir la dopamina para dejar de desear y poder sentirse satisfechos de una vez",
+        "Las dos sitúan la satisfacción en lo que ocurre en el presente, no en alcanzar la meta siguiente",
+        "Las dos aconsejan evitar las tareas difíciles para no frustrar el sistema de recompensa del cerebro",
+        "Las dos recomiendan perseguir la felicidad de frente, como si fuera el objetivo principal de todo"
+      ],
+      "correcta": 1,
+      "explicacion": "Lieberman y Long no proponen suprimir la dopamina, sino cultivar experiencias del presente; Csikszentmihalyi sitúa la satisfacción en la absorción en tareas difíciles pero manejables. Que ambos desplacen el foco de la meta siguiente es lectura nuestra.",
+      "dificultad": 2,
+      "fuentes": [
+        "dea179a2-c714-4726-a4b0-1057465845e3",
+        "8eac2573-0126-4f7a-b531-b40567af424b"
+      ]
+    },
+    {
+      "texto": "Lembke generaliza su balance placer-dolor y Lieberman y Long tratan la dopamina como un sistema casi unitario. ¿Qué simplificación señalan las lecciones en ambos casos?",
+      "opciones": [
+        "Reconocen expresamente en el libro que su modelo solo sirve para algunos casos y no lo generalizan",
+        "Basan su modelo solo en experimentos con animales, sin caso clínico ni observación en humanos alguna",
+        "Lo presentan más uniforme de lo que es: hay varias vías dopaminérgicas y diferencias entre personas",
+        "Restringen su modelo a las adicciones a sustancias y descartan que sirva para las conductas cotidianas"
+      ],
+      "correcta": 2,
+      "explicacion": "Según las autocorrecciones de las lecciones, Lieberman y Long simplifican al tratar la dopamina como un sistema casi unitario, cuando hay varias vías con funciones distintas, y Lembke presenta como universal un balance que varía entre individuos; en ambos casos se presenta más uniforme de lo que es.",
+      "dificultad": 3,
+      "fuentes": [
+        "2b0c7beb-56a7-419f-a332-0f700e603d3b",
+        "d2506e5d-5dee-4a90-856f-99530c33afeb"
+      ]
+    },
+    {
+      "texto": "¿Qué contraste entre Lembke y Csikszentmihalyi ayuda a ordenar el cruce?",
+      "opciones": [
+        "Lembke sostiene que el placer abundante protege del malestar; Csikszentmihalyi, que descansar es lo que más satisface",
+        "Lembke defiende que el placer no usa circuitos del dolor; Csikszentmihalyi, que la recompensa material basta",
+        "Lembke y Csikszentmihalyi coinciden en que el placer pasivo es la principal fuente de satisfacción duradera",
+        "Lembke liga el placer abundante a tolerancia y malestar; Csikszentmihalyi, la satisfacción a absorberse en tareas difíciles"
+      ],
+      "correcta": 3,
+      "explicacion": "Lembke describe un balance en el que el placer repetido se compensa con malestar y tolerancia. Csikszentmihalyi encontró los momentos de mayor satisfacción en la absorción en tareas difíciles pero manejables, no en el descanso ni en el placer pasivo.",
+      "dificultad": 1,
+      "fuentes": [
+        "2b0c7beb-56a7-419f-a332-0f700e603d3b",
+        "8eac2573-0126-4f7a-b531-b40567af424b"
+      ]
+    }
+  ]
+}

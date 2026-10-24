@@ -1,0 +1,297 @@
+{
+ "titulo": "Lo que el plan no puede saber",
+ "pregunta_generadora": "¿Por qué los planes diseñados desde arriba fallan a menudo, y qué tipo de conocimiento les falta?",
+ "tipo": "convergencia",
+ "autores_convocados": [
+  "James C. Scott",
+  "Jane Jacobs",
+  "Michael Oakeshott",
+  "Michael Polanyi",
+  "Friedrich A. Hayek"
+ ],
+ "libros_referenciados": [
+  "Seeing Like a State",
+  "The Death and Life of Great American Cities",
+  "Rationalism in Politics",
+  "The Tacit Dimension",
+  "The Counter-Revolution of Science"
+ ],
+ "cuerpo": "Cinco libros de campos distintos (ciencia política, urbanismo, filosofía, epistemología y economía) se asoman a un mismo problema: lo que un plan central no logra recoger. No hablan de lo mismo con las mismas palabras, y conviene no mezclarlos, pero cada uno señala un hueco entre el plano y el terreno.\n\nScott llama metis al saber práctico, local y encarnado, que se adquiere con experiencia prolongada y se transmite más por aprendizaje que por manual. Su caso es la agricultura campesina de África Oriental: policultivo en parcelas pequeñas, rotaciones ajustadas al suelo, decisiones menudas según el microclima. Los expertos coloniales y los planificadores poscoloniales la tomaron por primitiva y prescribieron monocultivos en grandes parcelas con variedades mejoradas y calendarios estandarizados. Según Scott, la productividad agregada cayó durante décadas, y la práctica campesina original seguía resistiendo mejor sequías e inundaciones, aunque se le critica que selecciona ejemplos favorables. Jacobs hace algo parecido con las ciudades: en los años cincuenta se derribaban barrios enteros para levantar bloques aislados entre zonas verdes y autopistas, y ella sostiene que esos proyectos a menudo creaban zonas más peligrosas y vacías que las que sustituían. Su método es el inverso: mirar calles concretas y deducir de ahí los principios.\n\nOakeshott y Polanyi dan nombre filosófico al hueco. Oakeshott distingue el conocimiento técnico, que se formula en reglas y se enseña, del práctico, que solo existe en el uso: un libro de cocina no hace un cocinero. Para él, la política es un arte del segundo tipo. Polanyi añade que el conocimiento explícito descansa siempre en un fondo tácito: sin criterio para saber cuándo aplicar una regla, la regla es letra muerta.\n\nHayek aporta algo distinto. Su lección no trata del saber práctico, sino del tipo de complejidad: en lo social, el significado de las variables depende del contexto subjetivo de cada agente, y los agentes reaccionan a las teorías sobre ellos. Por eso una regularidad conocida puede dejar de funcionar; la lección de Hayek lo ilustra con la relación entre inflación y desempleo que la curva de Phillips prometía explotar y que dejó de funcionar en los años setenta, y lo vincula a su discurso del Nobel de 1974.\n\nLeídos juntos, sugieren que un plan no falla solo por falta de datos: una parte de lo que importa no existe en forma de dato.",
+ "convergencias": "Los cinco desconfían de la confianza excesiva en el plan, la regla o el modelo formal. Scott, Oakeshott y Polanyi coinciden en que existe un saber que no cabe entero en preceptos: metis, conocimiento práctico y conocimiento tácito. Scott y Oakeshott añaden que se transmite junto a quien lo ejerce, no solo con manuales. Scott y Jacobs coinciden en un diagnóstico de método: los planes ideales no partieron de cómo funcionaban las cosas reales (los expertos veían primitiva la práctica campesina, que nadie comprendía por completo; los urbanistas no observaban las ciudades existentes) y a menudo dejaron algo peor. Hayek llega por otra vía, la economía, a una advertencia emparentada: pretender dominar lo social con el método de las ciencias físicas es una ilusión de conocimiento.",
+ "divergencias": "No explican el fallo del mismo modo. En el libro que aquí se lee, Hayek no se centra en el oficio ni en el saber local: su límite es la reflexividad de los agentes, que cambian su conducta al conocer las teorías sobre ellos, y aun así defiende predicciones de patrones sobre el tipo de estructura que emergerá. Polanyi extiende lo tácito a la base de todo conocimiento, incluido el científico. Scott, en cambio, matiza que la metis no es mejor en abstracto: no escala y depende de quienes la poseen, y admite que la techne rinde en entornos uniformes y controlados. Oakeshott desconfía de formar gobernantes con cursos. En la lección de Jacobs no aparece una teoría del saber: lo que se recoge es su método de observar calles.",
+ "lectura_cruzada": "Una forma de ordenarlo, que es nuestra y no de ningún autor, es en tres capas. Primera, qué falta: un saber local, práctico o tácito (Scott, Oakeshott, Polanyi). Segunda, por qué cuesta recogerlo: en parte no se deja formular y, en lo social, además puede cambiar cuando se conoce (Hayek). Tercera, qué ocurre cuando el plan se aplica sin partir de cómo funciona el terreno (Jacobs y Scott). Leídos así, los libros no dicen que todo plan sea inútil; lo que sugiere nuestra lectura es que la pregunta útil ante un plan no es solo si es racional, sino qué sabe quien vive allí que el plan no recoge.",
+ "aplicacion": "Ante una reforma, un rediseño de calle, un protocolo de trabajo o una norma nueva, puede ayudar preguntarse quién conoce el terreno y cómo se le va a escuchar antes de decidir. También, qué parte del asunto admite reglas uniformes y cuál depende de circunstancias locales; la crítica a Scott recogida en su lección apunta que la cuestión es empírica y que lo razonable es combinar ambos tipos de saber según el dominio. Y a escala personal: al aprender un oficio, el manual ayuda, pero Oakeshott recuerda que el saber práctico solo existe en el uso, y Polanyi que sin criterio la regla es letra muerta. Nada de esto garantiza que un plan salga bien; solo ayuda a ver qué se queda fuera.",
+ "cautelas": "Las propias lecciones señalan límites.Scott romantiza la metis: muchas prácticas tradicionales eran ineficientes y convivieron con hambrunas. Oakeshott separa técnica y práctica con más nitidez de la real, y parte del saber práctico se formaliza. Lo tácito de Polanyi es un concepto vago, y parte de ello se puede explicitar. La predicción de patrones de Hayek cuesta de falsar. La lección de Jacobs recuerda que atacó con dureza a urbanistas que también buscaban mejorar vidas reales, y que algunos de sus diagnósticos sobre la vivienda insalubre eran acertados.",
+ "esquemas": [
+  {
+   "tipo": "diagrama",
+   "plantilla": "comparar",
+   "titulo": "Dos saberes: el que se escribe y el que se practica",
+   "pie": "Lectura nuestra; para Polanyi lo tácito es el fondo de todo saber, no un tipo aparte.",
+   "datos": {
+    "izq": {
+     "t": "Saber formulable",
+     "tono": "mute",
+     "items": [
+      "Reglas, principios y directrices (Oakeshott)",
+      "Se escribe, se enseña y se aplica",
+      "Un libro de cocina no hace un cocinero (Oakeshott)"
+     ]
+    },
+    "der": {
+     "t": "Saber práctico o tácito",
+     "tono": "info",
+     "items": [
+      "Solo existe en el uso; se imita (Oakeshott)",
+      "Metis: local y ligado a quien lo posee (Scott)",
+      "Sabemos más de lo que podemos decir (Polanyi)"
+     ]
+    }
+   }
+  },
+  {
+   "tipo": "diagrama",
+   "plantilla": "mapa",
+   "titulo": "Cinco libros, un mismo hueco del plan",
+   "pie": "Ordenación nuestra: cada autor nombra el hueco a su manera y no son equivalentes.",
+   "datos": {
+    "centro": "Lo que el plan no recoge",
+    "nodos": [
+     {
+      "t": "Scott: metis local"
+     },
+     {
+      "t": "Jacobs: calles reales"
+     },
+     {
+      "t": "Oakeshott: saber práctico"
+     },
+     {
+      "t": "Polanyi: fondo tácito"
+     },
+     {
+      "t": "Hayek: complejidad social"
+     }
+    ]
+   }
+  },
+  {
+   "tipo": "diagrama",
+   "plantilla": "pasos",
+   "titulo": "Cómo un plan puede borrar lo que no ve",
+   "pie": "Esquema nuestro: ordena a Scott y, en parte, a Jacobs; casos elegidos por los autores; Scott puede sobrestimar el saber local.",
+   "datos": {
+    "pasos": [
+     {
+      "t": "Entorno variable y local",
+      "d": "Suelos, climas y calles que las reglas generales no captan"
+     },
+     {
+      "t": "El plan estandariza",
+      "d": "Monocultivos y calendarios únicos (Scott); bloques aislados (Jacobs)"
+     },
+     {
+      "t": "Se pierde el saber local",
+      "d": "Repartido entre muchos y difícil de recrear (Scott)",
+      "tono": "info"
+     },
+     {
+      "t": "A veces, peor resultado",
+      "d": "Cae la productividad (Scott); zonas más vacías y peligrosas (Jacobs)",
+      "tono": "mal"
+     }
+    ]
+   }
+  },
+  {
+   "tipo": "diagrama",
+   "plantilla": "comparar",
+   "titulo": "Lo que sostienen cuatro libros y lo que se les discute",
+   "pie": "Los matices proceden de las críticas recogidas en las lecciones de Scott, Oakeshott, Polanyi y Hayek.",
+   "datos": {
+    "izq": {
+     "t": "Lo que sostienen",
+     "tono": "info",
+     "items": [
+      "Scott: el alto modernismo destruye la metis",
+      "Oakeshott: la técnica no sustituye a la práctica",
+      "Polanyi: lo explícito descansa en lo tácito",
+      "Hayek: lo social es de otro tipo que lo físico"
+     ]
+    },
+    "der": {
+     "t": "Lo que se discute",
+     "tono": "mal",
+     "items": [
+      "Scott romantiza; hubo prácticas ineficientes",
+      "Oakeshott: parte de lo práctico se formaliza",
+      "Polanyi: concepto vago; algo se explicita",
+      "Hayek: sus predicciones de patrones, difíciles de falsar"
+     ]
+    }
+   }
+  }
+ ],
+ "capsulas": [
+  {
+   "titulo": "Dos saberes: el que se escribe y el que se practica",
+   "esquema": 0,
+   "fuentes": [
+    "c7d1a4d0-fe8f-403d-82c5-2ff916106cde",
+    "8c99e713-ef11-4491-9d48-882d87afe9e0",
+    "36279c4b-24fd-4530-b9b1-75cb084d2d51"
+   ],
+   "texto": "Oakeshott separa el conocimiento técnico, que se formula en reglas y se enseña, del práctico, que solo existe en el uso y se aprende imitando y trabajando junto a otros. Scott usa los términos techne y metis para algo cercano: la primera rinde en entornos uniformes y controlados, la segunda en entornos de mucha variabilidad local. Polanyi, por su parte, afirma que sabemos más de lo que podemos decir y que lo explícito descansa en un fondo tácito, no que lo tácito sea un tipo aparte. Leídos juntos, los tres sugieren que un plan hecho solo de reglas deja fuera una parte de lo que hace funcionar las cosas. Pero la frontera es discutida: parte del saber práctico sí puede formalizarse."
+  },
+  {
+   "titulo": "Cinco libros ven el mismo hueco desde sitios distintos",
+   "esquema": 1,
+   "fuentes": [
+    "8c99e713-ef11-4491-9d48-882d87afe9e0",
+    "31c63b8f-52b6-4b10-b51f-321f27132040",
+    "c7d1a4d0-fe8f-403d-82c5-2ff916106cde",
+    "36279c4b-24fd-4530-b9b1-75cb084d2d51",
+    "08782d19-3b95-4c7b-9328-89c9b0c655a0"
+   ],
+   "texto": "Scott habla de metis, Jacobs de calles que funcionan, Oakeshott de saber práctico, Polanyi de fondo tácito y Hayek de la complejidad de lo social. No son sinónimos: Hayek, por ejemplo, se centra en que los agentes cambian su conducta al conocer las teorías que los describen, no en el oficio. Una forma de ordenarlo, que es nuestra, es verlos como cinco ángulos sobre una misma distancia entre el plan y la realidad concreta. Esa coincidencia entre campos tan alejados la hace más interesante, aunque no demuestra que describan exactamente lo mismo."
+  },
+  {
+   "titulo": "Cuando el plan estandariza, puede perder más de lo que gana",
+   "esquema": 2,
+   "fuentes": [
+    "8c99e713-ef11-4491-9d48-882d87afe9e0",
+    "31c63b8f-52b6-4b10-b51f-321f27132040"
+   ],
+   "texto": "En el caso que analiza Scott, la agricultura campesina combinaba policultivo, múltiples variedades de cada cultivo y rotaciones ajustadas al suelo. Los planificadores la sustituyeron por monocultivos y calendarios estandarizados, y según él la productividad agregada cayó durante décadas (se le critica que elige ejemplos favorables). El saber perdido estaba repartido entre muchos agricultores y era difícil de recrear. Jacobs describe un patrón comparable en las ciudades: barrios derribados para levantar bloques aislados que, sostiene, a menudo resultaban más vacíos y peligrosos. Son dos casos elegidos por sus autores; no prueban que todo plan falle ni que toda práctica tradicional sea mejor."
+  },
+  {
+   "titulo": "Qué se discute de cada tesis",
+   "esquema": 3,
+   "fuentes": [
+    "8c99e713-ef11-4491-9d48-882d87afe9e0",
+    "c7d1a4d0-fe8f-403d-82c5-2ff916106cde",
+    "36279c4b-24fd-4530-b9b1-75cb084d2d51",
+    "08782d19-3b95-4c7b-9328-89c9b0c655a0",
+    "31c63b8f-52b6-4b10-b51f-321f27132040"
+   ],
+   "texto": "Las cinco lecciones traen alguna nota crítica; la de Jacobs recuerda sobre todo que algunos diagnósticos de los urbanistas a quienes atacó eran acertados. De Scott se critica que romantiza la metis: la agricultura tradicional convivió con hambrunas, y ni metis ni techne son superiores en todos los casos. De Oakeshott, que la frontera entre técnica y práctica es menos nítida y que la tecnología captura bastante saber tácito. De Polanyi, que lo tácito es un concepto vago y que parte se puede explicitar. De Hayek, que su predicción de patrones es difícil de falsar. Por eso el cruce funciona mejor como advertencia contra el exceso de confianza en el plan que como regla general."
+  }
+ ],
+ "fuentes": [
+  {
+   "leccion_id": "8c99e713-ef11-4491-9d48-882d87afe9e0",
+   "libro": "Seeing Like a State",
+   "autor": "James C. Scott",
+   "aporta": "Define la metis como saber práctico local que el alto modernismo destruye y la contrapone a la techne."
+  },
+  {
+   "leccion_id": "31c63b8f-52b6-4b10-b51f-321f27132040",
+   "libro": "The Death and Life of Great American Cities",
+   "autor": "Jane Jacobs",
+   "aporta": "Ataca los modelos urbanos ideales y propone observar cómo funcionan las calles reales."
+  },
+  {
+   "leccion_id": "c7d1a4d0-fe8f-403d-82c5-2ff916106cde",
+   "libro": "Rationalism in Politics",
+   "autor": "Michael Oakeshott",
+   "aporta": "Distingue conocimiento técnico y práctico con la imagen del libro de cocina."
+  },
+  {
+   "leccion_id": "36279c4b-24fd-4530-b9b1-75cb084d2d51",
+   "libro": "The Tacit Dimension",
+   "autor": "Michael Polanyi",
+   "aporta": "Sostiene que el saber explícito descansa en un fondo tácito que no se puede decir del todo."
+  },
+  {
+   "leccion_id": "08782d19-3b95-4c7b-9328-89c9b0c655a0",
+   "libro": "The Counter-Revolution of Science",
+   "autor": "Friedrich A. Hayek",
+   "aporta": "Defiende que lo social tiene otro tipo de complejidad y que dominarlo con método físico es una ilusión."
+  }
+ ],
+ "preguntas": [
+  {
+   "texto": "¿Qué comparten la metis de Scott y el conocimiento práctico de Oakeshott?",
+   "opciones": [
+    "La idea de que el saber local supera siempre a las reglas generales y a los planes",
+    "La tesis de que el saber práctico se reduce a un manual suficientemente detallado",
+    "Un saber que se adquiere con la práctica y no cabe del todo en reglas escritas",
+    "La limitación de ese saber a los oficios manuales, sin relación con la política"
+   ],
+   "correcta": 2,
+   "explicacion": "Scott describe la metis como saber local adquirido con experiencia y transmitido por aprendizaje; Oakeshott dice que el conocimiento práctico solo existe en el uso y no se reduce a preceptos. Ninguno lo declara superior en todo caso, y ambos lo oponen a la confianza en reglas y planes; Oakeshott lo aplica incluso a la política.",
+   "dificultad": 1,
+   "fuentes": [
+    "8c99e713-ef11-4491-9d48-882d87afe9e0",
+    "c7d1a4d0-fe8f-403d-82c5-2ff916106cde"
+   ]
+  },
+  {
+   "texto": "¿Qué emparejamiento de autor e idea distingue bien el límite de Hayek del de Scott y Polanyi?",
+   "opciones": [
+    "Hayek: los agentes cambian su conducta al conocer las teorías sobre ellos; Polanyi: lo explícito descansa en un fondo tácito",
+    "Hayek: lo explícito descansa en un fondo tácito; Polanyi: los agentes cambian su conducta al conocer las teorías sobre ellos",
+    "Hayek: lo que falta a los planes es un saber práctico transmitido por oficio; Scott: lo social es de otro tipo que lo físico",
+    "Hayek: bastaría reunir más variables para igualar lo físico; Scott: lo explícito descansa en un fondo tácito"
+   ],
+   "correcta": 0,
+   "explicacion": "En el cruce, Hayek aparece por una complejidad de tipo distinto y por la reflexividad de los agentes, no por el saber de oficio. La idea del fondo tácito es de Polanyi, y el saber práctico local es el eje de Scott; las demás opciones intercambian o mezclan estas ideas.",
+   "dificultad": 2,
+   "fuentes": [
+    "08782d19-3b95-4c7b-9328-89c9b0c655a0",
+    "8c99e713-ef11-4491-9d48-882d87afe9e0",
+    "36279c4b-24fd-4530-b9b1-75cb084d2d51"
+   ]
+  },
+  {
+   "texto": "¿Qué reproche de método comparten el diagnóstico de Jacobs sobre los barrios derribados y el de Scott sobre la agricultura campesina?",
+   "opciones": [
+    "Que los planes fallaron sobre todo por ejecutarse mal, no por cómo estaban concebidos",
+    "La conclusión de que la práctica tradicional supera al diseño planificado en cualquier contexto",
+    "La convicción de que ningún plan que busque mejorar la vida real puede acertar",
+    "Un plan que no observó lo concreto sustituyó lo existente y a menudo empeoró las cosas"
+   ],
+   "correcta": 3,
+   "explicacion": "Ambos describen planes ideales que no partieron de cómo funcionaban las cosas reales y que a menudo dejaron algo peor. Pero eso no equivale a que lo existente sea siempre mejor: Scott dice que la metis no es mejor en abstracto, y la nota de la lección de Jacobs recuerda que algunos diagnósticos de los urbanistas sobre vivienda insalubre eran acertados.",
+   "dificultad": 2,
+   "fuentes": [
+    "31c63b8f-52b6-4b10-b51f-321f27132040",
+    "8c99e713-ef11-4491-9d48-882d87afe9e0"
+   ]
+  },
+  {
+   "texto": "¿Qué matiz aparece en las críticas a Scott y a Oakeshott, tomadas juntas?",
+   "opciones": [
+    "Que la formación formal en gobierno es superior a la experiencia en cualquier situación",
+    "Que ni lo local ni lo formalizado son siempre superiores, y que la frontera entre ambos no es tan nítida",
+    "Que todo saber práctico puede convertirse en reglas, por lo que el saber local sobra",
+    "Que el saber local es siempre mejor que el formalizado, pero resulta difícil de demostrar"
+   ],
+   "correcta": 1,
+   "explicacion": "La crítica a Scott recoge que metis y techne no son superiores en todos los casos y pide combinarlas según el dominio; la de Oakeshott señala que parte de lo práctico se formaliza, de modo que la frontera es menos nítida.",
+   "dificultad": 3,
+   "fuentes": [
+    "8c99e713-ef11-4491-9d48-882d87afe9e0",
+    "c7d1a4d0-fe8f-403d-82c5-2ff916106cde"
+   ]
+  },
+  {
+   "texto": "¿Qué pregunta sugiere el cruce hacerse ante un plan, además de si es racional?",
+   "opciones": [
+    "Cómo evitar que los afectados conozcan el plan, para que no cambien su comportamiento",
+    "Qué parte de la tradición local se puede conservar sin ningún tipo de análisis previo",
+    "Cómo sustituir por completo el saber local por reglas estandarizadas y bien documentadas",
+    "Qué sabe quien vive allí que el plan no recoge, y qué parte admite reglas uniformes"
+   ],
+   "correcta": 3,
+   "explicacion": "Es la ordenación que proponemos al leerlos juntos: Scott, Oakeshott y Polanyi avisan de un saber que el plan no recoge, y la crítica a Scott sugiere combinar saber local y estandarización según el dominio. No es una tesis de ningún autor por separado.",
+   "dificultad": 2,
+   "fuentes": [
+    "8c99e713-ef11-4491-9d48-882d87afe9e0",
+    "c7d1a4d0-fe8f-403d-82c5-2ff916106cde",
+    "36279c4b-24fd-4530-b9b1-75cb084d2d51",
+    "31c63b8f-52b6-4b10-b51f-321f27132040"
+   ]
+  }
+ ]
+}

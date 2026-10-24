@@ -1,0 +1,42 @@
+Tarea: escribir UN «cruce» (ensayo didáctico que une lecciones de varios libros) para la app «Mente fría» (repo /home/user/Mf). El usuario aprende con esquemas visuales y algo de texto. Prioridad absoluta: que NO se enseñe nada equivocado ni se atribuya a un autor algo que no dice.
+
+Entrada: un candidato en /tmp/claude-0/cruces/pilotos.json (índice indicado en tu encargo): título provisional, pregunta, tipo, por_que_merece, riesgos y lecciones de origen (id, libro, aporta).
+
+Cómo trabajar:
+1. Con mcp__Supabase__execute_sql (ToolSearch "select:mcp__Supabase__execute_sql"; proyecto aduizdiiacrvpoavjmab; SOLO lectura) lee COMPLETAS las lecciones de origen: `select l.id, l.titulo, l.idea_clave, l.cuerpo, l.autocorreccion, l.conexion_cruzada, b.autor, b.titulo libro from lecciones l join libros b on b.id=l.libro_id where l.id in ('…')`. Lo que escribas debe poder rastrearse a lo que dicen esas lecciones. Puedes sumar hasta 2 lecciones más de la BD si el cruce lo gana de verdad (compruébalas igual).
+2. Reglas de contenido:
+   - Atribuye a cada autor solo lo que su lección dice. Distingue SIEMPRE tres cosas: (a) lo que dice cada libro, (b) lo discutido o con evidencia débil según las `autocorreccion`, y (c) la lectura cruzada, que es tuya y debe presentarse como tal («Leídos juntos…», «Una forma de ordenarlo…»), nunca como tesis de un autor.
+   - Si una tesis está muy discutida (ver `riesgos` del candidato y las autocorrecciones), preséntala como tal y no como hecho. Los temas de salud, duelo o clínica avisan en `cautelas` de que no sustituyen a un profesional.
+   - Cifras, años y nombres de estudios: solo si aparecen en una lección fuente; si no, no los escribas. Sin citas entre « » (parafrasea).
+   - Nada de frases que describan el proceso de generación («de memoria», «no pude confirmar»…).
+   - Español de España con tildes y ñ. Sin culpa ni tono de autoayuda.
+3. Escribe el paquete en /tmp/claude-0/cruces/<NN>-<slug>.json (NN = índice con dos cifras) con ESTA estructura exacta:
+{
+ "titulo": "…", "pregunta_generadora": "…", "tipo": "convergencia|tension|complementariedad",
+ "autores_convocados": ["…"], "libros_referenciados": ["Título del libro", …],
+ "cuerpo": "200-480 palabras: el cruce en prosa clara, qué enseña verlo junto (usa saltos de línea entre párrafos)",
+ "convergencias": "40-220 palabras: en qué coinciden y desde dónde",
+ "divergencias": "40-220 palabras: en qué chocan o se matizan y por qué",
+ "lectura_cruzada": "40-220 palabras: tu ordenación del cruce, marcada como lectura nuestra",
+ "aplicacion": "40-220 palabras: qué cambia en la vida real, sin prometer resultados",
+ "cautelas": "15-120 palabras: qué está discutido o es débil, y avisos de salud si procede",
+ "esquemas": [ 3 o 4 diagramas, uno por idea central, con la misma forma que /tmp/claude-0/visuales/gen.js: {"tipo":"diagrama","plantilla":"pasos|comparar|mapa|ciclo|espectro|matriz","titulo":"…","pie":"cautela o fuente en una línea","datos":{…}} ],
+ "capsulas": [ 3 o 4: {"titulo":"…(≤70 car.)","texto":"60-150 palabras: UNA idea con su esquema","esquema": <índice 0..n-1 del esquema que ilustra>, "fuentes":["<leccion_id>", …]} ],
+ "fuentes": [ 4-8: {"leccion_id":"<uuid real>","libro":"Título del libro","autor":"…","aporta":"una frase: qué pone esta lección en el cruce"} ],
+ "preguntas": [ 4 o 5: {"texto":"…","opciones":["","","",""],"correcta":0,"explicacion":"40-500 car.","dificultad":1-3,"fuentes":["<leccion_id>", …]} ]
+}
+   - Los esquemas deben ayudar a COMPARAR o RELACIONAR libros (no resumir uno solo): al menos uno comparando posturas o mecanismos entre autores. Respeta los límites de lib/lint-visual.js (título de bloque ≤40, descripción ≤90, título figura ≤64, pie ≤130; mapa: 3-6 nodos…).
+   - Cada cápsula y cada pregunta cita en `fuentes` los leccion_id de los que sale. Cada pregunta debe obligar a relacionar al menos 2 libros distintos y tener UNA sola respuesta defendible con lo que enseña el cruce.
+   - Preguntas: las 3 incorrectas entre el 85 y el 115 % de la longitud de la correcta; la correcta NO sistemáticamente la más larga (≤ 35 %); sin «todas las anteriores», «ambas» ni remisiones a otras opciones.
+4. Valida con (desde /home/user/Mf): `node tools/cruces/lint.js <paquete> --barajar` hasta que diga OK (--barajar reparte las posiciones de las correctas; si editas opciones después, relee pregunta, opciones y explicación y comprueba la clave). Los AVISOS de cifras debes resolverlos: o la cifra está en una lección fuente o la quitas.
+5. No modifiques el repo (salvo tu paquete en /tmp/claude-0/cruces/) ni la BD. Informa en pocas líneas: título, tipo, nº de lecciones/libros, plantillas de los esquemas, % de correcta más larga y lo que consideres más arriesgado para el verificador.
+
+---
+ERRORES FRECUENTES DETECTADOS EN LOS PILOTOS (evítalos desde el primer borrador)
+1. La `autocorreccion` de una lección es una NOTA CRÍTICA de la biblioteca, no una concesión del autor. Nunca escribas «X admite/reconoce/añade» a partir de ella; escribe «la nota de la lección sobre X señala…».
+2. Lo que viene de `conexion_cruzada` o de `aplicacion_practica` de una lección tampoco es tesis del libro: atribúyelo «según la lección».
+3. Una lectura cruzada (ordenar, emparejar, decir que dos libros «coinciden» cuando cada lección habla de otra cosa) es NUESTRA: márcala como tal en cuerpo, convergencias, pies de esquemas, cápsulas y enunciados de preguntas.
+4. No generalices a «los cuatro/cinco libros» ni al libro entero lo que solo consta en una lección.
+5. Evita dobles negaciones al exponer una tesis (invierten el sentido).
+6. Cada pregunta debe exigir relacionar al menos 2 libros: si se responde con una sola lección o por descarte, reformúlala. Ningún distractor puede ser verdadero según las lecciones; no uses referencias posicionales («la última opción») en las explicaciones.
+7. Una marca de espectro o una celda de matriz es una ordenación nuestra: dilo en el pie y no impliques precisión.

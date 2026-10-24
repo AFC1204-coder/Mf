@@ -1,0 +1,293 @@
+{
+ "titulo": "Atarse las manos a propósito",
+ "pregunta_generadora": "¿Por qué a veces conviene quitarse opciones de antemano, en el autocontrol, la negociación, la política monetaria o una constitución, y qué se pierde con ello?",
+ "tipo": "convergencia",
+ "autores_convocados": [
+  "Jon Elster",
+  "Thomas C. Schelling",
+  "Avinash K. Dixit y Barry J. Nalebuff",
+  "Milton Friedman",
+  "James Buchanan y Gordon Tullock"
+ ],
+ "libros_referenciados": [
+  "Ulysses and the Sirens: Studies in Rationality and Irrationality",
+  "Micromotives and Macrobehavior",
+  "The Art of Strategy",
+  "Capitalism and Freedom",
+  "The Calculus of Consent"
+ ],
+ "cuerpo": "Hay una idea que reaparece en lugares muy distintos: a veces decidir bien consiste en dejar de poder decidir después. Cinco libros de campos que apenas se tocan, la psicología de la voluntad, la estrategia, la política monetaria y el diseño de constituciones, pueden leerse, según la lectura que proponemos aquí, como variaciones de ella, cada uno desde su ángulo.\n\nJon Elster parte de Ulises atado al mástil. Según su lección, la conducta racional puede consistir en restringir las propias opciones futuras cuando se prevé que la voluntad fallará, y atarse resulta necesario precisamente porque el agente no es plenamente racional. Thomas Schelling describe el autocontrol como un conflicto entre el yo que decide hoy y el que actuará mañana: el primero intenta limitar las opciones del segundo, por ejemplo no teniendo alcohol en casa, apostando con un amigo o poniendo el despertador lejos de la cama.\n\nDixit y Nalebuff llevan la lógica a la relación con otros. Una amenaza o una promesa solo funciona si es creíble, y para lograrlo a veces hay que quitarse la salida: quemar las naves, comprometer la reputación, firmar contratos con penalización o delegar en alguien que no pueda echarse atrás. De ahí su paradoja: limitar las propias opciones puede dar poder.\n\nFriedman y Buchanan y Tullock tratan de reglas en el ámbito público, y la comparación con lo anterior es lectura nuestra, con una diferencia importante: ya no se ata una persona a sí misma, sino una comunidad a sus gobernantes o a sus decisiones futuras. Friedman prefiere una regla monetaria conocida de antemano, con dinero que crece a un ritmo estable y anunciado, frente a la discreción de las autoridades, que a su juicio llega tarde y concentra poder. Buchanan y Tullock distinguen un nivel constitucional, donde se eligen las reglas sin saber bien qué decisiones, posiciones e intereses vendrán, y un nivel posterior, donde se decide ya con los intereses conocidos.\n\nLas propias lecciones recogen que la atadura no sale gratis. Se señala que reduce la flexibilidad y puede volverse una jaula, que dos jugadores comprometidos a la vez con posturas incompatibles acaban chocando, que la regla monetaria fue muy discutida y que el velo de ignorancia constitucional raramente se da por completo. Leídos juntos, según nuestra lectura, los cinco libros no ofrecen una receta, sino una pregunta útil antes de limitarse: qué momento futuro se teme, quién queda atado y cuánto costará si las circunstancias cambian.",
+ "convergencias": "Lectura nuestra: los cinco textos pueden leerse como casos en que fijar algo antes del momento crítico es una decisión razonada y no una renuncia a pensar, aunque solo Elster y Schelling hablan de atarse uno mismo. Elster y Schelling lo sitúan en la propia persona: se decide con calma y se encarece o se bloquea la retirada, sin depender de la fuerza de voluntad en el momento de la tentación. Dixit y Nalebuff lo aplican a la credibilidad: quien no puede echarse atrás es creído. Friedman defiende una regla conocida de antemano en lugar del juicio de cada coyuntura, y Buchanan y Tullock sitúan las reglas en un nivel que se elige antes de las decisiones concretas. En los cinco puede verse el mismo orden temporal: primero la regla o la atadura, después el caso.",
+ "divergencias": "Los motivos no son los mismos. Elster y Schelling parten de una voluntad futura que puede fallar; Dixit y Nalebuff, de que el otro no se creerá una amenaza que no nos conviene cumplir; Friedman, de que la discreción de las autoridades llega con retraso y concentra poder; Buchanan y Tullock, de que reglas elegidas sin conocer el interés concreto resultan más imparciales. Tampoco coincide quién queda atado: en Elster es el propio agente, a sabiendas, y en Friedman son las autoridades. Las lecciones señalan además una objeción a cada libro: la legitimidad del yo presente para imponerse al futuro (Elster), que los compromisos pueden esquivarse (Schelling), el choque entre compromisos incompatibles (Dixit y Nalebuff), el abandono parcial de las metas monetarias (Friedman) y la dificultad de distinguir qué es constitucional (Buchanan y Tullock).",
+ "lectura_cruzada": "Lectura nuestra, no tesis de ningún autor: una forma de ordenar el cruce es con tres preguntas que cada lección permite plantear a su manera. Primera, qué momento futuro se teme: una tentación, un rival que no nos cree, un error de la autoridad o un interés propio que sesgue la regla. Segunda, quién ata a quién: uno mismo, un jugador a su propia posición, una sociedad a sus gobernantes. Tercera, qué coste trae la atadura: las lecciones de Elster y Schelling señalan la pérdida de flexibilidad cuando cambian las circunstancias, la de Dixit y Nalebuff el choque entre compromisos incompatibles, y las de Friedman y Buchanan y Tullock objetan que su esquema resulta menos estable o nítido en la práctica. Visto así, el precompromiso no sería una receta única sino una familia de soluciones con un coste que adopta formas distintas: en los compromisos personales y estratégicos, la pérdida de margen para adaptarse o ceder; en las reglas públicas, que el esquema resulte menos estable o nítido de lo supuesto.",
+ "aplicacion": "En la vida cotidiana, el cruce invita a distinguir entre pedirle más fuerza de voluntad al yo de mañana y cambiar hoy el entorno o el coste de la retirada, como hacen los ejemplos de Schelling y Elster. En una negociación, recuerda que un plazo firme o una postura innegociable pueden dar poder, pero también conducir al choque si el otro hace lo mismo. En organizaciones o comunidades, ayuda a preguntarse qué reglas conviene fijar de antemano, quién las revisará y cómo se sabrá si dejaron de servir. No garantiza resultados: sirve para hacer mejores preguntas antes de atarse a algo.",
+ "cautelas": "Casi todo aquí es discutido. La regla monetaria de Friedman fue muy debatida y varios bancos centrales abandonaron en buena parte las metas de cantidad de dinero; su lectura de la Gran Depresión sigue en debate. La distinción de dos niveles de Buchanan y Tullock simplifica una realidad con muchos niveles, y el velo de ignorancia raramente se cumple. Los compromisos personales pueden esquivarse o volverse una jaula. Si lo que preocupa es una adicción o un gasto compulsivo, este texto no sustituye a un profesional.",
+ "esquemas": [
+  {
+   "tipo": "diagrama",
+   "plantilla": "pasos",
+   "titulo": "El precompromiso en dos tiempos",
+   "pie": "Mecanismo descrito por Elster, con ejemplos de Schelling que encajan en él; no elimina sus costes.",
+   "datos": {
+    "pasos": [
+     {
+      "t": "Hoy se decide con calma",
+      "d": "El agente ve con claridad lo que le conviene"
+     },
+     {
+      "t": "Se cambia el entorno o el coste",
+      "d": "Se eliminan alternativas o se encarece la retirada"
+     },
+     {
+      "t": "Llega la tentación",
+      "d": "Una pasión o presión empuja en otra dirección",
+      "tono": "mal"
+     },
+     {
+      "t": "El yo posterior no puede deshacerlo",
+      "d": "Lo decidido antes se mantiene",
+      "tono": "ok"
+     }
+    ]
+   }
+  },
+  {
+   "tipo": "diagrama",
+   "plantilla": "comparar",
+   "titulo": "Por qué atarse, según cada libro",
+   "pie": "Lectura cruzada nuestra: los motivos de cada libro no son intercambiables.",
+   "datos": {
+    "izq": {
+     "t": "Se teme fallar",
+     "tono": "info",
+     "items": [
+      "Elster: la voluntad futura puede fallar",
+      "Schelling: el yo de mañana cede ante la tentación"
+     ]
+    },
+    "der": {
+     "t": "Se busca una garantía distinta",
+     "tono": "ok",
+     "items": [
+      "Dixit y Nalebuff: sin salida, la amenaza es creíble",
+      "Friedman: se desconfía de una discreción que llega tarde y concentra poder",
+      "Buchanan y Tullock: reglas elegidas sin ver el interés concreto dan imparcialidad"
+     ]
+    }
+   }
+  },
+  {
+   "tipo": "diagrama",
+   "plantilla": "mapa",
+   "titulo": "Qué se limita en cada libro",
+   "pie": "Lectura nuestra: cada autor ata algo distinto; el parecido está en el mecanismo, no en el objeto.",
+   "datos": {
+    "centro": "Atarse de antemano",
+    "nodos": [
+     {
+      "t": "Elster: la propia conducta futura"
+     },
+     {
+      "t": "Schelling: las opciones del yo de mañana"
+     },
+     {
+      "t": "Dixit y Nalebuff: su opción de retirada"
+     },
+     {
+      "t": "Friedman: la discreción oficial"
+     },
+     {
+      "t": "Buchanan y Tullock: decisiones futuras"
+     }
+    ]
+   }
+  },
+  {
+   "tipo": "diagrama",
+   "plantilla": "comparar",
+   "titulo": "Lo que se gana y lo que se paga",
+   "pie": "Costes recogidos en las autocorrecciones de las lecciones; la regla monetaria es discutida.",
+   "datos": {
+    "izq": {
+     "t": "Se gana",
+     "tono": "ok",
+     "items": [
+      "Cumplir lo decidido con claridad",
+      "Credibilidad ante el otro",
+      "Un marco previsible para los demás"
+     ]
+    },
+    "der": {
+     "t": "Se paga",
+     "tono": "mal",
+     "items": [
+      "Menos flexibilidad ante lo imprevisto",
+      "Choque si ambos se atan a posturas opuestas",
+      "Esquemas menos estables o nítidos en la práctica de lo supuesto",
+      "Disputas sobre qué es regla permanente"
+     ]
+    }
+   }
+  }
+ ],
+ "capsulas": [
+  {
+   "titulo": "Decidir hoy para que mañana no se pueda deshacer",
+   "texto": "Elster describe un mecanismo de dos tiempos, y los compromisos de Schelling encajan en él. Primero, la persona decide con calma y ve con claridad lo que le conviene. Después llega la tentación. Entre ambos momentos se interpone un precompromiso: se modifica el entorno, se añaden costes o se eliminan alternativas, de modo que el yo posterior no pueda deshacer lo decidido. Los ejemplos son cotidianos: ambos citan el despertador lejos de la cama; Schelling añade no tener alcohol en casa, apostar con un amigo o depositar dinero donde cuesta retirarlo, y Elster, entregar las tarjetas a un familiar o inscribirse en un plan de ahorro con penalización. Según Schelling, los compromisos más eficaces son los que no dependen de la fuerza de voluntad en el momento crítico. Elster añade que no es renunciar a la racionalidad, sino ejercerla sabiendo que la voluntad propia no siempre obedece.",
+   "esquema": 0,
+   "fuentes": [
+    "fe80445e-d383-450c-828e-3d50b4deac21",
+    "c96c2a5a-a63a-46f8-9949-8293439c4e18"
+   ]
+  },
+  {
+   "titulo": "Cuatro motivos distintos para el mismo gesto",
+   "texto": "Que varios libros traten de fijar algo de antemano no significa que lo hagan por la misma razón. Elster y Schelling parten de que la voluntad futura puede fallar. Dixit y Nalebuff, de que una amenaza o promesa solo se cree si quien la hace no puede echarse atrás. Friedman, una regla conocida de antemano, porque a su juicio la discreción de las autoridades llega tarde y concentra poder. Buchanan y Tullock sitúan las reglas en un nivel constitucional elegido sin saber qué intereses concretos habrá, lo que da imparcialidad sin depender de la virtud de los actores. Lectura nuestra: el parecido está en el mecanismo de fijar algo antes, no en la causa.",
+   "esquema": 1,
+   "fuentes": [
+    "fe80445e-d383-450c-828e-3d50b4deac21",
+    "c96c2a5a-a63a-46f8-9949-8293439c4e18",
+    "3332544e-2429-4907-a3c8-a5a886e9a9e1",
+    "71c4cefd-b8a3-42fb-8b74-42305e945cc3",
+    "43f46703-b538-4e91-86dc-8b07e0efe23f"
+   ]
+  },
+  {
+   "titulo": "Quién ata a quién cambia con el contexto",
+   "texto": "En Elster y Schelling, una persona limita a su propio yo futuro, y Elster subraya que importa que se ate a sabiendas. En Dixit y Nalebuff, el compromiso se dirige a lo que otro jugador espera de nosotros, y se logra quemando las naves, empeñando la reputación, firmando contratos o delegando. En Friedman, la regla limita a las autoridades monetarias. En Buchanan y Tullock, las reglas constitucionales constriñen cómo pueden perseguirse los intereses en las decisiones posteriores. Es una lectura nuestra que el mecanismo común sea fijar algo antes, pero conviene no confundir los casos: atarse uno mismo y atar a otros plantean problemas diferentes.",
+   "esquema": 2,
+   "fuentes": [
+    "fe80445e-d383-450c-828e-3d50b4deac21",
+    "3332544e-2429-4907-a3c8-a5a886e9a9e1",
+    "71c4cefd-b8a3-42fb-8b74-42305e945cc3",
+    "43f46703-b538-4e91-86dc-8b07e0efe23f"
+   ]
+  },
+  {
+   "titulo": "Qué objeta cada lección",
+   "texto": "Las lecciones no presentan la atadura como gratuita, y sus autocorrecciones lo recogen. En la de Elster se objeta que reduce la flexibilidad ante circunstancias imprevistas y que puede volverse una jaula si lo atado ya no responde a lo que la persona quiere. En la de Schelling, que los compromisos pueden esquivarse y que algunos defienden desarrollar autocontrol en lugar de depender de ataduras. En la de Dixit y Nalebuff se advierte de que dos jugadores comprometidos a la vez con posturas incompatibles acaban en choque. En la de Friedman se dice que su regla fue muy discutida y que varios bancos centrales abandonaron en buena parte las metas de cantidad de dinero. Y en la de Buchanan y Tullock, que la distinción entre niveles simplifica y su aplicación se disputa.",
+   "esquema": 3,
+   "fuentes": [
+    "fe80445e-d383-450c-828e-3d50b4deac21",
+    "c96c2a5a-a63a-46f8-9949-8293439c4e18",
+    "3332544e-2429-4907-a3c8-a5a886e9a9e1",
+    "71c4cefd-b8a3-42fb-8b74-42305e945cc3",
+    "43f46703-b538-4e91-86dc-8b07e0efe23f"
+   ]
+  }
+ ],
+ "fuentes": [
+  {
+   "leccion_id": "fe80445e-d383-450c-828e-3d50b4deac21",
+   "libro": "Ulysses and the Sirens: Studies in Rationality and Irrationality",
+   "autor": "Jon Elster",
+   "aporta": "Limitar las propias opciones puede ser racional cuando se prevé que la voluntad futura fallará."
+  },
+  {
+   "leccion_id": "c96c2a5a-a63a-46f8-9949-8293439c4e18",
+   "libro": "Micromotives and Macrobehavior",
+   "autor": "Thomas C. Schelling",
+   "aporta": "Ejemplos cotidianos de compromiso: cambiar hoy las opciones o el coste de actuar contra el propio plan."
+  },
+  {
+   "leccion_id": "3332544e-2429-4907-a3c8-a5a886e9a9e1",
+   "libro": "The Art of Strategy",
+   "autor": "Avinash K. Dixit y Barry J. Nalebuff",
+   "aporta": "Una amenaza o promesa es creíble solo si se limitan las propias opciones, con el riesgo de choque entre compromisos."
+  },
+  {
+   "leccion_id": "71c4cefd-b8a3-42fb-8b74-42305e945cc3",
+   "libro": "Capitalism and Freedom",
+   "autor": "Milton Friedman",
+   "aporta": "Prefiere una regla monetaria conocida de antemano a la discreción de las autoridades, con una regla muy discutida."
+  },
+  {
+   "leccion_id": "43f46703-b538-4e91-86dc-8b07e0efe23f",
+   "libro": "The Calculus of Consent",
+   "autor": "James Buchanan y Gordon Tullock",
+   "aporta": "Las reglas se eligen en un nivel constitucional, antes de las decisiones concretas, bajo un velo parcial de ignorancia."
+  }
+ ],
+ "preguntas": [
+  {
+   "texto": "Elster y Dixit y Nalebuff coinciden en que limitar las propias opciones puede ser útil. ¿En qué se diferencia lo que persigue cada uno?",
+   "opciones": [
+    "Elster, evitar que falle la voluntad futura; Dixit y Nalebuff, hacer creíble lo que se anuncia al otro",
+    "Elster, ganar poder de negociación; Dixit y Nalebuff, corregir los errores de las autoridades",
+    "Elster, hacer creíble una amenaza ante un rival; Dixit y Nalebuff, evitar que falle la voluntad futura",
+    "Elster, repartir el poder entre varias personas; Dixit y Nalebuff, mostrar que ninguna atadura compensa"
+   ],
+   "correcta": 0,
+   "explicacion": "Elster usa a Ulises para defender que se puede restringir la propia conducta futura cuando se prevé que la voluntad fallará. Dixit y Nalebuff exigen limitar opciones para que una amenaza o promesa resulte creíble ante el otro.",
+   "dificultad": 2,
+   "fuentes": [
+    "fe80445e-d383-450c-828e-3d50b4deac21",
+    "3332544e-2429-4907-a3c8-a5a886e9a9e1"
+   ]
+  },
+  {
+   "texto": "Según el cruce, ¿qué comparten la regla monetaria de Friedman y los compromisos personales que describe Schelling?",
+   "opciones": [
+    "Nacer del temor a que el yo futuro ceda ante una tentación, que ambos autores reconocen",
+    "Presentarse como soluciones sin costes ni objeciones, algo que ambos autores dan por plenamente cerrado",
+    "Fijar algo de antemano para que no dependa del juicio del momento, aunque atan a sujetos distintos",
+    "Basarse en la fuerza de voluntad en el momento crítico, que ambos consideran decisiva"
+   ],
+   "correcta": 2,
+   "explicacion": "Ambos fijan algo antes del momento crítico: Schelling lo hace para limitar al yo de mañana, Friedman para limitar la discreción de las autoridades. Los motivos y los sujetos atados difieren, y ambos tienen objeciones.",
+   "dificultad": 2,
+   "fuentes": [
+    "71c4cefd-b8a3-42fb-8b74-42305e945cc3",
+    "c96c2a5a-a63a-46f8-9949-8293439c4e18"
+   ]
+  },
+  {
+   "texto": "Comparando las autocorrecciones de las lecciones de Friedman y de Buchanan y Tullock, ¿qué tienen en común sus objeciones?",
+   "opciones": [
+    "Que su esquema resultó menos estable o nítido en la práctica de lo que suponía",
+    "Que dos jugadores comprometidos a la vez con posturas incompatibles acaban en choque",
+    "Que quien se ata puede encontrar maneras de esquivar su propio compromiso",
+    "Que se cuestiona con qué derecho el yo presente impone su criterio al yo futuro"
+   ],
+   "correcta": 0,
+   "explicacion": "Es una síntesis nuestra de dos objeciones distintas: en la lección de Friedman, la relación entre dinero y actividad resultó menos estable de lo que suponía el esquema; en la de Buchanan y Tullock, la distinción simplifica y su frontera se disputa. Las otras tres son objeciones de otras lecciones: el choque es de Dixit y Nalebuff, esquivar el compromiso de Schelling y el derecho del yo presente de Elster.",
+   "dificultad": 3,
+   "fuentes": [
+    "71c4cefd-b8a3-42fb-8b74-42305e945cc3",
+    "43f46703-b538-4e91-86dc-8b07e0efe23f"
+   ]
+  },
+  {
+   "texto": "¿Qué coste de la rigidez señalan, cada uno a su manera, las lecciones de Elster y de Dixit y Nalebuff?",
+   "opciones": [
+    "Verse obligado a elegir las reglas bajo un velo de ignorancia que nunca se levanta del todo",
+    "Perder margen para adaptarse o ceder cuando cambian las circunstancias o el otro también se compromete",
+    "Perder el interés propio porque toda atadura exige actuar con benevolencia hacia los demás actores del juego",
+    "Depender de la discreción de una autoridad que actúa siempre con retraso sobre los acontecimientos"
+   ],
+   "correcta": 1,
+   "explicacion": "La lección de Elster señala que el precompromiso reduce la flexibilidad ante imprevistos y que puede volverse una jaula. La de Dixit y Nalebuff advierte de que dos jugadores comprometidos con posturas incompatibles no pueden ceder y chocan.",
+   "dificultad": 2,
+   "fuentes": [
+    "fe80445e-d383-450c-828e-3d50b4deac21",
+    "3332544e-2429-4907-a3c8-a5a886e9a9e1"
+   ]
+  },
+  {
+   "texto": "Según la lectura cruzada, ¿qué momento tienen en común el compromiso personal de Schelling y el nivel constitucional de Buchanan y Tullock?",
+   "opciones": [
+    "Se actúa solo cuando el rival ya ha declarado su postura, para anunciar una amenaza creíble",
+    "Se actúa después de conocer los intereses de todos, para negociar un reparto que satisfaga a cada parte",
+    "Se actúa justo en el instante crítico, apoyándose en la fuerza de voluntad de quien decide",
+    "Se actúa antes de que pesen la tentación concreta o el interés conocido que podrían sesgar el juicio"
+   ],
+   "correcta": 3,
+   "explicacion": "Schelling destaca que los compromisos se activan antes de la tentación, cuando se piensa con claridad. Buchanan y Tullock sitúan las reglas en un nivel previo a las decisiones concretas, cuando aún no se conocen del todo intereses ni posiciones. El paralelo es una lectura nuestra.",
+   "dificultad": 2,
+   "fuentes": [
+    "c96c2a5a-a63a-46f8-9949-8293439c4e18",
+    "43f46703-b538-4e91-86dc-8b07e0efe23f"
+   ]
+  }
+ ]
+}

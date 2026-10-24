@@ -1,0 +1,309 @@
+{
+ "titulo": "Confiar en un extraño sin policía: cuatro libros, un mismo problema",
+ "pregunta_generadora": "¿Qué mecanismos permiten confiar en un extraño en un intercambio: reputación colectiva, tribunales, repetición del trato o garantías?",
+ "tipo": "complementariedad",
+ "autores_convocados": [
+  "Avner Greif",
+  "Robert Axelrod",
+  "Moshe Hoffman y Erez Yoeli",
+  "Thomas C. Schelling"
+ ],
+ "libros_referenciados": [
+  "Institutions and the Path to the Modern Economy",
+  "The Evolution of Cooperation",
+  "Hidden Games",
+  "Micromotives and Macrobehavior"
+ ],
+ "cuerpo": "Cuando entregas algo a una persona que no conoces y no hay nadie que te obligue a cumplir, el problema es siempre el mismo: qué le hace honrar el trato. Cuatro libros dan piezas que, leídas juntas, ayudan a pensar el problema, aunque no todos lo plantean así: Greif y Axelrod hablan de cumplimiento; Hoffman y Yoeli, de por qué se ayuda a desconocidos; Schelling, de qué pasa cuando no se distingue la calidad. Ninguna de las piezas es, por sí sola, la respuesta completa.\n\nGreif describe dos soluciones medievales. Los mercaderes maghribíes, una red de comerciantes judíos del Mediterráneo musulmán entre los siglos X y XII que conocemos por las cartas de la Geniza de El Cairo, no recurrían a tribunales: si un agente engañaba, la noticia corría por la red y el resto de la coalición dejaba de contratarlo. La garantía era la reputación ante el grupo y el castigo, colectivo. Funcionaba porque la información viajaba rápido, la identidad común era fuerte y excluir a alguien costaba poco. Su techo era que no podía abrirse a extraños. Los genoveses del siglo XII hicieron lo contrario: contratos escritos estandarizados, tribunales mercantiles y registros que daban publicidad a las decisiones. Quien incumplía respondía ante un tercero imparcial, fuera quien fuera, y eso permitía contratar con desconocidos a cambio de sostener un aparato costoso.\n\nAxelrod aporta una pieza que no necesita grupos ni jueces: la sombra del futuro. Si es probable que dos partes vuelvan a encontrarse y valoran lo bastante el futuro, cooperar compensa más que aprovecharse una vez; si el trato es efímero, la defección vuelve a ser lo racional. Hoffman y Yoeli añaden la reputación visible: se ayuda más a desconocidos cuando otros pueden verlo, porque la reciprocidad indirecta convierte la ayuda observada en confianza futura. Y Schelling, al recoger el mercado de limones de Akerlof, muestra qué ocurre cuando falta todo esto: si solo el vendedor conoce la calidad, el precio medio expulsa a los buenos y el mercado puede hundirse, salvo que garantías, inspecciones, marcas o reputación permitan distinguirla.\n\nLeídos juntos, estos textos no compiten: cada uno cubre un hueco distinto. Y ninguno funciona siempre, sino cuando se dan sus condiciones.",
+ "convergencias": "Leídos juntos, los textos comparten una idea, que es lectura nuestra: cumplir o aportar calidad no es automático, y algo (castigo posterior, reputación observada, tribunales o garantías) tiene que sostenerlo. Greif (en su caso maghribí) y Axelrod coinciden en que el coste del engaño llega después del trato: perder futuros contratos o enfrentarse a represalias en próximos encuentros. Hoffman y Yoeli miran el otro lado de la misma moneda: la ayuda visible mejora la reputación y atrae cooperación futura. Greif (en su caso genovés) y Schelling coinciden en otra cosa: hace falta que el cumplimiento o la calidad se puedan distinguir y exigir, sea con contratos y registros, sea con garantías, inspecciones y marcas. En Greif y en Schelling, además, la información sobre el tramposo o la calidad es parte explícita del mecanismo: sin que la noticia del engaño circule o la calidad se pueda comprobar, la garantía se debilita.",
+ "divergencias": "Los mecanismos chocan en quién castiga y a quién dejan fuera. La coalición maghribí castiga con el grupo y excluye al de fuera; el sistema genovés castiga con un tercero imparcial y admite a casi cualquiera, pero con un coste fijo alto. Axelrod presenta la cooperación como cálculo extendido en el tiempo, mientras que Hoffman y Yoeli sostienen que la reputación puede mover a ayudar sin que la persona lo perciba, y que la generosidad puede ser sincera a la vez. La autocorrección de la lección sobre Axelrod señala que se coopera a veces con quien no se volverá a ver, y que a veces falla la cooperación pese a una sombra del futuro larga. Schelling, por último, no explica por qué alguien cumple, sino cómo evitar que el mercado se hunda por no poder distinguir la calidad.",
+ "lectura_cruzada": "Una forma de ordenarlo, que es nuestra y no de ninguno de los autores: cada mecanismo responde a una pregunta diferente. Quién castiga: el grupo (maghribíes) o un tercero con reglas (genoveses). Por qué conviene cumplir: por lo que vendrá después (Axelrod) o por lo que otros verán (Hoffman y Yoeli, que hablan de ayudar a desconocidos). Y cómo se distingue al bueno antes del trato: con garantías, inspecciones y marcas (Schelling). Visto así, las piezas se pueden combinar según cuánto se conozcan las partes: la repetición y la coalición pesan más entre conocidos; los tribunales y las garantías, entre desconocidos. Es una ordenación para pensar, no una escala que propongan los libros.",
+ "aplicacion": "Ante una compra o un acuerdo con alguien desconocido, puede ayudar preguntarse qué hace aquí de garantía: la posibilidad de volver a tratar, la reputación visible para otros, un contrato exigible o una garantía sobre la calidad. Cuando ninguna de las cuatro está presente, el riesgo de engaño pesa más y quizá convenga pedir alguna: una garantía por escrito, referencias de terceros o un trato en pequeño antes del grande. También sirve para entender por qué ciertos entornos exhiben la ayuda o la reputación, y por qué otros no pueden. No asegura que un mecanismo funcione siempre: sirve para hacer mejores preguntas, no para predecir resultados.",
+ "cautelas": "Los casos de Greif son reconstrucciones históricas: las cartas de la Geniza solo conservan lo que se archivó, y explicar el estancamiento comercial por la coalición es debatible, igual que presentar el modelo genovés como ganador inevitable. La sombra del futuro no basta como explicación única, y los efectos de la reputación dependen del contexto y no siempre se repiten igual; una visibilidad excesiva puede ser contraproducente. El mercado de limones exagera cuando ya existen marcas, reputación o regulación. Cada mecanismo es una condición, no una receta.",
+ "esquemas": [
+  {
+   "tipo": "diagrama",
+   "plantilla": "comparar",
+   "titulo": "Dos soluciones de Greif al mismo problema",
+   "pie": "Reconstrucciones históricas de Greif; interpretación en discusión.",
+   "datos": {
+    "izq": {
+     "t": "Maghribíes: coalición",
+     "tono": "info",
+     "items": [
+      "Garantía: la reputación ante el grupo",
+      "Castigo: todos dejan de contratar al tramposo",
+      "Condición: información rápida e identidad común",
+      "Límite: no admite a extraños"
+     ]
+    },
+    "der": {
+     "t": "Genoveses: tribunales",
+     "tono": "ok",
+     "items": [
+      "Garantía: contrato escrito y exigible",
+      "Castigo: sanción de un tercero imparcial",
+      "Condición: tribunales, escribanos y registros",
+      "Coste: aparato fijo caro, pero escala"
+     ]
+    }
+   }
+  },
+  {
+   "tipo": "diagrama",
+   "plantilla": "espectro",
+   "titulo": "Cuánto necesita cada mecanismo que nos conozcan",
+   "pie": "Ordenación aproximada y nuestra, no de los autores; la lección de Hoffman y Yoeli no trata el comercio.",
+   "datos": {
+    "polos": [
+     "Trato entre conocidos",
+     "Trato entre desconocidos"
+    ],
+    "tonoA": "info",
+    "tonoB": "ok",
+    "marcas": [
+     {
+      "pos": 0.08,
+      "t": "Coalición cerrada",
+      "d": "Funciona dentro del grupo y no escala",
+      "tono": "info"
+     },
+     {
+      "pos": 0.32,
+      "t": "Repetición del trato",
+      "d": "Pesa más entre vecinos y clientes recurrentes",
+      "tono": "info"
+     },
+     {
+      "pos": 0.6,
+      "t": "Reputación visible",
+      "d": "Otros observan y premian la ayuda; encaje aproximado, lectura nuestra",
+      "tono": "ok"
+     },
+     {
+      "pos": 0.92,
+      "t": "Tribunales y contratos",
+      "d": "La identidad del otro es irrelevante",
+      "tono": "ok"
+     }
+    ]
+   }
+  },
+  {
+   "tipo": "diagrama",
+   "plantilla": "pasos",
+   "titulo": "La espiral de los limones y lo que la frena",
+   "pie": "Modelo de Akerlof recogido por Schelling; exagera si ya hay marcas o reputación.",
+   "datos": {
+    "pasos": [
+     {
+      "t": "Solo el vendedor sabe la calidad",
+      "d": "El comprador no puede distinguir buenos de malos"
+     },
+     {
+      "t": "El comprador paga un precio medio",
+      "d": "Los coches buenos no cobran lo que valen"
+     },
+     {
+      "t": "Los buenos se retiran",
+      "d": "Baja la calidad media de lo que queda"
+     },
+     {
+      "t": "La espiral se repite",
+      "d": "Puede quedar solo lo peor, o ningún comercio",
+      "tono": "mal"
+     },
+     {
+      "t": "Garantías, marcas y reputación",
+      "d": "Distinguen la calidad y rompen la espiral",
+      "tono": "ok"
+     }
+    ]
+   }
+  },
+  {
+   "tipo": "diagrama",
+   "plantilla": "mapa",
+   "titulo": "Cuatro libros, cinco piezas de un mismo problema",
+   "pie": "Lectura cruzada nuestra: cada pieza es una condición, no una receta.",
+   "datos": {
+    "centro": "Confiar en un extraño",
+    "nodos": [
+     {
+      "t": "Castigo del grupo (Greif)"
+     },
+     {
+      "t": "Tribunales y contratos (Greif)"
+     },
+     {
+      "t": "Repetición del trato (Axelrod)"
+     },
+     {
+      "t": "Reputación visible (Hoffman, Yoeli)"
+     },
+     {
+      "t": "Garantías y marcas (Schelling)"
+     }
+    ]
+   }
+  }
+ ],
+ "capsulas": [
+  {
+   "titulo": "Dos formas de castigar al tramposo",
+   "esquema": 0,
+   "fuentes": [
+    "af74203b-828f-41e3-9337-d3e71d442e9a",
+    "9e379da1-0415-455d-a315-2bd439993cad"
+   ],
+   "texto": "Greif cuenta dos respuestas al mismo problema. Entre los mercaderes maghribíes, la garantía era la reputación ante el grupo: si un agente engañaba, la noticia corría por la red y nadie volvía a contratarlo. Funcionaba por la información rápida, la identidad común y lo barato de excluir a alguien, pero no podía abrirse a extraños. Los genoveses, en paralelo, sustituyeron el castigo del grupo por el de un tercero: contratos escritos, tribunales especializados y registros públicos de las decisiones. Eso permitía tratar con desconocidos, a cambio de un aparato caro de mantener. Dos caminos, dos precios distintos."
+  },
+  {
+   "titulo": "Cuánto necesita cada mecanismo que nos conozcan",
+   "esquema": 1,
+   "fuentes": [
+    "af74203b-828f-41e3-9337-d3e71d442e9a",
+    "9e379da1-0415-455d-a315-2bd439993cad",
+    "41f05242-20f1-4120-ac90-a1edcf6a6558",
+    "10367b42-276c-445a-ba72-7395eed1f657"
+   ],
+   "texto": "Una forma de ordenar las piezas, que es lectura nuestra, es según cuánto se conozcan las partes. La coalición maghribí rendía mucho dentro del grupo y poco fuera. Axelrod sostiene que la cooperación es más fácil entre vecinos o clientes recurrentes que entre turistas o transacciones anónimas, porque lo que se pierde por defraudar pesa más. Hoffman y Yoeli, cuya lección no trata el comercio, añaden que la ayuda a desconocidos se favorece cuando otros la ven. En el extremo de los extraños, el sistema genovés hacía irrelevante quién era la otra parte. No es una escala de los autores, sino una manera de situarlos."
+  },
+  {
+   "titulo": "La espiral de los limones y lo que la frena",
+   "esquema": 2,
+   "fuentes": [
+    "8f0b629a-b65a-4e9e-8762-418e962bc6b0",
+    "10367b42-276c-445a-ba72-7395eed1f657"
+   ],
+   "texto": "Schelling recoge el mercado de limones de Akerlof: si solo el vendedor conoce la calidad del coche, el comprador paga un precio medio, los propietarios de coches buenos retiran su oferta, la calidad media baja y la espiral puede dejar solo lo peor o ningún comercio. Las salidas son garantías, inspecciones, marcas y reputación, que permiten distinguir la calidad. Leído junto a Hoffman y Yoeli, y como lectura nuestra, la reputación aparece como algo que otros observan y que puede atraer confianza hacia quien ayuda. El modelo, además, exagera cuando esos mecanismos ya existen: no todos los mercados con información desigual colapsan."
+  },
+  {
+   "titulo": "Cinco piezas, ninguna universal",
+   "esquema": 3,
+   "fuentes": [
+    "af74203b-828f-41e3-9337-d3e71d442e9a",
+    "9e379da1-0415-455d-a315-2bd439993cad",
+    "41f05242-20f1-4120-ac90-a1edcf6a6558",
+    "10367b42-276c-445a-ba72-7395eed1f657",
+    "8f0b629a-b65a-4e9e-8762-418e962bc6b0"
+   ],
+   "texto": "El mapa reúne, como lectura nuestra, lo que cada libro aporta al problema; no todos lo plantean así. Greif: el castigo del grupo y los tribunales con contratos. Axelrod: la repetición del trato, que pesa cuando el futuro cuenta. Hoffman y Yoeli: la reputación visible, que favorece ayudar a desconocidos. Schelling: garantías y marcas que evitan que la falta de información hunda el mercado. Ninguna es completa. La autocorrección de la lección sobre Axelrod recuerda que se coopera a veces sin reencuentro y que a veces falla pese a una sombra del futuro larga. Por eso conviene tratarlas como condiciones que se dan o no, no como recetas."
+  }
+ ],
+ "fuentes": [
+  {
+   "leccion_id": "af74203b-828f-41e3-9337-d3e71d442e9a",
+   "libro": "Institutions and the Path to the Modern Economy",
+   "autor": "Avner Greif",
+   "aporta": "Los mercaderes maghribíes resolvían la confianza con una coalición cerrada que castigaba entre todos al tramposo."
+  },
+  {
+   "leccion_id": "9e379da1-0415-455d-a315-2bd439993cad",
+   "libro": "Institutions and the Path to the Modern Economy",
+   "autor": "Avner Greif",
+   "aporta": "Los genoveses la resolvían con tribunales, contratos escritos y registros: otra solución al mismo problema."
+  },
+  {
+   "leccion_id": "41f05242-20f1-4120-ac90-a1edcf6a6558",
+   "libro": "The Evolution of Cooperation",
+   "autor": "Robert Axelrod",
+   "aporta": "La cooperación se vuelve racional cuando la sombra del futuro pesa más que la tentación inmediata de aprovecharse."
+  },
+  {
+   "leccion_id": "10367b42-276c-445a-ba72-7395eed1f657",
+   "libro": "Hidden Games",
+   "autor": "Moshe Hoffman y Erez Yoeli",
+   "aporta": "La ayuda a desconocidos se favorece cuando es visible, porque la reputación genera cooperación hacia quien ayuda."
+  },
+  {
+   "leccion_id": "8f0b629a-b65a-4e9e-8762-418e962bc6b0",
+   "libro": "Micromotives and Macrobehavior",
+   "autor": "Thomas C. Schelling",
+   "aporta": "Si solo el vendedor conoce la calidad el mercado puede hundirse; garantías y reputación lo evitan."
+  }
+ ],
+ "preguntas": [
+  {
+   "texto": "¿Qué comparten el castigo de la coalición maghribí y la sombra del futuro de Axelrod, a diferencia de los tribunales genoveses?",
+   "opciones": [
+    "Que ambos funcionan igual de bien con desconocidos que no volverán a verse.",
+    "Que ambos prescinden de que la noticia sobre el tramposo se difunda.",
+    "Que cumplir se apoya en perder tratos futuros, sin sanción formal de un tercero.",
+    "Que ambos exigen contratos escritos ante jueces especializados en el comercio y registros."
+   ],
+   "correcta": 2,
+   "explicacion": "Tanto en la coalición maghribí como en la sombra del futuro, el coste de engañar llega después: en Greif, porque el grupo deja de contratar al tramposo; en Axelrod, porque la contraparte responde en próximos encuentros. Los genoveses, en cambio, recurrían a un tercero imparcial y a contratos exigibles.",
+   "dificultad": 2,
+   "fuentes": [
+    "af74203b-828f-41e3-9337-d3e71d442e9a",
+    "41f05242-20f1-4120-ac90-a1edcf6a6558",
+    "9e379da1-0415-455d-a315-2bd439993cad"
+   ]
+  },
+  {
+   "texto": "¿Qué une, en nuestra lectura cruzada, el mercado de limones de Akerlof recogido por Schelling con la reputación visible de Hoffman y Yoeli?",
+   "opciones": [
+    "Que la reputación permite a otros reconocer y premiar a quien merece confianza.",
+    "Que la reputación sustituye siempre a las garantías y a las inspecciones formales del mercado.",
+    "Que la reputación es irrelevante cuando el comprador no puede ver la calidad.",
+    "Que la reputación solo funciona cuando todos los participantes son del mismo grupo."
+   ],
+   "correcta": 0,
+   "explicacion": "En la lección de Schelling la reputación figura entre las salidas a la espiral de los limones, y Hoffman y Yoeli muestran que la ayuda visible genera cooperación hacia quien ayuda. Unirlos es una lectura nuestra: en ambos casos la reputación permite que otros reconozcan y premien a quien merece confianza.",
+   "dificultad": 2,
+   "fuentes": [
+    "8f0b629a-b65a-4e9e-8762-418e962bc6b0",
+    "10367b42-276c-445a-ba72-7395eed1f657"
+   ]
+  },
+  {
+   "texto": "Leyendo juntos a Greif y a Axelrod, ¿qué diferencia hay entre cómo el castigo futuro sostenía el trato entre maghribíes y cómo lo hace la sombra del futuro?",
+   "opciones": [
+    "En ambos casos el castigo solo funciona si la misma pareja de partes vuelve a encontrarse más adelante, sin intervención del grupo.",
+    "En la coalición el castigo lo aplicaba todo el grupo, que dejaba de contratar al tramposo; en Axelrod depende de que las mismas partes vuelvan a encontrarse.",
+    "En la coalición el castigo lo aplicaba un tercero imparcial con contratos escritos; en Axelrod, lo aplica todo el grupo, que deja de contratar.",
+    "En la coalición el castigo lo aplicaban extraños ajenos al grupo, que vigilaban por igual a todos los mercaderes; en Axelrod, un tribunal especializado lo impone."
+   ],
+   "correcta": 1,
+   "explicacion": "Greif explica que la red transmitía rápido la información y excluir era barato, de modo que el castigo era colectivo; Axelrod describe un cálculo entre partes que esperan reencontrarse. Es una lectura conjunta, no una tesis de Greif.",
+   "dificultad": 2,
+   "fuentes": [
+    "af74203b-828f-41e3-9337-d3e71d442e9a",
+    "41f05242-20f1-4120-ac90-a1edcf6a6558"
+   ]
+  },
+  {
+   "texto": "¿Qué matiz común, en lectura conjunta, dejan la autocorrección de la lección de Axelrod y el planteamiento de Hoffman y Yoeli sobre cooperar con extraños?",
+   "opciones": [
+    "Que no siempre nace de un cálculo explícito de reencuentro: intervienen también motivos psicológicos o sociales no calculadores.",
+    "Que desaparece siempre que la ayuda se hace visible ante personas ajenas al trato y que pueden observarla.",
+    "Que solo aparece si hay una probabilidad alta y conocida de volver a encontrarse con la misma persona, y nunca sin ella.",
+    "Que se explica por completo con la teoría del cálculo egoísta de las represalias entre las mismas partes."
+   ],
+   "correcta": 0,
+   "explicacion": "La nota de autocorrección de la lección sobre Axelrod señala que se coopera a veces sin reencuentro y apunta a mecanismos psicológicos no calculadores; Hoffman y Yoeli sostienen que la reputación puede mover a ayudar aunque no seamos conscientes de ello, sin negar una generosidad sincera. Unir ambos es lectura nuestra: el cálculo explícito no lo agota.",
+   "dificultad": 3,
+   "fuentes": [
+    "41f05242-20f1-4120-ac90-a1edcf6a6558",
+    "10367b42-276c-445a-ba72-7395eed1f657"
+   ]
+  },
+  {
+   "texto": "¿Qué tienen en común las autocorrecciones de las lecciones sobre el modelo de Schelling y sobre la narrativa genovesa de Greif?",
+   "opciones": [
+    "Que ambos modelos fallan siempre, porque ningún mercado real sufre información desigual ni necesita instituciones de ningún tipo para funcionar bien.",
+    "Que ambos autores rechazan que las garantías, los tribunales o las inspecciones tengan efecto alguno sobre la confianza entre extraños en el comercio.",
+    "Que ambos resultados se han confirmado de forma definitiva con datos experimentales obtenidos en mercados reales actuales y en archivos históricos completos.",
+    "Que ambos modelos explican algo pero se sobrestiman: el de Schelling exagera si ya hay marcas, reputación o regulación, y la narrativa del modelo genovés como ganador histórico sufre sesgo de retrospección."
+   ],
+   "correcta": 3,
+   "explicacion": "La nota de autocorrección de la lección de Schelling advierte que el modelo exagera cuando existen marcas, reputación o regulación; la de la lección sobre los genoveses advierte que presentarlos como ganador histórico sufre sesgo de retrospección (atribuir el éxito posterior de Europa a ese modelo exige asumir una trayectoria inevitable) y que la dicotomía colectivista/individualista es borrosa.",
+   "dificultad": 3,
+   "fuentes": [
+    "8f0b629a-b65a-4e9e-8762-418e962bc6b0",
+    "9e379da1-0415-455d-a315-2bd439993cad"
+   ]
+  }
+ ]
+}
