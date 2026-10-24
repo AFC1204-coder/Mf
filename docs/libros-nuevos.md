@@ -295,3 +295,28 @@ Triage de 136 libros de las dos listas del usuario: 52 ya estaban en la bibliote
 **Patrón repetido (otra vez):** la opción correcta era la más larga y las explicaciones decían «las otras opciones» en casi todos los borradores.
 
 **Visuales:** 63 diagramas (uno por lección) y 10 mapas; caché del service worker v79.
+
+## Novena entrega (2026-10-24): cuarta tanda de las listas del usuario
+
+| Autor | Libro | Eje / sub_eje | Lecc. / preg. |
+|---|---|---|---|
+| Thorp | *A Man for All Markets* | Economía y Mercados / Economía | 7 / 21 |
+| Martin | *Money: The Unauthorized Biography* | Economía y Mercados / Economía | 6 / 18 |
+| Bernays | *Propaganda* | Psicología y Conducta / Influencia | 5 / 15 |
+| Sutherland | *Alchemy* | Psicología y Conducta / Influencia | 5 / 15 |
+| Shell | *Bargaining for Advantage* | Psicología y Conducta / Interpersonal | 7 / 22 |
+| Meyer | *The Culture Map* | Psicología y Conducta / Interpersonal | 6 / 17 |
+| Gallwey | *The Inner Game of Tennis* | Desarrollo Humano / Mentalidad | 5 / 15 |
+| Mukherjee | *The Gene* | Neurociencia y Biología / Biología y Longevidad | 7 / 21 |
+| Dawkins | *The Ancestor's Tale* | Neurociencia y Biología / Biología y Longevidad | 6 / 18 |
+| Bakewell | *At the Existentialist Café* | Pensamiento y Civilización / Filosofía | 7 / 21 |
+
+**Hallazgos de los verificadores que cambiaron el contenido** (con segunda verificación cuando hubo ERROR de contenido): *The Inner Game of Tennis* describía mal la réplica de Masters (era de Hardy, Mullen y Jones 1996 y fue una réplica controlada en la línea de Masters) y llamaba «manuscrito» a McKay et al., ya publicado en 2024 en *Psychological Bulletin*; *The Gene* decía que Asilomar dejó fuera a juristas y periodistas (asistieron abogados y unos 16 periodistas), atribuía a Ritchie un «lapsus de rigor» que no dijo, y citaba un libro de Woloshin que no está en la biblioteca; *A Man for All Markets* afirmaba que Kelly hace crecer el capital «sin riesgo de quedarse sin él», citaba a Taleb con títulos fuera del corpus y describía mal la apelación de *United States v. Regan*; *At the Existentialist Café* atribuía al libro o a reseñas cosas que no se localizan (Irish Times, Summit Daily, Globe and Mail), un anacronismo sobre Argelia y que Heidegger dejó el rectorado «de forma abrupta»; *Money* citaba una objeción de «Eric Lonergan» que no existe y mezclaba las atribuciones de Hummel y Murphy; *Bargaining for Advantage* conservaba una frase de un lector de Goodreads sobre las inclinaciones éticas de Shell y atribuía a *Nudge* que las opciones por defecto «operan como anclas»; *Propaganda* incluía un distractor que atribuía a Goebbels un relato en sus diarios (se quitó) y trataba «Torches of Freedom» (1929) como ejemplo del libro de 1928; *Alchemy* recogía un hotel con piscina y «mejores interiores» de Eurostar que no se localizan; *The Culture Map* tenía autores relacionados que no aparecían en sus conexiones y colocaciones de países como hechos; *The Ancestor's Tale*: sin errores, solo matices (Ensatina, Chang, Whelan 2017).
+
+**Cautelas que se mantienen:** no se pudo leer el texto de ninguno de los libros (todo viene de reseñas, índices y resúmenes). En *Money*, la reseña de Selgin (Cato/Barron's) no se pudo leer entera. En *The Gene*, la reseña de Ritchie en *The Spectator* tampoco (muro de pago). En *A Man for All Markets*, el fallo de *Regan* se conoce por resúmenes. En *Bargaining*, el «tres meses perdedores en unos 230» de Thorp se quitó por no localizarse, y «muy pocos meses perdedores» queda atribuido a reseñas.
+
+**Patrón repetido (otra vez):** la opción correcta era la más larga y las explicaciones decían «las otras opciones» en casi todos los borradores; además, los correctores dejaron a veces afirmaciones nuevas que los segundos verificadores tuvieron que volver a corregir (Asilomar, McKay).
+
+**Visuales:** 69 diagramas (uno por lección) y 10 mapas; caché del service worker v81.
+
+**Publicación de los cruces:** los 10 cruces (`articulos` con `tipo`) se publicaron en esta sesión tras la fusión del PR #29; los 11 ensayos antiguos de marzo siguen ocultos.
