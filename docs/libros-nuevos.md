@@ -228,3 +228,26 @@ Los 7 libros de la sección «Cuarta tanda, hecha en otra sesión» (*Power*, *S
 **Patrones repetidos** (útiles para el generador): títulos y cuerpos con absolutos («siempre», «nunca»); conexiones cruzadas sin rotular o con tesis ajenas mal atribuidas; notas de la biblioteca presentadas como críticas del libro; distractores con absolutos que permiten acertar sin la lección; correcta más larga (el lint no lo detecta del todo). Los paquetes verificados que preparé antes de saber que ya estaban publicados (`/tmp/…/libros4/`) no se cargaron: los ids deterministas coinciden y `alta` no sobrescribe.
 
 **Visuales:** los 33 diagramas y 7 mapas de esos libros (hechos por la otra sesión sobre el texto previo a la corrección) se revisaron contra el texto actual y se reescribieron todos: quitados absolutos y afirmaciones que la lección ya no hace, pies con la cautela de la autocorrección actual; caché v74.
+
+## Sexta entrega (2026-10-24): primera tanda de las listas «libros vistos en X» y «recomendaciones de Mente fría»
+
+Triage de 136 libros de las dos listas del usuario: 52 ya estaban en la biblioteca, ~19 se dejaron fuera por evidencia floja o hype (Scott Adams, *Start with No*, Nardone, *Stealing Fire*, *Opening Skinner's Box*, *Storyfulness*, *Hipercomplejidad*, *Beyond Self-Interest*, *The Introvert Advantage*, *The Education of a Speculator*…, aparcados a petición del usuario) y ~75 merecían entrar «progresivamente». Esta primera tanda son los 10 de mayor prioridad. Pipeline: generador (con `lecciones-aprendidas.md` de las auditorías) → verificador independiente → corrector → segunda verificación si hubo ERROR de contenido → retoques → carga en borrador (`SIN_PUNTOCOMA=1 … alta`, bloques de ≤12 KB) → huellas con 0 diferencias → publicación → visuales. Ningún generador pudo leer el texto de los libros (reseñas, índices, entrevistas y los estudios originales); la confianza es **media** en todos y las lecciones lo dicen.
+
+| Autor | Libro | Eje / sub_eje | Lecc. / preg. |
+|---|---|---|---|
+| Thorndike | *The Outsiders* | Economía y Mercados / Economía | 6 / 24 |
+| Stanley y Lehman | *Why Greatness Cannot Be Planned* | Pensamiento y Civilización / Epistemología | 6 / 18 |
+| Roberts | *Wild Problems* | Pensamiento y Civilización / Filosofía | 5 / 15 |
+| Mlodinow | *The Drunkard's Walk* | Pensamiento y Civilización / Epistemología | 7 / 21 |
+| Festinger, Riecken y Schachter | *When Prophecy Fails* | Psicología y Conducta / Social | 6 / 18 |
+| Schulz | *Being Wrong* | Psicología y Conducta / Cognitiva | 5 / 15 |
+| Ridley | *The Rational Optimist* | Economía y Mercados / Economía | 7 / 21 |
+| Poundstone | *Fortune's Formula* | Economía y Mercados / Economía | 5 / 15 |
+| Chancellor | *Devil Take the Hindmost* | Economía y Mercados / Economía | 5 / 15 |
+| Aron | *The Highly Sensitive Person* | Psicología y Conducta / Cognitiva | 5 / 15 |
+
+**Hallazgos de los verificadores que cambiaron el contenido** (ERROR de contenido, con segunda verificación): *Devil Take the Hindmost* situaba la Ley de Burbujas (sanción real el 11 de junio de 1720) después del colapso; *The Outsiders* mezclaba usos y fuentes del capital (el esquema de Thorndike son cinco usos y tres fuentes; «vender la compañía» no figura) y una pregunta no tenía única correcta; *The Rational Optimist* decía que «las ideas tienen sexo» da nombre al libro y describía su postura climática como causa humana «parcial» (su autodefinición es «lukewarmer»: real, mayormente humano, improbablemente peligroso); *Being Wrong* atribuía a Talarico y Rubin (2003) un resultado que no midieron (centrales mejor que periféricos); *The Highly Sensitive Person* decía que el libro «insiste en los costes» y confundía los dos grupos de 1997 con los tres de Lionetti 2018; *When Prophecy Fails* omitía la objeción reciente de Kelly (2026, en línea 2025) y afirmaba que los observadores «evitaban dirigir el grupo»; *The Drunkard's Walk* decía que Miller y Sanjurjo (2018) hallaban un efecto «modesto» y rotulaba Sally Clark como ajeno al libro.
+
+**Patrón repetido (otra vez):** en 8 de 10 borradores la opción correcta era la más larga en muchas preguntas (el lint no lo detecta del todo) y los distractores llevaban absolutos o se descartaban por sentido común; las notas de la biblioteca se presentaban a veces como críticas ya conocidas del libro.
+
+**Visuales:** 57 diagramas (uno por lección) y 10 mapas; caché del service worker v75.
