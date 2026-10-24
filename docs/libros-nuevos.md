@@ -176,3 +176,19 @@ De la lista de 61 propuestos: 41 entraron en esta tanda (el 41.º, *Built from B
 **Visuales (2026-10-22):** 321 diagramas (uno por lección) y 40 mapas (uno por libro) añadidos con `tools/datos/agregar.mjs` (0 rechazados por el lint). Los pies llevan la cautela de la `autocorreccion` de cada lección y lo que la lección marca como lectura nuestra va rotulado como tal en el propio diagrama. Se revisó una muestra renderizada con la hoja de estilos de la app (25 diagramas y 6 mapas) y se suavizaron dos textos del mapa de *How the World Really Works* que presentaban como de Smil lo que es lectura nuestra. Versión de caché del service worker: v70.
 
 **Pendiente:** la tanda B (16 libros con cautelas fuertes).
+
+## Cuarta tanda, hecha en otra sesión (2026-10-23): 7 libros de persuasión, influencia y comunicación
+
+Incorporados los 7 libros pendientes de la lista solicitada (los 3 restantes de la lista original ya estaban en el corpus: *Pre-suasión*, *The Dictator's Handbook* y *How Minds Change*). Cada libro cuenta con su paquete JSON validado por `lint.js`, carga determinista en Supabase (`cargar.cjs alta` y comprobación con 0 diferencias antes de publicar), mapas conceptuales en `datos/mapas.json` y diagramas visuales por lección en `datos/diagramas.json`.
+
+| Autor | Libro | Lecciones / preguntas |
+|---|---|---|
+| Jeffrey Pfeffer | *Power: Why Some People Have It—and Others Don't* (2010) | 4 / 10 |
+| Claude C. Hopkins | *Scientific Advertising* (1923) | 4 / 9 |
+| Jonah Berger | *The Catalyst: How to Change Anyone's Mind* (2020) | 5 / 15 |
+| William R. Miller y Stephen Rollnick | *Motivational Interviewing: Helping People Change* (2012) | 6 / 16 |
+| Peter Boghossian y James Lindsay | *How to Have Impossible Conversations* (2019) | 5 / 15 |
+| Zoe Chance | *Influence Is Your Superpower* (2022) | 4 / 12 |
+| Noah J. Goldstein, Steve J. Martin y Robert B. Cialdini | *Yes! 50 Scientifically Proven Ways to Be Persuasive* (2008) | 5 / 16 |
+
+**Visuales (2026-10-23):** 33 diagramas visuales (uno por lección) y 7 mapas conceptuales (uno por libro) integrados en `datos/diagramas.json` y `datos/mapas.json` con `tools/datos/agregar.mjs` (0 errores de validación).
