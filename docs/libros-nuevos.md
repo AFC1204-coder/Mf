@@ -272,3 +272,26 @@ Triage de 136 libros de las dos listas del usuario: 52 ya estaban en la bibliote
 **Patrón repetido (otra vez):** en casi todos los borradores la opción correcta era la más larga y las explicaciones decían «las otras opciones»; hubo que igualar longitudes en todas las preguntas, no solo en las señaladas.
 
 **Visuales:** 57 diagramas (uno por lección) y 10 mapas; caché del service worker v77.
+
+## Octava entrega (2026-10-24): tercera tanda de las listas del usuario
+
+| Autor | Libro | Eje / sub_eje | Lecc. / preg. |
+|---|---|---|---|
+| Nagoski y Nagoski | *Burnout* | Psicología y Conducta / Juego y bienestar | 5 / 15 |
+| Lefèvre | *Reminiscences of a Stock Operator* | Economía y Mercados / Economía | 6 / 18 |
+| Warburton | *A Little History of Philosophy* | Pensamiento y Civilización / Filosofía | 6 / 18 |
+| Mukherjee | *The Emperor of All Maladies* | Neurociencia y Biología / Biología y Longevidad | 6 / 18 |
+| Ramachandran y Blakeslee | *Phantoms in the Brain* | Neurociencia y Biología / Neurociencia | 6 / 18 |
+| Binmore | *Game Theory: A Very Short Introduction* | Economía y Mercados / Economía | 8 / 24 |
+| Fine | *Testosterone Rex* | Psicología y Conducta / Social | 5 / 15 |
+| Heath y Heath | *Switch* | Desarrollo Humano / Mentalidad | 6 / 18 |
+| Sandel | *Justice* | Pensamiento y Civilización / Filosofía | 7 / 21 |
+| Carroll | *Endless Forms Most Beautiful* | Neurociencia y Biología / Biología y Longevidad | 6 / 18 |
+
+**Hallazgos de los verificadores que cambiaron el contenido** (con segunda verificación cuando hubo ERROR de contenido): *The Emperor of All Maladies* atribuía a Fisher una comparación con la mastectomía radical (era la total; la radical de Halsted fue el ensayo de Veronesi) y sobrevendía RAS 1982 («una mutación puede bastar»); *Phantoms in the Brain* decía que el efecto del agua fría «se comunica en un solo paciente» (falso en general) y llamaba «posterior» a Chan 2007; *Switch* llamaba «independiente» a la revisión Cochrane de 2015 (incluye 13 de 72 estudios de Wansink), situaba mal el relato de los guantes y daba «dos comunidades» donde el estudio de 1998 solo confirma una; *Endless Forms* citaba un «comentario de Nature de 2006» que no se localiza, tomaba Shapiro 2004 como posterior al libro y atribuía a Ronshaugen, McGinnis y McGinnis lo que es de Galant y Carroll (onicóforo); *Justice* tenía una contradicción interna sobre las tres vías y atribuía a *Justice* lo que Sandel dice en *Liberalism and the Limits of Justice* (1982); *Testosterone Rex* atribuía las cifras de Hyde 2005 a un resumen y mezclaba quién sostiene el relato criticado; *Reminiscences* incluía el método de la muerte de Livermore (se quitó); *Game Theory* tenía una frase duplicada y sobrevendía el teorema popular y la aproximación de Rubinstein (Binmore, Rubinstein y Wolinsky 1986).
+
+**Cautelas que se mantienen:** no se pudo leer el texto de ninguno de los libros (todo lo atribuido viene de reseñas, índices y resúmenes). En *Justice* los dos verificadores discreparon sobre si la pareja equidad/degradación es de *Justice* o de *What Money Can't Buy*; se dejó como «lectura nuestra». En *Switch* se quitó el «424» de los guantes porque no se pudo verificar. En *Testosterone Rex* las cifras de Hyde van como «aprox.» según fuentes secundarias.
+
+**Patrón repetido (otra vez):** la opción correcta era la más larga y las explicaciones decían «las otras opciones» en casi todos los borradores.
+
+**Visuales:** 63 diagramas (uno por lección) y 10 mapas; caché del service worker v79.
