@@ -8,7 +8,13 @@
  * Uso:  node tools/libros/a-sql.js paquete.json alta|corregir|publicar > salida.sql
  */
 const crypto = require('crypto');
-const q = s => (s == null ? 'null' : "'" + String(s).replace(/'/g, "''") + "'");
+// SIN_PUNTOCOMA=1: la herramienta execute_sql se cuelga con ';' dentro de un literal; el mismo texto se compone con chr(59).
+const SIN_PC = !!process.env.SIN_PUNTOCOMA;
+const q = s => {
+  if (s == null) return 'null';
+  const t = "'" + String(s).replace(/'/g, "''") + "'";
+  return SIN_PC ? t.replace(/;/g, "'||chr(59)||'") : t;
+};
 const arr = a => (a && a.length ? 'array[' + a.map(q).join(',') + ']::text[]' : 'null');
 
 function ids(paq) {
@@ -25,7 +31,7 @@ function alta(paq) {
   paq.lecciones.forEach(l => {
     s.push(`insert into lecciones (id, libro_id, titulo, cuerpo, idea_clave, conexion_cruzada, autocorreccion, aplicacion_practica, autores_relacionados, cita_memorable, dominio_aplicacion, orden, activa) values (${q(I.lec(l.orden))}, ${q(I.libro)}, ${q(l.titulo)}, ${q(l.cuerpo)}, ${q(l.idea_clave)}, ${q(l.conexion_cruzada)}, ${q(l.autocorreccion)}, ${q(l.aplicacion_practica)}, ${arr(l.autores_relacionados)}, ${q(l.cita_memorable)}, ${arr(l.dominio_aplicacion)}, ${l.orden}, false) on conflict (id) do nothing;`);
     l.preguntas.forEach((p, j) => {
-      s.push(`insert into preguntas (id, libro_id, leccion_id, eje, texto, opciones, correcta, explicacion, dificultad, activa) values (${q(I.preg(l.orden, j + 1))}, ${q(I.libro)}, ${q(I.lec(l.orden))}, ${q(L.eje_principal)}, ${q(p.texto)}, ${q(JSON.stringify(p.opciones))}::jsonb, ${p.correcta}, ${q(p.explicacion)}, ${p.dificultad}, false) on conflict (id) do nothing;`);
+      s.push(`insert into preguntas (id, libro_id, leccion_id, eje, texto, opciones, correcta, explicacion, dificultad, activa) values (${q(I.preg(l.orden, j + 1))}, ${q(I.libro)}, ${q(I.lec(l.orden))}, ${q(L.eje_principal)}, ${q(p.texto)}, (${q(JSON.stringify(p.opciones))})::jsonb, ${p.correcta}, ${q(p.explicacion)}, ${p.dificultad}, false) on conflict (id) do nothing;`);
     });
   });
   s.push('commit;');
@@ -39,7 +45,7 @@ function corregir(paq) {
   paq.lecciones.forEach(l => {
     s.push(`update lecciones set titulo=${q(l.titulo)}, cuerpo=${q(l.cuerpo)}, idea_clave=${q(l.idea_clave)}, conexion_cruzada=${q(l.conexion_cruzada)}, autocorreccion=${q(l.autocorreccion)}, aplicacion_practica=${q(l.aplicacion_practica)}, autores_relacionados=${arr(l.autores_relacionados)}, cita_memorable=${q(l.cita_memorable)}, dominio_aplicacion=${arr(l.dominio_aplicacion)} where id=${q(I.lec(l.orden))};`);
     l.preguntas.forEach((p, j) => {
-      s.push(`update preguntas set texto=${q(p.texto)}, opciones=${q(JSON.stringify(p.opciones))}::jsonb, correcta=${p.correcta}, explicacion=${q(p.explicacion)}, dificultad=${p.dificultad} where id=${q(I.preg(l.orden, j + 1))};`);
+      s.push(`update preguntas set texto=${q(p.texto)}, opciones=(${q(JSON.stringify(p.opciones))})::jsonb, correcta=${p.correcta}, explicacion=${q(p.explicacion)}, dificultad=${p.dificultad} where id=${q(I.preg(l.orden, j + 1))};`);
     });
   });
   s.push('commit;');
