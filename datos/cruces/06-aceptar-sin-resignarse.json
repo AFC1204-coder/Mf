@@ -1,0 +1,302 @@
+{
+ "titulo": "Aceptar lo que no cambia sin caer en la resignación",
+ "pregunta_generadora": "¿Qué significa aceptar una circunstancia que no se puede cambiar, y cómo se distingue de resignarse o de tolerar algo evitable?",
+ "tipo": "convergencia",
+ "autores_convocados": [
+  "Dalai Lama y Howard C. Cutler",
+  "Bill Burnett y Dave Evans",
+  "William B. Irvine",
+  "Alan Watts"
+ ],
+ "libros_referenciados": [
+  "The Art of Happiness",
+  "Designing Your Life",
+  "A Guide to the Good Life",
+  "La sabiduría de la inseguridad"
+ ],
+ "cuerpo": "Aceptar es una palabra que puede significar tres cosas muy distintas: ver con lucidez lo que ocurre, rendirse o darse permiso para no hacer nada. Cuatro libros de tradiciones diferentes la trabajan con cuidado, y leerlos juntos ayuda a separar esos sentidos.\n\nEl Dalái Lama, en su libro con Cutler, parte de que cierto dolor es inevitable (el envejecimiento, la enfermedad, la pérdida) y de que lo que sí puede cambiar es la relación con él: buena parte del malestar añadido nace de resistirse y de preguntarse por qué me ocurre esto a mí. Watts lo dice con otro vocabulario: aceptar es dejar de añadir al hecho la resistencia a que sea así, y gran parte del sufrimiento procedería de esa resistencia más que del suceso.\n\nBurnett y Evans llevan la idea al terreno del diseño de la propia vida. Separan los problemas accionables de los gravitacionales, que son circunstancias que no se pueden cambiar, y proponen dos movimientos: comprobar que de verdad no hay forma razonable de modificarlos y, entonces, aceptarlos y dirigir la energía a lo accionable. Irvine, desde el estoicismo de Epicteto, traza una frontera parecida entre lo que depende de nosotros y lo que no, y añade una zona intermedia: los resultados, la reputación o la salud dependen solo en parte, de modo que conviene fijar el objetivo en el proceso propio y no en el resultado.\n\nLo que más enseña es la salvaguarda. Ninguno de los cuatro presenta aceptar como quedarse quieto. El Dalái Lama presenta la aceptación como empezar por ver el sufrimiento con claridad para actuar mejor sobre lo que depende de nosotros; Burnett y Evans exigen comprobar antes que el problema es de verdad gravitacional; Irvine aclara que su indiferencia no es pasividad y que se puede actuar para mejorar lo externo; Watts separa aceptar de resignarse y también de dejar de querer.\n\nLeídos juntos, los cuatro libros no dibujan una sola frontera, sino tres que no coinciden: entre lo que se puede cambiar y lo que no, entre lo que depende de uno y lo que no, y entre el dolor y la resistencia que se le suma. Un mismo suceso puede pasar una prueba y no otra, y por eso conviene tratarlas como preguntas encadenadas y no como una fórmula.",
+ "convergencias": "Los cuatro separan algo dado de algo sobre lo que se puede trabajar, aunque cada uno lo traza de otra manera. Para el Dalái Lama y Watts, lo añadido es la resistencia, el juicio, la rumiación o la queja; para Burnett y Evans, la energía gastada en quejarse de una circunstancia o intentar vencerla; para Irvine, la frontera pasa entre lo que depende de uno y lo que no, y pide que la tranquilidad no dependa de que las circunstancias salgan como se desea. Y los cuatro orientan su propuesta hacia actuar mejor, o hacia sentir el dolor sin pelearse con él, no hacia abandonar lo que sí admite cambio.",
+ "divergencias": "Difieren en dónde trazan la línea y en qué herramienta ofrecen. Burnett y Evans la sitúan entre problemas accionables y gravitacionales, y su paso siguiente es práctico: redirigir la energía. Irvine la sitúa entre lo que depende de uno y lo que no, con una zona parcial y la idea de internalizar el objetivo. El Dalái Lama propone cambiar de perspectiva y anticipar que las dificultades llegarán; Watts, entregarse a la experiencia, dolor incluido, en lugar de encerrarse para evitarla. La lección de Watts no plantea la pregunta de si se puede actuar: se centra en la resistencia que se suma al hecho, y su revisión crítica avisa de que aceptar no debe confundirse con tolerar un abuso o una situación estructural opresiva.",
+ "lectura_cruzada": "Una forma de ordenarlo, que es nuestra y no de ningún autor: tres preguntas en cadena. Primera, ¿se puede cambiar de forma razonable? Si es así, es un problema accionable y toca actuar; si no, es una circunstancia. Segunda, ¿qué parte depende de mí, aunque sea en parte? Ahí se concentra el esfuerzo. Tercera, ¿qué resistencia estoy añadiendo al hecho? Ahí se afloja. Leído así, resignarse sería saltarse la primera pregunta y dar por inmutable lo que quizá no lo es, y luchar contra lo inmutable sería no soltar la resistencia que se añade. Es un andamio para pensar, no un método respaldado por los libros.",
+ "aplicacion": "Ante un problema que se repite, puede ayudar anotar en tres líneas qué parte es circunstancia, qué parte depende de uno y qué parte es queja o rumiación añadida. Lo que cambia, sobre todo, es el destino de la energía: en lugar de pelear con lo que no se mueve, ir hacia lo que sí admite acción. La primera pregunta merece tiempo y, a veces, otras personas, porque declarar algo inmutable es fácil y a veces erróneo, sobre todo si el obstáculo es colectivo. Nada de esto promete que el dolor desaparezca: en la lección de Watts, aceptar no hace desaparecer la tristeza, solo evita la lucha adicional contra la realidad.",
+ "cautelas": "Las revisiones críticas de las lecciones de Dalái Lama, Burnett y Evans, y Watts avisan del mismo riesgo: usar aceptar para justificar injusticias o daños evitables, o tratar como inmutable un problema estructural que sí podría cambiarse de forma colectiva. La de Irvine señala otro: la frontera entre lo interno y lo externo es más borrosa de lo que el marco supone, porque juicios y deseos están modelados por biología, historia y cultura. Nada de esto sustituye a un profesional de la salud mental: en duelo, trauma o sufrimiento intenso o persistente, conviene pedir ayuda cualificada.",
+ "esquemas": [
+  {
+   "tipo": "diagrama",
+   "plantilla": "comparar",
+   "titulo": "Lo dado y lo que se suma",
+   "pie": "Ordenación nuestra: cada autor usa sus propios términos y marcos.",
+   "datos": {
+    "izq": {
+     "t": "Lo que viene dado",
+     "tono": "mute",
+     "items": [
+      "Dalái Lama: envejecer, enfermar, perder",
+      "Burnett y Evans: circunstancia gravitacional",
+      "Irvine: lo que no depende de nosotros (aunque se puede actuar sobre lo externo)"
+     ]
+    },
+    "der": {
+     "t": "Lo que se suma",
+     "tono": "info",
+     "items": [
+      "Dalái Lama: juicio, rumiación y queja",
+      "Watts: resistencia a que el hecho sea así",
+      "Burnett y Evans: quejarse o pelear con ello"
+     ]
+    }
+   }
+  },
+  {
+   "tipo": "diagrama",
+   "plantilla": "matriz",
+   "titulo": "Aceptar no es resignarse",
+   "pie": "Ordenación nuestra. Aquí resignarse es dar por inmutable lo evitable, no el sentido que le da Watts.",
+   "datos": {
+    "celdas": [
+     {
+      "t": "Aceptar y redirigir",
+      "d": "Lo inmutable se acepta; la energía va a lo accionable",
+      "tono": "ok"
+     },
+     {
+      "t": "Actuar",
+      "d": "Lo cambiable se trabaja con lucidez",
+      "tono": "info"
+     },
+     {
+      "t": "Luchar contra lo inmutable",
+      "d": "Agota energía sin resultado",
+      "tono": "mal"
+     },
+     {
+      "t": "Resignarse ante lo evitable",
+      "d": "Riesgo que señalan las cautelas",
+      "tono": "mal"
+     }
+    ],
+    "ejeX": {
+     "nombre": "¿Se puede cambiar?",
+     "izq": "No",
+     "der": "Sí"
+    },
+    "ejeY": {
+     "nombre": "Mirada",
+     "arriba": "Con lucidez",
+     "abajo": "Sin ella"
+    }
+   }
+  },
+  {
+   "tipo": "diagrama",
+   "plantilla": "mapa",
+   "titulo": "Cuatro herramientas para un mismo problema",
+   "pie": "Cada libro ofrece su vía; combinarlas es lectura nuestra.",
+   "datos": {
+    "centro": "Aceptar sin rendirse",
+    "nodos": [
+     {
+      "t": "Dalái Lama",
+      "d": "Cambiar de perspectiva y anticipar"
+     },
+     {
+      "t": "Burnett y Evans",
+      "d": "Energía hacia lo accionable"
+     },
+     {
+      "t": "Irvine",
+      "d": "Esfuerzo en lo que depende de uno"
+     },
+     {
+      "t": "Watts",
+      "d": "Soltar la resistencia al hecho"
+     }
+    ]
+   }
+  },
+  {
+   "tipo": "diagrama",
+   "plantilla": "pasos",
+   "titulo": "Tres preguntas y un destino",
+   "pie": "Andamio nuestro: ningún autor propone esta secuencia.",
+   "datos": {
+    "pasos": [
+     {
+      "t": "¿Se puede cambiar?",
+      "d": "Si es razonable, es accionable; si no, circunstancia"
+     },
+     {
+      "t": "¿Qué parte depende de mí?",
+      "d": "Ahí se concentra el esfuerzo",
+      "tono": "info"
+     },
+     {
+      "t": "¿Qué resistencia añado?",
+      "d": "Ahí se afloja: queja, rumiación, lucha"
+     },
+     {
+      "t": "¿Adónde va ahora la energía?",
+      "d": "A lo que admite acción",
+      "tono": "ok"
+     }
+    ]
+   }
+  }
+ ],
+ "capsulas": [
+  {
+   "titulo": "Dos capas: lo dado y lo que se suma",
+   "esquema": 0,
+   "fuentes": [
+    "bfb29c00-d4be-4300-8870-934e44caccad",
+    "c42d28b2-895f-4fe4-8bfb-a38673b8a973",
+    "765b8c0d-402e-4bf3-b9a5-8ae3993cfa8c",
+    "0c63a757-fbb6-46ec-8c42-32f376b5588a"
+   ],
+   "texto": "Los libros dejan ver dos capas, aunque no todos con los mismos términos ni todos con las dos. La primera es lo dado: para el Dalái Lama, el envejecimiento, la enfermedad o la pérdida; para Burnett y Evans, una circunstancia gravitacional; para Irvine, lo que no depende de nosotros, aunque él aclara que sobre lo externo se puede actuar. La segunda es lo que se suma encima: para el Dalái Lama, el juicio, la rumiación y la queja; para Watts, la resistencia a que el hecho sea así; para Burnett y Evans, quejarse o pelear contra la circunstancia. Que coincidan desde tradiciones distintas es una convergencia, no un acuerdo entre ellos."
+  },
+  {
+   "titulo": "Aceptar no es resignarse: una pregunta previa",
+   "esquema": 1,
+   "fuentes": [
+    "c42d28b2-895f-4fe4-8bfb-a38673b8a973",
+    "bfb29c00-d4be-4300-8870-934e44caccad",
+    "0c63a757-fbb6-46ec-8c42-32f376b5588a",
+    "765b8c0d-402e-4bf3-b9a5-8ae3993cfa8c"
+   ],
+   "texto": "Los cuatro textos orientan la aceptación hacia la acción o la lucidez, no hacia quedarse quieto, y la matriz ayuda a ver por qué. Se cruzan dos preguntas: si el problema se puede cambiar y si se mira con lucidez. Con lucidez, lo inmutable se acepta y se redirige la energía, como proponen Burnett y Evans, y lo cambiable se trabaja. Sin ella aparecen dos errores: pelear contra lo inmutable, que según Burnett y Evans agota energía sin resultado, y resignarse ante lo evitable, riesgo que señalan las revisiones críticas de varias lecciones. La matriz y el sentido que aquí damos a resignarse son una ordenación nuestra, no un esquema de ningún autor."
+  },
+  {
+   "titulo": "Cuatro vías distintas hacia un mismo fin",
+   "esquema": 2,
+   "fuentes": [
+    "bfb29c00-d4be-4300-8870-934e44caccad",
+    "c42d28b2-895f-4fe4-8bfb-a38673b8a973",
+    "765b8c0d-402e-4bf3-b9a5-8ae3993cfa8c",
+    "0c63a757-fbb6-46ec-8c42-32f376b5588a"
+   ],
+   "texto": "Cada libro ofrece un mecanismo propio. El Dalái Lama propone mirar la desgracia desde varios ángulos y reconocer con antelación que las dificultades llegarán. Burnett y Evans, comprobar que el problema es gravitacional y dirigir la energía a lo accionable. Irvine, concentrar el esfuerzo en lo que depende de uno y, en lo que depende solo en parte, fijar el objetivo en el proceso y no en el resultado. Watts, dejar de añadir resistencia y entregarse a la experiencia, dolor incluido. Son vías distintas que pueden combinarse, pero esa combinación es lectura nuestra y no de los autores."
+  },
+  {
+   "titulo": "Tres preguntas para no confundir los casos",
+   "esquema": 3,
+   "fuentes": [
+    "c42d28b2-895f-4fe4-8bfb-a38673b8a973",
+    "765b8c0d-402e-4bf3-b9a5-8ae3993cfa8c",
+    "bfb29c00-d4be-4300-8870-934e44caccad",
+    "0c63a757-fbb6-46ec-8c42-32f376b5588a"
+   ],
+   "texto": "Una forma de ordenar lo que enseñan los cuatro, que es nuestra y no de ningún autor, son tres preguntas en cadena. Primero, si el problema se puede cambiar de forma razonable, que es el punto de partida de Burnett y Evans. Segundo, qué parte depende de uno, aunque sea solo en parte: la frontera de Irvine, con su zona parcial, y el actuar sobre lo que depende de nosotros que menciona el Dalái Lama. Tercero, qué resistencia se añade al hecho, la idea de Watts y también del Dalái Lama. Al final, la energía va a lo que admite acción. Saltarse la primera puede llevar a la resignación; no soltar la resistencia de la tercera, a una lucha inútil. Es un andamio, no un método avalado por los libros."
+  }
+ ],
+ "fuentes": [
+  {
+   "leccion_id": "bfb29c00-d4be-4300-8870-934e44caccad",
+   "libro": "The Art of Happiness",
+   "autor": "Dalai Lama, Howard C. Cutler",
+   "aporta": "Parte del dolor es inevitable; cambia la relación con él y el malestar añadido por la resistencia."
+  },
+  {
+   "leccion_id": "c42d28b2-895f-4fe4-8bfb-a38673b8a973",
+   "libro": "Designing Your Life",
+   "autor": "Bill Burnett, Dave Evans",
+   "aporta": "Los problemas gravitacionales se aceptan y la energía se dirige a lo accionable."
+  },
+  {
+   "leccion_id": "765b8c0d-402e-4bf3-b9a5-8ae3993cfa8c",
+   "libro": "A Guide to the Good Life",
+   "autor": "William B. Irvine",
+   "aporta": "La dicotomía del control: esfuerzo en lo que depende de uno, con una zona parcial y objetivos internalizados."
+  },
+  {
+   "leccion_id": "0c63a757-fbb6-46ec-8c42-32f376b5588a",
+   "libro": "La sabiduría de la inseguridad",
+   "autor": "Alan Watts",
+   "aporta": "Aceptar no es resignarse: es dejar de añadir al hecho la resistencia a que sea así."
+  }
+ ],
+ "preguntas": [
+  {
+   "texto": "Según el cruce, ¿qué comparten el Dalái Lama y Watts al hablar del sufrimiento ante lo inevitable?",
+   "opciones": [
+    "Sostienen que sufrir es un error que se corrige razonando mejor",
+    "Separan un dolor dado del malestar que se suma al resistirse",
+    "Aseguran que el dolor desaparece si se acepta con total convicción",
+    "Proponen sustituir el dolor por una meta que dependa solo de uno"
+   ],
+   "correcta": 1,
+   "explicacion": "El Dalái Lama habla del malestar añadido por resistirse y Watts de la resistencia que se suma al hecho. Ninguna de las dos lecciones promete que el dolor desaparezca: en la de Watts, aceptar no hace desaparecer la tristeza.",
+   "dificultad": 1,
+   "fuentes": [
+    "bfb29c00-d4be-4300-8870-934e44caccad",
+    "0c63a757-fbb6-46ec-8c42-32f376b5588a"
+   ]
+  },
+  {
+   "texto": "¿Cómo se diferencia la frontera de Burnett y Evans de la de Irvine?",
+   "opciones": [
+    "Ellos separan lo accionable de lo gravitacional; él, lo que depende de uno de lo que no",
+    "Ellos recomiendan resignarse ante todo problema; él exige actuar siempre sin excepción",
+    "Él separa lo accionable de lo gravitacional; ellos, lo que depende de uno de lo que no",
+    "Para ellos el control es total; para él no existe ninguna zona de control posible"
+   ],
+   "correcta": 0,
+   "explicacion": "Burnett y Evans distinguen problemas accionables y gravitacionales; Irvine, siguiendo a Epicteto, distingue lo que depende de nosotros de lo que no, y añade una zona parcial.",
+   "dificultad": 2,
+   "fuentes": [
+    "c42d28b2-895f-4fe4-8bfb-a38673b8a973",
+    "765b8c0d-402e-4bf3-b9a5-8ae3993cfa8c"
+   ]
+  },
+  {
+   "texto": "Alguien concluye que, como su problema es gravitacional, no hay nada que hacer. ¿Qué corrección apoya el cruce?",
+   "opciones": [
+    "Hay que reformular el problema hasta que deje de parecer gravitacional, cueste lo que cueste",
+    "Lo prudente es esperar a que la circunstancia cambie sola antes de decidir nada",
+    "Aceptar implica renunciar a todo deseo, porque querer algo siempre añade resistencia",
+    "Aceptar libera energía para lo accionable, y la indiferencia estoica no es pasividad"
+   ],
+   "correcta": 3,
+   "explicacion": "Para Burnett y Evans aceptar lo gravitacional sirve para dirigir la energía a lo accionable; Irvine aclara que su indiferencia no es pasividad y que se puede actuar sobre lo externo. Watts tampoco pide dejar de querer.",
+   "dificultad": 2,
+   "fuentes": [
+    "c42d28b2-895f-4fe4-8bfb-a38673b8a973",
+    "765b8c0d-402e-4bf3-b9a5-8ae3993cfa8c",
+    "0c63a757-fbb6-46ec-8c42-32f376b5588a"
+   ]
+  },
+  {
+   "texto": "¿Qué riesgo comparten las revisiones críticas de las lecciones de Watts y de Burnett y Evans sobre aceptar?",
+   "opciones": [
+    "Que se ignore cuánto modelan la biología y la cultura los juicios y deseos propios",
+    "Que se acepte demasiado poco el dolor y, por eso, termine intensificándose con el tiempo",
+    "Que se use para justificar injusticias o problemas estructurales que podrían cambiarse",
+    "Que dependa de una tradición religiosa concreta y no pueda generalizarse a otros lectores"
+   ],
+   "correcta": 2,
+   "explicacion": "Las dos revisiones críticas avisan de que aceptar puede servir para tolerar abusos o dar por inmutable lo que se podría cambiar de forma colectiva. El límite entre lo interno y lo externo es la crítica a la lección de Irvine; la de la lección del Dalái Lama señala además que el libro mezcla religión y psicología.",
+   "dificultad": 2,
+   "fuentes": [
+    "0c63a757-fbb6-46ec-8c42-32f376b5588a",
+    "c42d28b2-895f-4fe4-8bfb-a38673b8a973",
+    "bfb29c00-d4be-4300-8870-934e44caccad"
+   ]
+  },
+  {
+   "texto": "¿En qué se diferencia el tratamiento que da Irvine a lo que depende solo en parte de uno (un resultado, la reputación) del que dan Burnett y Evans a una circunstancia gravitacional?",
+   "opciones": [
+    "Irvine fija el objetivo en el proceso propio y mantiene el deseo del resultado; ellos aceptan y dirigen la energía a lo accionable",
+    "Irvine pide aceptar el resultado sin esfuerzo alguno, como algo gravitacional; ellos piden fijar el objetivo en el proceso propio y no en el resultado",
+    "Irvine pide dejar de desear el resultado por completo; ellos piden seguir luchando contra la circunstancia hasta vencerla",
+    "Ambos piden esperar a que el resultado se conozca antes de fijar ningún objetivo propio ni dirigir la energía"
+   ],
+   "correcta": 0,
+   "explicacion": "Burnett y Evans aceptan lo gravitacional y dirigen la energía a lo accionable. Irvine añade una zona intermedia, como los resultados o la reputación, y propone el objetivo internalizado: el resultado sigue siendo deseado, pero ya no condiciona la tranquilidad. Compararlos así es lectura nuestra.",
+   "dificultad": 3,
+   "fuentes": [
+    "765b8c0d-402e-4bf3-b9a5-8ae3993cfa8c",
+    "c42d28b2-895f-4fe4-8bfb-a38673b8a973"
+   ]
+  }
+ ]
+}

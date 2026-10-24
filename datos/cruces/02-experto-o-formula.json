@@ -1,0 +1,291 @@
+{
+ "titulo": "¿Experto o fórmula? Cuándo fiarte de quien sabe",
+ "pregunta_generadora": "Cuando tienes que decidir sobre algo incierto (contratar, diagnosticar, invertir), ¿cuándo conviene fiarse del juicio de un experto y cuándo de una regla o un modelo?",
+ "tipo": "tension",
+ "autores_convocados": [
+  "Paul Meehl",
+  "Philip E. Tetlock",
+  "Nassim Nicholas Taleb",
+  "Nate Silver"
+ ],
+ "libros_referenciados": [
+  "Clinical Versus Statistical Prediction",
+  "Expert Political Judgment",
+  "El Cisne Negro",
+  "The Signal and the Noise"
+ ],
+ "cuerpo": "Cuando hay que decidir con incertidumbre, la tentación natural es fiarse de quien más sabe. Cuatro libros de la biblioteca ponen a prueba esa confianza y, leídos juntos, la convierten en una pregunta más fina que si alguien es experto o no.\n\nTetlock midió a expertos con predicciones concretas. En conjunto, apenas superaron estrategias muy simples: lo hicieron algo mejor que una persona sin formación especial, pero peor que modelos estadísticos sencillos, como extrapolar la tendencia reciente o suponer que todo seguirá igual. Pasado cierto nivel, más especialización no mejoraba el acierto y a veces lo empeoraba, sobre todo en previsiones a largo plazo dentro del propio campo. Aun así, había diferencias grandes entre expertos, y dependían de su forma de pensar, no de la ideología, la profesión o el acceso a información reservada. Él mismo advierte de que el resultado no prueba que el experto sea inútil: su saber sirve para entender y explicar, aunque no para predecir eventos complejos.\n\nLa lección sobre Meehl recoge una síntesis posterior, la de Kahneman y Klein, que da una condición: la ventaja de la fórmula depende del régimen de feedback en el que se formó el experto. Con feedback rápido, frecuente y claro (ajedrez, bomberos, urgencias en cuadros agudos), la pericia es genuina y puede igualar o superar a la fórmula. Con feedback lento o ambiguo, aparece confianza sin competencia y la fórmula suele ganar. La nota de esa lección añade un matiz: que exista feedback es necesario, pero no suficiente; también hace falta la disciplina de procesarlo.\n\nSilver aporta una métrica: la calibración, que mide si la confianza expresada coincide con la frecuencia real de acierto. Según su lección, los meteorólogos están entre los mejor calibrados porque reciben feedback diario, mientras que analistas políticos y economistas lo están peor, en parte por expresar más confianza de la que la evidencia justifica. Pero la corrección que añade su lección avisa de que la calibración es específica de cada dominio, no un rasgo fijo de la persona.\n\nTaleb añade un mecanismo distinto: el saber que hace experto a alguien, el dominio de la muestra histórica, lo ciega ante lo que queda fuera de ella. Y señala que las instituciones suelen premiar la confianza más que la calibración. La corrección que añade su lección, sin embargo, recuerda que su crítica es selectiva y que no ofrece criterios claros de cuándo sí fiarse.\n\nVerlo junto sugiere, como lectura nuestra, que elegir entre experto y fórmula no se resuelve con credenciales, sino mirando el entorno en el que ese experto aprendió y se evalúa, y también cómo piensa y si su confianza se corresponde con sus aciertos.",
+ "convergencias": "Los cuatro libros desconfían de que saber mucho o hablar con seguridad garanticen acertar. Tetlock encuentra que saber mucho no garantiza predecir mejor; la lección sobre Meehl separa la pericia genuina de la confianza sin competencia según el feedback; Silver sostiene que importa más que la confianza expresada se corresponda con los aciertos reales; y Taleb sostiene que el saber del experto puede aumentar su confianza a la vez que su ceguera. Coinciden, desde ángulos distintos (la medición de resultados, el aprendizaje, la calibración y los límites de la muestra), en que ni el saber ni la seguridad con la que alguien habla bastan por sí solos para decidir cuánto fiarse.",
+ "divergencias": "No dan el mismo porqué ni la misma salida. Para la síntesis recogida en la lección de Meehl, el problema es el entorno de aprendizaje: donde el feedback es válido, el experto puede ganar. Para Silver, lo decisivo es que la confianza expresada coincida con los aciertos reales; la corrección que su lección añade es que esa calibración es específica de cada dominio y requiere práctica deliberada con feedback en él. Taleb, según su lección, es más escéptico: en un terreno de extremos auténtico, cree que ningún entrenamiento supera la opacidad del sistema. Esa misma lección atribuye a Tetlock, pero en Superforecasting y no en el estudio de Expert Political Judgment, la creencia de que un entrenamiento adecuado puede mejorar la predicción. Además, según la nota de la lección de Taleb, su crítica es selectiva y la frontera entre terrenos (Mediocristán y Extremistán) es ambigua en los casos límite; y en la lección sobre su estudio, Tetlock insiste en que su resultado no vuelve inútil al experto.",
+ "lectura_cruzada": "Leídos juntos, una forma de ordenarlo es pasar de la pregunta cuánto sabe a cuatro preguntas sucesivas: si su entorno le da feedback rápido y claro, si de verdad procesa ese feedback, si hay constancia de que su confianza se corresponde con sus aciertos en ese dominio concreto y si el terreno admite sorpresas que ninguna muestra pasada contiene. Esta secuencia es una ordenación nuestra: ningún autor la propone así. Sirve para ver que las cuatro miradas explican fallos distintos y actúan en capas diferentes, aunque Tetlock y Taleb discrepan, según la lección de Taleb, sobre si el problema tiene arreglo, y para decidir cuánto peso dar a la fórmula y cuánto al juicio.",
+ "aplicacion": "Antes de fiarte de alguien, pregunta por su entorno más que por sus credenciales: cuánto tarda en saber si se equivocó, si guarda registro de sus previsiones y si ha acertado en ese tipo de decisión, no en otra cercana. Donde la respuesta sea poco favorable, una regla simple y aplicada de forma consistente puede ser un buen punto de partida, y el juicio experto puede servir para entender y explicar el caso. Y en terrenos donde pueden ocurrir sorpresas fuera de lo visto, una conclusión razonable nuestra (no de las lecciones) es no apostar todo a una previsión precisa. Esto ordena la duda; no promete acertar más.",
+ "cautelas": "Según algunos críticos recogidos en la lección de Tetlock, sus comparaciones con algoritmos dependen de cómo se definen las preguntas; la tesis de Taleb es discutida y selectiva. Según la corrección de la lección de Silver, la calibración no es un rasgo estable. El criterio del feedback es útil, pero no exhaustivo. Si la decisión afecta a tu salud o a tu dinero, esto no sustituye la opinión de un profesional cualificado.",
+ "esquemas": [
+  {
+   "tipo": "diagrama",
+   "plantilla": "mapa",
+   "titulo": "Cuatro miradas sobre el juicio experto",
+   "pie": "Tetlock da el resultado; los otros tres, mecanismos. La síntesis de Kahneman y Klein figura en la lección de Meehl.",
+   "datos": {
+    "centro": "Juicio experto",
+    "nodos": [
+     {
+      "t": "Tetlock: apenas supera reglas simples"
+     },
+     {
+      "t": "Kahneman y Klein: feedback lento"
+     },
+     {
+      "t": "Silver: confianza mayor que aciertos"
+     },
+     {
+      "t": "Taleb: ciego a lo fuera de la muestra"
+     }
+    ]
+   }
+  },
+  {
+   "tipo": "diagrama",
+   "plantilla": "pasos",
+   "titulo": "Cuatro preguntas antes de fiarte del experto",
+   "pie": "Ordenación nuestra; ningún autor propone esta secuencia.",
+   "datos": {
+    "pasos": [
+     {
+      "t": "¿Hay feedback rápido y claro?",
+      "d": "Sabe pronto y sin ambigüedad si se equivocó"
+     },
+     {
+      "t": "¿Procesa ese feedback?",
+      "d": "Revisa sus errores en vez de olvidarlos"
+     },
+     {
+      "t": "¿Está calibrado en este dominio?",
+      "d": "Su confianza coincide con sus aciertos en esto"
+     },
+     {
+      "t": "¿Admite sorpresas inéditas?",
+      "d": "Un terreno de extremos fuera de la muestra",
+      "tono": "info"
+     }
+    ]
+   }
+  },
+  {
+   "tipo": "diagrama",
+   "plantilla": "comparar",
+   "titulo": "Tetlock y Taleb: ¿tiene arreglo?",
+   "pie": "Primer ítem de Tetlock y ítem de Taleb, según la lección de Taleb; el resto de Tetlock, de Expert Political Judgment.",
+   "datos": {
+    "izq": {
+     "t": "Tetlock",
+     "tono": "info",
+     "items": [
+      "Según Taleb, cree que el entrenamiento mejora la predicción (Superforecasting)",
+      "La diferencia está en cómo piensan",
+      "El saber del experto explica, aunque no prediga"
+     ]
+    },
+    "der": {
+     "t": "Taleb",
+     "tono": "info",
+     "items": [
+      "El saber del experto sobre el pasado lo ciega fuera de la muestra",
+      "Según su lección, ningún entrenamiento supera ese límite",
+      "Su crítica es selectiva, según su lección"
+     ]
+    }
+   }
+  },
+  {
+   "tipo": "diagrama",
+   "plantilla": "espectro",
+   "titulo": "El feedback del dominio y la pericia",
+   "pie": "Posiciones orientativas, no una medición; la calibración es específica de cada dominio.",
+   "datos": {
+    "polos": [
+     "Feedback lento o difuso",
+     "Feedback rápido y claro"
+    ],
+    "tonoA": "mal",
+    "tonoB": "ok",
+    "marcas": [
+     {
+      "pos": 0.07,
+      "t": "Predicción política",
+      "d": "El evento ocurre o no, pero quizá por razones distintas a las del experto",
+      "tono": "mal"
+     },
+     {
+      "pos": 0.3,
+      "t": "Psicoterapia a largo plazo",
+      "d": "Mejora por terapia, tiempo u otros factores",
+      "tono": "mal"
+     },
+     {
+      "pos": 0.8,
+      "t": "Urgencias en cuadros agudos",
+      "d": "Feedback validador, según la lección sobre Meehl",
+      "tono": "ok"
+     },
+     {
+      "pos": 0.95,
+      "t": "Meteorología",
+      "d": "Feedback diario y sistemático",
+      "tono": "ok"
+     }
+    ]
+   }
+  }
+ ],
+ "capsulas": [
+  {
+   "titulo": "Cuatro miradas, no una sola tesis",
+   "texto": "Los libros no dan una única lectura de por qué el juicio experto falla a veces. Tetlock constata el resultado: medidos con predicciones concretas, los expertos apenas superaron estrategias sencillas. La lección sobre Meehl, con la síntesis de Kahneman y Klein, apunta al aprendizaje: sin feedback rápido y claro se genera confianza sin competencia. Silver mira la calibración: si la confianza expresada coincide con los aciertos reales. Taleb señala la ceguera: el saber sobre el pasado no contiene lo que queda fuera de la muestra. Son miradas distintas, y verlas lado a lado evita convertirlas en la simple idea de que los expertos no sirven.",
+   "esquema": 0,
+   "fuentes": [
+    "c939b497-a9c3-491c-9b49-98590e89fa23",
+    "a0a7429e-d91a-4ac0-9880-7faa5d762f86",
+    "0824a9bd-d49a-4c91-ac72-fdf49304fe16",
+    "571b7a45-65e8-4ee4-8de9-5455a7ca3058"
+   ]
+  },
+  {
+   "titulo": "Pregunta por el entorno, no por las credenciales",
+   "texto": "La lección sobre Meehl propone cambiar la pregunta: en vez de mirar credenciales o años de experiencia, preguntar si el experto recibe corrección rápida y precisa de sus errores. Si la recibe, su intuición probablemente es valiosa; si no, conviene preferir una fórmula simple. La corrección de esa lección añade que el feedback es necesario, pero no suficiente: hace falta además la disciplina de procesarlo. Silver aporta la comprobación de que la confianza coincide con los aciertos; la corrección de su lección precisa que esa comprobación ha de hacerse en ese dominio concreto. Las cuatro preguntas del esquema, en ese orden, son una ordenación nuestra que combina ambas ideas con la de Taleb sobre sorpresas inéditas.",
+   "esquema": 1,
+   "fuentes": [
+    "a0a7429e-d91a-4ac0-9880-7faa5d762f86",
+    "0824a9bd-d49a-4c91-ac72-fdf49304fe16",
+    "571b7a45-65e8-4ee4-8de9-5455a7ca3058"
+   ]
+  },
+  {
+   "titulo": "Tetlock y Taleb: mismo diagnóstico, distinta salida",
+   "texto": "Según la lección de Taleb, él y Tetlock (tal como aparece en Superforecasting, no en Expert Political Judgment) comparten el diagnóstico de que los expertos pronostican mal en terrenos de extremos, pero difieren en la solución. Esa lección atribuye a Tetlock la creencia de que un entrenamiento adecuado, probabilístico, calibrado y con feedback rápido, puede mejorar la predicción incluso en dominios difíciles. Taleb, en cambio, sostiene que en un terreno de extremos auténtico ninguna cantidad de entrenamiento supera la opacidad del sistema. En la lección de Tetlock sobre su estudio, además, el resultado no vuelve inútil al experto: su saber sirve para entender y explicar. Es una tensión abierta, y la corrección de la lección de Taleb recuerda que su crítica es selectiva.",
+   "esquema": 2,
+   "fuentes": [
+    "571b7a45-65e8-4ee4-8de9-5455a7ca3058",
+    "c939b497-a9c3-491c-9b49-98590e89fa23"
+   ]
+  },
+  {
+   "titulo": "El mismo experto no es fiable en todas partes",
+   "texto": "Silver sostiene, según su lección, que los meteorólogos son de los pronosticadores mejor calibrados porque reciben feedback diario, mientras que analistas políticos y economistas lo están peor, en parte porque su feedback es difuso y tardío. La lección sobre Meehl da ejemplos parecidos: el ajedrez o las urgencias en cuadros agudos están del lado del feedback claro, y la psicoterapia a largo plazo o la predicción política, del lado opuesto. La corrección de la lección de Silver advierte de que la calibración es específica del dominio: un buen meteorólogo puede ser un mal pronosticador político. El esquema coloca algunos de esos ejemplos (no el ajedrez) a modo de orientación, no de medición.",
+   "esquema": 3,
+   "fuentes": [
+    "0824a9bd-d49a-4c91-ac72-fdf49304fe16",
+    "a0a7429e-d91a-4ac0-9880-7faa5d762f86"
+   ]
+  }
+ ],
+ "fuentes": [
+  {
+   "leccion_id": "a0a7429e-d91a-4ac0-9880-7faa5d762f86",
+   "libro": "Clinical Versus Statistical Prediction",
+   "autor": "Paul Meehl",
+   "aporta": "Recoge la síntesis que condiciona la ventaja de la fórmula al régimen de feedback en que se formó el experto."
+  },
+  {
+   "leccion_id": "c939b497-a9c3-491c-9b49-98590e89fa23",
+   "libro": "Expert Political Judgment",
+   "autor": "Philip E. Tetlock",
+   "aporta": "Medidos con predicciones concretas, los expertos apenas superan reglas simples, y la diferencia está en cómo piensan."
+  },
+  {
+   "leccion_id": "571b7a45-65e8-4ee4-8de9-5455a7ca3058",
+   "libro": "El Cisne Negro",
+   "autor": "Nassim Nicholas Taleb",
+   "aporta": "El saber del experto sobre la muestra histórica lo ciega ante eventos fuera de ella; su crítica es selectiva."
+  },
+  {
+   "leccion_id": "0824a9bd-d49a-4c91-ac72-fdf49304fe16",
+   "libro": "The Signal and the Noise",
+   "autor": "Nate Silver",
+   "aporta": "La calibración mide cuánto fiarse de un pronosticador; la corrección de su lección la ve específica del dominio, no un rasgo estable."
+  }
+ ],
+ "preguntas": [
+  {
+   "texto": "Un gestor lleva años pronosticando activos con mucha seguridad, pero nunca contrasta sus previsiones con lo ocurrido. ¿Qué concluye el cruce al combinar a Silver y la lección sobre Meehl?",
+   "opciones": [
+    "Que debe descartarse, porque los estudios demuestran que ningún experto sirve nunca para predecir nada",
+    "Que su seguridad no prueba competencia: sin feedback claro y procesado ni calibración comprobada, una fórmula simple merece más fe",
+    "Que no se puede evaluar, porque la calibración es un rasgo estable que nadie puede medir bien en la práctica",
+    "Que su experiencia compensa la falta de contraste, porque la pericia crece solo con los años de práctica acumulados"
+   ],
+   "correcta": 1,
+   "explicacion": "La lección sobre Meehl (síntesis de Kahneman y Klein) liga la pericia al feedback válido y a la disciplina de procesarlo; la de Silver pide comprobar que la confianza coincide con los aciertos. Sin feedback válido, la fórmula suele ganar. Ningún libro afirma que los expertos no valgan nunca para predecir.",
+   "dificultad": 1,
+   "fuentes": [
+    "a0a7429e-d91a-4ac0-9880-7faa5d762f86",
+    "0824a9bd-d49a-4c91-ac72-fdf49304fe16"
+   ]
+  },
+  {
+   "texto": "Un meteorólogo muy bien calibrado se pasa a pronosticar elecciones. ¿Qué anticipa combinar la corrección de la lección de Silver con el régimen de feedback de la lección sobre Meehl?",
+   "opciones": [
+    "Que fallará siempre, porque toda previsión electoral es aleatoria según demuestran los tres libros",
+    "Que mejorará, porque la política ofrece feedback diario y sistemático como el tiempo atmosférico",
+    "Que seguirá igual de calibrado, porque la calibración es un rasgo estable que se lleva a todas partes",
+    "Que su calibración no se traslada sin más, porque depende del dominio y del feedback que lo entrenó"
+   ],
+   "correcta": 3,
+   "explicacion": "La corrección de la lección de Silver dice que la calibración es específica del dominio, y la lección sobre Meehl liga la pericia al régimen de feedback. El feedback de la política es difuso y tardío, según Silver.",
+   "dificultad": 2,
+   "fuentes": [
+    "0824a9bd-d49a-4c91-ac72-fdf49304fe16",
+    "a0a7429e-d91a-4ac0-9880-7faa5d762f86"
+   ]
+  },
+  {
+   "texto": "Combinando la lección de Taleb con la de Tetlock sobre su estudio, ¿cómo se relacionan sus posturas sobre el experto en terrenos de extremos?",
+   "opciones": [
+    "Comparten el diagnóstico de que el experto predice mal en extremos; Tetlock cree, según la lección de Taleb, que el entrenamiento puede mejorar la predicción, y Taleb, que ningún entrenamiento supera la opacidad del sistema",
+    "Tetlock defiende que el juicio experto supera siempre a la fórmula en cualquier terreno, mientras que Taleb defiende que la fórmula supera siempre al juicio experto, incluso con feedback válido",
+    "Taleb sostiene que el entrenamiento probabilístico resuelve el problema del experto en cualquier terreno, mientras que Tetlock descarta todo valor de su saber, incluso para explicar",
+    "Ambos concluyen que los expertos son inútiles en cualquier tarea y que la diferencia entre ellos depende solo de su ideología, de su profesión o de su acceso a información reservada"
+   ],
+   "correcta": 0,
+   "explicacion": "Tetlock advierte de que su resultado no prueba que el experto sea inútil: su saber sirve para entender y explicar. La lección de Taleb recoge el diagnóstico compartido y su tesis de que ningún entrenamiento supera la opacidad de un terreno de extremos auténtico, frente a la creencia que atribuye a Tetlock (en Superforecasting) de que un entrenamiento adecuado puede mejorar la predicción.",
+   "dificultad": 2,
+   "fuentes": [
+    "571b7a45-65e8-4ee4-8de9-5455a7ca3058",
+    "c939b497-a9c3-491c-9b49-98590e89fa23"
+   ]
+  },
+  {
+   "texto": "Aunque el feedback fuese rápido, ¿qué problema añadiría Taleb que no explican ni el régimen de feedback de la síntesis de Kahneman y Klein ni la calibración de Silver?",
+   "opciones": [
+    "Que los mercados y los medios premian al experto prudente y castigan al que expresa mucha seguridad",
+    "Que el feedback rápido y claro genera correlaciones espurias, de modo que la fórmula gana igualmente",
+    "Que su modelo, construido con datos del pasado, no contiene los eventos que quedan fuera de la muestra",
+    "Que en Mediocristán las predicciones expertas son esencialmente aleatorias, por lo que conviene desconfiar"
+   ],
+   "correcta": 2,
+   "explicacion": "Es el problema de la episteme en la lección de Taleb: el modelo del experto se construye con datos del pasado, que no contienen los eventos fuera de la muestra. Con feedback rápido y claro la pericia puede ser genuina (lección sobre Meehl), así que B es falsa. La paradoja institucional de Taleb va en sentido contrario a A: el sistema premia la confianza, no la prudencia. D falsea a Taleb, cuyo problema está en Extremistán.",
+   "dificultad": 3,
+   "fuentes": [
+    "571b7a45-65e8-4ee4-8de9-5455a7ca3058",
+    "a0a7429e-d91a-4ac0-9880-7faa5d762f86",
+    "0824a9bd-d49a-4c91-ac72-fdf49304fe16"
+   ]
+  },
+  {
+   "texto": "¿Qué lectura del resultado de Tetlock es coherente con su propia lección y con la de Meehl?",
+   "opciones": [
+    "Su saber sirve para entender y explicar, y es fiable con feedback válido, pero no basta para predecir lo complejo",
+    "Las credenciales y los años de experiencia son la mejor guía para elegir en qué experto confiar ante una decisión",
+    "Los expertos son inútiles en cualquier tarea, pues no superaron en nada a un chimpancé que lanzara dardos al azar",
+    "La ideología del experto explica casi toda la diferencia de acierto, de modo que basta con elegir bien el bando"
+   ],
+   "correcta": 0,
+   "explicacion": "Tetlock insiste en que el resultado no prueba que el experto sea inútil, y las diferencias no dependían de ideología ni profesión. La síntesis de Kahneman y Klein, recogida en la lección sobre Meehl, matiza que con feedback válido el experto puede igualar a la fórmula.",
+   "dificultad": 2,
+   "fuentes": [
+    "c939b497-a9c3-491c-9b49-98590e89fa23",
+    "a0a7429e-d91a-4ac0-9880-7faa5d762f86"
+   ]
+  }
+ ]
+}

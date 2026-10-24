@@ -3106,24 +3106,36 @@ function irALeccionDesdeCorpus(leccionId) {
 ═══════════════════════════════════════════ */
 let ensayosCache = [];
 
+const escAttr = s => esc(s).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+const CRUCE_TIPOS = {
+  convergencia: { ico: '🤝', txt: 'Convergencia', sub: 'Autores lejanos que llegan a lo mismo' },
+  tension: { ico: '⚖️', txt: 'Tensión', sub: 'Autores que se contradicen o se matizan' },
+  complementariedad: { ico: '🧩', txt: 'Complementariedad', sub: 'Piezas de un mismo mecanismo' }
+};
+
 async function renderEnsayos() {
   const grid = document.getElementById('ensayos-grid');
   if (!grid) return;
   grid.innerHTML = '<div class="skeleton sk-card"></div><div class="skeleton sk-card"></div>';
   try {
     if (!ensayosCache.length) {
-      const r = await fetch(`${SB_URL}/rest/v1/articulos?select=*&order=created_at.desc`, {
+      const r = await fetch(`${SB_URL}/rest/v1/articulos?select=*&publico=eq.true&order=created_at.desc`, {
         headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` }
       });
       ensayosCache = await r.json();
+      if (!Array.isArray(ensayosCache)) ensayosCache = [];
     }
     if (!ensayosCache.length) {
       grid.innerHTML = '<div class="empty">No hay ensayos disponibles todavía.</div>';
       return;
     }
-    grid.innerHTML = ensayosCache.map(a => `
+    grid.innerHTML = ensayosCache.map(a => {
+      const t = CRUCE_TIPOS[a.tipo];
+      const nLib = (a.libros_referenciados || []).length;
+      return `
       <div class="ensayo-card" onclick="verEnsayo('${a.id}')">
         <div class="ensayo-card-header">
+          ${t ? `<span class="cruce-tipo" title="${esc(t.sub)}">${t.ico} ${t.txt}</span>` : ''}
           <h2 class="ensayo-card-titulo">${esc(a.titulo)}</h2>
           <p class="ensayo-card-pregunta">${esc(a.pregunta_generadora)}</p>
         </div>
@@ -3131,76 +3143,117 @@ async function renderEnsayos() {
           <div class="ensayo-autores">
             ${(a.autores_convocados||[]).map(au=>`<span class="ensayo-autor-badge">${esc(au)}</span>`).join('')}
           </div>
-          <span class="ensayo-meta">${(a.autores_convocados||[]).length} autores</span>
+          <span class="ensayo-meta">${nLib ? nLib + ' libros · ' : ''}${(a.esquemas||[]).length ? (a.esquemas.length + ' esquemas') : (a.autores_convocados||[]).length + ' autores'}</span>
         </div>
-      </div>
-    `).join('');
-  } catch(e) {
+      </div>`;
+    }).join('');
+  } catch (e) {
     grid.innerHTML = '<div class="empty">Error cargando ensayos.</div>';
-    console.error(e);
   }
 }
 
-function nl2br(s){ return (s||'').split('\n').join('<br>'); }
+/** Esquema + texto corto de cada cápsula; los esquemas que ninguna cápsula usa van al final. */
+function cruceCapsulasHtml(a) {
+  const esq = Array.isArray(a.esquemas) ? a.esquemas : [];
+  const caps = Array.isArray(a.capsulas) ? a.capsulas : [];
+  const fuentes = Array.isArray(a.fuentes) ? a.fuentes : [];
+  const usados = new Set();
+  const chips = ids => (ids || []).map(id => {
+    const f = fuentes.find(x => x.leccion_id === id);
+    return f ? `<button class="cruce-fuente-chip" onclick="verLeccion('${escAttr(id)}')" title="${escAttr(f.aporta || '')}">${esc(f.libro)}</button>` : '';
+  }).join('');
+  const fig = i => (typeof Diagrama !== 'undefined' && esq[i]) ? Diagrama.render(esq[i]) : '';
+  let h = caps.map((c, k) => {
+    usados.add(c.esquema);
+    return `<section class="cruce-capsula">
+      <div class="cruce-capsula-num">${k + 1}</div>
+      <h3 class="cruce-capsula-titulo">${esc(c.titulo)}</h3>
+      ${fig(c.esquema)}
+      <p class="cruce-capsula-texto">${esc(c.texto)}</p>
+      <div class="cruce-capsula-fuentes"><span>De:</span>${chips(c.fuentes)}</div>
+    </section>`;
+  }).join('');
+  esq.forEach((_, i) => { if (!usados.has(i)) h += `<section class="cruce-capsula">${fig(i)}</section>`; });
+  return h;
+}
+
+function cruceSeccion(titulo, cuerpo, { abierta = false, cls = '', nota = '' } = {}) {
+  if (!cuerpo) return '';
+  return `
+    <div class="ensayo-section ${cls}${abierta ? ' expanded' : ''}">
+      <div class="ensayo-section-header" onclick="toggleEnsayoSection(this)">
+        <span>${titulo}</span><span class="ensayo-toggle">${abierta ? '▲' : '▼'}</span>
+      </div>
+      <div class="ensayo-section-body" style="display:${abierta ? 'block' : 'none'}">
+        ${nota ? `<div class="ensayo-sintesis-nota">${nota}</div>` : ''}
+        <div class="ensayo-body-text">${esc(cuerpo).replace(/\n/g, '<br>')}</div>
+      </div>
+    </div>`;
+}
+
+function crucePreguntasHtml(a) {
+  const ps = Array.isArray(a.preguntas) ? a.preguntas : [];
+  if (!ps.length) return '';
+  return `<div class="cruce-bloque">
+    <h3 class="cruce-bloque-titulo">Comprueba que lo has fijado</h3>
+    ${ps.map((p, i) => `
+      <div class="cruce-pregunta" data-i="${i}">
+        <p class="cruce-pregunta-texto">${esc(p.texto)}</p>
+        <div class="cruce-opciones">
+          ${(p.opciones || []).map((o, k) => `<button class="cruce-opcion" onclick="cruceResponder('${a.id}',${i},${k},this)">${esc(o)}</button>`).join('')}
+        </div>
+        <div class="cruce-explicacion" style="display:none"></div>
+      </div>`).join('')}
+  </div>`;
+}
+
+function cruceResponder(id, i, k, btn) {
+  const a = ensayosCache.find(x => x.id === id);
+  const p = a && a.preguntas && a.preguntas[i];
+  const cont = btn.closest('.cruce-pregunta');
+  if (!p || !cont || cont.dataset.resuelta) return;
+  cont.dataset.resuelta = '1';
+  cont.querySelectorAll('.cruce-opcion').forEach((b, n) => {
+    b.disabled = true;
+    if (n === p.correcta) b.classList.add('ok');
+    else if (n === k) b.classList.add('mal');
+  });
+  const ex = cont.querySelector('.cruce-explicacion');
+  ex.innerHTML = (k === p.correcta ? '<strong>Correcto.</strong> ' : '<strong>No exactamente.</strong> ') + esc(p.explicacion || '');
+  ex.style.display = 'block';
+  if (typeof track === 'function') track('cruce_pregunta', { cruce: id, i, ok: k === p.correcta });
+}
 
 function verEnsayo(id) {
   const a = ensayosCache.find(x => x.id === id);
   if (!a) return;
+  const t = CRUCE_TIPOS[a.tipo];
+  const fuentes = Array.isArray(a.fuentes) ? a.fuentes : [];
   const cont = document.getElementById('ensayo-contenido');
   cont.innerHTML = `
     <div class="ensayo-detail">
       <div class="ensayo-pregunta-hero">
-        <span class="ensayo-pregunta-label">Pregunta generadora</span>
+        <span class="ensayo-pregunta-label">${t ? t.ico + ' ' + t.txt + ' · ' : ''}Pregunta generadora</span>
         <h1 class="ensayo-detail-titulo">${esc(a.titulo)}</h1>
         <p class="ensayo-detail-pregunta">${esc(a.pregunta_generadora)}</p>
         <div class="ensayo-autores" style="margin-top:1rem">
           ${(a.autores_convocados||[]).map(au=>`<span class="ensayo-autor-badge clickable" data-autor="${esc(au)}" onclick="filtrarPorAutorDesdeEnsayo(this.dataset.autor)" title="Ver libros de ${esc(au)}">${esc(au)}</span>`).join('')}
         </div>
       </div>
-      <div class="ensayo-section expanded">
-        <div class="ensayo-section-header" onclick="toggleEnsayoSection(this)">
-          <span><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Ensayo</span><span class="ensayo-toggle">▲</span>
-        </div>
-        <div class="ensayo-section-body">
-          <div class="ensayo-body-text">${(a.cuerpo||'').replace(/\n/g,'<br>')}</div>
-        </div>
-      </div>
-      <div class="ensayo-section">
-        <div class="ensayo-section-header" onclick="toggleEnsayoSection(this)">
-          <span>🤝 Convergencias</span><span class="ensayo-toggle">▼</span>
-        </div>
-        <div class="ensayo-section-body" style="display:none">
-          <div class="ensayo-body-text">${(a.convergencias||'—').replace(/\n/g,'<br>')}</div>
-        </div>
-      </div>
-      <div class="ensayo-section">
-        <div class="ensayo-section-header" onclick="toggleEnsayoSection(this)">
-          <span>⚡ Divergencias</span><span class="ensayo-toggle">▼</span>
-        </div>
-        <div class="ensayo-section-body" style="display:none">
-          <div class="ensayo-body-text">${(a.divergencias||'—').replace(/\n/g,'<br>')}</div>
-        </div>
-      </div>
-      <div class="ensayo-section ensayo-sintesis">
-        <div class="ensayo-section-header" onclick="toggleEnsayoSection(this)">
-          <span>💎 Síntesis Original</span><span class="ensayo-toggle">▼</span>
-        </div>
-        <div class="ensayo-section-body" style="display:none">
-          <div class="ensayo-sintesis-nota">Esta síntesis es tu elaboración personal — no la de los autores</div>
-          <div class="ensayo-body-text">${(a.sintesis_original||'—').replace(/\n/g,'<br>')}</div>
-        </div>
-      </div>
-      <div class="ensayo-section">
-        <div class="ensayo-section-header" onclick="toggleEnsayoSection(this)">
-          <span>🎯 Aplicación Práctica</span><span class="ensayo-toggle">▼</span>
-        </div>
-        <div class="ensayo-section-body" style="display:none">
-          <div class="ensayo-body-text">${(a.aplicacion||'—').replace(/\n/g,'<br>')}</div>
-        </div>
-      </div>
+      ${cruceCapsulasHtml(a)}
+      ${cruceSeccion('<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Ensayo', a.cuerpo, { abierta: !(a.capsulas && a.capsulas.length) })}
+      ${cruceSeccion('🤝 Convergencias', a.convergencias)}
+      ${cruceSeccion('⚡ Divergencias', a.divergencias)}
+      ${cruceSeccion('💎 Lectura cruzada', a.sintesis_original, { cls: 'ensayo-sintesis', nota: 'Es una ordenación nuestra de lo que dicen las lecciones, generada y verificada; no es tesis de los autores.' })}
+      ${cruceSeccion('🎯 Aplicación', a.aplicacion)}
+      ${cruceSeccion('⚠️ Qué está discutido', a.cautelas, { abierta: true, cls: 'cruce-cautelas' })}
+      ${fuentes.length ? `<div class="cruce-bloque"><h3 class="cruce-bloque-titulo">Lecciones de origen</h3>
+        ${fuentes.map(f => `<button class="cruce-fuente" onclick="verLeccion('${escAttr(f.leccion_id)}')"><strong>${esc(f.libro)}</strong><span>${esc(f.autor)} — ${esc(f.aporta)}</span></button>`).join('')}</div>` : ''}
+      ${crucePreguntasHtml(a)}
     </div>
   `;
   showView('ensayo-detalle');
+  if (typeof track === 'function') track('cruce_abierto', { cruce: id });
 }
 
 function toggleEnsayoSection(hdr) {

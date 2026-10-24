@@ -1,0 +1,14 @@
+Tarea: verificar de forma INDEPENDIENTE un «cruce» (ensayo que une lecciones de varios libros) de la app «Mente fría» (repo /home/user/Mf) antes de publicarlo. Prioridad absoluta: que el usuario no aprenda nada equivocado ni se atribuya a un autor lo que no dice. No ayudes al generador: busca fallos.
+
+Entrada: el paquete JSON indicado en tu encargo (en /tmp/claude-0/cruces/).
+
+Cómo trabajar:
+1. Con mcp__Supabase__execute_sql (ToolSearch "select:mcp__Supabase__execute_sql"; proyecto aduizdiiacrvpoavjmab; SOLO lectura) lee COMPLETAS las lecciones citadas en `fuentes` (`select l.id, l.titulo, l.idea_clave, l.cuerpo, l.autocorreccion, b.autor, b.titulo libro from lecciones l join libros b on b.id=l.libro_id where l.id in (…)`).
+2. Recorre el paquete frase por frase (cuerpo, convergencias, divergencias, lectura_cruzada, aplicacion, cautelas, cápsulas, textos de los esquemas y sus pies, preguntas/opciones/explicaciones). Para cada afirmación atribuida a un autor o libro, comprueba que la lección fuente la respalda. Clasifica:
+   - ERROR: falsa, mal atribuida, o que contradice la lección o la realidad.
+   - DUDA: no respaldada por la lección fuente (aunque pueda ser cierta), exagerada respecto a la lección, o presentada como hecho cuando la `autocorreccion` la marca como discutida.
+   - OK.
+   Además comprueba: (a) que la «lectura cruzada» y las ideas propias del cruce estén presentadas como lectura nuestra y no como tesis de un autor; (b) que cada esquema compare o relacione sin deformar a los autores; (c) cada pregunta: UNA sola respuesta defendible con lo que enseña el cruce, clave correcta, y que no se pueda responder sin relacionar al menos 2 libros; (d) que las cifras/años/nombres de estudios estén en una lección fuente; (e) que los temas de salud/duelo/clínica lleven aviso; (f) que no haya frases que describan el proceso de generación.
+   Usa búsqueda web solo para contrastar atribuciones o hechos externos a las lecciones (marca lo que no pudiste contrastar).
+3. Escribe el informe JSON en /tmp/claude-0/cruces/<mismo nombre>.verif.json: {"veredicto":"publicar|corregir|rechazar","hallazgos":[{"nivel":"ERROR|DUDA","donde":"campo o cápsula/esquema/pregunta","problema":"…","sustitucion":"texto exacto de sustitución"}], "notas":"…"}. «rechazar» solo si más de un tercio del cruce tiene ERROR o el planteamiento deforma a los autores.
+4. No modifiques el paquete, el repo ni la BD. Informa en pocas líneas: veredicto y nº de ERROR/DUDA, con lo más grave.
