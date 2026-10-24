@@ -227,4 +227,4 @@ Los 7 libros de la sección «Cuarta tanda, hecha en otra sesión» (*Power*, *S
 
 **Patrones repetidos** (útiles para el generador): títulos y cuerpos con absolutos («siempre», «nunca»); conexiones cruzadas sin rotular o con tesis ajenas mal atribuidas; notas de la biblioteca presentadas como críticas del libro; distractores con absolutos que permiten acertar sin la lección; correcta más larga (el lint no lo detecta del todo). Los paquetes verificados que preparé antes de saber que ya estaban publicados (`/tmp/…/libros4/`) no se cargaron: los ids deterministas coinciden y `alta` no sobrescribe.
 
-**Pendiente:** los 33 diagramas y 7 mapas de esos libros los hizo la otra sesión sobre el texto anterior a la corrección; se revisan aparte.
+**Visuales:** los 33 diagramas y 7 mapas de esos libros (hechos por la otra sesión sobre el texto previo a la corrección) se revisaron contra el texto actual y se reescribieron todos: quitados absolutos y afirmaciones que la lección ya no hace, pies con la cautela de la autocorrección actual; caché v74.
