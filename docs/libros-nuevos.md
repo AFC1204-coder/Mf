@@ -192,3 +192,21 @@ Incorporados los 7 libros pendientes de la lista solicitada (los 3 restantes de 
 | Noah J. Goldstein, Steve J. Martin y Robert B. Cialdini | *Yes! 50 Scientifically Proven Ways to Be Persuasive* (2008) | 5 / 16 |
 
 **Visuales (2026-10-23):** 33 diagramas visuales (uno por lección) y 7 mapas conceptuales (uno por libro) integrados en `datos/diagramas.json` y `datos/mapas.json` con `tools/datos/agregar.mjs` (0 errores de validación).
+
+## Quinta entrega (2026-10-24): *Top Dog* y *Dirty Genes*
+
+Pedidos por el usuario. Pipeline completo: generador → lint → verificador independiente → corrector → segunda verificación con otro verificador → retoques → carga en borrador (`SIN_PUNTOCOMA=1 node tools/libros/a-sql.js … alta`, bloques de ≤12 KB) → comparación de huellas con 0 diferencias → publicación. Ambos con confianza **media**: ningún agente pudo abrir el texto de los libros (solo índices, reseñas, entrevistas y fuentes primarias de los estudios), y las lecciones lo dicen.
+
+| Autor | Libro | Eje / sub_eje | Lecciones / preguntas |
+|---|---|---|---|
+| Bronson y Merryman | *Top Dog: The Science of Winning and Losing* (2013) | Psicología y Conducta / Social | 6 / 18 |
+| Ben Lynch | *Dirty Genes* (2018) | Neurociencia y Biología / Biología y Longevidad | 6 / 18 |
+
+**Hallazgos de los verificadores que cambiaron el contenido**
+- *Dirty Genes*: un ERROR real. El borrador decía que los ensayos agrupados de vitaminas B no redujeron el ictus; la revisión Cochrane de 2017 halla una reducción pequeña (RR 0,90) y ninguna sobre infarto ni mortalidad. Además se reforzó el aviso sobre ácido fólico y embarazo (el CDC recomienda ácido fólico incluso con variantes de MTHFR) y se separó la deficiencia grave de MTHFR (rara, tratada por especialistas) de las variantes comunes. Sin dosis ni protocolos: la aplicación práctica es de pensamiento crítico.
+- *Top Dog*: se eliminó un contraste paracaidistas/bailarines que las propias fuentes contradicen, se corrigió un apellido (Zweigenhaft), se dejó de llamar «independiente» a un estudio con Jamieson como coautor, y el ejemplo de Kumar queda rotulado como de la biblioteca (no consta que el libro lo cite). La lección de los hermanos (L6) es la más débil: su base es la sinopsis editorial y no se localizó el capítulo; la lección lo dice.
+- Los dos: 11 de 18 preguntas de *Top Dog* tenían la correcta como opción más larga (el lint no lo detecta); se equilibraron.
+
+**Visuales:** 12 diagramas (uno por lección) y 2 mapas (uno por libro); caché del service worker v73.
+
+**Aviso de proceso:** la persuasión (7 libros) la incorporó otra sesión el 2026-10-23 con otra estructura y menos lecciones; mis paquetes verificados de esos 7 no se cargaron (los ids deterministas coinciden y `alta` no sobrescribe). Quedan pendientes de decisión del usuario.
