@@ -320,3 +320,26 @@ Triage de 136 libros de las dos listas del usuario: 52 ya estaban en la bibliote
 **Visuales:** 69 diagramas (uno por lección) y 10 mapas; caché del service worker v81.
 
 **Publicación de los cruces:** los 10 cruces (`articulos` con `tipo`) se publicaron en esta sesión tras la fusión del PR #29; los 11 ensayos antiguos de marzo siguen ocultos.
+
+## Décima entrega (2026-10-25): quinta tanda de las listas del usuario
+
+| Autor | Libro | Eje / sub_eje | Lecc. / preg. |
+|---|---|---|---|
+| Vance | *Suggestible You* | Neurociencia y Biología / Neurociencia | 5 / 15 |
+| Chancellor | *The Price of Time* | Economía y Mercados / Economía | 5 / 15 |
+| Tannen | *You Just Don't Understand* | Psicología y Conducta / Interpersonal | 5 / 15 |
+| Grant | *Hidden Potential* | Desarrollo Humano / Crecimiento Personal | 6 / 18 |
+| Rilke | *Cartas a un joven poeta* | Desarrollo Humano / Crecimiento Personal | 6 / 18 |
+| Eghbal | *Working in Public* | Economía y Mercados / Economía | 6 / 18 |
+| Panda | *The Circadian Code* | Neurociencia y Biología / Biología y Longevidad | 7 / 21 |
+| Sanders | *Every Patient Tells a Story* | Neurociencia y Biología / Biología y Longevidad | 6 / 18 |
+| Dawkins | *The Extended Phenotype* | Neurociencia y Biología / Biología y Longevidad | 7 / 23 |
+| Haselton | *Hormonal* | Neurociencia y Biología / Neurociencia | 5 / 15 |
+
+**Hallazgos de los verificadores que cambiaron el contenido** (con segunda verificación cuando hubo ERROR de contenido; *Hormonal* necesitó cuatro): *Letters to a Young Poet* decía que no se podía confirmar la publicación de las cartas de Kappus (las localizó Unglaub y se publicaron en alemán en 2019) y conectaba con autores fuera del corpus; *Working in Public* presentaba las «cuatro vías» como del libro (ahora «lectura nuestra»), atribuía a Benkler lo que Benkler ya decía sobre el coste de integración y llevaba una crítica de lectores que no se localiza; *Every Patient Tells a Story* hablaba de «medicina de familia norteamericana» (Marvel incluye Canadá), describía mal la reseña del JCI (Foster 2010) y daba por «aportó el diagnóstico» lo que Hampton llama «útil»; *The Extended Phenotype* atribuía a Dawkins y Krebs 1979 la tesis de las señales como manipulación (es de 1978); *The Circadian Code* decía 2010 para una valoración de la IARC hecha en 2007 y no recogía la publicación posterior, revisada por pares, del resumen de la AHA 2024; *Hormonal* describía mal los artefactos de Wood et al. 2014, las cifras de Arslan, la corrección de «2023», a Gangestad 2019 y el método de Haselton 2007 (las auditorías 2 y 3 se contradijeron en detalles finos, así que se redujo a afirmaciones generales que la cuarta auditoría confirmó); *Suggestible You*, *The Price of Time*, *You Just Don't Understand* y *Hidden Potential* solo tuvieron errores de forma y atribuciones suavizadas (p. ej. la «farmacia interna» pasa a imagen nuestra; d = 0,33 de las interrupciones intrusivas en lugar de «algo mayor»).
+
+**Cautelas que se mantienen:** no se pudo leer el texto de ninguno de los libros (reseñas, índices, fichas de editorial y resúmenes). Dos cifras o datos se declaran sin fuente primaria: los 18 s de Beckman y Frankel se retiraron; el título de la réplica de Woolley, Kim y Malone (2018) en *Hidden Potential* lo añadió un corrector sin que un verificador lo contraste. En *The Circadian Code* el 3,5 % del piloto de Gill y Panda solo consta en la nota de prensa del Salk. En *Working in Public* no se pudo leer la política de LLVM, solo citas. Nada de los asuntos personales de los autores entra en las lecciones.
+
+**Patrón repetido (otra vez):** la opción correcta más larga, explicaciones con «las otras opciones», distractores que imputaban hechos falsos a personas reales (Ostrom, Hull, Poulin, Gould y Lewontin), y correctores que reescribían con datos nuevos que luego había que volver a corregir (*Hormonal*).
+
+**Visuales:** 64 diagramas (uno por lección) y 10 mapas; caché del service worker v83.
