@@ -343,3 +343,48 @@ Triage de 136 libros de las dos listas del usuario: 52 ya estaban en la bibliote
 **Patrón repetido (otra vez):** la opción correcta más larga, explicaciones con «las otras opciones», distractores que imputaban hechos falsos a personas reales (Ostrom, Hull, Poulin, Gould y Lewontin), y correctores que reescribían con datos nuevos que luego había que volver a corregir (*Hormonal*).
 
 **Visuales:** 64 diagramas (uno por lección) y 10 mapas; caché del service worker v83.
+
+## Undécima entrega (2026-10-25): sexta tanda de las listas del usuario
+
+Los restantes de las tres listas del usuario que no estaban aparcados (20 libros: 109 lecciones, 333 preguntas). Siguen aparcados, como se acordó, *The Bitcoin Standard*, los dos de Rothbard, *Debt*, *The Almanack of Naval Ravikant*, *The Systems Bible*, *The Education of a Speculator* y *Beyond Self-Interest*, y la tanda B de unos 16 libros de salud, dieta y negocios con base anecdótica.
+
+| Autor | Libro | Eje / sub_eje | Lecc. / preg. |
+|---|---|---|---|
+| Cabane | *The Charisma Myth* | Psicología y Conducta / Interpersonal | 5 / 16 |
+| Lavingia | *The Minimalist Entrepreneur* | Economía y Mercados / Economía | 6 / 18 |
+| Chancellor (ed.) | *Capital Returns* | Economía y Mercados / Economía | 5 / 15 |
+| Hayek | *The Use of Knowledge in Society* | Economía y Mercados / Economía | 5 / 15 |
+| Sivers | *How to Live* | Desarrollo Humano / Crecimiento Personal | 4 / 12 |
+| Spector | *Spoon-Fed* | Neurociencia y Biología / Biología y Longevidad | 4 / 12 |
+| Thorp | *Beat the Dealer* | Economía y Mercados / Economía | 6 / 18 |
+| Sacks | *The Man Who Mistook His Wife for a Hat* | Neurociencia y Biología / Neurociencia | 6 / 18 |
+| Camus | *El mito de Sísifo* | Pensamiento y Civilización / Filosofía | 7 / 23 |
+| Millerd | *The Pathless Path* | Desarrollo Humano / Crecimiento Personal | 4 / 12 |
+| Poundstone | *Prisoner's Dilemma* | Economía y Mercados / Economía | 6 / 18 |
+| Platón | *The Last Days of Socrates* | Pensamiento y Civilización / Filosofía | 6 / 18 |
+| Lakoff | *Don't Think of an Elephant!* | Psicología y Conducta / Social | 5 / 15 |
+| Pirie | *How to Win Every Argument* | Pensamiento y Civilización / Epistemología | 7 / 21 |
+| Schopenhauer | *El arte de tener razón* | Pensamiento y Civilización / Epistemología | 5 / 15 |
+| Miller y Davidow | *The Logic of Sports Betting* | Economía y Mercados / Economía | 5 / 15 |
+| Harris | *Trading and Exchanges* | Economía y Mercados / Economía | 5 / 15 |
+| Malhotra y Bazerman | *Negotiation Genius* | Psicología y Conducta / Interpersonal | 7 / 21 |
+| Ronson | *The Psychopath Test* | Psicología y Conducta / Social | 5 / 18 |
+| Yong | *An Immense World* | Neurociencia y Biología / Neurociencia | 6 / 18 |
+
+**Hallazgos de los verificadores que cambiaron el contenido** (con segunda verificación en los casos con error de contenido o reescritura grande; *Hormonal*, de la tanda anterior, llegó a cuatro): *How to Live* tenía mal el subtítulo («Conclusion», no «Truth») y el año (2021 primera publicación, 2022 audiolibro y edición Hit Media) y atribuía a «las reseñas» la comparación con *Sum* de Eagleman, que es una inspiración declarada por el propio Sivers; *Trading and Exchanges* daba 2003 (la edición original es de octubre de 2002), atribuía a una ficha editorial una lista de participantes que no figura en ella y daba tres dimensiones de la liquidez donde Harris da cuatro; *The Man Who Mistook His Wife for a Hat* decía que el doctor P. confundió a su mujer con un sombrero (confundió su cabeza), citaba como textual una frase de Sacks que no consta y atribuía a Horgan un juicio no comprobado; *An Immense World* afirmaba que en otros vertebrados el canal TRPA1 no se caracteriza como sensor de calor (es falso: lo es en ranas, lagartos y pollo; lo discutido es el caso de los mamíferos) y decía que Walker no habla de otros animales; *The Last Days of Socrates* situaba la defensa de la *Apología* después del veredicto; *El mito de Sísifo* decía que Camus negaba que el mundo tuviera sentido en sí (escribe que «en sí mismo no es razonable» y que ignora si hay un sentido que lo trascienda); *Prisoner's Dilemma* atribuía a Perkins y Blitz un debate «abierto» que sobrevendía y confundía «Straightening the Record» (anuncio de pago en *The Nation*) con un texto de la BBC; *Spoon-Fed* incluía una lección sobre ZOE y la investigación de UnHerd sobre una persona viva y su empresa, que no se sostenía con varias fuentes (se redujo a una lección metodológica sin nombrar a nadie); *Negotiation Genius* llevaba una nota sobre la retractación de 2021 de un artículo de PNAS con Bazerman como coautor que insinuaba una responsabilidad que no se sigue (se eliminó); *The Pathless Path* fusionaba a Keynes y Paul Graham y recogía un episodio de la vida del autor sin confirmar; *How to Win Every Argument* atribuía al libro entradas y reseñas que no se localizan; *The Psychopath Test* generalizaba a «la comunidad científica» la crítica de una sola sociedad, atribuía a Cahalan más de lo que sostiene y daba la referencia de Banuazizi y Movahedi con los autores invertidos.
+
+**Regla aplicada a personas reales:** ningún distractor, opción ni explicación imputa hechos no verificados a personas reales; lo discutido se presenta como discutido, y ante el desacuerdo entre verificadores se redujo la afirmación en vez de sustituirla por otra.
+
+**Cautelas que se mantienen:**
+- No se pudo leer el texto de ninguno de los libros (reseñas, índices, fichas de editorial, resúmenes y los estudios originales).
+- Dos cifras se declaran «verificada» con la salvedad en la fuente porque el lint solo admite ese estado: 1945 y 1951 en *El mito de Sísifo* (entrevista conocida por fuentes secundarias; *El hombre rebelde* no consultado directamente).
+- El campo `año` de *The Last Days of Socrates* es −380 (aproximación a la fecha de composición; el lint impide escribir un intervalo).
+- En *The Man Who Mistook His Wife for a Hat* la crítica de Aviv (*The New Yorker*, diciembre de 2025) se conoce por cobertura secundaria; las dos frases en inglés entre comillas se declaran como citas literales de esa cobertura.
+- *Spoon-Fed*: el libro se describe solo por reseñas y fichas; sin capítulos ni estudios atribuidos al libro. Confianza baja.
+- *Negotiation Genius* y *The Pathless Path*: el contenido de capítulos concretos no se confirmó más allá de los títulos.
+- *Capital Returns* y *The Minimalist Entrepreneur* son antologías o relatos de una gestora o un fundador con interés propio; las lecciones lo dicen en la autocorrección.
+- Corregir cuando se pueda contrastar con el texto: el título de la réplica de Woolley, Kim y Malone (2018) en *Hidden Potential* (tanda anterior) lo añadió un corrector sin verificador.
+
+**Patrón repetido (otra vez):** explicaciones con «las otras opciones», la opción correcta como la más larga y distractores con hechos falsos sobre personas reales; además, correctores que reescribían con datos nuevos que los segundos verificadores tuvieron que volver a corregir (*An Immense World*, *Prisoner's Dilemma*, *The Man Who Mistook His Wife for a Hat*).
+
+**Visuales:** 109 diagramas (uno por lección) y 20 mapas; caché del service worker v85.
