@@ -388,3 +388,44 @@ Los restantes de las tres listas del usuario que no estaban aparcados (20 libros
 **Patrón repetido (otra vez):** explicaciones con «las otras opciones», la opción correcta como la más larga y distractores con hechos falsos sobre personas reales; además, correctores que reescribían con datos nuevos que los segundos verificadores tuvieron que volver a corregir (*An Immense World*, *Prisoner's Dilemma*, *The Man Who Mistook His Wife for a Hat*).
 
 **Visuales:** 109 diagramas (uno por lección) y 20 mapas; caché del service worker v85.
+
+## Duodécima entrega (tanda 7: negocios, autoayuda y salud)
+
+13 libros, 67 lecciones, 199 preguntas, 67 diagramas y 13 mapas; caché del service worker v86. Todos pasaron por verificador independiente, corrector y, tras cualquier error de contenido o reescritura grande, segunda (a veces tercera) verificación. Ninguno se publicó con un ERROR de contenido pendiente.
+
+| Autor | Libro | Eje / sub_eje | Lecc. / preg. |
+|---|---|---|---|
+| Ferriss | *The 4-Hour Workweek* | Desarrollo Humano / Crecimiento Personal | 5 / 15 |
+| Jarvis | *Company of One* | Economía y Mercados / Economía | 5 / 15 |
+| Kaufman | *The Personal MBA* | Economía y Mercados / Economía | 6 / 18 |
+| Hormozi | *$100M Offers* | Economía y Mercados / Economía | 6 / 18 |
+| Gallo | *Talk Like TED* | Psicología y Conducta / Influencia | 6 / 16 |
+| Fried y Heinemeier Hansson | *Rework* | Economía y Mercados / Economía | 5 / 15 |
+| Sethi | *I Will Teach You to Be Rich* | Economía y Mercados / Economía | 5 / 15 |
+| Manson | *The Subtle Art of Not Giving a F\*ck* | Desarrollo Humano / Crecimiento Personal | 6 / 18 |
+| Holiday | *The Obstacle Is the Way* | Desarrollo Humano / Mentalidad | 6 / 18 |
+| Bowman | *Move Your DNA* | Neurociencia y Biología / Biología y Longevidad | 4 / 8 |
+| Huffington | *The Sleep Revolution* | Neurociencia y Biología / Neurociencia | 4 / 12 |
+| Pollan | *Food Rules* | Neurociencia y Biología / Biología y Longevidad | 4 / 16 |
+| McDougall | *Born to Run* | Neurociencia y Biología / Biología y Longevidad | 5 / 15 |
+
+**Hallazgos de los verificadores que cambiaron el contenido:**
+- *Food Rules*: la fórmula «Eat food. Not too much. Mostly plants.» no aparece «por primera vez» en *In Defense of Food* (ya estaba en el ensayo «Unhappy Meals», 2007); el libro nació de médicos que querían algo breve para sus pacientes, no de «padres»; la crítica de Guthman apunta sobre todo a *The Omnivore's Dilemma* y su aplicación a este libro es lectura nuestra; MacKendrick no tiene crítica directa a Pollan (queda solo como lectura afín).
+- *Born to Run*: los distractores atribuían hechos falsos a Pickering y Bunn, Liebenberg, Rain Taxi y a los estudios de Lieberman de 2010 y 2020; se quitó una concesión de Liebenberg y un motivo sobre armas que no constan en ninguna fuente; Pickering y Bunn no cuestionan los proyectiles (lo documentado: rastreo, ambientes áridos, carroñeo); «pie más extendido» pasó a «pie más apuntado hacia abajo»; «tampoco muestran que el minimalista dañe» era demasiado tranquilizador (revisión de 2014: apoyo débil); se eliminó la fecha de Kirkus y los intervalos de la Cochrane no verificados.
+- *Move Your DNA*: la reseña de KineSophy trata el problema del ser y el deber ser (la «falacia naturalista» es lectura nuestra); la aleta de las orcas libres no se afirma como «erguida» sin matiz (rara la colapsada fuera del cautiverio, con variación entre poblaciones); se quitaron atribuciones a «una reseña» no confirmadas.
+- *The Sleep Revolution*: no se confirma que una reseña mencione zolpidem o sonambulismo; la crítica a *Why We Sleep* (Walker, 2017) es de Guzey (2019) y Gelman la comentó y respaldó, no hizo análisis propio; el índice consultado no tiene capítulo de tecnología (se atribuye a descripciones editoriales).
+- *The Obstacle Is the Way*: críticas «de reseñas» sin fuente eliminadas o pasadas a lectura nuestra; «dicotomía» del control es en realidad «tricotomía» (Irvine); la fórmula de Hays es una «versión concisa»; el subtítulo se omite porque hay dos versiones según la edición; las causas estructurales pasaron a lectura nuestra.
+- *Talk Like TED*, *The Personal MBA*, *$100M Offers*, *Rework*, *I Will Teach You to Be Rich*, *The Subtle Art*, *The 4-Hour Workweek* y *Company of One*: pasaron por verificación y corrección; el detalle de cada hallazgo no se anotó aquí (historial de la sesión).
+
+**Cautelas que se mantienen:**
+- No se pudo leer el texto de ninguno de los libros (reseñas, índices, fichas, resúmenes y estudios originales).
+- Libros de salud (*Move Your DNA*, *The Sleep Revolution*, *Food Rules*, *Born to Run*): sin consejo médico, dietético, de sueño, de calzado ni de entrenamiento; las lecciones lo declaran y la aplicación práctica es de pensamiento crítico. *Move Your DNA* y *Born to Run* tienen confianza baja o media (se conocen por reseñas).
+- El eje de *The Sleep Revolution* y de *Food Rules* («Neurociencia y Biología») no encaja del todo con libros de divulgación cultural y autoayuda; el lint solo admite los cinco ejes del corpus.
+- Los verificadores no pudieron abrir las páginas originales (WebFetch bloqueado): todo se contrastó con resultados de búsqueda. Texto literal de Hays 5.20 y de *Food Rules*, no verificado.
+- El año exacto en que Scrinis acuñó «nutricionismo» no se da.
+
+**Libros donde conviene tener el texto a mano** (porque la lección depende de lo que el libro dice y solo hemos visto reseñas): *Born to Run* (qué dedica a la caza por persistencia, a Lieberman y a la dieta/salud de los rarámuri), *Move Your DNA* (texto literal sobre las orcas y el capítulo 3), *The Obstacle Is the Way* (títulos de capítulos y ejemplos), *Food Rules* (rangos de reglas por sección), *The Sleep Revolution* (capítulos sobre tecnología y somníferos).
+
+**Patrón repetido (otra vez):** explicaciones con «las otras opciones», la opción correcta como la más larga, distractores con absolutos o con hechos falsos sobre personas reales, y críticas atribuidas a «reseñas» que los verificadores no localizan.
+
+**Visuales:** 67 diagramas (uno por lección) y 13 mapas; caché del service worker v86.
