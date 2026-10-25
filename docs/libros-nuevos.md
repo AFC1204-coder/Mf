@@ -272,3 +272,119 @@ Triage de 136 libros de las dos listas del usuario: 52 ya estaban en la bibliote
 **Patrón repetido (otra vez):** en casi todos los borradores la opción correcta era la más larga y las explicaciones decían «las otras opciones»; hubo que igualar longitudes en todas las preguntas, no solo en las señaladas.
 
 **Visuales:** 57 diagramas (uno por lección) y 10 mapas; caché del service worker v77.
+
+## Octava entrega (2026-10-24): tercera tanda de las listas del usuario
+
+| Autor | Libro | Eje / sub_eje | Lecc. / preg. |
+|---|---|---|---|
+| Nagoski y Nagoski | *Burnout* | Psicología y Conducta / Juego y bienestar | 5 / 15 |
+| Lefèvre | *Reminiscences of a Stock Operator* | Economía y Mercados / Economía | 6 / 18 |
+| Warburton | *A Little History of Philosophy* | Pensamiento y Civilización / Filosofía | 6 / 18 |
+| Mukherjee | *The Emperor of All Maladies* | Neurociencia y Biología / Biología y Longevidad | 6 / 18 |
+| Ramachandran y Blakeslee | *Phantoms in the Brain* | Neurociencia y Biología / Neurociencia | 6 / 18 |
+| Binmore | *Game Theory: A Very Short Introduction* | Economía y Mercados / Economía | 8 / 24 |
+| Fine | *Testosterone Rex* | Psicología y Conducta / Social | 5 / 15 |
+| Heath y Heath | *Switch* | Desarrollo Humano / Mentalidad | 6 / 18 |
+| Sandel | *Justice* | Pensamiento y Civilización / Filosofía | 7 / 21 |
+| Carroll | *Endless Forms Most Beautiful* | Neurociencia y Biología / Biología y Longevidad | 6 / 18 |
+
+**Hallazgos de los verificadores que cambiaron el contenido** (con segunda verificación cuando hubo ERROR de contenido): *The Emperor of All Maladies* atribuía a Fisher una comparación con la mastectomía radical (era la total; la radical de Halsted fue el ensayo de Veronesi) y sobrevendía RAS 1982 («una mutación puede bastar»); *Phantoms in the Brain* decía que el efecto del agua fría «se comunica en un solo paciente» (falso en general) y llamaba «posterior» a Chan 2007; *Switch* llamaba «independiente» a la revisión Cochrane de 2015 (incluye 13 de 72 estudios de Wansink), situaba mal el relato de los guantes y daba «dos comunidades» donde el estudio de 1998 solo confirma una; *Endless Forms* citaba un «comentario de Nature de 2006» que no se localiza, tomaba Shapiro 2004 como posterior al libro y atribuía a Ronshaugen, McGinnis y McGinnis lo que es de Galant y Carroll (onicóforo); *Justice* tenía una contradicción interna sobre las tres vías y atribuía a *Justice* lo que Sandel dice en *Liberalism and the Limits of Justice* (1982); *Testosterone Rex* atribuía las cifras de Hyde 2005 a un resumen y mezclaba quién sostiene el relato criticado; *Reminiscences* incluía el método de la muerte de Livermore (se quitó); *Game Theory* tenía una frase duplicada y sobrevendía el teorema popular y la aproximación de Rubinstein (Binmore, Rubinstein y Wolinsky 1986).
+
+**Cautelas que se mantienen:** no se pudo leer el texto de ninguno de los libros (todo lo atribuido viene de reseñas, índices y resúmenes). En *Justice* los dos verificadores discreparon sobre si la pareja equidad/degradación es de *Justice* o de *What Money Can't Buy*; se dejó como «lectura nuestra». En *Switch* se quitó el «424» de los guantes porque no se pudo verificar. En *Testosterone Rex* las cifras de Hyde van como «aprox.» según fuentes secundarias.
+
+**Patrón repetido (otra vez):** la opción correcta era la más larga y las explicaciones decían «las otras opciones» en casi todos los borradores.
+
+**Visuales:** 63 diagramas (uno por lección) y 10 mapas; caché del service worker v79.
+
+## Novena entrega (2026-10-24): cuarta tanda de las listas del usuario
+
+| Autor | Libro | Eje / sub_eje | Lecc. / preg. |
+|---|---|---|---|
+| Thorp | *A Man for All Markets* | Economía y Mercados / Economía | 7 / 21 |
+| Martin | *Money: The Unauthorized Biography* | Economía y Mercados / Economía | 6 / 18 |
+| Bernays | *Propaganda* | Psicología y Conducta / Influencia | 5 / 15 |
+| Sutherland | *Alchemy* | Psicología y Conducta / Influencia | 5 / 15 |
+| Shell | *Bargaining for Advantage* | Psicología y Conducta / Interpersonal | 7 / 22 |
+| Meyer | *The Culture Map* | Psicología y Conducta / Interpersonal | 6 / 17 |
+| Gallwey | *The Inner Game of Tennis* | Desarrollo Humano / Mentalidad | 5 / 15 |
+| Mukherjee | *The Gene* | Neurociencia y Biología / Biología y Longevidad | 7 / 21 |
+| Dawkins | *The Ancestor's Tale* | Neurociencia y Biología / Biología y Longevidad | 6 / 18 |
+| Bakewell | *At the Existentialist Café* | Pensamiento y Civilización / Filosofía | 7 / 21 |
+
+**Hallazgos de los verificadores que cambiaron el contenido** (con segunda verificación cuando hubo ERROR de contenido): *The Inner Game of Tennis* describía mal la réplica de Masters (era de Hardy, Mullen y Jones 1996 y fue una réplica controlada en la línea de Masters) y llamaba «manuscrito» a McKay et al., ya publicado en 2024 en *Psychological Bulletin*; *The Gene* decía que Asilomar dejó fuera a juristas y periodistas (asistieron abogados y unos 16 periodistas), atribuía a Ritchie un «lapsus de rigor» que no dijo, y citaba un libro de Woloshin que no está en la biblioteca; *A Man for All Markets* afirmaba que Kelly hace crecer el capital «sin riesgo de quedarse sin él», citaba a Taleb con títulos fuera del corpus y describía mal la apelación de *United States v. Regan*; *At the Existentialist Café* atribuía al libro o a reseñas cosas que no se localizan (Irish Times, Summit Daily, Globe and Mail), un anacronismo sobre Argelia y que Heidegger dejó el rectorado «de forma abrupta»; *Money* citaba una objeción de «Eric Lonergan» que no existe y mezclaba las atribuciones de Hummel y Murphy; *Bargaining for Advantage* conservaba una frase de un lector de Goodreads sobre las inclinaciones éticas de Shell y atribuía a *Nudge* que las opciones por defecto «operan como anclas»; *Propaganda* incluía un distractor que atribuía a Goebbels un relato en sus diarios (se quitó); además, el encargo inicial proponía «Torches of Freedom» como ejemplo, pero es de 1929, posterior al libro de 1928, y el generador lo detectó y lo trató como no confirmado; *Alchemy* recogía un hotel con piscina y «mejores interiores» de Eurostar que no se localizan; *The Culture Map* tenía autores relacionados que no aparecían en sus conexiones y colocaciones de países como hechos; *The Ancestor's Tale*: sin errores, solo matices (Ensatina, Chang, Whelan 2017).
+
+**Cautelas que se mantienen:** no se pudo leer el texto de ninguno de los libros (todo viene de reseñas, índices y resúmenes). En *Money*, la reseña de Selgin (Cato/Barron's) no se pudo leer entera. En *The Gene*, la reseña de Ritchie en *The Spectator* tampoco (muro de pago). En *A Man for All Markets*, el fallo de *Regan* se conoce por resúmenes. En *A Man for All Markets*, el «tres meses perdedores en unos 230» no se localizó y quedó como «muy pocos meses perdedores», atribuido a reseñas.
+
+**Patrón repetido (otra vez):** la opción correcta era la más larga y las explicaciones decían «las otras opciones» en casi todos los borradores; además, los correctores dejaron a veces afirmaciones nuevas que los segundos verificadores tuvieron que volver a corregir (Asilomar, McKay).
+
+**Visuales:** 69 diagramas (uno por lección) y 10 mapas; caché del service worker v81.
+
+**Publicación de los cruces:** los 10 cruces (`articulos` con `tipo`) se publicaron en esta sesión tras la fusión del PR #29; los 11 ensayos antiguos de marzo siguen ocultos.
+
+## Décima entrega (2026-10-25): quinta tanda de las listas del usuario
+
+| Autor | Libro | Eje / sub_eje | Lecc. / preg. |
+|---|---|---|---|
+| Vance | *Suggestible You* | Neurociencia y Biología / Neurociencia | 5 / 15 |
+| Chancellor | *The Price of Time* | Economía y Mercados / Economía | 5 / 15 |
+| Tannen | *You Just Don't Understand* | Psicología y Conducta / Interpersonal | 5 / 15 |
+| Grant | *Hidden Potential* | Desarrollo Humano / Crecimiento Personal | 6 / 18 |
+| Rilke | *Cartas a un joven poeta* | Desarrollo Humano / Crecimiento Personal | 6 / 18 |
+| Eghbal | *Working in Public* | Economía y Mercados / Economía | 6 / 18 |
+| Panda | *The Circadian Code* | Neurociencia y Biología / Biología y Longevidad | 7 / 21 |
+| Sanders | *Every Patient Tells a Story* | Neurociencia y Biología / Biología y Longevidad | 6 / 18 |
+| Dawkins | *The Extended Phenotype* | Neurociencia y Biología / Biología y Longevidad | 7 / 23 |
+| Haselton | *Hormonal* | Neurociencia y Biología / Neurociencia | 5 / 15 |
+
+**Hallazgos de los verificadores que cambiaron el contenido** (con segunda verificación cuando hubo ERROR de contenido; *Hormonal* necesitó cuatro): *Letters to a Young Poet* decía que no se podía confirmar la publicación de las cartas de Kappus (las localizó Unglaub y se publicaron en alemán en 2019) y conectaba con autores fuera del corpus; *Working in Public* presentaba las «cuatro vías» como del libro (ahora «lectura nuestra»), atribuía a Benkler lo que Benkler ya decía sobre el coste de integración y llevaba una crítica de lectores que no se localiza; *Every Patient Tells a Story* hablaba de «medicina de familia norteamericana» (Marvel incluye Canadá), describía mal la reseña del JCI (Foster 2010) y daba por «aportó el diagnóstico» lo que Hampton llama «útil»; *The Extended Phenotype* atribuía a Dawkins y Krebs 1979 la tesis de las señales como manipulación (es de 1978); *The Circadian Code* decía 2010 para una valoración de la IARC hecha en 2007 y no recogía la publicación posterior, revisada por pares, del resumen de la AHA 2024; *Hormonal* describía mal los artefactos de Wood et al. 2014, las cifras de Arslan, la corrección de «2023», a Gangestad 2019 y el método de Haselton 2007 (las auditorías 2 y 3 se contradijeron en detalles finos, así que se redujo a afirmaciones generales que la cuarta auditoría confirmó); *Suggestible You*, *The Price of Time*, *You Just Don't Understand* y *Hidden Potential* solo tuvieron errores de forma y atribuciones suavizadas (p. ej. la «farmacia interna» pasa a imagen nuestra; d = 0,33 de las interrupciones intrusivas en lugar de «algo mayor»).
+
+**Cautelas que se mantienen:** no se pudo leer el texto de ninguno de los libros (reseñas, índices, fichas de editorial y resúmenes). Dos cifras o datos se declaran sin fuente primaria: los 18 s de Beckman y Frankel se retiraron; el título de la réplica de Woolley, Kim y Malone (2018) en *Hidden Potential* lo añadió un corrector sin que un verificador lo contraste. En *The Circadian Code* el 3,5 % del piloto de Gill y Panda solo consta en la nota de prensa del Salk. En *Working in Public* no se pudo leer la política de LLVM, solo citas. Nada de los asuntos personales de los autores entra en las lecciones.
+
+**Patrón repetido (otra vez):** la opción correcta más larga, explicaciones con «las otras opciones», distractores que imputaban hechos falsos a personas reales (Ostrom, Hull, Poulin, Gould y Lewontin), y correctores que reescribían con datos nuevos que luego había que volver a corregir (*Hormonal*).
+
+**Visuales:** 64 diagramas (uno por lección) y 10 mapas; caché del service worker v83.
+
+## Undécima entrega (2026-10-25): sexta tanda de las listas del usuario
+
+Los restantes de las tres listas del usuario que no estaban aparcados (20 libros: 109 lecciones, 333 preguntas). Siguen aparcados, como se acordó, *The Bitcoin Standard*, los dos de Rothbard, *Debt*, *The Almanack of Naval Ravikant*, *The Systems Bible*, *The Education of a Speculator* y *Beyond Self-Interest*, y la tanda B de unos 16 libros de salud, dieta y negocios con base anecdótica.
+
+| Autor | Libro | Eje / sub_eje | Lecc. / preg. |
+|---|---|---|---|
+| Cabane | *The Charisma Myth* | Psicología y Conducta / Interpersonal | 5 / 16 |
+| Lavingia | *The Minimalist Entrepreneur* | Economía y Mercados / Economía | 6 / 18 |
+| Chancellor (ed.) | *Capital Returns* | Economía y Mercados / Economía | 5 / 15 |
+| Hayek | *The Use of Knowledge in Society* | Economía y Mercados / Economía | 5 / 15 |
+| Sivers | *How to Live* | Desarrollo Humano / Crecimiento Personal | 4 / 12 |
+| Spector | *Spoon-Fed* | Neurociencia y Biología / Biología y Longevidad | 4 / 12 |
+| Thorp | *Beat the Dealer* | Economía y Mercados / Economía | 6 / 18 |
+| Sacks | *The Man Who Mistook His Wife for a Hat* | Neurociencia y Biología / Neurociencia | 6 / 18 |
+| Camus | *El mito de Sísifo* | Pensamiento y Civilización / Filosofía | 7 / 23 |
+| Millerd | *The Pathless Path* | Desarrollo Humano / Crecimiento Personal | 4 / 12 |
+| Poundstone | *Prisoner's Dilemma* | Economía y Mercados / Economía | 6 / 18 |
+| Platón | *The Last Days of Socrates* | Pensamiento y Civilización / Filosofía | 6 / 18 |
+| Lakoff | *Don't Think of an Elephant!* | Psicología y Conducta / Social | 5 / 15 |
+| Pirie | *How to Win Every Argument* | Pensamiento y Civilización / Epistemología | 7 / 21 |
+| Schopenhauer | *El arte de tener razón* | Pensamiento y Civilización / Epistemología | 5 / 15 |
+| Miller y Davidow | *The Logic of Sports Betting* | Economía y Mercados / Economía | 5 / 15 |
+| Harris | *Trading and Exchanges* | Economía y Mercados / Economía | 5 / 15 |
+| Malhotra y Bazerman | *Negotiation Genius* | Psicología y Conducta / Interpersonal | 7 / 21 |
+| Ronson | *The Psychopath Test* | Psicología y Conducta / Social | 5 / 18 |
+| Yong | *An Immense World* | Neurociencia y Biología / Neurociencia | 6 / 18 |
+
+**Hallazgos de los verificadores que cambiaron el contenido** (con segunda verificación en los casos con error de contenido o reescritura grande; *Hormonal*, de la tanda anterior, llegó a cuatro): *How to Live* tenía mal el subtítulo («Conclusion», no «Truth») y el año (2021 primera publicación, 2022 audiolibro y edición Hit Media) y atribuía a «las reseñas» la comparación con *Sum* de Eagleman, que es una inspiración declarada por el propio Sivers; *Trading and Exchanges* daba 2003 (la edición original es de octubre de 2002), atribuía a una ficha editorial una lista de participantes que no figura en ella y daba tres dimensiones de la liquidez donde Harris da cuatro; *The Man Who Mistook His Wife for a Hat* decía que el doctor P. confundió a su mujer con un sombrero (confundió su cabeza), citaba como textual una frase de Sacks que no consta y atribuía a Horgan un juicio no comprobado; *An Immense World* afirmaba que en otros vertebrados el canal TRPA1 no se caracteriza como sensor de calor (es falso: lo es en ranas, lagartos y pollo; lo discutido es el caso de los mamíferos) y decía que Walker no habla de otros animales; *The Last Days of Socrates* situaba la defensa de la *Apología* después del veredicto; *El mito de Sísifo* decía que Camus negaba que el mundo tuviera sentido en sí (escribe que «en sí mismo no es razonable» y que ignora si hay un sentido que lo trascienda); *Prisoner's Dilemma* atribuía a Perkins y Blitz un debate «abierto» que sobrevendía y confundía «Straightening the Record» (anuncio de pago en *The Nation*) con un texto de la BBC; *Spoon-Fed* incluía una lección sobre ZOE y la investigación de UnHerd sobre una persona viva y su empresa, que no se sostenía con varias fuentes (se redujo a una lección metodológica sin nombrar a nadie); *Negotiation Genius* llevaba una nota sobre la retractación de 2021 de un artículo de PNAS con Bazerman como coautor que insinuaba una responsabilidad que no se sigue (se eliminó); *The Pathless Path* fusionaba a Keynes y Paul Graham y recogía un episodio de la vida del autor sin confirmar; *How to Win Every Argument* atribuía al libro entradas y reseñas que no se localizan; *The Psychopath Test* generalizaba a «la comunidad científica» la crítica de una sola sociedad, atribuía a Cahalan más de lo que sostiene y daba la referencia de Banuazizi y Movahedi con los autores invertidos.
+
+**Regla aplicada a personas reales:** ningún distractor, opción ni explicación imputa hechos no verificados a personas reales; lo discutido se presenta como discutido, y ante el desacuerdo entre verificadores se redujo la afirmación en vez de sustituirla por otra.
+
+**Cautelas que se mantienen:**
+- No se pudo leer el texto de ninguno de los libros (reseñas, índices, fichas de editorial, resúmenes y los estudios originales).
+- Dos cifras se declaran «verificada» con la salvedad en la fuente porque el lint solo admite ese estado: 1945 y 1951 en *El mito de Sísifo* (entrevista conocida por fuentes secundarias; *El hombre rebelde* no consultado directamente).
+- El campo `año` de *The Last Days of Socrates* es −380 (aproximación a la fecha de composición; el lint impide escribir un intervalo).
+- En *The Man Who Mistook His Wife for a Hat* la crítica de Aviv (*The New Yorker*, diciembre de 2025) se conoce por cobertura secundaria; las dos frases en inglés entre comillas se declaran como citas literales de esa cobertura.
+- *Spoon-Fed*: el libro se describe solo por reseñas y fichas; sin capítulos ni estudios atribuidos al libro. Confianza baja.
+- *Negotiation Genius* y *The Pathless Path*: el contenido de capítulos concretos no se confirmó más allá de los títulos.
+- *Capital Returns* y *The Minimalist Entrepreneur* son antologías o relatos de una gestora o un fundador con interés propio; las lecciones lo dicen en la autocorrección.
+- Corregir cuando se pueda contrastar con el texto: el título de la réplica de Woolley, Kim y Malone (2018) en *Hidden Potential* (tanda anterior) lo añadió un corrector sin verificador.
+
+**Patrón repetido (otra vez):** explicaciones con «las otras opciones», la opción correcta como la más larga y distractores con hechos falsos sobre personas reales; además, correctores que reescribían con datos nuevos que los segundos verificadores tuvieron que volver a corregir (*An Immense World*, *Prisoner's Dilemma*, *The Man Who Mistook His Wife for a Hat*).
+
+**Visuales:** 109 diagramas (uno por lección) y 20 mapas; caché del service worker v85.
