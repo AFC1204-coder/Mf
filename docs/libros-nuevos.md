@@ -429,3 +429,52 @@ Los restantes de las tres listas del usuario que no estaban aparcados (20 libros
 **Patrón repetido (otra vez):** explicaciones con «las otras opciones», la opción correcta como la más larga, distractores con absolutos o con hechos falsos sobre personas reales, y críticas atribuidas a «reseñas» que los verificadores no localizan.
 
 **Visuales:** 67 diagramas (uno por lección) y 13 mapas; caché del service worker v86.
+
+## Decimotercera entrega (tanda 8: historia, economía del desarrollo, biología y Grit)
+
+12 libros, 61 lecciones, 181 preguntas, 61 diagramas y 12 mapas; caché del service worker v87. Propuestos por mí y aprobados por el usuario para los sub-ejes con menos peso (Historia, Biología y Longevidad, Economía). Excluí a propósito *Predictably Irrational* (acusaciones de fraude en torno al autor) y no incluí a Harari (críticas de historiadores a *Sapiens*). Todos pasaron por verificador independiente y corrector, con segunda a cuarta verificación según el caso; ninguno se publicó con un error de contenido pendiente.
+
+| Autor | Libro | Eje / sub_eje | Lecc. / preg. |
+|---|---|---|---|
+| Beard | *SPQR* | Pensamiento y Civilización / Historia | 5 / 15 |
+| Frankopan | *The Silk Roads* | Pensamiento y Civilización / Historia | 5 / 10 |
+| McNeill | *Plagues and Peoples* | Pensamiento y Civilización / Historia | 5 / 15 |
+| Scheidel | *The Great Leveler* | Pensamiento y Civilización / Historia | 5 / 15 |
+| Deaton | *The Great Escape* | Economía y Mercados / Economía | 5 / 15 |
+| Banerjee y Duflo | *Poor Economics* | Economía y Mercados / Economía | 6 / 18 |
+| Akerlof y Shiller | *Phishing for Phools* | Economía y Mercados / Economía | 5 / 15 |
+| Oreskes y Conway | *Merchants of Doubt* | Pensamiento y Civilización / Epistemología | 5 / 15 |
+| Wrangham | *Catching Fire* | Neurociencia y Biología / Biología y Longevidad | 5 / 18 |
+| Weiner | *The Beak of the Finch* | Neurociencia y Biología / Biología y Longevidad | 5 / 15 |
+| de Waal | *Mama's Last Hug* | Neurociencia y Biología / Biología y Longevidad | 5 / 15 |
+| Duckworth | *Grit* | Desarrollo Humano / Crecimiento Personal | 5 / 15 |
+
+**Hallazgos de los verificadores que cambiaron el contenido:**
+- *The Silk Roads*: las críticas de la entrada de Wikipedia (Guha, Leonzini) no se pudieron contrastar con los originales y se atribuyen «según Wikipedia»; lo que se decía de Leonzini («refuerza la centralidad de Europa») no tenía respaldo (Wikipedia recoge que enfatiza las atrocidades europeas e ignora las eurasiáticas); se quitó la autoría de la reseña de Brown Pundits y una frase atribuida a Evans (LSE) que no aparece; «University of California Press» es el editor de la revista, no el autor de la reseña (es de Michael R. Drompp en *Studies in Late Antiquity*).
+- *Plagues and Peoples*: Jones (2003) no apunta a McNeill por nombre; el artículo de Fancy y Green es de 2021 y habla de Bagdad (1258), no de «el asedio»; «critical community size» se asocia al trabajo de Bartlett de 1960 además del de 1957; «la genética probó la hipótesis» sobrevendía (la genética contrastó el origen geográfico de la cepa, no el mecanismo mongol).
+- *The Great Leveler*: la reseña de Comegna (Cato Journal) es favorable y no se confirma que advierta de los casos soviético y maoísta; se eliminó una «conversación recogida por Oxfam» no localizada.
+- *The Great Escape*: la reseña «wrong on aid» de Oxfam (marzo de 2014) es una reseña invitada de Ricardo Fuentes en el blog de Duncan Green; Green escribió después su propia réplica (abril de 2014).
+- *Phishing for Phools*: lo de Galles (Independent Review) no coincidía con lo que se pudo leer; la analogía del aguacate sí es del libro; la distinción psicológico/informacional es del libro, no nuestra.
+- *Merchants of Doubt*: el memorando de 1969 fue de una sola empresa (Brown & Williamson); se quitó una crítica de BioSocieties que no se pudo confirmar y la entrada del blog del INET se quedó solo como «entrada de blog».
+- *SPQR*: no existe pieza de LARB sobre el libro (se citaba como fuente del 212); «fuente única» de Cicerón contradecía a Salustio; se quitó la lista de grupos que se atribuía a la editorial sin confirmar.
+- *Catching Fire*: Roebroeks y Villa (PNAS 2011) revisan yacimientos europeos (~300.000-400.000 años), no el mundo; se quitaron atribuciones no confirmadas a The Councilor y «varias reseñas» (queda Savage Minds); «grasa y locomoción» son propuesta de Navarrete, no de Aiello y Wheeler.
+- *The Beak of the Finch*: la inversión de la selección se midió sobre todo en los años posteriores a El Niño de 1982-83, no en «1983».
+- *Mama's Last Hug*: Barbara King solo reprocha el optimismo sobre los zoos; el estudio sobre reconocimiento tras décadas es de Lewis, Wessling, Kano y colegas (PNAS 2023), no «de Kano».
+- *Grit*: Maddi et al. (2012) hallaron que hardiness y grit aportan cada uno información propia sobre la retención y solo hardiness predice el rendimiento (el texto decía otra cosa); el efecto de las intervenciones de mentalidad de crecimiento se apoya en Sisk et al. (2018).
+- *Poor Economics*: se quitaron la frase sobre réplicas de la escasez y la de «élites depredadoras» por no localizar la fuente.
+
+**Incidencia de carga:** al cargar *Plagues and Peoples* la comprobación con huellas detectó que el agente había «corregido» una palabra del texto («mongol» → «mongola»). Se resolvió cambiando el paquete a «mongola» (es lo correcto en español) y la comprobación quedó en 0 diferencias. A los cargadores siguientes se les pidió expresamente no corregir ni una palabra.
+
+**Cautelas que se mantienen:**
+- No se pudo leer el texto de ninguno de los libros (reseñas, índices, fichas y estudios originales); los verificadores trabajaron con extractos de búsqueda porque WebFetch estaba bloqueado.
+- Varias críticas de *The Silk Roads* y los datos de reseñas de *The Great Leveler*, *Merchants of Doubt* y *Mama's Last Hug* se conocen solo por fragmentos; las lecciones lo indican.
+- *Catching Fire* es una hipótesis discutida y la lección 5 (cocina, pareja, reparto de tareas) es la más especulativa; sin consejo dietético.
+- Las cifras de Bartlett (1957 y 1960) constan como «verificadas» porque el lint solo admite ese estado, con fuentes que dicen que la atribución del concepto procede de revisiones posteriores.
+
+**Libros donde conviene tener el texto a mano:** *The Silk Roads* (qué dice de verdad sobre Persia, el petróleo y la peste negra), *Plagues and Peoples* (capítulo mongol y tratamiento de América), *Mama's Last Hug* (cómo trata la distinción emoción/sentimiento), *The Great Escape* (si describe la disputa Sachs–Easterly), *Phishing for Phools* (capítulos 3 en adelante) y *Catching Fire* (respuesta de Wrangham a las objeciones).
+
+**Visuales:** 61 diagramas (uno por lección) y 12 mapas; caché del service worker v87.
+
+## Seguridad de la base (propuesta, sin aplicar)
+
+Revisión del esquema de Supabase del proyecto: 25 tablas con RLS desactivado, de las cuales usa la app `repaso`, `eventos`, `compromisos`, `perfil_usuario`, `articulos` y las del módulo observatorio (`esquemas/observatorio.html`). Propuesta de SQL en `supabase/seguridad_rls.sql`; no se ha ejecutado. Límite del modelo: la app entra con la clave pública y `usuario_id='default'`, así que la protección real exigiría activar Supabase Auth.
