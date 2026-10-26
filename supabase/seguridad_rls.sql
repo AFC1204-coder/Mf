@@ -19,6 +19,8 @@ create policy perfil_usuario_dueno on public.perfil_usuario for all to anon, aut
 alter table public.eventos enable row level security;
 create policy eventos_insertar on public.eventos for insert to anon, authenticated with check (usuario_id = 'default');
 create policy eventos_admin_leer on public.eventos for select to authenticated using (public.is_admin());
+-- La app inserta con «Prefer: return=representation», así que el insert necesita poder leer lo que acaba de insertar (solo 'default'):
+create policy eventos_leer_propios on public.eventos for select to anon, authenticated using (usuario_id = 'default');
 create policy eventos_admin_borrar on public.eventos for delete to authenticated using (public.is_admin());
 
 -- ═══ BLOQUE 3 · Artículos de cruce: lectura pública solo de los publicados; escribe solo el administrador ═══
