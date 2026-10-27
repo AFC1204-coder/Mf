@@ -3328,6 +3328,7 @@ function renderSRSDashboard() {
       <div class="srs-stat"><div class="srs-stat-num">${totalItems}</div><div class="srs-stat-lbl">Ideas en repaso</div></div>
       <div class="srs-stat"><div class="srs-stat-num" style="color:var(--success)">${n4}</div><div class="srs-stat-lbl">Asentadas</div></div>
     </div>
+    <div class="srs-cols">
     <div class="srs-niveles">
       <p class="sec-label" style="margin-bottom:0.8rem">Cómo de firmes</p>
       ${fila('Nuevas', n1, 'var(--text3)')}
@@ -3335,6 +3336,7 @@ function renderSRSDashboard() {
       ${fila('Firmes', n3, 'var(--accent)')}
       ${fila('Asentadas', n4, 'var(--success)')}
     </div>
+    <div class="srs-col-b">
     <div class="srs-modo-section">
       <p class="sec-label" style="margin-bottom:0.8rem">Tipo de tarjeta</p>
       <div class="srs-modo-row">
@@ -3347,6 +3349,8 @@ function renderSRSDashboard() {
       <button class="act-btn primary" onclick="iniciarSesionSRS()">Repasar</button>
       <button class="act-btn secondary" onclick="iniciarTest()">Test de un tomo o eje</button>
       <button class="act-btn secondary" onclick="comenzarRepasoRapido()">Repaso rápido</button>
+    </div>
+    </div>
     </div>
   `;
 }

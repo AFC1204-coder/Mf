@@ -758,3 +758,14 @@ Quien abre un enlace con `?carta=1` entra en **solo lectura y sin datos del due�
 Límites conocidos: la clave pública va en el código y las políticas de `notas` y `favoritos_usuario` permiten todo, así que alguien técnico puede leerlas fuera de la app; cerrarlo exige un login solo para el dueño. La clave de Google TTS también es visible: conviene restringirla a este dominio en la consola de Google.
 
 **Portada del invitado y compartir un libro:** al abrir un libro compartido (`?carta=1#lecciones/<libro>`) el invitado ve «Alejandro te ha enviado este libro» (constante `NOMBRE_DUENO` en `app.js`), la portada, la descripción, lecciones y minutos de lectura, un único botón «Empezar a leer», y «Lo que te llevas» (las tres primeras ideas del libro). Sin progreso ni «leídas» (son del dueño), sin libros relacionados, sin enlace a la biblioteca y **sin botón final**: solo ve el libro compartido. El texto que acompaña al enlace al pulsar «Compartir» lleva una idea del libro, título y autor, y las lecciones y minutos de lectura.
+
+## Formato ordenador (≥1024px)
+
+Hoja aparte, `escritorio.css`, enlazada con `media="(min-width: 1024px)"` (el móvil no la descarga ni la aplica). Puntos:
+
+- **Mismo ancho en todas las pestañas.** Antes Hoy medía 720px y el resto 1176px, y el contenido saltaba al cambiar de pestaña. Ahora `main` usa `--content-max` (1560px; 1680px en pantallas ≥1700px) con márgenes fluidos (`--gutter`), y `html { scrollbar-gutter: stable }` reserva el hueco de la barra de desplazamiento para que tampoco salte cuando una pestaña es más larga que otra.
+- **El menú superior se alinea** con el borde del contenido en pantallas anchas.
+- **Dos columnas por pestaña:** Hoy (atril + mazo fijo a la derecha), Biblioteca (filtros y buscador fijos a la izquierda; estantería con cuadrícula `auto-fill` a la derecha), Libro (ficha fija + lecciones, la lista con un tope de 60rem), Tú (semana/ajustes + mapa de dominios) y Repaso (niveles | tipo de tarjeta y botones).
+- **Todo fluido:** `clamp()`, `minmax()` y `auto-fill`; se reajusta al cambiar el tamaño de la ventana sin saltos. Comprobado entre 390 y 2560px sin desbordes.
+- La **lectura de una lección** y el modo Kindle conservan su columna estrecha a propósito.
+- Observación (no tocada): `nav.biblio-tabs` es un `<nav>` y hereda el estilo de la barra superior; en escritorio se neutraliza en `escritorio.css`, en móvil el estilo en línea de `index.html` sigue alcanzándolo.

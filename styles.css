@@ -327,6 +327,8 @@ nav {
 
 
 /* ── MAIN LAYOUT ── */
+html { scrollbar-gutter: stable; }
+.tu-sec-dom { margin-top: 2rem; }   /* evita que el contenido salte al aparecer la barra de desplazamiento al cambiar de pestaña */
 main { max-width:var(--content-max); margin:0 auto; padding:var(--sp-8) var(--sp-6) 4rem; }
 .view { display:none; }
 .view.active { display:block; animation:fadeIn 0.22s ease; }

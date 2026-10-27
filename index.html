@@ -28,6 +28,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="escritorio.css" media="(min-width: 1024px)">
 
 <style>
 /* CSS INYECTADO DIRECTO PARA EVITAR CACHÉ MÓVIL */
@@ -129,6 +130,7 @@
     <div class="quick-row">
       <button class="q-btn" onclick="leccionAleatoria()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><path d="M8 8h.01"/><path d="M12 12h.01"/><path d="M16 16h.01"/></svg> Sorpréndeme</button>
     </div>
+    <div class="biblio-side">
     <p class="sec-label">Por eje</p>
     <div class="eje-filters" id="eje-filters"></div>
     <div class="eje-filters-sub" id="eje-filters-sub"></div>
@@ -136,6 +138,7 @@
       <span class="si"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
       <input class="search-input" id="search-input" type="text" placeholder="Buscar libros, lecciones, conceptos..." oninput="onSearch(this.value)">
       <button class="sc" id="search-clear" onclick="clearSearch()">✕</button>
+    </div>
     </div>
     <div id="search-results-lecs" class="search-results-lecs" style="display:none"></div>
     <p class="sec-label" id="libros-count-label">Los tomos</p>
