@@ -478,3 +478,17 @@ Los restantes de las tres listas del usuario que no estaban aparcados (20 libros
 ## Seguridad de la base (propuesta, sin aplicar)
 
 Revisión del esquema de Supabase del proyecto: 25 tablas con RLS desactivado, de las cuales usa la app `repaso`, `eventos`, `compromisos`, `perfil_usuario`, `articulos` y las del módulo observatorio (`esquemas/observatorio.html`). Propuesta de SQL en `supabase/seguridad_rls.sql`; no se ha ejecutado. Límite del modelo: la app entra con la clave pública y `usuario_id='default'`, así que la protección real exigiría activar Supabase Auth.
+
+## Ampliación de lecciones cortas (octubre 2026)
+
+Se ampliaron **las lecciones de menos de 900 caracteres** de 63 libros (≈ 360 lecciones, hasta ~1.400–2.300 caracteres cada una). Las lecciones de 900–1.200 caracteres no se han tocado.
+
+**Proceso (el mismo de los libros nuevos):** un expansor escribe el cuerpo nuevo conservando íntegro el texto antiguo y rotulando lo añadido («Fuera del libro…», «Lectura nuestra:», «Nota de la biblioteca:», «Según resúmenes…»); un verificador independiente comprueba con búsqueda web cada afirmación nueva y las preguntas existentes; un corrector aplica los hallazgos; la carga usa un `update` por lección con guarda `md5(cuerpo)` del texto antiguo y se comprueba después la huella del texto cargado contra el texto final (0 diferencias en todas las cargas). Ninguna pregunta cambió de respuesta correcta.
+
+**Hallazgos de los verificadores que cambiaron el contenido (selección):**
+- Errores de hecho corregidos antes de cargar: caballitos de mar → pez pipa (*The Evolution of Desire*); resultado de Tetlock invertido (*The Most Important Thing*); cifra de Tamiflu (*Bad Pharma*); Solon y el ingreso del padre (*The Son Also Rises*); fecha de muerte de Graeber (*Bullshit Jobs*, texto antiguo); cronología del torneo de Tetlock (*Expert Political Judgment*, texto antiguo); «miles de penaltis» (*The Art of Strategy*, texto antiguo); «elección inducida» vs elección obligatoria (*Nudge*, texto antiguo); frase atribuida a Jackall que no está en la entrevista (*Moral Mazes*); encuestas sobre interpretaciones de la cuántica (*The Fabric of Reality*).
+- Regla: en la app el campo `autocorreccion` se muestra como «El giro»; ninguna lección debe remitir a una «nota crítica» ni a «la autocorrección».
+
+**Pendiente:** la lección 3 de *Moral Tribes* (el agente de carga se detuvo por un bloqueo del clasificador de seguridad; la fila no se modificó). Dudas menores sin aplicar de *A Mind for Numbers* (lecciones 3 y 7, de la segunda verificación). Libros con lecciones de 900–1.200 caracteres.
+
+**Cautelas:** nadie pudo leer el texto de los libros; lo atribuido a ellos se apoya en reseñas, índices y fichas, y así consta en las lecciones.
