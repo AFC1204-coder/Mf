@@ -69,6 +69,7 @@
   <div class="nav-links">
     <button class="nav-btn active" onclick="showView('home')" id="nav-home" title="Hoy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2"/><path d="M5.6 5.6l1.4 1.4"/><path d="M18.4 5.6 17 7"/><path d="M3 13h2"/><path d="M19 13h2"/><path d="M7 13a5 5 0 0 1 10 0"/><path d="M3 18h18"/></svg> <span class="lbl">Hoy</span></button>
     <button class="nav-btn" onclick="showView('biblioteca')" id="nav-biblioteca" title="Biblioteca"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg> <span class="lbl">Biblioteca</span></button>
+    <button class="nav-btn" onclick="showView('consulta')" id="nav-consulta" title="Consulta"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z"/></svg> <span class="lbl">Consulta</span></button>
     <button class="nav-btn" onclick="showView('repaso-srs')" id="nav-repaso-srs" title="Repaso"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg> <span class="lbl">Repaso</span></button>
     <button class="nav-btn" onclick="showView('tu')" id="nav-tu" title="Tú"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg> <span class="lbl">Tú</span></button>
     <button class="nav-btn" onclick="toggleSpotlight()" id="nav-busqueda" title="Buscar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg> <span class="lbl">Buscar</span></button>
@@ -83,6 +84,9 @@
     </button>
     <button class="bnav-btn" id="bnav-biblioteca" onclick="showView('biblioteca')">
       <span class="bnav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg></span><span class="bnav-label">Biblioteca</span>
+    </button>
+    <button class="bnav-btn" id="bnav-consulta" onclick="showView('consulta')">
+      <span class="bnav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z"/></svg></span><span class="bnav-label">Consulta</span>
     </button>
     <button class="bnav-btn" id="bnav-repaso-srs" onclick="showView('repaso-srs')">
       <span class="bnav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></span><span class="bnav-label">Repaso</span>
@@ -115,6 +119,7 @@
       <button type="button" class="biblio-tab" onclick="showView('esquemas')">Esquemas</button>
       <button type="button" class="biblio-tab" onclick="showView('ensayos')">Ensayos</button>
       <button type="button" class="biblio-tab" onclick="verQuotes()">Ideas</button>
+      <button type="button" class="biblio-tab" onclick="showView('consulta')">Consulta</button>
     </nav>
     <section class="estanteria" aria-label="Estantería">
     <div class="estanteria-head">
@@ -149,6 +154,11 @@
       <div class="skeleton sk-card"></div>
     </div>
     </section>
+  </div>
+
+  <!-- CONSULTA POR NECESIDAD -->
+  <div class="view" id="view-consulta">
+    <div id="consulta-root"></div>
   </div>
 
   <!-- ONBOARDING -->
@@ -393,10 +403,12 @@
 <script src="lib/reporte.js" defer></script>
 <script src="lib/novedad.js" defer></script>
 <script src="lib/invitado.js" defer></script>
+<script src="lib/consulta.js" defer></script>
 <script src="sesion-ui.js" defer></script>
 <script src="perfil-ui.js" defer></script>
 <script src="mazo-ui.js" defer></script>
 <script src="reporte-ui.js" defer></script>
+<script src="consulta-ui.js" defer></script>
 <script src="app.js" defer></script>
 
 <!-- ═══════════════════════════════════════════════════════════════
