@@ -195,13 +195,17 @@ function renderTu() {
   const ruta = rutaActivaItems();
   const fila = (t, sub, fn) => `<button type="button" class="tu-row" onclick="${fn}"><span class="tu-row-t">${t}</span><span class="tu-row-s">${sub}</span></button>`;
   root.innerHTML = `
+    <div class="tu-col tu-col-a">
     <p class="sec-label">Esta semana</p>
     ${tuSemanaHtml()}
     ${tuResumenHtml()}
     <p class="tu-nota">Cuenta leer y repasar. El día acaba a las 04:00.</p>
-    <p class="sec-label" style="margin-top:2rem">Mapa de dominios</p>
+    </div>
+    <div class="tu-col tu-col-b">
+    <p class="sec-label tu-sec-dom">Mapa de dominios</p>
     <p class="tu-nota" style="margin-top:0">Lecciones leídas por eje; «asentadas» son las que ya recuerdas con firmeza.</p>
     <div id="tu-dominios" class="dom-lista">${tuDominiosHtml()}</div>
+    </div>
     <div class="tu-list" style="margin-top:2rem">
       ${fila('Tu ruta', p ? (ruta ? esc(ruta.titulo) + ` · ${ruta.pct}%` : 'Sin ruta fija') + ` · ${p.minutos} min · ${p.dias === 7 ? 'cada día' : p.dias + ' días'}` : 'Elige objetivo, tiempo y días', 'perfilEmpezar()')}
       ${fila('Guardados', `${favLecs().length} lecciones · ${favLibros().length} libros`, "showView('favoritos')")}

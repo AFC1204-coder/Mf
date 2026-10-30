@@ -758,3 +758,24 @@ Quien abre un enlace con `?carta=1` entra en **solo lectura y sin datos del due�
 Límites conocidos: la clave pública va en el código y las políticas de `notas` y `favoritos_usuario` permiten todo, así que alguien técnico puede leerlas fuera de la app; cerrarlo exige un login solo para el dueño. La clave de Google TTS también es visible: conviene restringirla a este dominio en la consola de Google.
 
 **Portada del invitado y compartir un libro:** al abrir un libro compartido (`?carta=1#lecciones/<libro>`) el invitado ve «Alejandro te ha enviado este libro» (constante `NOMBRE_DUENO` en `app.js`), la portada, la descripción, lecciones y minutos de lectura, un único botón «Empezar a leer», y «Lo que te llevas» (las tres primeras ideas del libro). Sin progreso ni «leídas» (son del dueño), sin libros relacionados, sin enlace a la biblioteca y **sin botón final**: solo ve el libro compartido. El texto que acompaña al enlace al pulsar «Compartir» lleva una idea del libro, título y autor, y las lecciones y minutos de lectura.
+
+## Formato ordenador (≥1024px)
+
+Hoja aparte, `escritorio.css`, enlazada con `media="(min-width: 1024px)"` (el móvil no la descarga ni la aplica). Puntos:
+
+- **Mismo ancho en todas las pestañas.** Antes Hoy medía 720px y el resto 1176px, y el contenido saltaba al cambiar de pestaña. Ahora `main` usa `--content-max` (1560px; 1680px en pantallas ≥1700px) con márgenes fluidos (`--gutter`), y `html { scrollbar-gutter: stable }` reserva el hueco de la barra de desplazamiento para que tampoco salte cuando una pestaña es más larga que otra.
+- **El menú superior se alinea** con el borde del contenido en pantallas anchas.
+- **Dos columnas por pestaña:** Hoy (atril + mazo fijo a la derecha), Biblioteca (filtros y buscador fijos a la izquierda; estantería con cuadrícula `auto-fill` a la derecha), Libro (ficha fija + lecciones, la lista con un tope de 60rem), Tú (semana/ajustes + mapa de dominios) y Repaso (niveles | tipo de tarjeta y botones).
+- **Todo fluido:** `clamp()`, `minmax()` y `auto-fill`; se reajusta al cambiar el tamaño de la ventana sin saltos. Comprobado entre 390 y 2560px sin desbordes.
+- La **lectura de una lección** y el modo Kindle conservan su columna estrecha a propósito.
+- Observación (no tocada): `nav.biblio-tabs` es un `<nav>` y hereda el estilo de la barra superior; en escritorio se neutraliza en `escritorio.css`, en móvil el estilo en línea de `index.html` sigue alcanzándolo.
+
+## Modo «Consulta» (por necesidad)
+
+Nueva sección en el menú (y pestaña en la Biblioteca). El usuario escribe una necesidad o duda («me cuesta concentrarme…») y la app propone hasta 6 libros (12 con «ver más»), cada uno con: por qué encaja (lección más relevante con las palabras resaltadas), a qué partes de la consulta responde, nivel de encaje (muy bien / bien / parcial) y botones para empezar por esa lección o abrir el libro.
+
+- **Sin IA ni red.** `lib/consulta.js` hace recuperación de texto (BM25 con pesos por campo: título, idea clave, dominios, aplicación, cita, cuerpo…) sobre el corpus que ya está en el dispositivo, más un léxico de ~40 necesidades en español (`TEMAS`) que traduce el lenguaje cotidiano al vocabulario del corpus. Lo que añade el léxico pesa menos que lo que el usuario escribe. El índice se construye una vez al abrir la sección (~100 ms con el corpus completo).
+- **Honestidad.** Dice en qué se basa; si no encuentra nada claro, lo dice y no inventa. Admite filtro por eje y guarda las últimas 5 consultas solo en el dispositivo.
+- **Seguridad.** Temas de salud mental, sueño, salud, duelo y adicciones añaden el aviso de que los libros no sustituyen la ayuda profesional. Ante frases de riesgo vital (comparación de frase exacta, para evitar falsos positivos) solo se muestra un mensaje de ayuda (024 / 112 en España), sin libros.
+- **Mejorar el léxico:** añadir o ajustar entradas en `TEMAS` (`claves` = cómo lo diría la gente; `expande` = vocabulario del corpus). `tests/consulta.test.js` comprueba que cada ejemplo de la interfaz reconozca un tema y que no haya falsos parientes (móvil/movilidad, negocio/negociar, público/publicidad).
+- Límites conocidos: es léxico, no comprensión; una necesidad redactada con palabras que ni el corpus ni el léxico conocen dará «no encuentro». Ajustada con las ideas de los 482 libros (`datos/mapas.json`); no se ha podido evaluar con el texto completo de todas las lecciones.

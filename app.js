@@ -1889,6 +1889,7 @@ function verLeccion(id, from=null, skipPush=false, replace=false){
   if(from==='repaso'){backBtn.onclick=()=>showView('repaso');backBtn.textContent='← Repaso';}
   else if(from==='autor'){backBtn.onclick=()=>showView('autor');backBtn.textContent='← Autor';}
   else if(from==='favoritos'){backBtn.onclick=()=>showView('favoritos');backBtn.textContent='← Favoritos';}
+  else if(from==='consulta'){backBtn.onclick=()=>showView('consulta');backBtn.textContent='← Consulta';}
   else if(modoCarta()){backBtn.onclick=()=>{ if(libroActual) verLibro(libroActual.id); }; backBtn.textContent='← Este tomo';}
   else{backBtn.onclick=()=>volverDeLeccion();backBtn.textContent='← Lecciones';}
 
@@ -2996,7 +2997,7 @@ function showView(name, skipPush=false, replace=false){
   document.body.classList.toggle('noche', name==='cuaderno');
   document.body.classList.toggle('en-sesion', name==='sesion'||name==='onboarding');
   Lectura.apply(name);
-  if (modoCarta() && (name==='home' || name==='favoritos' || name==='esquemas' || name==='ensayos' || name==='repaso-srs' || name==='test' || name==='busqueda' || name==='ruta')) {
+  if (modoCarta() && (name==='home' || name==='favoritos' || name==='esquemas' || name==='ensayos' || name==='repaso-srs' || name==='test' || name==='busqueda' || name==='consulta' || name==='ruta')) {
     if (lecActual) { verLeccion(lecActual.id); return; }
     if (libroActual) { verLibro(libroActual.id); return; }
   }
@@ -3006,7 +3007,7 @@ function showView(name, skipPush=false, replace=false){
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   // Cinco secciones: Hoy · Biblioteca · Repaso · Tú · Buscar
   const secMap={home:'home',sesion:'home',onboarding:'home',ruta:'home',biblioteca:'biblioteca',lecciones:'biblioteca',quotes:'biblioteca',esquemas:'biblioteca','esquema-viewer':'biblioteca',ensayos:'biblioteca','ensayo-detalle':'biblioteca',autor:'biblioteca',
-    'repaso-srs':'repaso-srs',test:'repaso-srs',resultados:'repaso-srs',repaso:'repaso-srs',tu:'tu',favoritos:'tu',busqueda:'busqueda'};
+    'repaso-srs':'repaso-srs',test:'repaso-srs',resultados:'repaso-srs',repaso:'repaso-srs',tu:'tu',favoritos:'tu',busqueda:'busqueda',consulta:'consulta'};
   const sec=secMap[name];
   document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('active'));
   if(sec){ document.getElementById(`nav-${sec}`)?.classList.add('active'); document.getElementById(`bnav-${sec}`)?.classList.add('active'); }
@@ -3030,6 +3031,7 @@ function showView(name, skipPush=false, replace=false){
     renderStats();renderEjes();renderLibros();renderUltimosLibros();
   }
   if(name==='tu')renderTu();
+  if(name==='consulta')renderConsulta();
   if(name==='favoritos')renderFavoritos();
   if(name==='ensayos')renderEnsayos();
   if(name==='busqueda'){ setTimeout(()=>{ const i=document.getElementById('corpus-search-input'); if(i)i.focus(); },100); }
@@ -3328,6 +3330,7 @@ function renderSRSDashboard() {
       <div class="srs-stat"><div class="srs-stat-num">${totalItems}</div><div class="srs-stat-lbl">Ideas en repaso</div></div>
       <div class="srs-stat"><div class="srs-stat-num" style="color:var(--success)">${n4}</div><div class="srs-stat-lbl">Asentadas</div></div>
     </div>
+    <div class="srs-cols">
     <div class="srs-niveles">
       <p class="sec-label" style="margin-bottom:0.8rem">Cómo de firmes</p>
       ${fila('Nuevas', n1, 'var(--text3)')}
@@ -3335,6 +3338,7 @@ function renderSRSDashboard() {
       ${fila('Firmes', n3, 'var(--accent)')}
       ${fila('Asentadas', n4, 'var(--success)')}
     </div>
+    <div class="srs-col-b">
     <div class="srs-modo-section">
       <p class="sec-label" style="margin-bottom:0.8rem">Tipo de tarjeta</p>
       <div class="srs-modo-row">
@@ -3347,6 +3351,8 @@ function renderSRSDashboard() {
       <button class="act-btn primary" onclick="iniciarSesionSRS()">Repasar</button>
       <button class="act-btn secondary" onclick="iniciarTest()">Test de un tomo o eje</button>
       <button class="act-btn secondary" onclick="comenzarRepasoRapido()">Repaso rápido</button>
+    </div>
+    </div>
     </div>
   `;
 }

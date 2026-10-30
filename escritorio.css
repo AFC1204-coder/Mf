@@ -1,0 +1,143 @@
+/* ═══════════════════════════════════════════════════════════════
+   ESCRITORIO (≥1024px) — se carga después de styles.css solo en ventanas anchas.
+   Ideas:
+   1. Un único ancho de contenido para todas las pestañas (antes Hoy medía 720px y el resto 1176px,
+      y el contenido «saltaba» al cambiar de pestaña) + hueco fijo para la barra de desplazamiento.
+   2. El menú de arriba se alinea con el borde del contenido.
+   3. Cada pestaña usa las dos columnas: Hoy (atril + mazo), Biblioteca (filtros fijos + estantería),
+      Libro (ficha fija + lecciones), Tú y Repaso (dos bloques).
+   4. Todo es fluido (clamp, minmax, auto-fill): se adapta al redimensionar sin saltos.
+   La lectura de una lección conserva su columna estrecha a propósito.
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  --gutter: clamp(1.25rem, 2.6vw, 2.75rem);
+  --content-max: 1560px;
+  --side-w: clamp(248px, 20vw, 316px);
+  --col-gap: clamp(1.75rem, 3.2vw, 3.5rem);
+  --nav-h: 64px;
+  --sticky-top: calc(var(--nav-h) + 1.25rem);
+}
+
+/* ── Marco común ── */
+main {
+  max-width: var(--content-max);
+  padding: var(--sp-7) var(--gutter) 4rem;
+}
+nav:not(.bottom-nav):not(.biblio-tabs) {
+  padding-inline: max(var(--gutter), calc((100% - var(--content-max)) / 2 + var(--gutter)));
+}
+/* El menú de pestañas de la biblioteca es un <nav> y heredaba el estilo de la barra superior (altura fija, sticky, blur). */
+nav.biblio-tabs {
+  position: static; height: auto; padding: 0; background: none; box-shadow: none; border-bottom: 0;
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+  justify-content: flex-start; align-items: center; gap: var(--sp-2);
+  margin: 0 0 var(--sp-5);
+}
+.sec-label { margin-bottom: var(--sp-3); }
+
+/* ── HOY: atril a la izquierda, mazo a la derecha ── */
+#view-home.active {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(300px, 0.8fr);
+  grid-template-areas: "atril mazo" "rutas rutas";
+  column-gap: var(--col-gap);
+  row-gap: var(--sp-6);
+  align-items: start;
+}
+#atril { grid-area: atril; max-width: none; margin: 0; padding-top: 0; }
+#mazo { grid-area: mazo; min-width: 0; margin: 0; position: sticky; top: var(--sticky-top); }
+#rutas-section { grid-area: rutas; min-width: 0; }
+#mazo .mz-card { flex-basis: 92%; max-width: none; min-height: 0; }
+/* Si no hay mazo, el atril ocupa todo */
+#view-home.active:has(#mazo:empty) { grid-template-columns: minmax(0, 1fr); grid-template-areas: "atril" "rutas"; }
+#view-home.active:has(#mazo:empty) #atril { max-width: min(60rem, 100%); }
+
+/* ── BIBLIOTECA: filtros fijos a la izquierda, estantería a la derecha ── */
+.estanteria {
+  display: grid;
+  grid-template-columns: var(--side-w) minmax(0, 1fr);
+  column-gap: var(--col-gap);
+  align-items: start;
+  margin-top: 0; padding-top: var(--sp-4); border-top: 0;
+}
+.estanteria > * { grid-column: 2; min-width: 0; }
+.estanteria > .biblio-side {
+  grid-column: 1; grid-row: 1 / span 12;
+  position: sticky; top: var(--sticky-top);
+  max-height: calc(100vh - var(--sticky-top) - 1rem); overflow-y: auto; overflow-x: hidden;
+  scrollbar-width: thin; padding-right: 2px;
+}
+.estanteria-head { margin-bottom: var(--sp-4); }
+.biblio-side .eje-filters { flex-direction: column; align-items: stretch; gap: 0.3rem; margin-bottom: var(--sp-2); }
+.biblio-side .eje-pill { justify-content: flex-start; text-align: left; width: 100%; min-height: 34px; padding: 0.4rem 0.8rem; }
+.biblio-side .eje-filters-sub { gap: 0.3rem; margin-bottom: var(--sp-4); min-height: 0; }
+.biblio-side .search-wrap { margin-bottom: var(--sp-4); }
+.libros-grid { grid-template-columns: repeat(auto-fill, minmax(clamp(200px, 14.5vw, 250px), 1fr)); gap: var(--sp-4); }
+.libro-cover-wrap, .libro-cover, .libro-cover-placeholder { height: clamp(120px, 8.5vw, 160px); }
+
+/* ── LIBRO: ficha fija a la izquierda, lecciones a la derecha ── */
+#view-lecciones.active {
+  display: grid;
+  grid-template-columns: minmax(270px, 340px) minmax(0, 1fr);
+  column-gap: var(--col-gap);
+  align-items: start;
+}
+#view-lecciones > .back-btn { grid-column: 1 / -1; justify-self: start; }
+#view-lecciones > #libro-hero-cont {
+  grid-column: 1; grid-row: 2 / span 8;
+  position: sticky; top: var(--sticky-top);
+  max-height: calc(100vh - var(--sticky-top) - 1rem); overflow-y: auto; scrollbar-width: thin;
+}
+#view-lecciones > :not(.back-btn):not(#libro-hero-cont) { grid-column: 2; min-width: 0; }
+#view-lecciones .libro-hero { flex-direction: column; gap: var(--sp-4); border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
+#view-lecciones .libro-hero-cover, #view-lecciones .libro-hero-cover-ph { width: 100%; height: clamp(150px, 20vh, 220px); }
+#view-lecciones .libro-hero-stats { flex-wrap: wrap; gap: var(--sp-2) var(--sp-4); }
+
+/* ── TÚ y REPASO: dos bloques ── */
+#tu-cont {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  grid-template-areas: "a b" "l b";
+  grid-template-rows: auto 1fr;
+  column-gap: var(--col-gap);
+  align-items: start;
+}
+#tu-cont > .tu-col-a { grid-area: a; min-width: 0; }
+#tu-cont > .tu-col-b { grid-area: b; min-width: 0; }
+#tu-cont > .tu-list { grid-area: l; min-width: 0; margin-top: var(--sp-4) !important; }
+.tu-sec-dom { margin-top: 0; }
+.srs-cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: var(--col-gap);
+  align-items: start;
+}
+.srs-cols > div { min-width: 0; }
+
+/* ── Muy anchas: algo más de aire ── */
+@media (min-width: 1700px) {
+  :root { --content-max: 1680px; }
+  #view-home.active { grid-template-columns: minmax(0, 1.4fr) minmax(340px, 0.75fr); }
+}
+
+/* Lista de lecciones: no se estira hasta el borde (el título y la estrella quedaban a un metro) */
+#view-lecciones > .search-wrap, #view-lecciones > .lec-tabs, #view-lecciones > #lecciones-container { max-width: 60rem; }
+
+/* ── CONSULTA: formulario fijo a la izquierda y resultados a la derecha ── */
+.consulta-layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.8fr) minmax(0, 1.5fr);
+  column-gap: var(--col-gap);
+  align-items: start;
+}
+.consulta-panel {
+  position: sticky; top: var(--sticky-top);
+  max-height: calc(100vh - var(--sticky-top) - 1rem); overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; padding-right: 2px;
+}
+.consulta-resultados { margin-top: 0; }
+.consulta-resultados:empty::before {
+  content: 'Escribe lo que necesitas y verás aquí los libros que mejor lo abordan.';
+  display: block; padding: var(--sp-8) var(--sp-6); border: 1px dashed var(--border2); border-radius: var(--radius-lg);
+  color: var(--text3); font-family: var(--font-display); font-style: italic; text-align: center;
+}
