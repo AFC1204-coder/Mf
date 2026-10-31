@@ -493,12 +493,16 @@ Se ampliaron **todas las lecciones activas de menos de 1.200 caracteres**, en do
 - Dos explicaciones de preguntas corregidas: *The Selfish Gene* («capítulo 11») y *Nudge* (norma social).
 - Regla: en la app el campo `autocorreccion` se muestra como «El giro»; ninguna lección debe remitir a una «nota crítica» ni a «la autocorrección».
 
-**Pendiente / para revisar a mano (no se tocó sin permiso):**
-- Preguntas que mencionan «la autocorrección» en el enunciado o la explicación (*The Art of Happiness* L4, L6 y L7; *On Grief and Grieving* L4; *The Brain That Changes Itself*).
-- *De la guerra* L5: el enunciado de una pregunta dice «¿Qué campaña cita Clausewitz…?»; el texto ya solo dice que la analizó y suele leerse como ejemplo.
-- *How to Win Every Argument*: tres preguntas citan «notas de la biblioteca» que no están en el cuerpo (L3, L4 y L6).
+**Revisión posterior de los pendientes (aplicada):**
+- «Autocorrección» en preguntas: no es un fallo puntual. 657 preguntas activas de toda la biblioteca la mencionan en su enunciado o explicación; es la forma habitual de redactarlas y no se toca.
+- *Seeing Like a State* L5 e *Historia del Pensamiento Económico II* L8 usan «autocorrección» como palabra normal (corregirse con la experiencia), no como remisión al campo: sin cambios.
+- Remisiones reales al campo `autocorreccion`, quitadas (solo la cláusula): *The Vital Question* L6 («…como se verá en la autocorrección») y *The 4-Hour Workweek* L4 («…algo que se analiza en la autocorrección»).
+- *De la guerra*: la pregunta «¿Qué campaña cita Clausewitz…?» pasó a «¿Qué campaña analizó Clausewitz…?» (misma respuesta: Napoleón en Rusia, 1812).
+
+**Sigue pendiente / para revisar a mano:**
 - *Four Thousand Weeks* L5 conserva la lista antigua de principios y el párrafo nuevo da otra lista de los resúmenes; ambas están rotuladas, pero conviene unificarlas.
-- Lecciones anteriores con `<`/`>` (*Principles for Dealing with the Changing World Order* L3, *Trade Like a Stock Market Wizard* L9, *Consciousness and the Brain* L1, *The Selfish Gene* L3, esta con «rB > C») y con remisiones a «la autocorrección» o «nota crítica» (*Seeing Like a State* L5, *Historia del Pensamiento Económico II* L8, *The Vital Question* L6, *The 4-Hour Workweek* L4).
+- *How to Win Every Argument*: tres preguntas citan «notas de la biblioteca» que no están en el cuerpo (L3, L4 y L6).
+- Lecciones anteriores con `<`/`>` (*Principles for Dealing with the Changing World Order* L3, *Trade Like a Stock Market Wizard* L9, *Consciousness and the Brain* L1, *The Selfish Gene* L3, esta con «rB > C»).
 - Dudas menores de *A Mind for Numbers* L3 y L7 (fase 1) y de *Scarcity* L2.
 
 **Cautelas:** nadie pudo leer el texto de los libros; lo atribuido a ellos se apoya en reseñas, índices y fichas, y así consta en las lecciones. Varios agentes de verificación recibieron instrucciones incrustadas en resultados de búsqueda y las ignoraron.
