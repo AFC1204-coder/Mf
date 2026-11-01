@@ -506,3 +506,38 @@ Se ampliaron **todas las lecciones activas de menos de 1.200 caracteres**, en do
 - Dudas menores de *A Mind for Numbers* L3 y L7 (fase 1) y de *Scarcity* L2.
 
 **Cautelas:** nadie pudo leer el texto de los libros; lo atribuido a ellos se apoya en reseñas, índices y fichas, y así consta en las lecciones. Varios agentes de verificación recibieron instrucciones incrustadas en resultados de búsqueda y las ignoraron.
+
+## Entrega de noviembre 2026: marcos, estatus y dinámicas de conversación + Mantak Chia (10 libros)
+
+**Pedido:** una lista de 9 libros sobre marcos, estatus y dinámicas de superioridad en las conversaciones (solo los que no estuvieran) y, aparte, los libros de Mantak Chia, sobre todo *The Multi-Orgasmic Man*, sin descalificarlos por esotéricos. De la lista ya estaban *The Status Game*, *La presentación de la persona en la vida cotidiana*, *Never Split the Difference*, *Las 48 leyes del poder*, *Las leyes de la naturaleza humana* e *Influencia*. Se añadieron tres de la lista y siete de Chia; los manuales de artes marciales de Chia quedaron fuera por indicación del usuario.
+
+| Libro | Eje / sub-eje | Lecciones · preguntas |
+|---|---|---|
+| *Impro* (Keith Johnstone, 1979) | Psicología y Conducta / Social | 6 · 18 |
+| *Games People Play* / *Juegos en que participamos* (Eric Berne, 1964) | Psicología y Conducta / Interpersonal | 6 · 18 |
+| *Pitch Anything* (Oren Klaff, 2011) | Psicología y Conducta / Influencia | 6 · 18 |
+| *The Multi-Orgasmic Man* (Chia y Abrams Arava, 1996) | Desarrollo Humano / Crecimiento Personal | 6 · 18 |
+| *The Multi-Orgasmic Couple* (Chia, Chia, Abrams Arava y Abrams, 2000) | ídem | 6 · 18 |
+| *Taoist Secrets of Love* (Chia y Winn, 1984) | ídem | 6 · 18 |
+| *Healing Love Through the Tao* (Chia y Chia, 1986) | ídem | 6 · 12 |
+| *Taoist Ways to Transform Stress into Vitality* (Chia, 1985) | ídem | 6 · 18 |
+| *Chi Self-Massage* (Chia, 1986) | ídem | 5 · 15 |
+| *Awaken Healing Energy Through the Tao* (Chia, 1983) | ídem | 5 · 15 |
+
+**Proceso:** el de siempre (generador, verificador independiente con búsqueda web, corrector, carga en borrador oculta, comprobación por huellas `md5` con 0 diferencias en los diez, y publicación). *Pitch Anything*, *Taoist Secrets of Love* y *Awaken Healing Energy* pasaron por una segunda verificación independiente porque la primera encontró errores de contenido. Ningún verificador pudo leer el texto de los libros: contrastaron con reseñas, índices y su conocimiento de las obras, así que lo no confirmado quedó atribuido («según el autor», «según los resúmenes») o suavizado.
+
+**Criterio editorial de Chia (pedido por el usuario):** se trata como tradición práctica. La energía (*ching*, *chi*, *shen*), la Órbita Microcósmica y las correspondencias órgano-emoción se exponen como tesis del libro o de la tradición, nunca como hechos probados ni como disparates. La crítica (campo `autocorreccion`, «El giro» en la app) separa lo que cada lector puede comprobar por sí mismo (relajación, respiración, suelo pélvico, atención) de lo difícil de contrastar, e indica qué haría falta para ponerlo a prueba, sin tono despectivo.
+
+**Hallazgos de los verificadores que cambiaron el contenido:**
+- *Pitch Anything*: el título de la lección 6 invertía el «marco de premio» (quien se cualifica es la otra parte); los marcos de poder, tiempo y analista se presentaban como estrategia de Klaff cuando son marcos que trae la otra parte y hay que contrarrestar; una pregunta atribuía al libro un «límite reconocido» que es crítica nuestra; la definición del punto de enganche y la «O» de STRONG no eran confirmables y se suavizaron a «según los resúmenes»; se quitó la idea de «pares» y la explicación por escasez quedó rotulada como lectura nuestra.
+- *Impro*: el mecanismo por el que la máscara libera conducta («dejar de vigilar la imagen») era del generador y no de Johnstone: ahora el trance es de Johnstone y el mecanismo, lectura nuestra; se quitaron gestos de estatus y una frase sobre la simpatía no atribuibles; un distractor era defendible como bloqueo.
+- *Games People Play*: «Pateme» → «Patéame»; el premio de ese juego ya no se describe como «injusticia»; se corrigió la fórmula del juego (gancho, respuesta, giro, desconcierto, premio) y «cesación» no es término de Berne; se añadió que revisiones recientes desde el propio campo del análisis transaccional afirman efectos de la terapia, con estudios de calidad dispar y sin validar los constructos de Berne, y que los estados del yo se apoyaron en estudios de Penfield, interpretación hoy descartada.
+- Seguridad (todos los libros de Chia sobre energía sexual): se añadió que los estudios observacionales grandes asocian una eyaculación más frecuente con menor riesgo de cáncer de próstata (asociación, no causalidad; sin cifras), que no hay base de salud para espaciarla y que quien lo pruebe lo haga como experimento personal con sus controles médicos; que presionar el perineo o retener el aire puede dañar y no se recomienda; que las prácticas no son anticoncepción ni tratamiento de fertilidad ni de problemas prostáticos; y, en *Healing Love*, que el masaje de pechos no sustituye cribados ni consulta ante bultos. En *Chi Self-Massage* se ampliaron las precauciones oculares (globos oculares, glaucoma, desprendimiento de retina, cirugía reciente, lentes de contacto).
+- *Taoist Secrets of Love*: una frase afirmaba que el libro «insiste en no apretar con fuerza»; no se podía sostener (sus técnicas incluyen esfuerzo fuerte) y se sustituyó por lo que sí se puede afirmar y la nota de que esta biblioteca no las recomienda.
+- *Awaken Healing Energy*: no se pudo confirmar que los Seis Sonidos Curativos estén en este libro de 1983, así que se eliminó esa lección (quedan 5); la Sonrisa Interior se presenta como práctica del sistema de Chia. Un segundo verificador halló en el índice que «Secret of the Inner Smile» es un capítulo de este libro; se deja la redacción prudente.
+- Autores: «Kabat-Zinn», «Gallwey», «Pfeffer» y «Fisher» no están en el corpus (`autores-corpus.json`); se sustituyeron por autores del corpus y se alinearon `autores_relacionados` y `conexion_cruzada`.
+- Una atribución apócrifa («un espacio entre estímulo y respuesta» a Frankl) se sustituyó por una descripción de su tesis.
+
+**Incidencia del proceso:** los generadores compartían un script (`gen.js`) en la carpeta común y se pisaron entre sí; un fichero (*Multi-Orgasmic Man*) quedó sin barajar, se volvió a barajar y se comprobó que el contenido era el verificado. Regla para la próxima vez: cada agente escribe en su propio directorio y con scripts de nombre único.
+
+**Pendiente:** otros libros de Chia (los de artes marciales y qigong, descartados por ahora: *Iron Shirt Chi Kung*, *Bone Marrow Nei Kung*, *Fusion of the Five Elements*, *Tan Tien Chi Kung*, *Cosmic Healing*…).
