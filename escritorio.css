@@ -7,7 +7,8 @@
    3. Cada pestaña usa las dos columnas: Hoy (atril + mazo), Biblioteca (filtros fijos + estantería),
       Libro (ficha fija + lecciones), Tú y Repaso (dos bloques).
    4. Todo es fluido (clamp, minmax, auto-fill): se adapta al redimensionar sin saltos.
-   La lectura de una lección conserva su columna estrecha a propósito.
+   5. La lectura de una lección (ver el último bloque) crece con la ventana: letra y columna
+      suben juntas para que la línea siga teniendo ~70 caracteres en cualquier monitor.
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
@@ -141,3 +142,28 @@ nav.biblio-tabs {
   display: block; padding: var(--sp-8) var(--sp-6); border: 1px dashed var(--border2); border-radius: var(--radius-lg);
   color: var(--text3); font-family: var(--font-display); font-style: italic; text-align: center;
 }
+
+/* ── LECCIÓN: la letra y la columna se adaptan al tamaño de la ventana ──
+   En móvil el modo Kindle fija 1.28rem y una columna de 36rem; en un monitor eso se queda diminuto y
+   estrecho. Aquí la letra sube suavemente con el ancho (de 1.28rem a 1.75rem) y la columna se calcula
+   a partir de la letra (34 × tamaño de letra), así la línea mantiene ~70 caracteres: al subir la letra
+   con A+ la columna también se ensancha, y al ensanchar la ventana todo crece sin saltos.
+   --tipo es el A−/A+ del usuario (1.14 por defecto). */
+:root {
+  --lec-fs: clamp(1.28rem, 1rem + 0.45vw, 1.75rem);
+  --lec-medida: 34;
+}
+body.kindle #view-leccion {
+  max-width: min(calc(var(--lec-fs) * var(--tipo, 1.14) * var(--lec-medida)), 92vw);
+}
+body.kindle .folio .fmt,
+body.kindle .folio .lec-body { font-size: calc(var(--lec-fs) * var(--tipo, 1.14)); }
+body.kindle .folio .lec-titulo { font-size: calc(var(--lec-fs) * 1.13); }
+body.kindle .idea-clave p { font-size: calc(var(--lec-fs) * 0.875 * var(--tipo, 1.14)); }
+body.kindle .check-q { font-size: calc(var(--lec-fs) * 0.84 * var(--tipo, 1.14)); }
+body.kindle .check-opt { font-size: calc(var(--lec-fs) * 0.77 * var(--tipo, 1.14)); }
+
+/* Sin modo Kindle (página oscura de siempre): la hoja también crece, con la letra algo más grande */
+body:not(.kindle) #view-leccion { max-width: min(clamp(52rem, 38rem + 20vw, 76rem), 100%); }
+body:not(.kindle) .folio .fmt { font-size: clamp(1.02rem, 0.9rem + 0.3vw, 1.32rem); }
+body:not(.kindle) .folio { padding: clamp(2.8rem, 2rem + 1vw, 4rem) clamp(3.2rem, 2rem + 3vw, 5.5rem) clamp(3rem, 2rem + 1vw, 4rem); }
