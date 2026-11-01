@@ -25,9 +25,11 @@ async function sb(path, opts={}) {
   const dec = Invitado.decidir(path, opts.method, modoCarta());
   if (dec === 'vacio') return [];
   if (dec === 'descartar') return null;
+  // Las cabeceras del llamador (p. ej. Prefer) se SUMAN a las de la clave: `...opts` va primero y `headers` después.
+  // Antes `...opts` iba detrás y las sustituía enteras, así que esas peticiones salían sin apikey y Supabase las rechazaba.
   const r = await fetch(`${SB_URL}/rest/v1/${path}`, {
-    headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Content-Type':'application/json','Prefer':'return=representation',...opts.headers},
-    ...opts
+    ...opts,
+    headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Content-Type':'application/json','Prefer':'return=representation',...opts.headers}
   });
   if (!r.ok) { const e = await r.text(); throw new Error(e); }
   const t = await r.text(); return t ? JSON.parse(t) : null;
@@ -39,9 +41,9 @@ async function sbAll(path, opts={}) {
   const sep=path.includes('?')?'&':'?';
   const pedir=async (offset, contar)=>{
     const r=await fetch(`${SB_URL}/rest/v1/${path}${sep}limit=${PAGE}&offset=${offset}`,{
+      ...opts,
       headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Content-Type':'application/json',
-        'Prefer':contar?'count=exact':'return=representation',...opts.headers},
-      ...opts
+        'Prefer':contar?'count=exact':'return=representation',...opts.headers}
     });
     if(!r.ok){const e=await r.text();throw new Error(e);}
     const t=await r.text();
@@ -272,8 +274,77 @@ async function migrateLocalStorageToDB() {
   } catch(e) { console.warn('Migration failed, will retry next load:', e.message); }
 }
 
-const setUltima  = (lecId,libId) => LS.set(ULTIMA_K,{lecId,libId,ts:Date.now()});
+const setUltima  = (lecId,libId) => { LS.set(ULTIMA_K,{lecId,libId,ts:Date.now()}); estadoSubirPronto('ultima'); };
 const getUltima  = () => LS.get(ULTIMA_K,null);
+
+/* ═══════════════════════════════════════════
+   LO RECIENTE ENTRE DISPOSITIVOS (lib/estado.js)
+   Última lección, últimos libros e hilo se guardan también en Supabase (estado_lectura).
+   Cada campo lleva su marca de tiempo; al sincronizar gana el más reciente.
+═══════════════════════════════════════════ */
+const ESTADO_META_K = 'scs2_estado_ts';
+let estadoPend = new Set(), estadoTimer = null, estadoUltimaSync = 0;
+const estadoMeta = () => LS.get(ESTADO_META_K, {});
+function estadoMarcar(campo){ const m = estadoMeta(); m[campo] = Date.now(); LS.set(ESTADO_META_K, m); }
+function estadoLocal(){
+  const m = estadoMeta(), ul = LS.get(ULTIMOS_K, []), h = LS.get(HILO_K, null);
+  return {
+    ultima: getUltima(),
+    ultimos: { ids: ul, ts: m.ultimos || Estado.marcaInicial(ul.length > 0) },
+    hilo: { datos: h, ts: m.hilo || Estado.marcaInicial(!!h) },
+  };
+}
+function estadoAplicar(campo, v){
+  const m = estadoMeta();
+  if (campo === 'ultima') LS.set(ULTIMA_K, v);
+  else if (campo === 'ultimos') { LS.set(ULTIMOS_K, Estado.normalizarUltimos(v.ids)); m.ultimos = v.ts; }
+  else if (campo === 'hilo') { if (v.datos) LS.set(HILO_K, v.datos); else localStorage.removeItem(HILO_K); m.hilo = v.ts; }
+  LS.set(ESTADO_META_K, m);
+}
+async function estadoSubir(campos){
+  if (modoCarta() || !campos.length) return;
+  const loc = estadoLocal();
+  const body = { usuario_id: USUARIO_ID, actualizado_at: new Date().toISOString() };
+  campos.forEach(c => { body[c] = loc[c]; });      // solo los campos que cambiaron: no pisa los demás
+  await sb('estado_lectura?on_conflict=usuario_id', {
+    method: 'POST', headers: { Prefer: 'resolution=merge-duplicates,return=minimal' }, body: JSON.stringify(body)
+  });
+}
+/** Agrupa los cambios seguidos y los sube de golpe. */
+function estadoSubirPronto(campo){
+  if (campo) estadoPend.add(campo);
+  clearTimeout(estadoTimer);
+  estadoTimer = setTimeout(async () => {
+    const campos = [...estadoPend]; estadoPend = new Set();
+    try { await estadoSubir(campos); } catch(e) { console.warn('Estado: no se pudo subir:', e.message || e); campos.forEach(c => estadoPend.add(c)); }
+  }, 1200);
+}
+/** Baja lo más nuevo del servidor y sube lo más nuevo de este dispositivo. Devuelve true si cambió algo local. */
+async function estadoSync(){
+  if (modoCarta()) return false;
+  try {
+    const filas = await sb(`estado_lectura?select=ultima,ultimos,hilo&usuario_id=eq.${USUARIO_ID}&limit=1`);
+    const rem = (filas && filas[0]) || {};
+    const { bajar, subir } = Estado.comparar(estadoLocal(), rem);
+    bajar.forEach(c => estadoAplicar(c, rem[c]));
+    if (subir.length) await estadoSubir(subir);
+    estadoUltimaSync = Date.now();
+    return bajar.length > 0;
+  } catch(e) { console.warn('Estado: no se pudo sincronizar:', e.message || e); return false; }
+}
+function estadoRepintar(){ renderAtril(); renderUltimosLibros(); }
+/** Al volver a la pestaña o a la app (p. ej. tras leer en el otro dispositivo): trae lo nuevo sin recargar. */
+async function sincronizarAlVolver(){
+  if (document.hidden || modoCarta() || Date.now() - estadoUltimaSync < 20000) return;
+  estadoUltimaSync = Date.now();
+  try {
+    const antes = Corpus.huella({ libros, lecs, preg, prog, revisiones });
+    const [u, cambio] = await Promise.all([descargarUsuario(), estadoSync(), loadFavoritosFromDB(), loadNotasFromDB()]).then(r => [r[0], r[1]]);
+    aplicarUsuario(u);
+    await Corpus.guardar('usuario', usuarioParaGuardar(u));
+    if ((cambio || Corpus.huella({ libros, lecs, preg, prog, revisiones }) !== antes) && !document.body.classList.contains('en-sesion')) pintarTodo();
+  } catch(e) { console.warn('Sincronizar al volver:', e.message || e); }
+}
 
 /* ═══════════════════════════════════════════
    RACHA
@@ -508,9 +579,9 @@ async function refrescarEnSegundoPlano(cache){
     ]);
     if(c){ await Corpus.guardar('corpus', c); aplicarCorpus(c); }
     aplicarUsuario(u);
-    await Promise.all([loadFavoritosFromDB(), loadNotasFromDB()]);
+    const [, , cambioEstado] = await Promise.all([loadFavoritosFromDB(), loadNotasFromDB(), estadoSync()]);
     await Corpus.guardar('usuario', usuarioParaGuardar(u));
-    if(Corpus.huella({ libros, lecs, preg, prog, revisiones }) !== antes && !document.body.classList.contains('en-sesion')) pintarTodo();
+    if((cambioEstado || Corpus.huella({ libros, lecs, preg, prog, revisiones }) !== antes) && !document.body.classList.contains('en-sesion')) pintarTodo();
   }catch(e){ console.warn('Actualización en segundo plano:', e.message||e); }
 }
 
@@ -530,7 +601,7 @@ async function init() {
     const [c, u] = await Promise.all([descargarCorpus(), descargarUsuario()]);
     await Corpus.guardar('corpus', c);     // se guarda antes de fusionar los diagramas (IndexedDB copia al guardar)
     aplicarCorpus(c); aplicarUsuario(u);
-    await Promise.all([loadFavoritosFromDB(), loadNotasFromDB()]);
+    await Promise.all([loadFavoritosFromDB(), loadNotasFromDB(), estadoSync()]);
     await Corpus.guardar('usuario', usuarioParaGuardar(u));
     migrateLocalStorageToDB();
     arrancarUI();
@@ -572,10 +643,8 @@ function animStat(id,val){
 
 const ULTIMOS_K='scs2_ultimos';
 function addUltimo(libroId){
-  let arr=LS.get(ULTIMOS_K,[]);
-  arr=arr.filter(id=>id!==libroId);
-  arr.unshift(libroId);
-  LS.set(ULTIMOS_K,arr.slice(0,6));
+  LS.set(ULTIMOS_K, Estado.empujarUltimo(LS.get(ULTIMOS_K,[]), libroId));
+  estadoMarcar('ultimos'); estadoSubirPronto('ultimos');
 }
 function renderUltimosLibros(){
   const arr=LS.get(ULTIMOS_K,[]);
@@ -1022,9 +1091,16 @@ function guardarHilo(fromLec, nextLec){
     libro: libro ? libro.titulo : '',
     autor: libro ? libro.autor : '',
   });
+  estadoMarcar('hilo'); estadoSubirPronto('hilo');
 }
 function getHilo(){ return LS.get(HILO_K, null); }
-function clearHilo(){ try { localStorage.removeItem(HILO_K); } catch(e) {} }
+function clearHilo(){
+  try {
+    if (localStorage.getItem(HILO_K) === null) return;
+    localStorage.removeItem(HILO_K);
+    estadoMarcar('hilo'); estadoSubirPronto('hilo');     // el borrado también viaja: si no, el otro dispositivo lo resucitaría
+  } catch(e) {}
+}
 
 function renderAtril(){
   const root = document.getElementById('atril');
@@ -3690,6 +3766,9 @@ function compartirLibro(){
 
 /* START */
 init();
+// Al volver a la pestaña o a la app, trae lo que se haya leído en el otro dispositivo.
+document.addEventListener('visibilitychange', sincronizarAlVolver);
+window.addEventListener('focus', sincronizarAlVolver);
 
 
 
