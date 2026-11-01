@@ -20,6 +20,12 @@ const esc=s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&g
 const SB_URL = 'https://aduizdiiacrvpoavjmab.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFkdWl6ZGlpYWNydnBvYXZqbWFiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1OTg5MDEsImV4cCI6MjA4NzE3NDkwMX0.US2sEhlSBJbcwg93txuL-9AdPKo2LLmdVX5dur7i5GQ';
 
+/** Token del usuario si hay sesión (se renueva solo); si no, la clave pública. Ver cuenta-ui.js. */
+async function authBearer(){
+  try { return (typeof Cuenta !== 'undefined' && await Cuenta.token()) || SB_KEY; } catch(e) { return SB_KEY; }
+}
+async function authHdr(extra){ return { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + await authBearer(), ...extra }; }
+
 async function sb(path, opts={}) {
   // Modo invitado (enlace compartido): solo lectura y sin datos del dueño. Ver lib/invitado.js
   const dec = Invitado.decidir(path, opts.method, modoCarta());
@@ -29,7 +35,7 @@ async function sb(path, opts={}) {
   // Antes `...opts` iba detrás y las sustituía enteras, así que esas peticiones salían sin apikey y Supabase las rechazaba.
   const r = await fetch(`${SB_URL}/rest/v1/${path}`, {
     ...opts,
-    headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Content-Type':'application/json','Prefer':'return=representation',...opts.headers}
+    headers:{'apikey':SB_KEY,'Authorization':`Bearer ${await authBearer()}`,'Content-Type':'application/json','Prefer':'return=representation',...opts.headers}
   });
   if (!r.ok) { const e = await r.text(); throw new Error(e); }
   const t = await r.text(); return t ? JSON.parse(t) : null;
@@ -39,10 +45,11 @@ async function sbAll(path, opts={}) {
   // Primera página con el total (Content-Range) y el resto en paralelo.
   const PAGE=1000;
   const sep=path.includes('?')?'&':'?';
+  const bearer=await authBearer();
   const pedir=async (offset, contar)=>{
     const r=await fetch(`${SB_URL}/rest/v1/${path}${sep}limit=${PAGE}&offset=${offset}`,{
       ...opts,
-      headers:{'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Content-Type':'application/json',
+      headers:{'apikey':SB_KEY,'Authorization':`Bearer ${bearer}`,'Content-Type':'application/json',
         'Prefer':contar?'count=exact':'return=representation',...opts.headers}
     });
     if(!r.ok){const e=await r.text();throw new Error(e);}
@@ -333,6 +340,8 @@ async function estadoSync(){
   } catch(e) { console.warn('Estado: no se pudo sincronizar:', e.message || e); return false; }
 }
 function estadoRepintar(){ renderAtril(); renderUltimosLibros(); }
+/** Tras iniciar sesión: trae ya todo lo del usuario sin esperar a los 20 s. */
+function forzarSincronizacion(){ estadoUltimaSync = 0; return sincronizarAlVolver(); }
 /** Al volver a la pestaña o a la app (p. ej. tras leer en el otro dispositivo): trae lo nuevo sin recargar. */
 async function sincronizarAlVolver(){
   if (document.hidden || modoCarta() || Date.now() - estadoUltimaSync < 20000) return;
@@ -567,6 +576,7 @@ function arrancarUI(){
   if (typeof track==='function') track('app_abierta',{sesion_hecha:isNocheCerrada()});
   if (typeof sesPrecargar==='function') sesPrecargar();
   if (typeof perfilSincronizar==='function') perfilSincronizar();
+  if (typeof Cuenta!=='undefined') Cuenta.alArrancar();       // pide iniciar sesión si no la hay (cuenta-ui.js)
 }
 
 /** Pide lo nuevo sin bloquear: el contenido solo si caducó; el usuario siempre. Repinta si algo cambió. */
@@ -3139,7 +3149,7 @@ async function ejecutarCorpusSearch(termino) {
   try {
     const r = await fetch(`${SB_URL}/rest/v1/rpc/buscar_corpus`, {
       method: 'POST',
-      headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json' },
+      headers: await authHdr({ 'Content-Type': 'application/json' }),
       body: JSON.stringify({ termino, limite: 15 })
     });
     const data = await r.json();
@@ -3198,7 +3208,7 @@ async function renderEnsayos() {
   try {
     if (!ensayosCache.length) {
       const r = await fetch(`${SB_URL}/rest/v1/articulos?select=*&publico=eq.true&order=created_at.desc`, {
-        headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` }
+        headers: await authHdr()
       });
       ensayosCache = await r.json();
       if (!Array.isArray(ensayosCache)) ensayosCache = [];
@@ -3369,7 +3379,7 @@ async function srsRPC(fn, body) {
   if (dec === 'descartar') return null;
   const r = await fetch(`${SB_URL}/rest/v1/rpc/${fn}`, {
     method: 'POST',
-    headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`, 'Content-Type': 'application/json' },
+    headers: await authHdr({ 'Content-Type': 'application/json' }),
     body: JSON.stringify(body)
   });
   if (!r.ok) throw new Error(await r.text());

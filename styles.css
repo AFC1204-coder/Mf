@@ -3012,3 +3012,19 @@ body.carta #view-lecciones .back-btn { display: none !important; } /* el invitad
   .consulta-meta, .consulta-por, .consulta-mas, .consulta-acc { margin-left: 0; }
 }
 .consulta-por mark.hl { background: rgba(201,168,76,0.22); color: var(--text); padding: 0 2px; border-radius: 2px; }
+
+/* ── CUENTA: pantalla de entrada (cuenta-ui.js) ── */
+.cuenta-overlay { position:fixed; inset:0; z-index:500; display:flex; align-items:center; justify-content:center; padding:var(--sp-5); background:var(--bg, #080808); }
+.cuenta-overlay[hidden] { display:none; }
+.cuenta-card { width:min(26rem, 100%); background:var(--surface); border:1px solid var(--border2); border-radius:var(--radius-lg); padding:var(--sp-7) var(--sp-6); display:flex; flex-direction:column; gap:var(--sp-2); box-shadow:0 24px 70px rgba(0,0,0,.5); }
+.cuenta-card h2 { font-family:var(--font-display); font-size:var(--text-xl, 1.5rem); color:var(--text); margin:0; letter-spacing:-0.01em; }
+.cuenta-sub { color:var(--text3); font-size:var(--text-sm); line-height:1.5; margin:0 0 var(--sp-4); }
+.cuenta-lab { font-family:var(--font-ui); font-size:var(--text-xs); letter-spacing:0.1em; text-transform:uppercase; color:var(--text3); margin-top:var(--sp-3); }
+.cuenta-in { width:100%; min-height:46px; padding:0.7rem 0.9rem; background:var(--surface2); color:var(--text); border:1px solid var(--border2); border-radius:var(--radius); font:inherit; font-size:1rem; }
+.cuenta-in:focus { outline:2px solid var(--accent); outline-offset:1px; border-color:var(--accent); }
+.cuenta-ver { display:flex; align-items:center; gap:0.5rem; font-size:var(--text-sm); color:var(--text3); margin-top:var(--sp-2); cursor:pointer; }
+.cuenta-err { min-height:1.3em; color:#e07a6e; font-size:var(--text-sm); margin:var(--sp-3) 0 0; }
+.cuenta-btn { margin-top:var(--sp-3); min-height:46px; background:var(--accent); color:#000; border:0; border-radius:var(--radius); font:700 var(--text-sm) var(--font-ui); letter-spacing:0.06em; cursor:pointer; }
+.cuenta-btn:disabled { opacity:.6; cursor:default; }
+.cuenta-saltar { margin-top:var(--sp-2); min-height:40px; background:none; border:0; color:var(--text3); font:inherit; font-size:var(--text-sm); text-decoration:underline; cursor:pointer; }
+.cuenta-saltar[hidden] { display:none; }
