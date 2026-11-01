@@ -207,7 +207,7 @@ async function markNotifRead(id, el) {
   try {
     await fetch(SB_URL + '/rest/v1/notificaciones?id=eq.' + id, {
       method: 'PATCH',
-      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + ((typeof Cuenta !== 'undefined' && Cuenta.tokenSync()) || SB_KEY), 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
       body: JSON.stringify({ leida: true })
     });
   } catch (e) { /* silent */ }
@@ -221,7 +221,7 @@ async function markAllRead() {
   try {
     await fetch(SB_URL + '/rest/v1/notificaciones?usuario_id=eq.default&leida=eq.false', {
       method: 'PATCH',
-      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + ((typeof Cuenta !== 'undefined' && Cuenta.tokenSync()) || SB_KEY), 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
       body: JSON.stringify({ leida: true })
     });
   } catch (e) { /* silent */ }
@@ -243,7 +243,7 @@ async function dismissNotif(id, btn) {
   try {
     await fetch(SB_URL + '/rest/v1/notificaciones?id=eq.' + id, {
       method: 'DELETE',
-      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Prefer': 'return=minimal' }
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + ((typeof Cuenta !== 'undefined' && Cuenta.tokenSync()) || SB_KEY), 'Prefer': 'return=minimal' }
     });
   } catch (e) { /* silent */ }
 }
@@ -558,7 +558,7 @@ async function clearAllNotifications() {
   try {
     await fetch(SB_URL + '/rest/v1/notificaciones?usuario_id=eq.default', {
       method: 'DELETE',
-      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Prefer': 'return=minimal' }
+      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + ((typeof Cuenta !== 'undefined' && Cuenta.tokenSync()) || SB_KEY), 'Prefer': 'return=minimal' }
     });
     toast('Notificaciones eliminadas');
   } catch (e) { toast('Error al eliminar'); }
@@ -586,7 +586,7 @@ function vapidBytes(b64) {
   const raw = atob((b64 + pad).replace(/-/g, '+').replace(/_/g, '/'));
   return Uint8Array.from(raw, c => c.charCodeAt(0));
 }
-const pushHeaders = extra => Object.assign({ 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY, 'Content-Type': 'application/json' }, extra || {});
+const pushHeaders = extra => Object.assign({ 'apikey': SB_KEY, 'Authorization': 'Bearer ' + ((typeof Cuenta !== 'undefined' && Cuenta.tokenSync()) || SB_KEY), 'Content-Type': 'application/json' }, extra || {});
 
 /** Lección que toca hoy (la calcula la app); el aviso lleva su idea y título. */
 function proximaLeccionPush() {

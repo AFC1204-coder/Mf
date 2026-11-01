@@ -209,6 +209,7 @@ function renderTu() {
     <div class="tu-list" style="margin-top:2rem">
       ${fila('Tu ruta', p ? (ruta ? esc(ruta.titulo) + ` · ${ruta.pct}%` : 'Sin ruta fija') + ` · ${p.minutos} min · ${p.dias === 7 ? 'cada día' : p.dias + ' días'}` : 'Elige objetivo, tiempo y días', 'perfilEmpezar()')}
       ${fila('Guardados', `${favLecs().length} lecciones · ${favLibros().length} libros`, "showView('favoritos')")}
+      ${typeof Cuenta !== 'undefined' ? fila('Cuenta', Cuenta.activa() ? esc(Cuenta.email()) + ' · Cerrar sesión' : 'Inicia sesión para tener lo mismo en todos tus dispositivos', 'Cuenta.abrir()') : ''}
       ${fila('Avisos', 'Recordatorio diario y ajustes', 'toggleNotifPanel()')}
       ${fila('Mapa de conexiones', 'Autores y tesis cruzadas', "location.href='mapa.html'")}
     </div>`;
