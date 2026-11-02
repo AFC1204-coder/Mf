@@ -3028,3 +3028,9 @@ body.carta #view-lecciones .back-btn { display: none !important; } /* el invitad
 .cuenta-btn:disabled { opacity:.6; cursor:default; }
 .cuenta-saltar { margin-top:var(--sp-2); min-height:40px; background:none; border:0; color:var(--text3); font:inherit; font-size:var(--text-sm); text-decoration:underline; cursor:pointer; }
 .cuenta-saltar[hidden] { display:none; }
+.cuenta-o { display:flex; align-items:center; gap:var(--sp-3); margin:var(--sp-4) 0 0; color:var(--text3); font-size:var(--text-xs); letter-spacing:0.08em; text-transform:uppercase; }
+.cuenta-o::before, .cuenta-o::after { content:''; flex:1; height:1px; background:var(--border2); }
+.cuenta-btn.sec { background:transparent; color:var(--text); border:1px solid var(--border2); margin-top:var(--sp-2); }
+.cuenta-info { min-height:1.3em; color:var(--text2); font-size:var(--text-sm); line-height:1.5; margin:var(--sp-3) 0 0; }
+#cuenta-codigo-box[hidden] { display:none; }
+#cuenta-codigo-box { display:flex; flex-direction:column; gap:var(--sp-2); }

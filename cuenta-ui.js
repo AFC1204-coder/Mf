@@ -11,6 +11,7 @@ const Cuenta = (() => {
   const OBLIGATORIA = false;
 
   let sesion = null, cargada = false, renovando = null, timer = null;
+  let entroPorEnlace = false, errorEnlace = '';
   const ahora = () => Date.now();
 
   function cargar() {
@@ -86,6 +87,58 @@ const Cuenta = (() => {
     mostrar();
   }
 
+  /* ── Entrar sin contraseña: enlace al correo o código de 6 cifras ── */
+  /** Dirección a la que vuelve el enlace del correo: la propia app (debe estar en las URLs permitidas de Supabase). */
+  const volverA = () => location.origin + location.pathname.replace(/[^/]*$/, '');
+
+  /** Envía al correo un enlace y un código. Solo para cuentas que ya existen (no crea usuarios). */
+  async function pedirEnlace(correo) {
+    const error = CuentaLib.validarCorreo(correo);
+    if (error) return { ok: false, msg: error };
+    const email = String(correo).trim();
+    const r = await llamar('otp?redirect_to=' + encodeURIComponent(volverA()), { email, create_user: false });
+    if (!r.ok) return { ok: false, msg: CuentaLib.mensajeError(r.status, r.cuerpo) };
+    try { localStorage.setItem(K_EMAIL, email); } catch (e) {}
+    return { ok: true, email };
+  }
+
+  /** Entra con el código de 6 cifras que llegó al correo (sirve en la app instalada, donde el enlace no llega). */
+  async function entrarConCodigo(correo, codigo) {
+    const e1 = CuentaLib.validarCorreo(correo);
+    if (e1) return { ok: false, msg: e1 };
+    const c = CuentaLib.limpiarCodigo(codigo);
+    if (!c) return { ok: false, msg: 'El código son las cifras del correo (normalmente 6).' };
+    const r = await llamar('verify', { type: 'email', email: String(correo).trim(), token: c });
+    if (!r.ok) return { ok: false, msg: CuentaLib.mensajeError(r.status, r.cuerpo) };
+    const sNueva = CuentaLib.sesionDe(r.cuerpo, ahora());
+    if (!sNueva) return { ok: false, msg: CuentaLib.mensajeError(500, null) };
+    guardar(sNueva);
+    try { localStorage.setItem(K_EMAIL, String(correo).trim()); sessionStorage.removeItem(K_SALTAR); } catch (e) {}
+    return { ok: true };
+  }
+
+  /** Al volver desde el enlace del correo la dirección trae la sesión: se guarda y se limpia la dirección. */
+  function capturarEnlace() {
+    let hash = '';
+    try { hash = location.hash; } catch (e) { return; }
+    const r = CuentaLib.sesionDeHash(hash, ahora());
+    if (!r) return;
+    cargar();
+    if (r.sesion) { guardar(r.sesion); entroPorEnlace = true; try { sessionStorage.removeItem(K_SALTAR); } catch (e) {} }
+    else if (r.error) errorEnlace = r.error;
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+  }
+  /** El enlace no dice de quién es la sesión: se pregunta a Supabase para mostrar el correo. */
+  async function completarUsuario() {
+    if (!sesion || sesion.email) return;
+    try {
+      const r = await fetch(`${SB_URL}/auth/v1/user`, { headers: { apikey: SB_KEY, Authorization: 'Bearer ' + sesion.access } });
+      if (!r.ok) return;
+      const u = await r.json();
+      if (u && u.email && sesion) { guardar({ ...sesion, email: u.email, uid: u.id || sesion.uid }); refrescarVista(); }
+    } catch (e) {}
+  }
+
   /* ── Pantalla de entrada ── */
   function overlay() {
     let o = document.getElementById('cuenta-overlay');
@@ -105,12 +158,39 @@ const Cuenta = (() => {
         <label class="cuenta-ver"><input type="checkbox" id="cuenta-ver"> Mostrar contraseña</label>
         <p class="cuenta-err" id="cuenta-err" role="alert"></p>
         <button type="submit" class="cuenta-btn" id="cuenta-ok">Entrar</button>
+        <p class="cuenta-o"><span>o sin contraseña</span></p>
+        <button type="button" class="cuenta-btn sec" id="cuenta-enlace">Enviarme un enlace al correo</button>
+        <p class="cuenta-info" id="cuenta-info" role="status"></p>
+        <div id="cuenta-codigo-box" hidden>
+          <label class="cuenta-lab" for="cuenta-codigo">Código del correo</label>
+          <input class="cuenta-in" type="text" id="cuenta-codigo" inputmode="numeric" autocomplete="one-time-code" maxlength="12" placeholder="123456">
+          <button type="button" class="cuenta-btn" id="cuenta-codigo-ok">Entrar con el código</button>
+        </div>
         <button type="button" class="cuenta-saltar" id="cuenta-saltar">Seguir sin cuenta</button>
       </form>`;
     document.body.appendChild(o);
     const f = o.querySelector('#cuenta-form'), err = o.querySelector('#cuenta-err'), btn = o.querySelector('#cuenta-ok');
     o.querySelector('#cuenta-ver').addEventListener('change', e => { o.querySelector('#cuenta-pass').type = e.target.checked ? 'text' : 'password'; });
     o.querySelector('#cuenta-saltar').addEventListener('click', () => { try { sessionStorage.setItem(K_SALTAR, '1'); } catch (e) {} ocultar(); });
+    const info = o.querySelector('#cuenta-info'), caja = o.querySelector('#cuenta-codigo-box');
+    const btnEnlace = o.querySelector('#cuenta-enlace'), btnCodigo = o.querySelector('#cuenta-codigo-ok');
+    btnEnlace.addEventListener('click', async () => {
+      err.textContent = ''; info.textContent = ''; btnEnlace.disabled = true; btnEnlace.textContent = 'Enviando…';
+      const r = await pedirEnlace(o.querySelector('#cuenta-email').value);
+      btnEnlace.disabled = false; btnEnlace.textContent = 'Enviarme un enlace al correo';
+      if (!r.ok) { err.textContent = r.msg; return; }
+      info.textContent = `Te he escrito a ${r.email}. Pulsa el enlace del correo o, si tienes la app instalada, escribe aquí el código.`;
+      caja.hidden = false;
+      setTimeout(() => o.querySelector('#cuenta-codigo').focus(), 50);
+    });
+    btnCodigo.addEventListener('click', async () => {
+      err.textContent = ''; btnCodigo.disabled = true; btnCodigo.textContent = 'Entrando…';
+      const r = await entrarConCodigo(o.querySelector('#cuenta-email').value, o.querySelector('#cuenta-codigo').value);
+      btnCodigo.disabled = false; btnCodigo.textContent = 'Entrar con el código';
+      if (!r.ok) { err.textContent = r.msg; return; }
+      o.querySelector('#cuenta-codigo').value = ''; info.textContent = ''; caja.hidden = true;
+      ocultar(); alEntrar(); completarUsuario();
+    });
     f.addEventListener('submit', async ev => {
       ev.preventDefault();
       err.textContent = ''; btn.disabled = true; btn.textContent = 'Entrando…';
@@ -130,6 +210,7 @@ const Cuenta = (() => {
     const campo = o.querySelector('#cuenta-email');
     if (!campo.value) { try { campo.value = localStorage.getItem(K_EMAIL) || ''; } catch (e) {} }
     o.hidden = false;
+    if (errorEnlace) { o.querySelector('#cuenta-err').textContent = errorEnlace; errorEnlace = ''; }
     setTimeout(() => (campo.value ? o.querySelector('#cuenta-pass') : campo).focus(), 50);
   }
   function ocultar() { const o = document.getElementById('cuenta-overlay'); if (o) o.hidden = true; }
@@ -147,7 +228,10 @@ const Cuenta = (() => {
     if (typeof modoCarta === 'function' && modoCarta()) return;
     cargar();
     if (sesion) { await token(); }              // renueva ya si hacía falta; si la sesión ya no vale, se borra
-    if (activa()) return;
+    if (activa()) {
+      if (entroPorEnlace) { entroPorEnlace = false; alEntrar(); completarUsuario(); }
+      return;
+    }
     let saltada = false;
     try { saltada = sessionStorage.getItem(K_SALTAR) === '1'; } catch (e) {}
     if (OBLIGATORIA || !saltada) mostrar();
@@ -160,5 +244,7 @@ const Cuenta = (() => {
     if (confirm('¿Cerrar la sesión en este dispositivo? Tus datos siguen guardados en tu cuenta.')) cerrar();
   }
 
-  return { token, tokenSync, email, activa, iniciar, cerrar, abrir, mostrar, alArrancar, OBLIGATORIA };
+  capturarEnlace();   // antes de que app.js lea la dirección: el hash del enlace no es una ruta de la app
+
+  return { token, tokenSync, email, activa, iniciar, cerrar, abrir, mostrar, alArrancar, pedirEnlace, entrarConCodigo, OBLIGATORIA };
 })();
