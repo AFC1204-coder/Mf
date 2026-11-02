@@ -2102,7 +2102,7 @@ function verLeccion(id, from=null, skipPush=false, replace=false){
 
   html+=`<div class="lec-actions">
     ${!done
-      ?`<button class="act-btn" onclick="marcarCompletada('${id}')">Marcar leída</button>`
+      ?`<button class="act-btn" id="btn-marcar-leida" onclick="marcarCompletada('${id}')">Marcar leída</button>`
       :`<button class="act-btn done-mark" disabled>Leída</button>`}
     <button class="act-btn" id="btn-fav-lec" onclick="toggleFavLecDetalle('${id}',this)">${fav?'Guardada':'Guardar'}</button>
     <button class="act-btn share carta-ok" onclick="compartirLeccion()">Enviar</button>
@@ -2120,6 +2120,7 @@ function verLeccion(id, from=null, skipPush=false, replace=false){
   if(typeof SCSSubrayados !== 'undefined' && SCSSubrayados.init) {
     SCSSubrayados.init(lecActual.id);
   }
+  iniciarLecturaAuto(lecActual.id);
 }
 
 /* Primer párrafo → figura → resto, para que el diagrama ilustre la idea ya enunciada. */
@@ -2549,6 +2550,7 @@ async function despertarLeidasUnaVez(){
    MARCAR COMPLETADA
 ═══════════════════════════════════════════ */
 async function marcarCompletada(id, opts={}){
+  if (opts.auto && completadasSet().has(id)) return;
   if (typeof lecturaTerminada==='function') lecturaTerminada(id);
   try{
     await sb('progreso',{method:'POST',body:JSON.stringify({tipo:'leccion',item_id:id,resultado:'correcta',fecha:new Date().toISOString()})});
@@ -2556,11 +2558,57 @@ async function marcarCompletada(id, opts={}){
     setNocheCerrada(id);
     marcarDiaEstudiado();
     tarjetasDeLecciones([id]).catch(e=>console.warn('Repaso:', e));
-    if (typeof track==='function') track('leccion_leida',{origen:opts.sinNavegar?'sesion':'folio'});
-    if (!opts.sinNavegar) toast('✓ Lección completada');
+    if (typeof track==='function') track('leccion_leida',{origen:opts.auto?'auto':(opts.sinNavegar?'sesion':'folio')});
+    if (opts.auto) avisoLeidaAuto(id);
+    else if (!opts.sinNavegar) toast('✓ Lección completada');
     renderStats(); renderAtril();
-    if (!opts.sinNavegar && !document.body.classList.contains('noche')) verLeccion(id);
-  }catch(e){toast('Error: '+e.message);}
+    if (!opts.sinNavegar && !opts.auto && !document.body.classList.contains('noche')) verLeccion(id);
+  }catch(e){
+    // En automático un fallo (sin red) no molesta: el botón sigue disponible.
+    if (opts.auto) console.warn('Lectura automática:', e); else toast('Error: '+e.message);
+  }
+}
+
+/* ═══════════════════════════════════════════
+   LECTURA AUTOMÁTICA
+   Una lección cuenta como leída, sin pulsar el botón, cuando ha estado a la vista el tiempo
+   razonable y se ha llegado al final del texto (lib/leida.js). El botón sigue ahí por si se prefiere.
+═══════════════════════════════════════════ */
+let lecAuto=null;
+function detenerLecturaAuto(){ if(lecAuto){ clearInterval(lecAuto.t); lecAuto=null; } }
+function iniciarLecturaAuto(id){
+  detenerLecturaAuto();
+  if(typeof LeidaAuto==='undefined' || modoCarta() || completadasSet().has(id)) return;
+  const st={id,seg:0,t:null};
+  lecAuto=st;
+  const minutos=Didactica.minutosLectura(lecActual);
+  st.t=setInterval(()=>{
+    const vista=document.getElementById('view-leccion');
+    // Dejó la lección (otra vista u otra lección): se para solo.
+    if(!lecActual || lecActual.id!==id || !vista || !vista.classList.contains('active')){
+      clearInterval(st.t); if(lecAuto===st) lecAuto=null; return;
+    }
+    if(document.hidden) return;                    // pestaña en segundo plano: no cuenta
+    st.seg++;
+    const bloques=document.querySelectorAll('#leccion-contenido .lec-body, #leccion-contenido .aplic-box, #leccion-contenido .con-box, #leccion-contenido .auto-box');
+    const bottoms=Array.from(bloques,e=>e.getBoundingClientRect().bottom);
+    if(LeidaAuto.haLeido({minutos,segundos:st.seg,bottoms,altoVentana:window.innerHeight})){
+      clearInterval(st.t); if(lecAuto===st) lecAuto=null;
+      marcarCompletada(id,{auto:true});
+    }
+  },1000);
+}
+/** Sin recargar la lección (se perdería el sitio donde se lee): avisa y cambia el botón y las marcas. */
+function avisoLeidaAuto(id){
+  if(!lecActual || lecActual.id!==id) return;
+  toast('✓ Lección leída');
+  const b=document.getElementById('btn-marcar-leida');
+  if(b){ b.textContent='Leída'; b.disabled=true; b.classList.add('done-mark'); b.removeAttribute('onclick'); }
+  const meta=document.querySelector('#leccion-contenido .lec-meta-header');
+  if(meta && !meta.querySelector('.lec-done')){
+    const sp=document.createElement('span'); sp.className='lec-done'; sp.textContent='Completada'; meta.appendChild(sp);
+  }
+  document.querySelector('#leccion-contenido .lec-paso.on')?.classList.add('done');
 }
 
 /* ═══════════════════════════════════════════
