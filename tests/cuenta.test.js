@@ -81,3 +81,47 @@ describe('Cuenta · lo escrito y los errores', () => {
     expect(C.sesionPerdida(503)).toBe(false);
   });
 });
+
+describe('Cuenta · entrar sin contraseña (enlace o código del correo)', () => {
+  it('valida solo el correo', () => {
+    expect(C.validarCorreo('')).toMatch(/correo/);
+    expect(C.validarCorreo('no-es-correo')).toMatch(/válido/);
+    expect(C.validarCorreo(' a@b.es ')).toBeNull();
+  });
+  it('limpia el código: cifras, sin espacios ni guiones, entre 6 y 10', () => {
+    expect(C.limpiarCodigo('123456')).toBe('123456');
+    expect(C.limpiarCodigo(' 123 456 ')).toBe('123456');
+    expect(C.limpiarCodigo('123-456')).toBe('123456');
+    expect(C.limpiarCodigo('12345')).toBeNull();
+    expect(C.limpiarCodigo('12345678901')).toBeNull();
+    expect(C.limpiarCodigo('12a456')).toBeNull();
+    expect(C.limpiarCodigo('')).toBeNull();
+    expect(C.limpiarCodigo(undefined)).toBeNull();
+  });
+  it('lee la sesión que trae el enlace del correo', () => {
+    const r = C.sesionDeHash('#access_token=AT&refresh_token=RT&expires_in=3600&token_type=bearer&type=magiclink', AHORA);
+    expect(r.tipo).toBe('magiclink');
+    expect(r.sesion).toMatchObject({ access: 'AT', refresh: 'RT', expira: AHORA + 3600_000 });
+  });
+  it('prefiere expires_at si viene', () => {
+    const r = C.sesionDeHash('#access_token=AT&refresh_token=RT&expires_in=3600&expires_at=1800000500', AHORA);
+    expect(r.sesion.expira).toBe(1_800_000_500_000);
+  });
+  it('el enlace caducado da un mensaje claro', () => {
+    const r = C.sesionDeHash('#error=access_denied&error_code=otp_expired&error_description=Email+link+is+invalid+or+has+expired', AHORA);
+    expect(r.error).toMatch(/caducado/);
+    expect(r.sesion).toBeUndefined();
+  });
+  it('los hash normales de la app no se tocan', () => {
+    for (const h of ['', '#', '#home', '#biblioteca', '#leccion/aaa/bbb', '#lecciones/aaa', undefined, null])
+      expect(C.sesionDeHash(h, AHORA)).toBeNull();
+  });
+  it('un hash con access_token vacío no es sesión', () => {
+    expect(C.sesionDeHash('#access_token=&refresh_token=RT', AHORA)).toBeNull();
+  });
+  it('mensajes nuevos en español', () => {
+    expect(C.mensajeError(400, { error_code: 'otp_expired', msg: 'Token has expired or is invalid' })).toMatch(/caducado/);
+    expect(C.mensajeError(422, { msg: 'Signups not allowed for otp' })).toMatch(/no tiene cuenta/);
+    expect(C.mensajeError(429, { error_code: 'over_email_send_rate_limit' })).toMatch(/Demasiados/);
+  });
+});
