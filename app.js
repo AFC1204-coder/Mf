@@ -2006,9 +2006,9 @@ function verLeccion(id, from=null, skipPush=false, replace=false){
   const libro=libros.find(l=>l.id===lecActual.libro_id);
   let html='';
 
-  const figuras=(typeof Diagrama!=='undefined'?Diagrama.deLeccion(lecActual):[]).map(Diagrama.render).join('');
-  if(!figuras && !lecActual.imagen_principal && lecActual._svgPendiente) cargarSvgPendiente(lecActual);
-  if(!figuras && lecActual.imagen_principal){
+  const figuras=(typeof Diagrama!=='undefined'?Diagrama.deLeccion(lecActual):[]).map(Diagrama.render).filter(Boolean);
+  if(!figuras.length && !lecActual.imagen_principal && lecActual._svgPendiente) cargarSvgPendiente(lecActual);
+  if(!figuras.length && lecActual.imagen_principal){
     html+=`<div class="lec-img-wrap">
       <img src="${lecActual.imagen_principal}" alt="${esc(lecActual.titulo)}" loading="lazy" referrerpolicy="no-referrer"
         onclick="abrirZoomImagen(this)" title="Ampliar" onerror="this.parentElement.style.display='none'">
@@ -2146,12 +2146,21 @@ function verLeccion(id, from=null, skipPush=false, replace=false){
 
 /* Primer párrafo → figura → resto, para que el diagrama ilustre la idea ya enunciada. */
 function cuerpoConFigura(cuerpo, figuras){
-  if(!figuras) return fmt(cuerpo);
+  const figs=(Array.isArray(figuras)?figuras:(figuras?[figuras]:[])).filter(Boolean);
+  if(!figs.length) return fmt(cuerpo);
   const partes=String(cuerpo||'').split(/\n\s*\n/);
-  const primero=partes[0]||'';
-  const esParrafo=!/^\s*([-*•|#>]|\d+[.)]\s)/.test(primero) && !/<table/i.test(primero);
-  if(!esParrafo || partes.length<2) return figuras+fmt(cuerpo);
-  return fmt(primero)+figuras+fmt(partes.slice(1).join('\n\n'));
+  const sitios=Visuales.colocarFiguras(partes,figs.length);
+  if(!sitios.length) return figs.join('')+fmt(cuerpo);
+  // La primera figura va tras el primer párrafo; las demás, repartidas más abajo junto al texto que ilustran.
+  let html='', bloque=[];
+  partes.forEach((p,i)=>{
+    bloque.push(p);
+    const k=sitios.indexOf(i);
+    if(k>=0){ html+=fmt(bloque.join('\n\n'))+figs[k]; bloque=[]; }
+  });
+  if(bloque.length) html+=fmt(bloque.join('\n\n'));
+  // Si hubo más figuras que sitios, el resto va al final del texto
+  return html+figs.slice(sitios.length).join('');
 }
 
 /* Comprobación activa: una pregunta del mismo libro, afín a la lección. No guarda progreso. */

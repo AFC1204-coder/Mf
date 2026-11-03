@@ -2597,6 +2597,21 @@ body.kindle .dg-svg { font-family: 'Literata', Georgia, serif; }
 .dg-hub { fill: var(--c-a); fill-opacity: 0.14; stroke: var(--c-a); stroke-width: 1.6; }
 .dg-curve { fill: none; stroke: var(--tn); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
 .dg-zone { fill: var(--tn); fill-opacity: 0.07; }
+/* matemática sencilla: gráfica, barras, fórmula, tabla, árbol, Venn, recta */
+.dg-grid { stroke: var(--dg-rule); stroke-opacity: 0.55; stroke-width: 1; }
+.dg-tick { fill: var(--dg-ink2); font-size: 12px; }
+.dg-ref { stroke: var(--tn); stroke-opacity: 0.85; stroke-width: 1.7; stroke-dasharray: 5 5; fill: none; }
+.dg-curve.dash { stroke-dasharray: 8 6; }
+.dg-bar { fill: var(--tn); fill-opacity: 0.82; }
+.dg-formula { fill: var(--tn); font-family: var(--font-display); font-weight: 600; letter-spacing: 0.01em; }
+body.kindle .dg-formula, body.kindle .dg-sym { font-family: 'Literata', Georgia, serif; }
+.dg-sym { fill: var(--tn); font-family: var(--font-display); font-size: 21px; font-weight: 700; font-style: italic; }
+.dg-celda { fill: var(--dg-ink); fill-opacity: 0.045; stroke: var(--dg-rule); stroke-width: 1; }
+.dg-celda.hi { fill: var(--tn); fill-opacity: 0.17; stroke: var(--tn); stroke-opacity: 0.7; stroke-width: 1.4; }
+.dg-venn { fill: var(--tn); fill-opacity: 0.17; stroke: var(--tn); stroke-opacity: 0.75; stroke-width: 1.6; }
+.dg-d.i { font-style: italic; }
+.dg-d.bb { font-weight: 700; fill: var(--dg-ink); }
+.dg-line[class*="tn-"] { stroke: var(--tn); stroke-opacity: 0.7; }
 .dg-plate { fill: var(--dg-bg); }
 .dg-big { fill: var(--tn); font-size: 30px; font-weight: 700; font-family: var(--font-display); }
 body.kindle .dg-big { font-family: 'Literata', Georgia, serif; font-weight: 600; }
