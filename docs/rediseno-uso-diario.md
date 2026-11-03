@@ -801,3 +801,14 @@ de menos paciencia: parálisis por análisis.
 
 **No se ha tocado:** el contenido de las fichas, la reanudación automática de la lectura al abrir, ni la pestaña Biblioteca.
 **Pendiente (decisión del usuario):** reducir la saturación de la propia Biblioteca (cientos de tomos de golpe).
+
+## 22. Ventanas que no atrapan (3 nov 2026)
+
+**Fallo:** al pulsar «Test de un tomo o eje» en Repaso, el modal «Configurar test» (fijo, centrado, de 640 px de alto) se recortaba por arriba y por
+abajo en cualquier pantalla más baja de ≈ 660 px (móvil con barras del navegador, en horizontal, pantallas pequeñas, letra grande), sin poder desplazarlo:
+quedaban fuera el título y los botones «Cancelar» e «Iniciar» y no había forma de salir salvo cerrar la app. El mismo patrón tenían «Exportar PDF» y la pantalla de entrada.
+
+**Arreglo (`styles.css`, `index.html`, `app.js`):** la ventana se desplaza si no cabe (`max-height` en `dvh`, `overflow-y: auto`, centrada con `margin: auto` en vez de
+`align-items: center`, que es lo que recortaba); los botones de salida van fijos abajo (`position: sticky`); se cierra con un toque fuera, con Escape y con una ✕; y en alturas
+< 720 px la ventana se compacta. Probado en Chromium a 390×844, 390×560, 360×480 y 844×390: botones siempre a la vista, cierre de las cuatro formas, «Iniciar» arranca el test,
+«Exportar PDF» y la pantalla de entrada también se pueden recorrer.

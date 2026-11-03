@@ -2209,7 +2209,12 @@ function abrirZoom(nodo){
   document.body.appendChild(o);
 }
 function cerrarZoom(){ document.querySelectorAll('.dg-zoom').forEach(n=>n.remove()); }
-document.addEventListener('keydown',e=>{ if(e.key==='Escape') cerrarZoom(); });
+/** Escape cierra lo que esté abierto encima de la pantalla: ninguna ventana debe dejarte sin salida. */
+function cerrarModales(){
+  const t=document.getElementById('tconfig-overlay'); if(t && !t.classList.contains('hidden')) closeTconfig();
+  const pd=document.getElementById('pdf-modal'); if(pd && !pd.classList.contains('hidden')) closePdfModal();
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ cerrarZoom(); cerrarModales(); } });
 
 function guardarNota(id){const ta=document.getElementById(`nota-${id}`);if(ta){saveNota(id,ta.value).then(()=>toast('📝 Nota guardada'));}}
 function toggleFavLecDetalle(id,btn){toggleFavLec(id,btn);btn.textContent=favLecs().includes(id)?'Guardada':'Guardar';}

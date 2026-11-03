@@ -3083,3 +3083,24 @@ body.carta #view-lecciones .back-btn { display: none !important; } /* el invitad
   .inicio-pulso, .inicio-mas-btn { display: none; }
   .inicio-mas, .inicio-mas-cuerpo { display: contents; }
 }
+
+/* ═══ VENTANAS QUE NO ATRAPAN ═══
+   Un modal centrado y fijo, más alto que la pantalla (móvil con barras del navegador, en horizontal, letra grande),
+   quedaba recortado por arriba y por abajo sin forma de desplazarlo ni de llegar a «Cancelar»: había que cerrar la app.
+   Ahora la ventana se desplaza, los botones de salida van siempre a la vista, y se cierra con un toque fuera, con Escape
+   o con la ✕. Afecta a «Configurar test», «Exportar PDF» y la pantalla de entrada. */
+.tconfig-overlay, .modal-overlay, .cuenta-overlay { align-items: flex-start; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+.tconfig-overlay > *, .modal-overlay > *, .cuenta-overlay > * { margin: auto; }
+.tconfig-box, .modal-box, .cuenta-card { max-height: calc(100vh - 2 * var(--sp-5)); max-height: calc(100dvh - 2 * var(--sp-5)); overflow-y: auto; overscroll-behavior: contain; }
+.tconfig-box, .modal-box { padding-bottom: 0; }
+.tconfig-footer, .modal-actions { position: sticky; bottom: 0; background: var(--surface); padding: var(--sp-4) 0 var(--sp-6); margin-top: 0; z-index: 1; }
+.tconfig-title { display: flex; align-items: center; gap: var(--sp-2); }
+.tconfig-x { margin-left: auto; min-width: 44px; min-height: 44px; background: none; border: 0; color: var(--text3); font-size: 1.1rem; cursor: pointer; border-radius: var(--radius); }
+.tconfig-x:hover { color: var(--text); background: var(--surface2); }
+@media (max-height: 720px) {
+  .tconfig-box, .modal-box { padding-top: var(--sp-5); padding-left: var(--sp-5); padding-right: var(--sp-5); }
+  .tconfig-sub { margin-bottom: var(--sp-4); }
+  .tconfig-pills, .tconfig-num-row { margin-bottom: var(--sp-4); }
+  .tconfig-info { margin-bottom: var(--sp-2); }
+  .tconfig-pill, .tconfig-num { min-height: 40px; }
+}
