@@ -117,14 +117,17 @@ el texto de la lección; 14 necesitaron retoques (etiquetas que no decían qué 
 de la lección, un intervalo que no se dibujaba) y ninguna se quitó. Pendiente de decidir: `bbc4346c` (mamograma), cuya figura es
 correcta pero contradice una frase de su lección (ver abajo).
 
-### Erratas encontradas en lecciones ya publicadas (no corregidas todavía)
-Las vieron los verificadores al contrastar las figuras con el texto:
-- *Reckoning with Risk* — «El ilusión de la certeza» (`bbc4346c`): dice «109 positivos, de los cuales 10 son enfermas»; con una sensibilidad del 90 % son **108 y 9** (9/108 = 8,3 %).
-- *Adaptive Thinking* — frecuencias naturales (`fa617959`): dice «7,8 %»; 8/107 = **7,5 %**.
-- *Reckoning with Risk* — frecuencias naturales (`964e8598`): la aplicación práctica dice «reduce el riesgo en 30 %… de 4 a 3 por mil»; 4 → 3 es un **25 %** (un beneficio absoluto de 1 por mil).
-- *Skin in the Game* — ergodicidad y ruina (`41644c9b`): dice que quien juega seis veces a la ruleta rusa muere «casi con seguridad»; 1 − (5/6)⁶ = **66,5 %**.
-- *Rational Choice in an Uncertain World* — bayesiano (`80752021`, *Surfing Uncertainty*): «Priors fuertes requieren menos evidencia para actualizar» está **al revés** (un prior fuerte necesita más).
-- *Take The Best* (`b212435e`): «3 preguntas frente a 50 variables» e «ignora el 90 %» no cuadran entre sí.
-- Lección del taxi azul (`6543d90c`): «hay que multiplicar por la tasa base… dando ≈ 41 %»; el 41 % sale de dividir 12 entre 29, no de multiplicar.
-- *The Singularity Is Nearer* (`130b11dd`): «ChatGPT llegó con cinco años de adelanto» sin fuente, y aparece «Segundo Cerebro Soberano» (parece un resto de otro proyecto).
-- Otras menores: `aab37980` («evidencia irrefutable», «95 % de los traders» sin fuente, confunde stop máximo con pérdida media), `74d75ea6` (cifras de sobrecoste sin fuente; la visión externa se atribuye a Tversky y fue con Seymour Fox), `e4c30e1f` («keynesiando»), `e8b1cb2b` («abaco»; no dice que cada paso duplique), `c1c9554d` (frase rota en la autocorrección).
+### Erratas encontradas en lecciones ya publicadas (corregidas el 3 nov 2026)
+Las vieron los verificadores al contrastar las figuras con el texto. Se corrigieron en la base de datos con un `update` por columna protegido por `md5` del texto anterior (solo actúa si el texto no ha cambiado), con cambios mínimos y sin añadir datos nuevos; 14 correcciones en 12 lecciones, todas comprobadas después:
+- *Reckoning with Risk* (`bbc4346c`): «109 positivos, de los cuales 10 son enfermas» → **108 y 9** (con la sensibilidad del 90 % que fija la propia lección; 9/108 = 8,3 %).
+- *Adaptive Thinking* (`fa617959`): «7.8%» → **7,5 % (8 de 107)**; también en su diagrama (`datos/diagramas.json`).
+- *Reckoning with Risk* (`964e8598`): «reduce el riesgo en 30 %… de 4 a 3 por mil» → **25 %** (4 → 3); «0.1%» → «0,1 %».
+- *Skin in the Game* (`41644c9b`): quien juega seis veces a la ruleta rusa muere «casi con seguridad» → **dos probabilidades entre tres** (1 − (5/6)⁶ = 66,5 %) y, si sigue jugando, acaba muriendo casi con seguridad.
+- *Surfing Uncertainty* (`80752021`): «Priors fuertes requieren menos evidencia» estaba **al revés** → más evidencia.
+- *Take The Best* (`b212435e`): «3 preguntas frente a 50 variables» e «ignora el 90 %» no cuadraban → «muchas más variables» e «ignora la mayor parte».
+- *El arte de pensar*, taxi azul (`6543d90c`): «hay que multiplicar… dando ≈ 41 %» → se explica con los 100 taxis (12 de 29), suponiendo que el testigo acierta el 80 % con ambos colores.
+- *The Singularity Is Nearer* (`130b11dd`): quitado «ChatGPT llegó con cinco años de adelanto» (sin fuente) y «exactamente el patrón que predice» (ahora «compatible… aunque no lo prueba»); «Segundo Cerebro Soberano» → «la biblioteca»; la pregunta de McGilchrist se rotula como lectura propia.
+- *Conoce la verdad sobre tu trading* (`aab37980`): «evidencia irrefutable» → «indicio claro»; «el 95 % de los traders» (sin fuente) → «la mayoría»; el stop pasa a ser la **pérdida media** objetivo (la figura se ajustó).
+- Otras menores: `e4c30e1f` («keynesiando»; los impuestos «en exactamente la cantidad» → «según Hazlitt… equivalente»), `e8b1cb2b` («abaco»; ahora dice que cada paso duplica al anterior; su figura lo atribuye a la lección), `c1c9554d` (frase rota).
+
+**Sin corregir (no se pudo confirmar):** en `74d75ea6` las cifras de sobrecoste del 40 % y el 20 % (sin fuente) y la atribución de la visión externa a Tversky (la intervención fue con Seymour Fox y el equipo del currículo); «exponencialmente más frecuentes» en `6bf94fd3` (las colas gruesas decaen algebraicamente). Quedan para revisar contra el libro.
