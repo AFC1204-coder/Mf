@@ -220,3 +220,38 @@ describe('Diagrama — matemática sencilla', () => {
     casos.forEach(([n, d]) => { const h = Diagrama.render(base(n, d, { titulo: mal, pie: mal })); expect(h).not.toContain('<img'); expect(h).not.toMatch(/NaN|undefined/); });
   });
 });
+
+describe('Diagrama — fórmulas con exponentes', () => {
+  const f = l => Diagrama.svg({ tipo: 'diagrama', plantilla: 'formula', titulo: 'T', datos: { lineas: [l] } });
+  it('«10^α» se dibuja con el exponente elevado y no deja el ^ literal', () => {
+    const g = f('10^α veces más raro');
+    expect(g).not.toContain('^');
+    expect(g).toMatch(/<tspan dy="-[\d.]+" style="font-size:[\d.]+px">α<\/tspan>/);
+    expect(g).toMatch(/<tspan dy="[\d.]+"> veces más raro<\/tspan>/);      // vuelve a la línea base
+  });
+  it('varios exponentes y llaves', () => {
+    const g = f('x^2 + y^{n+1} = z');
+    expect(g).not.toContain('^');
+    expect(g).toContain('>2</tspan>');
+    expect(g).toContain('>n+1</tspan>');
+  });
+  it('una fórmula sin exponentes sale como antes, y los exponentes no encogen la letra de más', () => {
+    expect(f('a > b')).toContain('a &gt; b');
+    const t = s => Number(f(s).match(/font-size:([\d.]+)px/)[1]);
+    expect(t('x^2 + y^2 = z^2 + w^2')).toBeGreaterThanOrEqual(t('x2 + y2 = z2 + w2 + extra'));
+  });
+  it('escapa el HTML también dentro de los exponentes', () => {
+    const g = f('a^<script>');
+    expect(g).not.toContain('<script>');
+  });
+});
+
+describe('Diagrama.wrap — espacio duro', () => {
+  it('no parte «72 %» cuando el espacio es duro, y sí cuando es normal', () => {
+    const duro = Diagrama.wrap('Mueren 400 · 22 %', 70, 14);
+    expect(duro.join('|')).toContain('22 %');
+    expect(duro.some(l => l === '%')).toBe(false);
+    const normal = Diagrama.wrap('Mueren 400 · 22 %', 70, 14);
+    expect(normal.length).toBeGreaterThanOrEqual(duro.length);
+  });
+});

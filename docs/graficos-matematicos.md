@@ -107,3 +107,24 @@ node tools/datos/agregar.mjs diagramas lote.json --anadir       # suma las figur
 El lote es `{ "idLección": [ figura, … ] }`. Con `--anadir` cada figura debe llevar `"adicional": true`.
 Dónde se colocan en la lección: la primera tras el primer párrafo y las demás repartidas por el texto, siempre tras un
 párrafo corrido (`Visuales.colocarFiguras`).
+
+## Piloto (3 nov 2026)
+
+Se revisaron 58 lecciones con vocabulario cuantitativo (como mucho 2 por libro) y se decidió lección a lección. Resultado:
+**29 lecciones con figura nueva (30 figuras)** —9 fórmulas, 7 gráficas, 5 árboles, 4 rectas, 3 tablas, 2 barras— y 29 sin ella
+(cualitativas, sin cifras o ya cubiertas por su diagrama). Cada figura pasó por un verificador independiente que recalculó los números contra
+el texto de la lección; 14 necesitaron retoques (etiquetas que no decían qué se medía, títulos que afirmaban sin la condición
+de la lección, un intervalo que no se dibujaba) y ninguna se quitó. Pendiente de decidir: `bbc4346c` (mamograma), cuya figura es
+correcta pero contradice una frase de su lección (ver abajo).
+
+### Erratas encontradas en lecciones ya publicadas (no corregidas todavía)
+Las vieron los verificadores al contrastar las figuras con el texto:
+- *Reckoning with Risk* — «El ilusión de la certeza» (`bbc4346c`): dice «109 positivos, de los cuales 10 son enfermas»; con una sensibilidad del 90 % son **108 y 9** (9/108 = 8,3 %).
+- *Adaptive Thinking* — frecuencias naturales (`fa617959`): dice «7,8 %»; 8/107 = **7,5 %**.
+- *Reckoning with Risk* — frecuencias naturales (`964e8598`): la aplicación práctica dice «reduce el riesgo en 30 %… de 4 a 3 por mil»; 4 → 3 es un **25 %** (un beneficio absoluto de 1 por mil).
+- *Skin in the Game* — ergodicidad y ruina (`41644c9b`): dice que quien juega seis veces a la ruleta rusa muere «casi con seguridad»; 1 − (5/6)⁶ = **66,5 %**.
+- *Rational Choice in an Uncertain World* — bayesiano (`80752021`, *Surfing Uncertainty*): «Priors fuertes requieren menos evidencia para actualizar» está **al revés** (un prior fuerte necesita más).
+- *Take The Best* (`b212435e`): «3 preguntas frente a 50 variables» e «ignora el 90 %» no cuadran entre sí.
+- Lección del taxi azul (`6543d90c`): «hay que multiplicar por la tasa base… dando ≈ 41 %»; el 41 % sale de dividir 12 entre 29, no de multiplicar.
+- *The Singularity Is Nearer* (`130b11dd`): «ChatGPT llegó con cinco años de adelanto» sin fuente, y aparece «Segundo Cerebro Soberano» (parece un resto de otro proyecto).
+- Otras menores: `aab37980` («evidencia irrefutable», «95 % de los traders» sin fuente, confunde stop máximo con pérdida media), `74d75ea6` (cifras de sobrecoste sin fuente; la visión externa se atribuye a Tversky y fue con Seymour Fox), `e4c30e1f` («keynesiando»), `e8b1cb2b` («abaco»; no dice que cada paso duplique), `c1c9554d` (frase rota en la autocorrección).
