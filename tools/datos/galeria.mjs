@@ -26,7 +26,7 @@ const bloques = Object.entries(lote).map(([id, v]) => {
 const html = `<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="${pathToFileURL(path.join(RAIZ, 'styles.css'))}">
 <style>body{padding:12px;background:#0b0b0b;font-family:sans-serif} .g{max-width:420px;margin:0 auto 18px} .g-id{color:#888;font:11px monospace;text-align:center;margin:14px 0 4px}</style>
 </head><body class="${kindle ? 'kindle' : ''}">${bloques}</body></html>`;
-const tmp = path.join(path.dirname(path.resolve(salida)), '_galeria.html');
+const tmp = path.join(path.dirname(path.resolve(salida)), `_galeria-${process.pid}-${Date.now()}.html`);   // único: varias ejecuciones a la vez no se pisan
 fs.writeFileSync(tmp, html);
 const { chromium } = require('playwright');
 const b = await chromium.launch();
@@ -35,5 +35,5 @@ await p.goto(pathToFileURL(tmp).href);
 await p.waitForTimeout(500);
 await p.screenshot({ path: salida, fullPage: true });
 await b.close();
-fs.unlinkSync(tmp);
+try { fs.unlinkSync(tmp); } catch (e) { /* otro proceso ya lo borró */ }
 console.log(`Figuras dibujadas: ${n}${sin.length ? ' · NO se dibujan: ' + sin.join(', ') : ''} → ${salida}`);
