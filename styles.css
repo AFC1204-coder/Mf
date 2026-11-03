@@ -2861,13 +2861,13 @@ body.en-sesion .bottom-nav { display:none !important; }
 /* ═══ MAZO · entrada rápida (mazo-ui.js) ═══ */
 .mazo { margin: 0.4rem 0 1.6rem; }
 .mz-track {
-  display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory;
+  display: flex; gap: 24px; overflow-x: auto; scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch; scrollbar-width: none; padding: 2px 2px 6px;
   margin: 0 -2px;
 }
 .mz-track::-webkit-scrollbar { display: none; }
 .mz-card {
-  flex: 0 0 86%; max-width: 520px; scroll-snap-align: start; box-sizing: border-box;
+  flex: 0 0 100%; max-width: 520px; scroll-snap-align: start; box-sizing: border-box;
   background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
   padding: 1.1rem 1.15rem 0.9rem; display: flex; flex-direction: column; min-height: 300px;
   position: relative;
@@ -3034,3 +3034,37 @@ body.carta #view-lecciones .back-btn { display: none !important; } /* el invitad
 .cuenta-info { min-height:1.3em; color:var(--text2); font-size:var(--text-sm); line-height:1.5; margin:var(--sp-3) 0 0; }
 #cuenta-codigo-box[hidden] { display:none; }
 #cuenta-codigo-box { display:flex; flex-direction:column; gap:var(--sp-2); }
+
+/* ═══ INICIO CALMADO · una sola cosa a la vez al abrir (móvil) ═══ */
+.inicio-pulso {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  font-family: var(--font-ui); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--text3); margin: 0.9rem 2px 0.2rem;
+}
+.inicio-pulso:empty { display: none; }
+.ip-semana { letter-spacing: 0.12em; }
+.mz-pasar {
+  position: absolute; top: 0.55rem; right: 3.2rem; min-height: 32px; padding: 0 0.5rem;
+  background: none; border: 0; color: var(--text3); font: inherit; font-size: 0.74rem;
+  letter-spacing: 0.08em; cursor: pointer;
+}
+.mz-pasar::after { content: ' →'; }
+.mz-pasar:hover { color: var(--text2); }
+.inicio-mas-btn {
+  display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 52px;
+  background: none; border: 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  color: var(--text2); font-family: var(--font-ui); font-size: 0.72rem; letter-spacing: 0.16em;
+  text-transform: uppercase; padding: 0 2px; cursor: pointer; margin-top: 0.4rem;
+}
+.inicio-mas-btn:hover { color: var(--text); }
+.im-flecha { width: 8px; height: 8px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg) translateY(-2px); transition: transform .2s; }
+.inicio-mas.abierto .im-flecha { transform: rotate(225deg); }
+.inicio-mas-cuerpo { display: none; padding-top: 1.4rem; }
+.inicio-mas.abierto .inicio-mas-cuerpo { display: block; }
+/* Si no hay mazo que enseñar, el resto de Inicio se ve directamente */
+#view-home:has(#mazo:empty) .inicio-mas-cuerpo { display: block; padding-top: 0; }
+#view-home:has(#mazo:empty) .inicio-mas-btn { display: none; }
+@media (min-width: 1024px) {
+  .inicio-pulso, .inicio-mas-btn { display: none; }
+  .inicio-mas, .inicio-mas-cuerpo { display: contents; }
+}

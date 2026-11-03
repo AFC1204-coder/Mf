@@ -1112,11 +1112,32 @@ function clearHilo(){
   } catch(e) {}
 }
 
+/** Saludo y constancia, discretos: lo único que acompaña a la primera ficha del mazo. */
+function saludoDeLaHora(){
+  const h=new Date().getHours();
+  return h<6?'Buenas noches':h<13?'Buenos días':h<20?'Buenas tardes':'Buenas noches';
+}
+function pintarPulso(sem, nNoches){
+  const el=document.getElementById('inicio-pulso');
+  if(!el) return;
+  const n=sem?sem.n:nNoches;
+  const txt=sem?sem.texto:(nNoches+' noche'+(nNoches===1?'':'s'));
+  el.innerHTML=`<span>${saludoDeLaHora()}</span>${n>0?`<span class="ip-semana">${esc(txt)}</span>`:''}`;
+}
+/** El resto de Inicio (atril, sesión, cuaderno, ambiente, rutas) se despliega con un toque; en el móvil empieza plegado. */
+function alternarInicioMas(forzar){
+  const c=document.getElementById('inicio-mas'), b=document.getElementById('inicio-mas-btn');
+  if(!c||!b) return;
+  const abrir=typeof forzar==='boolean'?forzar:!c.classList.contains('abierto');
+  c.classList.toggle('abierto',abrir);
+  b.setAttribute('aria-expanded',abrir?'true':'false');
+}
 function renderAtril(){
   const root = document.getElementById('atril');
   if (!root) return;
   const sem = (typeof estadoSemana === 'function') ? estadoSemana() : null;
   const nNoches = sem ? sem.n : nochesEsteMes();
+  pintarPulso(sem, nNoches);
   const top = `<div class="atril-top"><div>Mente fría · <strong>Noche</strong></div>
     <div class="atril-nights">${lampsHtml(nNoches)}<span>${sem ? esc(sem.texto) : nNoches+' noche'+(nNoches===1?'':'s')}</span>
       <button type="button" class="atril-sound${Ambiente.on?' on':''}" onclick="event.preventDefault();Ambiente.toggle()">${Ambiente.on?'Ambiente · on':'Ambiente'}</button>

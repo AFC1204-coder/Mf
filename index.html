@@ -104,12 +104,21 @@
 
   <!-- HOME -->
   <div class="view active" id="view-home">
+    <p class="inicio-pulso" id="inicio-pulso" aria-live="polite"></p>
     <section id="mazo" class="mazo" aria-label="Para un hueco"></section>
-    <div id="atril"></div>
-    <section id="rutas-section" class="rutas-section" aria-label="Rutas de aprendizaje" hidden>
-      <p class="sec-label">Rutas de aprendizaje</p>
-      <div class="rutas-row" id="rutas-row"></div>
-    </section>
+    <!-- En el móvil, lo demás de Inicio queda plegado: una sola cosa a la vez. En el ordenador se ve todo. -->
+    <div class="inicio-mas" id="inicio-mas">
+      <button type="button" class="inicio-mas-btn" id="inicio-mas-btn" aria-expanded="false" aria-controls="inicio-mas-cuerpo" onclick="alternarInicioMas()">
+        <span id="inicio-mas-txt">Más para esta noche</span><span class="im-flecha" aria-hidden="true"></span>
+      </button>
+      <div class="inicio-mas-cuerpo" id="inicio-mas-cuerpo">
+        <div id="atril"></div>
+        <section id="rutas-section" class="rutas-section" aria-label="Rutas de aprendizaje" hidden>
+          <p class="sec-label">Rutas de aprendizaje</p>
+          <div class="rutas-row" id="rutas-row"></div>
+        </section>
+      </div>
+    </div>
   </div>
 
   <!-- BIBLIOTECA -->

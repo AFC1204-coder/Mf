@@ -779,3 +779,25 @@ Nueva sección en el menú (y pestaña en la Biblioteca). El usuario escribe una
 - **Seguridad.** Temas de salud mental, sueño, salud, duelo y adicciones añaden el aviso de que los libros no sustituyen la ayuda profesional. Ante frases de riesgo vital (comparación de frase exacta, para evitar falsos positivos) solo se muestra un mensaje de ayuda (024 / 112 en España), sin libros.
 - **Mejorar el léxico:** añadir o ajustar entradas en `TEMAS` (`claves` = cómo lo diría la gente; `expande` = vocabulario del corpus). `tests/consulta.test.js` comprueba que cada ejemplo de la interfaz reconozca un tema y que no haya falsos parientes (móvil/movilidad, negocio/negociar, público/publicidad).
 - Límites conocidos: es léxico, no comprensión; una necesidad redactada con palabras que ni el corpus ni el léxico conocen dará «no encuentro». Ajustada con las ideas de los 482 libros (`datos/mapas.json`); no se ha podido evaluar con el texto completo de todas las lecciones.
+
+## 21. Inicio calmado: una sola cosa al abrir (3 nov 2026)
+
+**Problema (visto con una biblioteca grande simulada y un usuario que lee a diario):** al abrir la app, Inicio medía
+≈ 5,6 pantallas y tenía 14 botones. Ofrecía dos lecturas distintas a la vez (una ficha de un libro y, debajo, el atril de
+otro), el mazo mezclaba hasta cuatro libros y la siguiente ficha asomaba por el borde. Demasiadas decisiones en el momento
+de menos paciencia: parálisis por análisis.
+
+**Cambios (móvil; el ordenador se ve como antes):**
+- **Una sola oferta.** La primera ficha es siempre la oferta del día: lo que quedó a medias («Seguías aquí») o la idea de
+  lo que toca leer. Orden del mazo: oferta · otra idea del mismo libro · recordar algo leído · matiz o cita · cierre.
+- **Pocos libros.** Todo el mazo sale como mucho de dos libros: el de hoy y el del recuerdo (el matiz se toma del libro del
+  recuerdo). Antes, hasta cuatro. Sin lección que toque (todo leído) se conserva el orden de siempre (`lib/mazo.js`).
+- **Una ficha a la vez.** Las fichas ocupan todo el ancho (la siguiente ya no asoma) y cada una tiene «Pasar →», además de deslizar.
+- **Lo demás, plegado.** Atril, sesión de hoy, cuaderno, «Ambiente» y rutas quedan tras un único «Más para esta noche»
+  (se despliega con un toque). Si no hay mazo que enseñar, se ve todo directamente.
+- **Saludo y constancia, discretos:** «Buenas tardes · 2 días esta semana», en lugar de la barra con las lámparas y el botón
+  dorado de «Ambiente».
+- Resultado medido: Inicio pasa de 4.765 px a 423 px; de 14 botones a 4 en la primera pantalla.
+
+**No se ha tocado:** el contenido de las fichas, la reanudación automática de la lectura al abrir, ni la pestaña Biblioteca.
+**Pendiente (decisión del usuario):** reducir la saturación de la propia Biblioteca (cientos de tomos de golpe).

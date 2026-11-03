@@ -77,7 +77,7 @@ const mazoFuente = lec => { const b = mazoLibro(lec); return b ? `<em>${esc(b.ti
 
 function mazoFichaHtml(f, i, n) {
   const lec = f.lecId ? lecs.find(x => x.id === f.lecId) : null;
-  const pie = `<div class="mz-n">${i + 1} / ${n}</div>`;
+  const pie = `<div class="mz-n">${i + 1} / ${n}</div>` + (i < n - 1 ? `<button type="button" class="mz-pasar" onclick="mazoPasar(${i})" aria-label="Pasar a la siguiente ficha">Pasar</button>` : '');
   const leer = lec ? `<button type="button" class="mz-btn" onclick="mazoLeer('${lec.id}','${f.tipo}')">Leer · ${Didactica.minutosLectura(lec)} min</button>` : '';
   if (f.tipo === 'reanudar' && lec) return `<article class="mz-card mz-reanudar">
       <p class="mz-k">Seguías aquí${f.restante ? ` · quedan ${f.restante} min` : ''}</p>
@@ -150,6 +150,14 @@ function renderMazo() {
   if (io) [...pista.children].forEach(c => io.observe(c));
 }
 
+/** Pasa a la siguiente ficha con un toque (además de deslizar). */
+function mazoPasar(i) {
+  const t = document.getElementById('mz-track');
+  const c = t && t.children[i + 1];
+  if (!c) return;
+  if (typeof track === 'function') track('ficha', { tipo: (mazoFichas[i] || {}).tipo, i, accion: 'pasar' });
+  t.scrollTo({ left: c.offsetLeft - t.offsetLeft, behavior: 'smooth' });
+}
 function mazoLeer(id, tipo) {
   if (typeof track === 'function') track('ficha', { tipo, accion: 'leer', peldano: 2 });
   abrirFolioAtril(id);
