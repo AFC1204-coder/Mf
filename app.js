@@ -1112,11 +1112,32 @@ function clearHilo(){
   } catch(e) {}
 }
 
+/** Saludo y constancia, discretos: lo único que acompaña a la primera ficha del mazo. */
+function saludoDeLaHora(){
+  const h=new Date().getHours();
+  return h<6?'Buenas noches':h<13?'Buenos días':h<20?'Buenas tardes':'Buenas noches';
+}
+function pintarPulso(sem, nNoches){
+  const el=document.getElementById('inicio-pulso');
+  if(!el) return;
+  const n=sem?sem.n:nNoches;
+  const txt=sem?sem.texto:(nNoches+' noche'+(nNoches===1?'':'s'));
+  el.innerHTML=`<span>${saludoDeLaHora()}</span>${n>0?`<span class="ip-semana">${esc(txt)}</span>`:''}`;
+}
+/** El resto de Inicio (atril, sesión, cuaderno, ambiente, rutas) se despliega con un toque; en el móvil empieza plegado. */
+function alternarInicioMas(forzar){
+  const c=document.getElementById('inicio-mas'), b=document.getElementById('inicio-mas-btn');
+  if(!c||!b) return;
+  const abrir=typeof forzar==='boolean'?forzar:!c.classList.contains('abierto');
+  c.classList.toggle('abierto',abrir);
+  b.setAttribute('aria-expanded',abrir?'true':'false');
+}
 function renderAtril(){
   const root = document.getElementById('atril');
   if (!root) return;
   const sem = (typeof estadoSemana === 'function') ? estadoSemana() : null;
   const nNoches = sem ? sem.n : nochesEsteMes();
+  pintarPulso(sem, nNoches);
   const top = `<div class="atril-top"><div>Mente fría · <strong>Noche</strong></div>
     <div class="atril-nights">${lampsHtml(nNoches)}<span>${sem ? esc(sem.texto) : nNoches+' noche'+(nNoches===1?'':'s')}</span>
       <button type="button" class="atril-sound${Ambiente.on?' on':''}" onclick="event.preventDefault();Ambiente.toggle()">${Ambiente.on?'Ambiente · on':'Ambiente'}</button>
@@ -1985,9 +2006,9 @@ function verLeccion(id, from=null, skipPush=false, replace=false){
   const libro=libros.find(l=>l.id===lecActual.libro_id);
   let html='';
 
-  const figuras=(typeof Diagrama!=='undefined'?Diagrama.deLeccion(lecActual):[]).map(Diagrama.render).join('');
-  if(!figuras && !lecActual.imagen_principal && lecActual._svgPendiente) cargarSvgPendiente(lecActual);
-  if(!figuras && lecActual.imagen_principal){
+  const figuras=(typeof Diagrama!=='undefined'?Diagrama.deLeccion(lecActual):[]).map(Diagrama.render).filter(Boolean);
+  if(!figuras.length && !lecActual.imagen_principal && lecActual._svgPendiente) cargarSvgPendiente(lecActual);
+  if(!figuras.length && lecActual.imagen_principal){
     html+=`<div class="lec-img-wrap">
       <img src="${lecActual.imagen_principal}" alt="${esc(lecActual.titulo)}" loading="lazy" referrerpolicy="no-referrer"
         onclick="abrirZoomImagen(this)" title="Ampliar" onerror="this.parentElement.style.display='none'">
@@ -2125,12 +2146,21 @@ function verLeccion(id, from=null, skipPush=false, replace=false){
 
 /* Primer párrafo → figura → resto, para que el diagrama ilustre la idea ya enunciada. */
 function cuerpoConFigura(cuerpo, figuras){
-  if(!figuras) return fmt(cuerpo);
+  const figs=(Array.isArray(figuras)?figuras:(figuras?[figuras]:[])).filter(Boolean);
+  if(!figs.length) return fmt(cuerpo);
   const partes=String(cuerpo||'').split(/\n\s*\n/);
-  const primero=partes[0]||'';
-  const esParrafo=!/^\s*([-*•|#>]|\d+[.)]\s)/.test(primero) && !/<table/i.test(primero);
-  if(!esParrafo || partes.length<2) return figuras+fmt(cuerpo);
-  return fmt(primero)+figuras+fmt(partes.slice(1).join('\n\n'));
+  const sitios=Visuales.colocarFiguras(partes,figs.length);
+  if(!sitios.length) return figs.join('')+fmt(cuerpo);
+  // La primera figura va tras el primer párrafo; las demás, repartidas más abajo junto al texto que ilustran.
+  let html='', bloque=[];
+  partes.forEach((p,i)=>{
+    bloque.push(p);
+    const k=sitios.indexOf(i);
+    if(k>=0){ html+=fmt(bloque.join('\n\n'))+figs[k]; bloque=[]; }
+  });
+  if(bloque.length) html+=fmt(bloque.join('\n\n'));
+  // Si hubo más figuras que sitios, el resto va al final del texto
+  return html+figs.slice(sitios.length).join('');
 }
 
 /* Comprobación activa: una pregunta del mismo libro, afín a la lección. No guarda progreso. */
@@ -2179,7 +2209,12 @@ function abrirZoom(nodo){
   document.body.appendChild(o);
 }
 function cerrarZoom(){ document.querySelectorAll('.dg-zoom').forEach(n=>n.remove()); }
-document.addEventListener('keydown',e=>{ if(e.key==='Escape') cerrarZoom(); });
+/** Escape cierra lo que esté abierto encima de la pantalla: ninguna ventana debe dejarte sin salida. */
+function cerrarModales(){
+  const t=document.getElementById('tconfig-overlay'); if(t && !t.classList.contains('hidden')) closeTconfig();
+  const pd=document.getElementById('pdf-modal'); if(pd && !pd.classList.contains('hidden')) closePdfModal();
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ cerrarZoom(); cerrarModales(); } });
 
 function guardarNota(id){const ta=document.getElementById(`nota-${id}`);if(ta){saveNota(id,ta.value).then(()=>toast('📝 Nota guardada'));}}
 function toggleFavLecDetalle(id,btn){toggleFavLec(id,btn);btn.textContent=favLecs().includes(id)?'Guardada':'Guardar';}

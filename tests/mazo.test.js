@@ -10,13 +10,40 @@ describe('Mazo.componer', () => {
     expect(m.length).toBeLessThanOrEqual(5);
     expect(m[m.length - 1].tipo).toBe('cierre');
   });
-  it('empieza recordando algo leído y sigue con la lección que toca y la siguiente del mismo libro', () => {
+  it('abre con la idea de lo que toca leer, sigue con otra del mismo libro y luego recuerda algo leído', () => {
     const m = Mazo.componer({ lecs, completadas: new Set(['a', 'd']), siguiente: lecs[1], semilla: 2 });
+    expect(m[0]).toMatchObject({ tipo: 'idea', lecId: 'b', siguiente: true });
+    expect(m[1]).toMatchObject({ tipo: 'idea', lecId: 'c' });
+    expect(m[2].tipo).toBe('recuerda');
+    expect(m[m.length - 1]).toMatchObject({ tipo: 'cierre', lecId: 'b' });
+  });
+  it('el mazo gira en torno a un solo libro: recuerdo y matiz salen del libro de hoy si hay algo leído en él', () => {
+    const libro = id => lecs.find(l => l.id === id).libro_id;
+    for (let s = 0; s < 40; s++) {
+      const m = Mazo.componer({ lecs, completadas: new Set(['a', 'd']), siguiente: lecs[1], semilla: s });
+      const sinCierre = m.filter(f => f.tipo !== 'cierre');
+      expect(new Set(sinCierre.map(f => libro(f.lecId)))).toEqual(new Set(['B1']));
+    }
+  });
+  it('si en el libro de hoy no hay nada leído, el recuerdo viene de otro (y solo ese)', () => {
+    const libro = id => lecs.find(l => l.id === id).libro_id;
+    for (let s = 0; s < 30; s++) {
+      const m = Mazo.componer({ lecs, completadas: new Set(['d', 'e']), siguiente: lecs[0], semilla: s });
+      const libros = new Set(m.filter(f => f.tipo !== 'cierre').map(f => libro(f.lecId)));
+      expect(libros.size).toBeLessThanOrEqual(2);   // el de hoy y el del recuerdo, nada más
+      expect(m[0]).toMatchObject({ tipo: 'idea', lecId: 'a', siguiente: true });
+    }
+  });
+  it('la primera ficha es siempre la oferta del día (lo que toca o lo que quedó a medias), no un recuerdo suelto', () => {
+    for (let s = 0; s < 30; s++) {
+      expect(Mazo.componer({ lecs, completadas: new Set(['a', 'd']), siguiente: lecs[1], semilla: s })[0].tipo).toBe('idea');
+      expect(Mazo.componer({ lecs, completadas: new Set(['a', 'd']), siguiente: lecs[1], reanudar: { lec: lecs[2], restante: 2 }, semilla: s })[0].tipo).toBe('reanudar');
+    }
+  });
+  it('sin lección que toque (todo leído) conserva el orden de siempre: recuerdo primero', () => {
+    const m = Mazo.componer({ lecs, completadas: new Set(lecs.map(l => l.id)), siguiente: null, semilla: 7 });
     expect(m[0].tipo).toBe('recuerda');
-    expect(['a', 'd']).toContain(m[0].lecId);
-    expect(m[1]).toMatchObject({ tipo: 'idea', lecId: 'b', siguiente: true });
-    expect(m[2]).toMatchObject({ tipo: 'idea', lecId: 'c' });
-    expect(m[4]).toMatchObject({ tipo: 'cierre', lecId: 'b' });
+    expect(m[m.length - 1].tipo).toBe('cierre');
   });
   it('si hay lectura a medias, la primera ficha es reanudarla y el cierre la ofrece', () => {
     const m = Mazo.componer({ lecs, completadas: new Set(), siguiente: lecs[0], reanudar: { lec: lecs[4], restante: 3 }, semilla: 3 });

@@ -2597,6 +2597,21 @@ body.kindle .dg-svg { font-family: 'Literata', Georgia, serif; }
 .dg-hub { fill: var(--c-a); fill-opacity: 0.14; stroke: var(--c-a); stroke-width: 1.6; }
 .dg-curve { fill: none; stroke: var(--tn); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
 .dg-zone { fill: var(--tn); fill-opacity: 0.07; }
+/* matemática sencilla: gráfica, barras, fórmula, tabla, árbol, Venn, recta */
+.dg-grid { stroke: var(--dg-rule); stroke-opacity: 0.55; stroke-width: 1; }
+.dg-tick { fill: var(--dg-ink2); font-size: 12px; }
+.dg-ref { stroke: var(--tn); stroke-opacity: 0.85; stroke-width: 1.7; stroke-dasharray: 5 5; fill: none; }
+.dg-curve.dash { stroke-dasharray: 8 6; }
+.dg-bar { fill: var(--tn); fill-opacity: 0.82; }
+.dg-formula { fill: var(--tn); font-family: var(--font-display); font-weight: 600; letter-spacing: 0.01em; }
+body.kindle .dg-formula, body.kindle .dg-sym { font-family: 'Literata', Georgia, serif; }
+.dg-sym { fill: var(--tn); font-family: var(--font-display); font-size: 21px; font-weight: 700; font-style: italic; }
+.dg-celda { fill: var(--dg-ink); fill-opacity: 0.045; stroke: var(--dg-rule); stroke-width: 1; }
+.dg-celda.hi { fill: var(--tn); fill-opacity: 0.17; stroke: var(--tn); stroke-opacity: 0.7; stroke-width: 1.4; }
+.dg-venn { fill: var(--tn); fill-opacity: 0.17; stroke: var(--tn); stroke-opacity: 0.75; stroke-width: 1.6; }
+.dg-d.i { font-style: italic; }
+.dg-d.bb { font-weight: 700; fill: var(--dg-ink); }
+.dg-line[class*="tn-"] { stroke: var(--tn); stroke-opacity: 0.7; }
 .dg-plate { fill: var(--dg-bg); }
 .dg-big { fill: var(--tn); font-size: 30px; font-weight: 700; font-family: var(--font-display); }
 body.kindle .dg-big { font-family: 'Literata', Georgia, serif; font-weight: 600; }
@@ -2861,13 +2876,13 @@ body.en-sesion .bottom-nav { display:none !important; }
 /* ═══ MAZO · entrada rápida (mazo-ui.js) ═══ */
 .mazo { margin: 0.4rem 0 1.6rem; }
 .mz-track {
-  display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory;
+  display: flex; gap: 24px; overflow-x: auto; scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch; scrollbar-width: none; padding: 2px 2px 6px;
   margin: 0 -2px;
 }
 .mz-track::-webkit-scrollbar { display: none; }
 .mz-card {
-  flex: 0 0 86%; max-width: 520px; scroll-snap-align: start; box-sizing: border-box;
+  flex: 0 0 100%; max-width: 520px; scroll-snap-align: start; box-sizing: border-box;
   background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
   padding: 1.1rem 1.15rem 0.9rem; display: flex; flex-direction: column; min-height: 300px;
   position: relative;
@@ -3034,3 +3049,58 @@ body.carta #view-lecciones .back-btn { display: none !important; } /* el invitad
 .cuenta-info { min-height:1.3em; color:var(--text2); font-size:var(--text-sm); line-height:1.5; margin:var(--sp-3) 0 0; }
 #cuenta-codigo-box[hidden] { display:none; }
 #cuenta-codigo-box { display:flex; flex-direction:column; gap:var(--sp-2); }
+
+/* ═══ INICIO CALMADO · una sola cosa a la vez al abrir (móvil) ═══ */
+.inicio-pulso {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  font-family: var(--font-ui); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--text3); margin: 0.9rem 2px 0.2rem;
+}
+.inicio-pulso:empty { display: none; }
+.ip-semana { letter-spacing: 0.12em; }
+.mz-pasar {
+  position: absolute; top: 0.55rem; right: 3.2rem; min-height: 32px; padding: 0 0.5rem;
+  background: none; border: 0; color: var(--text3); font: inherit; font-size: 0.74rem;
+  letter-spacing: 0.08em; cursor: pointer;
+}
+.mz-pasar::after { content: ' →'; }
+.mz-pasar:hover { color: var(--text2); }
+.inicio-mas-btn {
+  display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 52px;
+  background: none; border: 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  color: var(--text2); font-family: var(--font-ui); font-size: 0.72rem; letter-spacing: 0.16em;
+  text-transform: uppercase; padding: 0 2px; cursor: pointer; margin-top: 0.4rem;
+}
+.inicio-mas-btn:hover { color: var(--text); }
+.im-flecha { width: 8px; height: 8px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg) translateY(-2px); transition: transform .2s; }
+.inicio-mas.abierto .im-flecha { transform: rotate(225deg); }
+.inicio-mas-cuerpo { display: none; padding-top: 1.4rem; }
+.inicio-mas.abierto .inicio-mas-cuerpo { display: block; }
+/* Si no hay mazo que enseñar, el resto de Inicio se ve directamente */
+#view-home:has(#mazo:empty) .inicio-mas-cuerpo { display: block; padding-top: 0; }
+#view-home:has(#mazo:empty) .inicio-mas-btn { display: none; }
+@media (min-width: 1024px) {
+  .inicio-pulso, .inicio-mas-btn { display: none; }
+  .inicio-mas, .inicio-mas-cuerpo { display: contents; }
+}
+
+/* ═══ VENTANAS QUE NO ATRAPAN ═══
+   Un modal centrado y fijo, más alto que la pantalla (móvil con barras del navegador, en horizontal, letra grande),
+   quedaba recortado por arriba y por abajo sin forma de desplazarlo ni de llegar a «Cancelar»: había que cerrar la app.
+   Ahora la ventana se desplaza, los botones de salida van siempre a la vista, y se cierra con un toque fuera, con Escape
+   o con la ✕. Afecta a «Configurar test», «Exportar PDF» y la pantalla de entrada. */
+.tconfig-overlay, .modal-overlay, .cuenta-overlay { align-items: flex-start; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+.tconfig-overlay > *, .modal-overlay > *, .cuenta-overlay > * { margin: auto; }
+.tconfig-box, .modal-box, .cuenta-card { max-height: calc(100vh - 2 * var(--sp-5)); max-height: calc(100dvh - 2 * var(--sp-5)); overflow-y: auto; overscroll-behavior: contain; }
+.tconfig-box, .modal-box { padding-bottom: 0; }
+.tconfig-footer, .modal-actions { position: sticky; bottom: 0; background: var(--surface); padding: var(--sp-4) 0 var(--sp-6); margin-top: 0; z-index: 1; }
+.tconfig-title { display: flex; align-items: center; gap: var(--sp-2); }
+.tconfig-x { margin-left: auto; min-width: 44px; min-height: 44px; background: none; border: 0; color: var(--text3); font-size: 1.1rem; cursor: pointer; border-radius: var(--radius); }
+.tconfig-x:hover { color: var(--text); background: var(--surface2); }
+@media (max-height: 720px) {
+  .tconfig-box, .modal-box { padding-top: var(--sp-5); padding-left: var(--sp-5); padding-right: var(--sp-5); }
+  .tconfig-sub { margin-bottom: var(--sp-4); }
+  .tconfig-pills, .tconfig-num-row { margin-bottom: var(--sp-4); }
+  .tconfig-info { margin-bottom: var(--sp-2); }
+  .tconfig-pill, .tconfig-num { min-height: 40px; }
+}
