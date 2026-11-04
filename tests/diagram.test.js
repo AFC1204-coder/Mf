@@ -34,11 +34,14 @@ const MUESTRAS = {
   red: { nodos: [{ t: 'A' }, { t: 'B' }, { t: 'C' }], relaciones: [{ de: 0, a: 1, t: 'causa' }, { de: 1, a: 2, t: 'limita' }] },
   reparto: { unidad: '%', partes: [{ t: 'Uno', v: 60 }, { t: 'Dos', v: 40 }] },
   jerarquia: { raiz: 'Todo', ramas: [{ t: 'Rama A', hijos: [{ t: 'a1' }, { t: 'a2' }] }, { t: 'Rama B', hijos: [{ t: 'b1' }] }] },
+  circulos: { anillos: [{ t: 'Exterior' }, { t: 'Medio', d: 'Detalle' }, { t: 'Centro' }] },
+  carriles: { carriles: [{ t: 'Uno', eventos: [{ f: '1900', t: 'A' }, { f: '1950', t: 'B' }] }, { t: 'Dos', eventos: [{ f: '1925', t: 'C' }] }] },
+  balanza: { izq: { t: 'Pros', items: ['a', 'b'] }, der: { t: 'Contras', items: ['c'] }, inclina: 'izq' },
   posicion: { ejeX: { izq: 'Poco', der: 'Mucho' }, ejeY: { abajo: 'Bajo', arriba: 'Alto' }, puntos: [{ t: 'A', x: 0.2, y: 0.8 }, { t: 'B', x: 0.7, y: 0.3 }] }
 };
 
 describe('Diagrama — plantillas', () => {
-  it('expone las veintiocho plantillas documentadas (diez cualitativas, siete de matemática sencilla, seis estructurales y cinco de relación y clasificación)', () => {
+  it('expone las treinta y una plantillas documentadas (diez cualitativas, siete de matemática sencilla, seis estructurales, cinco de relación y clasificación y tres de círculos, carriles y balanza)', () => {
     expect(Diagrama.plantillas.sort()).toEqual(Object.keys(MUESTRAS).sort());
   });
 
@@ -345,5 +348,27 @@ describe('Diagrama — plantillas de relación y clasificación', () => {
     expect(Diagrama.svg(spec('red', { nodos: [{ t: 'A' }, { t: 'B' }], relaciones: [] }))).toBe('');
     expect(Diagrama.svg(spec('reparto', { partes: [{ t: 'A', v: 1 }] }))).toBe('');
     expect(Diagrama.svg(spec('posicion', { puntos: [{ t: 'A', x: 0.1, y: 0.1 }] }))).toBe('');
+  });
+});
+
+
+describe('Diagrama — círculos, carriles y balanza', () => {
+  const spec = (plantilla, datos) => ({ tipo: 'diagrama', plantilla, titulo: 'T', pie: 'P', datos });
+  it('circulos: todos los anillos, del exterior al centro', () => {
+    const s = Diagrama.svg(spec('circulos', { anillos: [{ t: 'Exterior' }, { t: 'Medio' }, { t: 'Centro' }] }));
+    expect((s.match(/<circle/g) || []).length).toBe(3); expect(s).toContain('Exterior › Medio › Centro');
+    expect(Diagrama.svg(spec('circulos', { anillos: [{ t: 'Solo' }] }))).toBe('');
+  });
+  it('carriles: ordena los hechos por fecha y los reparte por carril', () => {
+    const s = Diagrama.svg(spec('carriles', { carriles: [{ t: 'Uno', eventos: [{ f: '1950', t: 'Tarde' }, { f: '1900', t: 'Pronto' }] }, { t: 'Dos', eventos: [{ f: '1925', t: 'Medio' }] }] }));
+    expect(s.indexOf('>Pronto<')).toBeLessThan(s.indexOf('>Medio<')); expect(s.indexOf('>Medio<')).toBeLessThan(s.indexOf('>Tarde<'));
+    expect(Diagrama.svg(spec('carriles', { carriles: [{ t: 'Uno', eventos: [{ f: '1', t: 'a' }] }] }))).toBe('');
+  });
+  it('balanza: inclina hacia el lado indicado y queda en equilibrio si no se dice', () => {
+    const d = (inclina) => spec('balanza', { izq: { t: 'A', items: ['x'] }, der: { t: 'B', items: ['y'] }, inclina });
+    expect(Diagrama.svg(d('izq'))).toContain('inclinada hacia A');
+    expect(Diagrama.svg(d('der'))).toContain('inclinada hacia B');
+    expect(Diagrama.svg(d())).toContain('en equilibrio');
+    expect(Diagrama.svg(spec('balanza', { izq: { t: 'A', items: [] }, der: { t: 'B', items: ['y'] } }))).toBe('');
   });
 });

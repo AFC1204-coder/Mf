@@ -143,3 +143,43 @@ figuras**:
 Mejoras de motor surgidas al revisarlas: la etiqueta de una relación de la red se coloca donde no tape nodos ni otras etiquetas (y
 debajo si la flecha es corta), el eje de `posicion` no se rellena y el centro de `fuerzas` admite palabras más largas.
 Total acumulado: 33 figuras en 30 lecciones.
+
+## Tres plantillas más: círculos, carriles y balanza (total: 31)
+| La lección describe… | Plantilla | No la uses si… |
+|---|---|---|
+| anillos concéntricos que el autor enuncia como tales (círculos de influencia, de confianza, el círculo dorado) | `circulos` | el anidamiento es una metáfora o no es del autor (usa `capas`, rectangulares, si basta) |
+| dos líneas de hechos con **fechas** que corren en paralelo (dos tradiciones, dos países, dos bandos) | `carriles` | las fechas no están en la lección, o solo hay una línea (usa `tiempo`) |
+| dos lados que se sopesan (costes y beneficios, a favor y en contra) y **la lección dice cuál pesa más** o que se equilibran | `balanza` | la inclinación la decidirías tú: si el autor no la da, usa `equilibrio`, o `comparar` |
+
+**circulos** — `{"anillos":[{"t":"Exterior","d":"…"},{"t":"…"},{"t":"Centro"}]}` · 2–4 anillos, del exterior al centro (t ≤ 24, d ≤ 40).
+**carriles** — `{"carriles":[{"t":"Economía","eventos":[{"f":"1776","t":"…","d":"…"}]},{"t":"Psicología","eventos":[…]}]}` · exactamente 2
+carriles, 1–5 hechos cada uno (≤ 8 en total). Cada hecho lleva una **fecha con dígitos que sale de la lección**; se ordenan por la
+primera cifra de la fecha y **el espaciado no está a escala** (di en el pie «sin escala» si importa).
+**balanza** — `{"izq":{"t":"Beneficios","items":["…"]},"der":{"t":"Costes","items":["…"]},"inclina":"izq"}` · 1–4 elementos por lado;
+`inclina` = `izq`, `der` o `equilibrio` (por defecto). Si se inclina, **el pie debe decir de quién es la conclusión** («Según la
+lección…»): el lint lo exige.
+
+### Cuarta tanda (4 nov 2026): 11 figuras más
+Segunda pasada amplia (~60 lecciones leídas con las plantillas ya existentes) y búsqueda dirigida para círculos, carriles y balanza. De
+12 propuestas, el verificador quitó 1 y corrigió 7 (pies, un nodo del bucle de las finanzas que la lección no sostenía, un rótulo
+de las fuerzas institucionales, un título que presentaba como hecho lo que la lección da como hipótesis).
+- **bucle** (3): espiral de la escuela del barrio (Hirschman), reflexividad ascendente (*La Alquimia de las Finanzas*), el ciclo económico de
+  Marks (lectura de la biblioteca: el cierre es cualitativo).
+- **escalera** (2): los niveles de la realidad de Polanyi (*The Tacit Dimension*; emergencia discutida) y las cuatro instrucciones del
+  experimentador de Milgram, de menor a mayor presión.
+- **jerarquia** (2): señales del protocolo de McGilchrist (cognitivas, emocionales, somáticas) y culturas de honor, dignidad y victimización.
+- **reparto** (1): la curva de adopción de Rogers (2,5 / 13,5 / 34 / 34 / 16 %).
+- **iceberg** (1): problemas perpetuos en la pareja (Gottman; ejemplo hipotético de la lección, no aplicable ante maltrato).
+- **fuerzas** (1): por qué se mantiene un equilibrio institucional (Greif; el empuje es lectura de la biblioteca).
+- **balanza** (1): la lista de Darwin sobre casarse (la lección dice que concluyó que le convenía; el peso de las razones no es medible).
+Quitada: la diana de tres anillos de *Traction* (la lección ya tiene una pirámide con exactamente los mismos tres niveles).
+**`circulos` y `carriles` aún no tienen ninguna lección**: las búsquedas no encontraron anillos concéntricos enunciados por el autor
+ni dos líneas de hechos fechados en paralelo. Total acumulado: 44 figuras en 41 lecciones.
+
+## Un solo estilo
+Todas las plantillas nuevas reutilizan las clases de las de siempre (`dg-box`, `dg-t`, `dg-d`, `dg-rule`, `dg-dot`, `dg-bar`, `dg-arrow`, los
+tonos `tn-*` y las variables CSS de color y tipografía), así que cambian solas con el tema oscuro, el claro y el modo Kindle. Se
+comprobó poniendo cada nueva junto a su equivalente antigua en los tres modos y se igualaron los detalles que desentonaban: la
+balanza usa los títulos de color, la regla y las viñetas de `comparar`; la raíz de `jerarquia` va centrada como los niveles de
+`piramide`; las barras de `reparto` son tan finas como las de `barras`. Regla para futuras plantillas: nada de colores ni fuentes
+propios, y mirar siempre la figura antigua más parecida antes de dar por buena una nueva.

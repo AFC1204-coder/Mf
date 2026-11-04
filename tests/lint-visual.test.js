@@ -191,3 +191,25 @@ describe('LintVisual — plantillas de relación y clasificación', () => {
     expect(lint('jerarquia', { raiz: 'R', ramas: [{ t: 'A' }] }).join()).toMatch(/ramas/);
   });
 });
+
+
+describe('LintVisual — círculos, carriles y balanza', () => {
+  const lint = (plantilla, datos, pie) => LintVisual.diagrama({ tipo: 'diagrama', plantilla, titulo: 'Título', pie: pie || 'Pie de la figura.', datos });
+  it('carriles: dos carriles, fechas con dígitos y no más de 8 hechos', () => {
+    const ok = { carriles: [{ t: 'Uno', eventos: [{ f: '1900', t: 'A' }] }, { t: 'Dos', eventos: [{ f: '1925', t: 'B' }] }] };
+    expect(lint('carriles', ok)).toEqual([]);
+    expect(lint('carriles', { carriles: [ok.carriles[0]] }).join()).toMatch(/carriles/);
+    expect(lint('carriles', { carriles: [{ t: 'Uno', eventos: [{ f: 'antes', t: 'A' }] }, ok.carriles[1]] }).join()).toMatch(/sin fecha con dígitos/);
+  });
+  it('balanza: si se inclina, el pie dice de quién es la conclusión', () => {
+    const d = { izq: { t: 'A', items: ['x'] }, der: { t: 'B', items: ['y'] }, inclina: 'izq' };
+    expect(lint('balanza', d).join()).toMatch(/de quién es esa conclusión/);
+    expect(lint('balanza', d, 'Según la lección: pesan más los beneficios.')).toEqual([]);
+    expect(lint('balanza', { ...d, inclina: 'equilibrio' })).toEqual([]);
+    expect(lint('balanza', { ...d, inclina: 'arriba' }, 'Según la lección.').join()).toMatch(/izq, der o equilibrio/);
+  });
+  it('circulos: de 2 a 4 anillos', () => {
+    expect(lint('circulos', { anillos: [{ t: 'A' }, { t: 'B' }] })).toEqual([]);
+    expect(lint('circulos', { anillos: [{ t: 'A' }] }).join()).toMatch(/anillos/);
+  });
+});
