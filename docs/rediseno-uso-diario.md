@@ -812,3 +812,9 @@ quedaban fuera el título y los botones «Cancelar» e «Iniciar» y no había f
 `align-items: center`, que es lo que recortaba); los botones de salida van fijos abajo (`position: sticky`); se cierra con un toque fuera, con Escape y con una ✕; y en alturas
 < 720 px la ventana se compacta. Probado en Chromium a 390×844, 390×560, 360×480 y 844×390: botones siempre a la vista, cierre de las cuatro formas, «Iniciar» arranca el test,
 «Exportar PDF» y la pantalla de entrada también se pueden recorrer.
+
+## 17. Inicio con hábitos y deslizar entre pantallas (4 nov 2026)
+Inicio queda así, de arriba abajo (`inicio-ui.js`): saludo y semana con el sonido ambiente como icono; el **mazo de fichas** (ahora prefiere lecciones con esquema y, sin esquema, enseña la portada del libro); **Tu sesión de hoy** (Recuerda · Lee · Comprueba · Lleva, un solo botón; si ya está hecha, el resumen); **buscar y temas** (entrada directa a la biblioteca por eje); **esquemas para mirar** (hasta seis, de libros distintos, sin repetir los del mazo; estables durante el día); rutas. Desaparecen el atril, «Anoche te quedaste aquí» y el plegable «Más para esta noche».
+Base de hábitos (*Hábitos Atómicos*, con las cautelas de su autocorrección): señal clara y un solo paso para empezar, seguimiento visual de la constancia y no de resultados, y «volver mañana es lo que cuenta» en vez de una racha frágil.
+**Deslizar** (solo táctil, `lib/swipe.js` + `swipe-ui.js`): Hoy · Biblioteca · Consulta · Repaso · Tú. No actúa sobre el mazo ni sobre nada que se desplace de lado, ni en los 24 px del borde (gesto «atrás»), ni con una ventana abierta, ni en lecciones o sesión. Cambia con una entrada suave, sin arrastre en vivo.
+Pendiente: tarjeta «Tu ancla» (hora y lugar del hábito con aviso propio).

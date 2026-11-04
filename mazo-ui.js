@@ -69,7 +69,8 @@ function mazoComponer() {
   return Mazo.componer({
     lecs, completadas: comp, reanudar,
     siguiente: typeof pickNocheLeccion === 'function' ? pickNocheLeccion() : null,
-    vistas: LS.get(MAZO_VISTAS_K, []), semilla: mazoSemilla
+    vistas: LS.get(MAZO_VISTAS_K, []), semilla: mazoSemilla,
+    conFigura: lec => typeof Diagrama !== 'undefined' && Diagrama.deLeccion(lec).length > 0
   });
 }
 const mazoLibro = lec => libros.find(b => b.id === lec.libro_id) || null;
@@ -98,6 +99,7 @@ function mazoFichaHtml(f, i, n) {
     return `<article class="mz-card mz-idea" id="mz-${i}">
       <p class="mz-k">${f.siguiente ? 'Lo que toca leer' : 'Una idea'}</p>
       ${fig ? `<div class="mz-fig">${fig}</div>` : ''}
+      ${!fig && mazoLibro(lec) && mazoLibro(lec).portada_url ? `<img class="mz-cover" src="${esc(mazoLibro(lec).portada_url)}" alt="" loading="lazy" onerror="this.remove()" onload="if(this.naturalWidth<=1)this.remove()">` : ''}
       <h3 class="mz-t">${esc(lec.titulo)}</h3><p class="mz-src">${mazoFuente(lec)}</p>
       <p class="mz-txt">${esc(Mazo.extracto(lec.idea_clave, fig ? 220 : 380))}</p>
       ${amp ? `<div class="mz-amp">${amp}</div>` : ''}
@@ -148,6 +150,7 @@ function renderMazo() {
     if (typeof track === 'function') track('ficha', { tipo: f.tipo, i, accion: 'vista' });
   }), { root: pista, threshold: 0.6 }) : null;
   if (io) [...pista.children].forEach(c => io.observe(c));
+  if (typeof renderInicio === 'function') renderInicio();   // los esquemas de abajo no repiten lo que ya sale en el mazo
 }
 
 /** Pasa a la siguiente ficha con un toque (además de deslizar). */

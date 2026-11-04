@@ -819,6 +819,7 @@ const Ambiente = (() => {
       b.classList.toggle('on', on);
       b.textContent = etiqueta();
     });
+    document.querySelectorAll('.ip-sound').forEach(b => { b.classList.toggle('on', on); b.title = etiqueta(); });
     syncPanel();
   }
 
@@ -1122,7 +1123,7 @@ function pintarPulso(sem, nNoches){
   if(!el) return;
   const n=sem?sem.n:nNoches;
   const txt=sem?sem.texto:(nNoches+' noche'+(nNoches===1?'':'s'));
-  el.innerHTML=`<span>${saludoDeLaHora()}</span>${n>0?`<span class="ip-semana">${esc(txt)}</span>`:''}`;
+  el.innerHTML=`<span>${saludoDeLaHora()}</span><span class="ip-der">${n>0?`<span class="ip-semana">${esc(txt)}</span>`:''}<button type="button" class="ip-sound${Ambiente.on?' on':''}" onclick="Ambiente.toggle()" aria-label="Sonido ambiente" title="${esc(Ambiente.on?'Ambiente · activado':'Ambiente sonoro')}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg></button></span>`;
 }
 /** El resto de Inicio (atril, sesión, cuaderno, ambiente, rutas) se despliega con un toque; en el móvil empieza plegado. */
 function alternarInicioMas(forzar){
@@ -1133,11 +1134,12 @@ function alternarInicioMas(forzar){
   b.setAttribute('aria-expanded',abrir?'true':'false');
 }
 function renderAtril(){
-  const root = document.getElementById('atril');
-  if (!root) return;
   const sem = (typeof estadoSemana === 'function') ? estadoSemana() : null;
   const nNoches = sem ? sem.n : nochesEsteMes();
   pintarPulso(sem, nNoches);
+  if (typeof renderInicio === 'function') renderInicio();
+  const root = document.getElementById('atril');
+  if (!root) return;     // Inicio ya no tiene atril: ahora son «Hoy», temas y esquemas (inicio-ui.js)
   const top = `<div class="atril-top"><div>Mente fría · <strong>Noche</strong></div>
     <div class="atril-nights">${lampsHtml(nNoches)}<span>${sem ? esc(sem.texto) : nNoches+' noche'+(nNoches===1?'':'s')}</span>
       <button type="button" class="atril-sound${Ambiente.on?' on':''}" onclick="event.preventDefault();Ambiente.toggle()">${Ambiente.on?'Ambiente · on':'Ambiente'}</button>
