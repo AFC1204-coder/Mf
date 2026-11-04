@@ -12,8 +12,17 @@ La app entra con **correo y contraseña** (Supabase Auth, por REST; no hay libre
 - Contraseña olvidada: restablecerla desde Supabase → Authentication → Users.
 
 ## Estado
-1. **Hecho:** inicio de sesión opcional («Seguir sin cuenta»), sesión guardada y token usado en las peticiones. Los datos siguen siendo del usuario `default` y las políticas de seguridad (RLS) siguen aceptando la clave pública, así que nada se rompe mientras tanto.
-2. **Pendiente (se hace tras comprobar que se entra bien en el portátil y en el móvil):** cerrar el acceso a los datos personales en la base de datos para que solo los lea y escriba la cuenta del dueño (políticas con `is_admin()`), y poner `OBLIGATORIA = true` en `cuenta-ui.js` para quitar «Seguir sin cuenta». Hasta entonces cualquiera con la clave pública de la app podría leer o escribir esos datos.
+1. **Hecho (3 nov):** inicio de sesión con correo y contraseña, o con enlace/código por correo; sesión guardada y renovada sola; token en todas las peticiones.
+2. **Hecho (4 nov 2026): cuenta obligatoria.** Se comprobó que se entra bien en el portátil y en el móvil y se cerró el acceso en la base de datos (`supabase/migrations/20261104_cuenta_obligatoria.sql`; reversión en `…_revertir.sql`):
+   - Los **datos personales** (progreso, repaso, notas, favoritos, sesiones, subrayados, compromisos, estado de lectura, perfil, retos y respuestas, notificaciones y push) solo los lee y escribe la cuenta del dueño: política `to authenticated` con `is_admin()` (tabla `admins`, hoy solo alejandrofrutos1204@gmail.com) y `usuario_id = 'default'`. Con la clave pública sin sesión se ven 0 filas y no se puede escribir.
+   - El **contenido** (libros, lecciones, preguntas, retos activos, escenarios) sigue de lectura pública: lo usan los enlaces compartidos.
+   - «¿Algo no cuadra?» desde un enlace compartido sigue pudiendo enviarse (solo insertar); leerlos es solo del dueño.
+   - La portada de un libro (`set_portada`) solo la fija una sesión iniciada.
+   - Las funciones de servidor (cron de recordatorios) usan `service_role` y no pasan por estas políticas.
+   - En la app, `OBLIGATORIA = true` en `cuenta-ui.js`: ya no existe «Seguir sin cuenta». Los enlaces `?carta=1` siguen sin pedir sesión.
+   - Comprobación hecha con roles simulados: `anon` ve 0 filas en 10 tablas personales y su INSERT en `progreso` falla; el dueño ve todos sus datos.
+3. **Si algo falla:** ejecutar `supabase/migrations/20261104_cuenta_obligatoria_revertir.sql` devuelve las políticas anteriores (y poner `OBLIGATORIA = false`).
+4. **Nota:** si se pierde el acceso a la cuenta, la contraseña se restablece desde Supabase → Authentication → Users.
 
 ## Entrar sin contraseña: enlace o código por correo
 
