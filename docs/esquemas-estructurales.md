@@ -158,3 +158,20 @@ primera cifra de la fecha y **el espaciado no está a escala** (di en el pie «s
 **balanza** — `{"izq":{"t":"Beneficios","items":["…"]},"der":{"t":"Costes","items":["…"]},"inclina":"izq"}` · 1–4 elementos por lado;
 `inclina` = `izq`, `der` o `equilibrio` (por defecto). Si se inclina, **el pie debe decir de quién es la conclusión** («Según la
 lección…»): el lint lo exige.
+
+### Cuarta tanda (4 nov 2026): 11 figuras más
+Segunda pasada amplia (~60 lecciones leídas con las plantillas ya existentes) y búsqueda dirigida para círculos, carriles y balanza. De
+12 propuestas, el verificador quitó 1 y corrigió 7 (pies, un nodo del bucle de las finanzas que la lección no sostenía, un rótulo
+de las fuerzas institucionales, un título que presentaba como hecho lo que la lección da como hipótesis).
+- **bucle** (3): espiral de la escuela del barrio (Hirschman), reflexividad ascendente (*La Alquimia de las Finanzas*), el ciclo económico de
+  Marks (lectura de la biblioteca: el cierre es cualitativo).
+- **escalera** (2): los niveles de la realidad de Polanyi (*The Tacit Dimension*; emergencia discutida) y las cuatro instrucciones del
+  experimentador de Milgram, de menor a mayor presión.
+- **jerarquia** (2): señales del protocolo de McGilchrist (cognitivas, emocionales, somáticas) y culturas de honor, dignidad y victimización.
+- **reparto** (1): la curva de adopción de Rogers (2,5 / 13,5 / 34 / 34 / 16 %).
+- **iceberg** (1): problemas perpetuos en la pareja (Gottman; ejemplo hipotético de la lección, no aplicable ante maltrato).
+- **fuerzas** (1): por qué se mantiene un equilibrio institucional (Greif; el empuje es lectura de la biblioteca).
+- **balanza** (1): la lista de Darwin sobre casarse (la lección dice que concluyó que le convenía; el peso de las razones no es medible).
+Quitada: la diana de tres anillos de *Traction* (la lección ya tiene una pirámide con exactamente los mismos tres niveles).
+**`circulos` y `carriles` aún no tienen ninguna lección**: las búsquedas no encontraron anillos concéntricos enunciados por el autor
+ni dos líneas de hechos fechados en paralelo. Total acumulado: 44 figuras en 41 lecciones.
