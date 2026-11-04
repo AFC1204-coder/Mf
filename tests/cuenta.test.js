@@ -125,3 +125,28 @@ describe('Cuenta · entrar sin contraseña (enlace o código del correo)', () =>
     expect(C.mensajeError(429, { error_code: 'over_email_send_rate_limit' })).toMatch(/Demasiados/);
   });
 });
+
+describe('Cuenta · usuario de los datos personales', () => {
+  const b64 = o => Buffer.from(JSON.stringify(o)).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  const tok = sub => 'h.' + b64({ sub }) + '.s';
+  it('uidDeToken lee el sub del token y no se rompe con basura', () => {
+    expect(C.uidDeToken(tok('abc-123'))).toBe('abc-123');
+    expect(C.uidDeToken('x.y.z')).toBe('');
+    expect(C.uidDeToken('')).toBe('');
+    expect(C.uidDeToken(null)).toBe('');
+  });
+  it('sin sesión o sin dato guardado se usa «default»', () => {
+    expect(C.usuarioDe(null, { uid: 'u1', usuario: 'u1' })).toBe('default');
+    expect(C.usuarioDe({ uid: 'u1', access: 'a' }, null)).toBe('default');
+    expect(C.usuarioDe({ uid: 'u1', access: 'a' }, { uid: 'u1', usuario: null })).toBe('default');
+  });
+  it('usa lo guardado solo si es de esta misma cuenta', () => {
+    expect(C.usuarioDe({ uid: 'u1', access: 'a' }, { uid: 'u1', usuario: 'u1' })).toBe('u1');
+    expect(C.usuarioDe({ uid: 'u1', access: 'a' }, { uid: 'u1', usuario: 'default' })).toBe('default');
+    expect(C.usuarioDe({ uid: 'u2', access: 'a' }, { uid: 'u1', usuario: 'u1' })).toBe('default');
+  });
+  it('si la sesión no trae uid, lo saca del token', () => {
+    expect(C.usuarioDe({ access: tok('u9') }, { uid: 'u9', usuario: 'u9' })).toBe('u9');
+    expect(C.usuarioDe({ access: 'no-es-token' }, { uid: 'u9', usuario: 'u9' })).toBe('default');
+  });
+});

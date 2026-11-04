@@ -37,3 +37,10 @@ Además de correo + contraseña, la pantalla de entrada tiene «Enviarme un enla
 - *Email* activado y *Confirm email* activado (la cuenta del dueño ya estaba confirmada).
 - **Pendiente (solo para el código):** la plantilla «Magic Link» de *Authentication → Emails* debe incluir `{{ .Token }}` además del enlace; con la plantilla por defecto el correo trae solo el enlace.
 - El servicio de correo integrado de Supabase tiene un límite de envíos muy bajo (pensado para pruebas): para una sola persona basta; si se abriera el registro a más gente habría que configurar un SMTP propio.
+
+## Varios usuarios (5 nov 2026)
+Para que otra persona (p. ej. la madre del dueño) use la app con su propio progreso:
+- **Base de datos** (`supabase/migrations/20261105_multiusuario.sql`; reversión en `…_revertir.sql`): tabla `miembros` (las cuentas que el dueño da de alta) y función `mi_usuario()`: devuelve `'default'` para el dueño (sus datos no cambian de sitio), el id de la cuenta para un miembro y `null` para cualquier otra. Las políticas de las tablas personales (y `notificaciones`) pasan a `usuario_id = mi_usuario()`. El contenido sigue siendo público; los avisos push siguen siendo solo del dueño.
+- **App:** `USUARIO_ID` / `SRS_USER` ya no son fijos: `cuenta-ui.js` pregunta a `mi_usuario()` tras entrar y guarda el resultado (`scs2_usuario`); si cambia respecto a lo que usa la app, recarga una vez. Si la función aún no existe, todo sigue como antes.
+- **Alta de un miembro:** (1) en Supabase → Authentication → Users, «Add user / Invite user» con su correo (la app no permite registrarse sola); (2) añadir su fila a `miembros` (`insert into miembros (user_id, email) select id, email from auth.users where email = '…'`); (3) ella entra desde su móvil con «Enviarme un enlace al correo» o con el código.
+- **Seguridad:** quien tenga cuenta pero no esté en `miembros` no ve ni guarda nada personal. Conviene dejar desactivado el registro abierto en Authentication → Providers → Email («Allow new users to sign up») y dar de alta por invitación.

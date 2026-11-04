@@ -12,7 +12,7 @@ let evOff = false, evBusy = false;
 function track(tipo, props) {
   try {
     const q = LS.get(EV_Q, []);
-    q.push({ usuario_id: 'default', ts: new Date().toISOString(), dia: Dia.hoy(), tipo, props: props || {} });
+    q.push({ usuario_id: USUARIO_ID, ts: new Date().toISOString(), dia: Dia.hoy(), tipo, props: props || {} });
     LS.set(EV_Q, q.slice(-200));
   } catch (e) { return; }
   flushEventos();

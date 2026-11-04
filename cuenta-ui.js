@@ -6,12 +6,12 @@
    La parte pura está en lib/cuenta.js.
 ═══════════════════════════════════════════ */
 const Cuenta = (() => {
-  const K = 'scs2_cuenta', K_EMAIL = 'scs2_cuenta_email', K_SALTAR = 'scs2_cuenta_saltar';
+  const K = 'scs2_cuenta', K_EMAIL = 'scs2_cuenta_email', K_SALTAR = 'scs2_cuenta_saltar', K_USUARIO = 'scs2_usuario';
   /** true desde el 4 nov 2026: la base de datos exige la sesión del dueño para los datos personales, así que no hay «Seguir sin cuenta». */
   const OBLIGATORIA = true;
 
   let sesion = null, cargada = false, renovando = null, timer = null;
-  let entroPorEnlace = false, errorEnlace = '';
+  let entroPorEnlace = false, errorEnlace = '', sinAcceso = false;
   const ahora = () => Date.now();
 
   function cargar() {
@@ -215,8 +215,39 @@ const Cuenta = (() => {
   }
   function ocultar() { const o = document.getElementById('cuenta-overlay'); if (o) o.hidden = true; }
 
+
+  /** Usuario de los datos personales según lo último que dijo la base de datos para esta cuenta. 'default' = el dueño. */
+  function usuarioGuardado() {
+    cargar();
+    let c = null;
+    try { c = JSON.parse(localStorage.getItem(K_USUARIO)); } catch (e) {}
+    return CuentaLib.usuarioDe(sesion, c);
+  }
+  /**
+   * Pregunta a la base de datos quién es esta cuenta (`mi_usuario()`): el dueño usa 'default' y el resto de miembros su
+   * propio identificador. Si cambia respecto a lo que usa la app ahora, recarga una vez para empezar con los datos correctos.
+   */
+  async function resolverUsuario() {
+    if (!activa()) return;
+    const t = await token();
+    if (!t) return;
+    let usuario;
+    try {
+      const resp = await fetch(`${SB_URL}/rest/v1/rpc/mi_usuario`, { method: 'POST', headers: { apikey: SB_KEY, Authorization: 'Bearer ' + t, 'Content-Type': 'application/json' }, body: '{}' });
+      if (!resp.ok) return;                       // función aún no instalada o sin red: se queda como está
+      const r = await resp.json();
+      usuario = typeof r === 'string' && r ? r : null;
+    } catch (e) { return; }
+    const uid = (sesion && sesion.uid) || CuentaLib.uidDeToken(t);
+    try { localStorage.setItem(K_USUARIO, JSON.stringify({ uid, usuario })); } catch (e) {}
+    sinAcceso = !usuario;
+    if (usuario && typeof USUARIO_ID !== 'undefined' && usuario !== USUARIO_ID) { location.reload(); return; }
+    if (sinAcceso && typeof toast === 'function') toast('Tu cuenta aún no tiene espacio personal. Pídelo a quien te dio acceso.');
+  }
+
   /** Tras entrar: trae los datos del usuario y repinta. */
   function alEntrar() {
+    resolverUsuario();
     refrescarVista();
     try { if (typeof forzarSincronizacion === 'function') forzarSincronizacion(); } catch (e) {}
     if (typeof toast === 'function') toast('Sesión iniciada');
@@ -229,6 +260,7 @@ const Cuenta = (() => {
     cargar();
     if (sesion) { await token(); }              // renueva ya si hacía falta; si la sesión ya no vale, se borra
     if (activa()) {
+      resolverUsuario();
       if (entroPorEnlace) { entroPorEnlace = false; alEntrar(); completarUsuario(); }
       return;
     }
@@ -246,5 +278,5 @@ const Cuenta = (() => {
 
   capturarEnlace();   // antes de que app.js lea la dirección: el hash del enlace no es una ruta de la app
 
-  return { token, tokenSync, email, activa, iniciar, cerrar, abrir, mostrar, alArrancar, pedirEnlace, entrarConCodigo, OBLIGATORIA };
+  return { token, tokenSync, email, activa, usuarioGuardado, resolverUsuario, iniciar, cerrar, abrir, mostrar, alArrancar, pedirEnlace, entrarConCodigo, OBLIGATORIA };
 })();

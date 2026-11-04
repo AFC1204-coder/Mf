@@ -156,7 +156,8 @@ const NOTAS_K='scs2_notas', ULTIMA_K='scs2_ultima_lec';
 ═══════════════════════════════════════════ */
 let favCache = { libro: [], leccion: [], cita: [] };
 let notasCache = {};
-const USUARIO_ID = 'default';
+/** Dueño de los datos personales: 'default' para el dueño de siempre; para otros miembros, su identificador (lo fija cuenta-ui.js). */
+let USUARIO_ID = (typeof Cuenta !== 'undefined' && Cuenta.usuarioGuardado) ? Cuenta.usuarioGuardado() : 'default';
 
 async function loadFavoritosFromDB() {
   try {
@@ -3465,7 +3466,7 @@ function filtrarPorAutorDesdeEnsayo(autor) {
 /* ═══════════════════════════════════════════
    SPACED REPETITION SYSTEM (SRS)
 ═══════════════════════════════════════════ */
-const SRS_USER = 'default';
+let SRS_USER = USUARIO_ID;
 let srsEstado = null;
 let srsCola = [];
 let srsIdx = 0;

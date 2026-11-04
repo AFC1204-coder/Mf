@@ -30,7 +30,7 @@ function toggleNotifPanel() {
 /* ── LOAD FROM SUPABASE ── */
 async function loadNotifications() {
   try {
-    const d = await sb('notificaciones?usuario_id=eq.default&order=fecha.desc&limit=80');
+    const d = await sb('notificaciones?usuario_id=eq.' + USUARIO_ID + '&order=fecha.desc&limit=80');
     // Los avisos de racha/deuda no se muestran (rediseño: sin culpa)
     notifCache = (d || []).filter(n => n.tipo !== 'racha' && n.tipo !== 'repaso');
     renderNotifList();
@@ -219,7 +219,7 @@ async function markAllRead() {
   updateBadge();
   updateNotifStats();
   try {
-    await fetch(SB_URL + '/rest/v1/notificaciones?usuario_id=eq.default&leida=eq.false', {
+    await fetch(SB_URL + '/rest/v1/notificaciones?usuario_id=eq.' + USUARIO_ID + '&leida=eq.false', {
       method: 'PATCH',
       headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + ((typeof Cuenta !== 'undefined' && Cuenta.tokenSync()) || SB_KEY), 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
       body: JSON.stringify({ leida: true })
@@ -317,7 +317,7 @@ async function checkForNewNotifications() {
   if (now - lastNotifCheck < 15000) return; // min 15s between checks
   lastNotifCheck = now;
   try {
-    const d = await sb('notificaciones?usuario_id=eq.default&leida=eq.false&order=fecha.desc&limit=10');
+    const d = await sb('notificaciones?usuario_id=eq.' + USUARIO_ID + '&leida=eq.false&order=fecha.desc&limit=10');
     if (d && d.length) {
       const newOnes = d.filter(n => !notifCache.find(c => c.id === n.id));
       newOnes.filter(n => n.tipo !== 'racha' && n.tipo !== 'repaso').forEach(n => {
@@ -556,7 +556,7 @@ async function clearAllNotifications() {
   updateBadge();
   updateNotifStats();
   try {
-    await fetch(SB_URL + '/rest/v1/notificaciones?usuario_id=eq.default', {
+    await fetch(SB_URL + '/rest/v1/notificaciones?usuario_id=eq.' + USUARIO_ID + '', {
       method: 'DELETE',
       headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + ((typeof Cuenta !== 'undefined' && Cuenta.tokenSync()) || SB_KEY), 'Prefer': 'return=minimal' }
     });
