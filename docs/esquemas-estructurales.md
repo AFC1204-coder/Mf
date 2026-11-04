@@ -175,3 +175,11 @@ de las fuerzas institucionales, un título que presentaba como hecho lo que la l
 Quitada: la diana de tres anillos de *Traction* (la lección ya tiene una pirámide con exactamente los mismos tres niveles).
 **`circulos` y `carriles` aún no tienen ninguna lección**: las búsquedas no encontraron anillos concéntricos enunciados por el autor
 ni dos líneas de hechos fechados en paralelo. Total acumulado: 44 figuras en 41 lecciones.
+
+## Un solo estilo
+Todas las plantillas nuevas reutilizan las clases de las de siempre (`dg-box`, `dg-t`, `dg-d`, `dg-rule`, `dg-dot`, `dg-bar`, `dg-arrow`, los
+tonos `tn-*` y las variables CSS de color y tipografía), así que cambian solas con el tema oscuro, el claro y el modo Kindle. Se
+comprobó poniendo cada nueva junto a su equivalente antigua en los tres modos y se igualaron los detalles que desentonaban: la
+balanza usa los títulos de color, la regla y las viñetas de `comparar`; la raíz de `jerarquia` va centrada como los niveles de
+`piramide`; las barras de `reparto` son tan finas como las de `barras`. Regla para futuras plantillas: nada de colores ni fuentes
+propios, y mirar siempre la figura antigua más parecida antes de dar por buena una nueva.
