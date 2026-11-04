@@ -86,3 +86,19 @@ Quedan 10 figuras en 8 lecciones:
 
 Lo que cada verificación cambió: el signo de cada flecha se justifica con una frase de la lección; el pie atribuye («según los
 autores») y separa la «lectura nuestra» de la biblioteca; los umbrales del embudo se contrastaron uno a uno con el texto.
+
+## Segunda tanda (4 nov 2026)
+Se buscaron otras ~100 lecciones candidatas (y se leyeron todas las de *Thinking in Systems* y *The Fifth Discipline* en busca de
+bucles). Se propusieron 12 figuras; un verificador independiente quitó 1 (redundante con la que la lección ya tenía) y corrigió 7
+(sobre todo pies que atribuían como «de la lección» lo que era lectura de la biblioteca, nodos o rótulos imprecisos, y un embudo
+cuya cifra 98 = 9 + 89 es cálculo nuestro y ahora se declara). Quedan **11 figuras** más:
+- **bucle** (4): la erosión de objetivos (equilibrio) y el desplazamiento de la carga (refuerzo) de Senge; la burbuja de 2003-2007
+  como bucle reflexivo (*La Alquimia de las Finanzas*); la coevolución herramientas-cognición (*Digital Behavior*, la más débil:
+  el cierre del bucle es implícito).
+- **escalera** (1): los seis peldaños de la escalera de inferencia (*The Fifth Discipline*).
+- **flujo** (1): la regla de Taleb «no arriesgar lo que no puedes perder» (*Skin in the Game*).
+- **iceberg** (3): sesgo de disponibilidad con el caso de la polio, patrones de control (*Evite Ser Utilizado*) y los cuatro marcos
+  de pensamiento de los agresores (*In Sheep's Clothing*; lectura de la biblioteca).
+- **embudo** (1): de 1.000 personas a quién está realmente enferma (*Reckoning with Risk*).
+- **capas** (1): el Círculo Dorado de Sinek (tres anillos concéntricos).
+Total con la primera tanda: 21 figuras en 18 lecciones. Siguen sin descubrirse capas «contenidas» en casi ninguna lección.
