@@ -75,6 +75,26 @@ describe('Estudio · tiempo por libro (con relecturas)', () => {
   });
 });
 
+describe('Estudio · tiempo real medido', () => {
+  const tiempo = [
+    { leccion_id: 'l1', dia: '2026-11-03', segundos: 600 }, { leccion_id: 'l2', dia: '2026-11-04', segundos: 300 },
+    { leccion_id: 'l3', dia: '2026-11-04', segundos: 2400 }, { leccion_id: 'zzz', dia: '2026-11-04', segundos: 999 }, { leccion_id: 'l1', dia: '2026-11-04', segundos: 0 }
+  ];
+  const v = E.variedad({ prog: [], libros, lecs, diaDe, hoy: HOY, tiempo });
+  it('suma segundos por libro e ignora lecciones desconocidas y filas vacías', () => {
+    expect(v.tiempoReal.segundos).toBe(3300);
+    expect(v.tiempoReal.libros.map(x => [x.titulo, x.segundos])).toEqual([['Dos', 2400], ['Uno', 900]]);
+  });
+  it('libro con más tiempo real, porcentaje, días medidos y media por día', () => {
+    expect(v.tiempoReal.libroMas).toMatchObject({ titulo: 'Dos', segundos: 2400, pct: 73 });
+    expect(v.tiempoReal.dias).toBe(2); expect(v.tiempoReal.desde).toBe('2026-11-03'); expect(v.tiempoReal.mediaPorDia).toBe(1650);
+  });
+  it('sin datos medidos no inventa nada', () => {
+    const w = E.variedad({ prog: [], libros, lecs, diaDe, hoy: HOY });
+    expect(w.tiempoReal.segundos).toBe(0); expect(w.tiempoReal.libroMas).toBeNull(); expect(w.tiempoReal.desde).toBeNull();
+  });
+});
+
 describe('Estudio · retención', () => {
   const repaso = [
     { estado: 'activa', leccion_id: 'l1', nivel: 4, veces_correcta: 5, veces_incorrecta: 0 },

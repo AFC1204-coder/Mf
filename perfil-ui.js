@@ -285,7 +285,7 @@ async function tuEstudio() {
   const rd = typeof RetosUI !== 'undefined' ? RetosUI.datos() : { respuestas: [], activos: 0 };
   const e = Estudio.analizar({
     prog, revisiones, repaso, libros, lecs, preg, respuestas: rd.respuestas, revisionesReto: revReto,
-    retosActivos: rd.activos, minutos: Didactica.minutosLectura, diaDe: f => Dia.logico(f), hoy: Dia.hoy()
+    retosActivos: rd.activos, tiempo: typeof TiempoUI !== 'undefined' ? TiempoUI.datos() : [], minutos: Didactica.minutosLectura, diaDe: f => Dia.logico(f), hoy: Dia.hoy()
   });
   root.innerHTML = '<button class="back-btn" onclick="renderTu()">← Tú</button>' + estudioHtml(e);
 }
@@ -315,7 +315,11 @@ function estudioHtml(e) {
     <p class="sec-label est-sec">Variedad</p>
     <div class="srs-stats-grid">${estCifra(v.librosTocados, 'Libros tocados')}${estCifra(v.libros30, 'En 30 días')}${estCifra(v.terminados, 'Terminados')}</div>
     ${v.ejes.map(x => estBarra(x.eje, x.lecciones, v.ejes[0].lecciones, `${x.lecciones} · ${x.pct} %`)).join('') || '<p class="tu-nota">Aún no has leído ninguna lección.</p>'}
-    ${v.libroMasTiempo ? `<p class="est-sub">Libros a los que más tiempo has dedicado (contando relecturas)</p>
+    ${v.tiempoReal.segundos ? `<p class="est-sub">Tiempo real con la lección en pantalla</p>
+    ${v.tiempoReal.libros.map(x => estBarra(x.titulo, x.segundos, v.tiempoReal.libros[0].segundos, Tiempo.texto(x.segundos))).join('')}
+    <p class="tu-nota">Total medido: ${Tiempo.texto(v.tiempoReal.segundos)} en ${v.tiempoReal.dias} día${v.tiempoReal.dias === 1 ? '' : 's'} (desde el ${esc(v.tiempoReal.desde)}), unos ${Tiempo.texto(v.tiempoReal.mediaPorDia)} por día de uso. «${esc(v.tiempoReal.libroMas.titulo)}» es el libro con más tiempo (${v.tiempoReal.libroMas.pct} %). Solo cuenta con la lección en pantalla, la pestaña visible y toques o desplazamientos en los últimos 90 segundos.</p>`
+      : '<p class="tu-nota">El tiempo real se empieza a medir desde hoy: aparecerá aquí cuando lo hayas acumulado.</p>'}
+    ${v.libroMasTiempo ? `<p class="est-sub">Libros a los que más tiempo has dedicado (estimado, contando relecturas)</p>
     ${v.tiempoLibros.map(x => estBarra(x.titulo, x.minutos, v.tiempoLibros[0].minutos, estMin(x.minutos) + (x.relecturas ? ` · ${x.relecturas} rel.` : ''))).join('')}
     <p class="tu-nota">«${esc(v.libroMasTiempo.titulo)}»: ${estMin(v.libroMasTiempo.minutos)} (${v.libroMasTiempo.pct} % de ${estMin(v.minutosTotal)}). Es una estimación: minutos de lectura de cada lección × las veces que la has leído, no el tiempo real en pantalla.
       ${v.libroMasReleido ? `Libro que más relees: «${esc(v.libroMasReleido.titulo)}» (${v.libroMasReleido.relecturas} relectura${v.libroMasReleido.relecturas === 1 ? '' : 's'} en ${v.libroMasReleido.releidas} lección${v.libroMasReleido.releidas === 1 ? '' : 'es'}).` : 'Aún no hay relecturas registradas.'}
