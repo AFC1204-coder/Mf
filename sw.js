@@ -3,7 +3,7 @@
 ═══════════════════════════════════════════ */
 
 const SCS_ICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='36' fill='%23080808'/%3E%3Ctext x='96' y='125' text-anchor='middle' font-family='Georgia,serif' font-size='90' font-weight='700' fill='%23c9a84c'%3E§%3C/text%3E%3C/svg%3E";
-const CACHE_NAME = 'scs-cache-v116';
+const CACHE_NAME = 'scs-cache-v119';
 const urlsToCache = [
   '/Mf/',
   '/Mf/index.html',
@@ -24,6 +24,10 @@ const urlsToCache = [
   '/Mf/lib/mazo.js',
   '/Mf/lib/ambiente.js',
   '/Mf/mazo-ui.js',
+  '/Mf/inicio-ui.js',
+  '/Mf/lib/swipe.js',
+  '/Mf/lib/recomendar.js',
+  '/Mf/swipe-ui.js',
   '/Mf/lib/reporte.js',
   '/Mf/lib/novedad.js',
   '/Mf/lib/invitado.js',

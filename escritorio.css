@@ -37,22 +37,27 @@ nav.biblio-tabs {
 }
 .sec-label { margin-bottom: var(--sp-3); }
 
-/* ── HOY: atril a la izquierda, mazo a la derecha ── */
+/* ── HOY: sesión y buscar a la izquierda, mazo a la derecha; esquemas y rutas debajo, a todo el ancho ── */
 #view-home.active {
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(300px, 0.8fr);
-  grid-template-areas: "atril mazo" "rutas rutas";
+  grid-template-areas: "libros mazo" "hoy mazo" "explorar mazo" "esq esq" "rutas rutas";
+  grid-template-rows: auto auto auto 1fr auto auto;
   column-gap: var(--col-gap);
   row-gap: var(--sp-6);
   align-items: start;
 }
-#atril { grid-area: atril; max-width: none; margin: 0; padding-top: 0; }
+#inicio-libros { grid-area: libros; min-width: 0; margin: 0; }
+#inicio-hoy { grid-area: hoy; margin: 0; }
+#inicio-explorar { grid-area: explorar; margin: 0; }
+#inicio-esquemas { grid-area: esq; min-width: 0; margin: 0; }
 #mazo { grid-area: mazo; min-width: 0; margin: 0; position: sticky; top: var(--sticky-top); }
 #rutas-section { grid-area: rutas; min-width: 0; }
 #mazo .mz-card { flex-basis: 92%; max-width: none; min-height: 0; }
-/* Si no hay mazo, el atril ocupa todo */
-#view-home.active:has(#mazo:empty) { grid-template-columns: minmax(0, 1fr); grid-template-areas: "atril" "rutas"; }
-#view-home.active:has(#mazo:empty) #atril { max-width: min(60rem, 100%); }
+.ie-esq { flex-basis: 23%; max-width: 320px; }
+/* Si no hay mazo, la sesión, buscar y esquemas ocupan todo */
+#view-home.active:has(#mazo:empty) { grid-template-columns: minmax(0, 1fr); grid-template-areas: "libros" "hoy" "explorar" "esq" "rutas"; grid-template-rows: auto; }
+#view-home.active:has(#mazo:empty) #inicio-hoy, #view-home.active:has(#mazo:empty) #inicio-explorar { max-width: min(60rem, 100%); }
 
 /* ── BIBLIOTECA: filtros fijos a la izquierda, estantería a la derecha ── */
 .estanteria {

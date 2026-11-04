@@ -100,3 +100,23 @@ describe('Mazo.extracto', () => {
     expect(Mazo.extracto('corto', 30)).toBe('corto');
   });
 });
+
+describe('Mazo.componer · fichas con esquema', () => {
+  it('sin lección que toque, las ideas salen de lecciones con esquema si las hay', () => {
+    const conFigura = l => ['e', 'f'].includes(l.id);
+    for (let s = 1; s <= 20; s++) {
+      const m = Mazo.componer({ lecs, completadas: new Set(), siguiente: null, semilla: s, conFigura });
+      const ideas = m.filter(f => f.tipo === 'idea').map(f => f.lecId);
+      expect(ideas.length).toBeGreaterThan(0);
+      ideas.forEach(id => expect(['e', 'f']).toContain(id));
+    }
+  });
+  it('si ninguna tiene esquema, funciona igual que antes', () => {
+    const m = Mazo.componer({ lecs, completadas: new Set(), siguiente: null, semilla: 3, conFigura: () => false });
+    expect(m.filter(f => f.tipo === 'idea').length).toBeGreaterThan(0);
+  });
+  it('un conFigura que falla no rompe el mazo', () => {
+    const m = Mazo.componer({ lecs, completadas: new Set(), siguiente: null, semilla: 3, conFigura: () => { throw new Error('x'); } });
+    expect(m[m.length - 1].tipo).toBe('cierre');
+  });
+});

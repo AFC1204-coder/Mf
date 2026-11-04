@@ -106,19 +106,15 @@
   <div class="view active" id="view-home">
     <p class="inicio-pulso" id="inicio-pulso" aria-live="polite"></p>
     <section id="mazo" class="mazo" aria-label="Para un hueco"></section>
-    <!-- En el móvil, lo demás de Inicio queda plegado: una sola cosa a la vez. En el ordenador se ve todo. -->
-    <div class="inicio-mas" id="inicio-mas">
-      <button type="button" class="inicio-mas-btn" id="inicio-mas-btn" aria-expanded="false" aria-controls="inicio-mas-cuerpo" onclick="alternarInicioMas()">
-        <span id="inicio-mas-txt">Más para esta noche</span><span class="im-flecha" aria-hidden="true"></span>
-      </button>
-      <div class="inicio-mas-cuerpo" id="inicio-mas-cuerpo">
-        <div id="atril"></div>
-        <section id="rutas-section" class="rutas-section" aria-label="Rutas de aprendizaje" hidden>
-          <p class="sec-label">Rutas de aprendizaje</p>
-          <div class="rutas-row" id="rutas-row"></div>
-        </section>
-      </div>
-    </div>
+    <!-- Inicio: el mazo de fichas (visual) y debajo, de arriba abajo: la sesión de hoy, buscar/temas, esquemas para mirar y rutas. -->
+    <section id="inicio-libros" class="ir" aria-label="Libros para ti"></section>
+    <section id="inicio-hoy" class="ih" aria-label="Tu sesión de hoy"></section>
+    <section id="inicio-explorar" class="ie" aria-label="Buscar en la biblioteca"></section>
+    <section id="inicio-esquemas" class="ie-esq-sec" aria-label="Esquemas para mirar"></section>
+    <section id="rutas-section" class="rutas-section" aria-label="Rutas de aprendizaje" hidden>
+      <p class="sec-label">Rutas de aprendizaje</p>
+      <div class="rutas-row" id="rutas-row"></div>
+    </section>
   </div>
 
   <!-- BIBLIOTECA -->
@@ -423,6 +419,10 @@
 <script src="sesion-ui.js" defer></script>
 <script src="perfil-ui.js" defer></script>
 <script src="mazo-ui.js" defer></script>
+<script src="inicio-ui.js" defer></script>
+<script src="lib/swipe.js" defer></script>
+<script src="lib/recomendar.js" defer></script>
+<script src="swipe-ui.js" defer></script>
 <script src="retos-ui.js" defer></script>
 <script src="tiempo-ui.js" defer></script>
 <script src="reporte-ui.js" defer></script>
