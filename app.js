@@ -1440,10 +1440,22 @@ function renderCuaderno(){
 /* ═══════════════════════════════════════════
    EJES
 ═══════════════════════════════════════════ */
+/** Cuántos libros hay por eje principal y, dentro de un eje, por sub-eje (solo lo que existe: los vacíos no se ofrecen). */
+function contarEjes(){
+  const c={};
+  libros.forEach(l=>{const e=getEjePrincipal(l); if(e) c[e]=(c[e]||0)+1;});
+  return c;
+}
+function contarSubEjes(eje){
+  const c={};
+  libros.filter(l=>getEjePrincipal(l)===eje).forEach(l=>{const s=getSubEje(l); if(s) c[s]=(c[s]||0)+1;});
+  return Object.entries(c).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));
+}
 function renderEjes(){
   const cont=document.getElementById('eje-filters');
-  cont.innerHTML=`<button class="eje-pill active" onclick="filtrarEjePrincipal('',this)">Todos</button>`+
-    Object.entries(EJES_CONFIG).map(([n,cfg])=>`<button class="eje-pill" onclick="filtrarEjePrincipal('${n}',this)">${cfg.icon} ${n}</button>`).join('');
+  const cuentas=contarEjes();
+  cont.innerHTML=`<button class="eje-pill active" onclick="filtrarEjePrincipal('',this)">Todos <span class="eje-n">${libros.length||''}</span></button>`+
+    Object.entries(EJES_CONFIG).filter(([n])=>cuentas[n]>0).map(([n,cfg])=>`<button class="eje-pill" onclick="filtrarEjePrincipal('${n}',this)">${cfg.icon} ${n} <span class="eje-n">${cuentas[n]}</span></button>`).join('');
   document.getElementById('eje-filters-sub').innerHTML='';
 }
 function filtrarEjePrincipal(eje,btn){
@@ -1451,8 +1463,10 @@ function filtrarEjePrincipal(eje,btn){
   document.querySelectorAll('#eje-filters .eje-pill').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   const subCont=document.getElementById('eje-filters-sub');
-  if(eje&&EJES_CONFIG[eje]){
-    subCont.innerHTML=Object.entries(EJES_CONFIG[eje].sub).map(([n,ic])=>`<button class="eje-pill sub" onclick="filtrarSubEje('${n}',this)">${ic || EJES_CONFIG[eje].icon} ${n}</button>`).join('');
+  // Sub-ejes: solo los que tienen libros (con su número); si solo hay uno, no hay nada que filtrar
+  const subs=eje&&EJES_CONFIG[eje]?contarSubEjes(eje):[];
+  if(subs.length>1){
+    subCont.innerHTML=subs.map(([n,k])=>`<button class="eje-pill sub" data-sub="${escAttr(n)}" onclick="filtrarSubEje(this.dataset.sub,this)">${EJES_CONFIG[eje].sub[n]||EJES_CONFIG[eje].icon} ${esc(n)} <span class="eje-n">${k}</span></button>`).join('');
   }else{subCont.innerHTML='';}
   renderLibros();
 }
