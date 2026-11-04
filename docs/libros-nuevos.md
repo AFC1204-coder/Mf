@@ -550,3 +550,10 @@ Añadido a petición del usuario: eje Desarrollo Humano / Mentalidad, 8 leccione
 - **Errores corregidos:** la lección 7 llamaba «último» al capítulo del sexto sentido (en la edición de 1937 el último es el de los seis fantasmas del miedo); se afirmaba que la perseverancia es la «combinación de» siete elementos (Hill da más); «impregnar» iba entre comillas sin poder confirmarlo; conexiones con Kahneman y Munger demasiado laxas; la mención a *Burlar al Diablo* atribuía un «estilo de exposición» sin revisar esa obra.
 - **Homonimia:** el Carnegie del relato es Andrew; el corpus tiene a Dale Carnegie. La lección 8 lo aclara.
 - **Límite:** el verificador no pudo abrir el texto del libro ni encontró nada web sobre Barnes ni sobre las diferencias entre ediciones; esas partes quedan atribuidas y sin afirmar qué pasajes cambian.
+
+## *Rodeado de idiotas* (Thomas Erikson, 2014) — noviembre 2026
+
+Añadido a petición del usuario: Psicología y Conducta / Interpersonal, 5 lecciones y 15 preguntas (la premisa del libro, los cuatro colores, fortalezas y puntos ciegos, adaptar la comunicación, mezclas y contexto). Proceso habitual con dos verificaciones independientes (la primera: 1 ERROR de atribución y 8 DUDA; la segunda sobre el texto corregido: 0 ERROR y 5 DUDA menores, aplicadas), carga oculta, huellas `md5` con 0 diferencias y publicación.
+
+- **Tratamiento editorial:** divulgación popular cuyo modelo de cuatro colores viene de la tradición DISC (Marston, *Emotions of Normal People*, 1928) y tiene un respaldo empírico débil frente a los cinco grandes. Todo se expone como «el modelo del libro»; cada lección lleva su crítica (validez y fiabilidad, efecto Barnum/Forer, encasillamiento, anécdotas sin estudio controlado, baja falsabilidad) y se recoge que psicólogos y divulgadores suecos lo han calificado de pseudociencia. Las aplicaciones hablan de conducta en una situación, nunca de etiquetar personas.
+- **Límite:** ningún verificador pudo leer el libro ni hallar su índice; lo que se atribuye a capítulos concretos se suavizó o se eliminó. Confianza media.
