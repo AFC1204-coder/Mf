@@ -2165,6 +2165,8 @@ function cuerpoConFigura(cuerpo, figuras){
 
 /* Comprobación activa: una pregunta del mismo libro, afín a la lección. No guarda progreso. */
 function comprobacionHtml(lec){
+  // Con reto de pensamiento activo, el test antiguo se oculta (sus preguntas siguen en la base y en el repaso).
+  if(typeof RetosUI!=='undefined' && RetosUI.tiene(lec.id)) return RetosUI.html(lec);
   const qs=Didactica.preguntasParaLeccion(lec,preg,1);
   if(!qs.length) return '';
   const p=qs[0];
@@ -3499,6 +3501,7 @@ function renderSRSDashboard() {
       <div class="srs-stat"><div class="srs-stat-num">${totalItems}</div><div class="srs-stat-lbl">Ideas en repaso</div></div>
       <div class="srs-stat"><div class="srs-stat-num" style="color:var(--success)">${n4}</div><div class="srs-stat-lbl">Asentadas</div></div>
     </div>
+    ${typeof RetosUI!=='undefined'?RetosUI.bloqueRepaso():''}
     <div class="srs-cols">
     <div class="srs-niveles">
       <p class="sec-label" style="margin-bottom:0.8rem">Cómo de firmes</p>
@@ -3859,6 +3862,7 @@ function compartirLibro(){
 
 /* START */
 init();
+RetosUI.cargar();
 // Al volver a la pestaña o a la app, trae lo que se haya leído en el otro dispositivo.
 document.addEventListener('visibilitychange', sincronizarAlVolver);
 window.addEventListener('focus', sincronizarAlVolver);

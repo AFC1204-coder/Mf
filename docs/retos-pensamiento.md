@@ -35,6 +35,11 @@ En vez de repetir la pregunta, reaparece **tu respuesta** con «¿sigues pensand
 generador (`tools/retos/prompts/generador.md`) → `node tools/retos/lint.js` → verificador independiente (`prompts/verificador.md`) → corrector → carga en borrador (`activo=false`) → comprobación por huella → activar.
 
 ## Estado
-- Hecho: migración aplicada y comprobada (RLS y permisos por rol), lint de retos con pruebas, guía y prompts.
-- Piloto: *How Minds Change* y *In Sheep's Clothing* (los dos libros más leídos por el usuario; 17 lecciones).
-- Pendiente (tras el piloto): pantalla del reto al final de la lección, repaso de respuestas, registro de predicciones, y qué hacer con el test antiguo (decisión del usuario: ocultarlo en las lecciones con reto; `preguntas` y `repaso` no se borran).
+- Hecho: migración aplicada y comprobada, lint de retos con pruebas, guía y prompts.
+- Piloto cargado: *How Minds Change* (9) y *In Sheep's Clothing* (8). Cada lote pasó por un verificador independiente, que corrigió 10 de 17: varias respuestas estaban escritas en la propia lección («autocorrección») y se podían copiar, y dos predicciones venían ya hechas.
+- Pantalla (`lib/retos.js` lógica pura + `retos-ui.js`):
+  - **Fin de la lección**: el reto con su caja de respuesta (1–3 líneas), **Saltar** siempre visible (no se guarda ni penaliza) y «Explícalo con tus palabras» opcional, con dictado si el navegador lo trae. Con reto activo el test antiguo se oculta; sin reto (o en modo invitado) sigue como antes.
+  - **Repaso**: bloque «Retos de pensamiento» con una tarjeta cada vez. Reflexiones: tu respuesta + «¿sigues pensando lo mismo?» (lo mismo / con matices / he cambiado; intervalos 7·21·60·150 días, «he cambiado» reinicia). Predicciones: a los 30 días «¿acertaste?» (sí / no / a medias / aún no se sabe → vuelve en 30 días).
+  - **Registro de predicciones** por autor o por idea, con aciertos, fallos, a medias y pendientes. Avisa de que con menos de 5 comprobadas aún no dice nada fiable.
+- Los retos se cargan inactivos (`activo=false`) y se activan a mano.
+- Pendiente: más libros (ampliar con el mismo proceso), migrar las preguntas antiguas (el usuario dijo «para después»), usar estos datos en el perfil.

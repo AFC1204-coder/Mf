@@ -3104,3 +3104,37 @@ body.carta #view-lecciones .back-btn { display: none !important; } /* el invitad
   .tconfig-info { margin-bottom: var(--sp-2); }
   .tconfig-pill, .tconfig-num { min-height: 40px; }
 }
+
+/* ── Retos de pensamiento (docs/retos-pensamiento.md) ── */
+.reto { margin: 2.2rem 0 1.4rem; padding: 1.25rem 1.3rem 1.3rem; border: 1px solid #cbb992; background: rgba(138,106,40,0.06); }
+.reto-label { font: 600 0.68rem/1 var(--font-ui); letter-spacing: 0.22em; text-transform: uppercase; color: #8a6a28; }
+.reto-q { font-family: var(--font-body); font-size: 1.04rem; line-height: 1.55; margin: 0.6rem 0 0.9rem; color: #2a2218; }
+.reto-contr { font: 500 0.78rem/1.4 var(--font-ui); color: #6f5a34; margin: -0.3rem 0 0.9rem; }
+.reto-area { width: 100%; box-sizing: border-box; font: 1rem/1.5 var(--font-body); color: #2a2218; background: rgba(255,255,255,0.55); border: 1px solid #cbb992; border-radius: 6px; padding: 0.7rem 0.8rem; resize: vertical; min-height: 4.5rem; }
+.reto-area:focus { outline: 2px solid #8a6a28; outline-offset: 1px; }
+.reto-acc, .retos-bot { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-top: 0.7rem; }
+.reto-btn { font: 600 0.82rem/1 var(--font-ui); padding: 0.7rem 1.05rem; min-height: 44px; border-radius: 6px; border: 1px solid #8a6a28; background: #8a6a28; color: #fff; cursor: pointer; }
+.reto-btn.sec { background: transparent; color: #6f5a34; }
+.reto-ayuda { font: 400 0.76rem/1.35 var(--font-ui); color: #7a6a4a; flex: 1 1 12rem; }
+.reto-hecho { font: 400 0.84rem/1.5 var(--font-ui); color: #6f5a34; margin-top: 0.8rem; }
+.reto-link { background: none; border: 0; padding: 0.3rem 0; font: inherit; color: #8a6a28; text-decoration: underline; cursor: pointer; min-height: 32px; }
+.reto-mia { border-left: 3px solid #cbb992; padding: 0.2rem 0 0.2rem 0.8rem; margin: 0.4rem 0 0.6rem; }
+.reto-mia-cab { font: 600 0.68rem/1 var(--font-ui); letter-spacing: 0.14em; text-transform: uppercase; color: #8a6a28; margin-bottom: 0.4rem; }
+.reto-mia-txt { font: 1rem/1.5 var(--font-body); color: #2a2218; white-space: pre-wrap; }
+.reto-exp { margin-top: 1rem; border-top: 1px dashed #cbb992; padding-top: 0.7rem; }
+.reto-exp summary { cursor: pointer; font: 500 0.84rem/1.4 var(--font-ui); color: #6f5a34; min-height: 32px; }
+.reto-exp summary small { color: #8f7f5f; }
+.retos-rep { margin: 0 0 1.6rem; }
+.retos-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.1rem 1.2rem; margin-bottom: 0.9rem; }
+.retos-card-n { font: 600 0.68rem/1.3 var(--font-ui); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); margin-bottom: 0.6rem; }
+.retos-card-q { font-size: 0.9rem; line-height: 1.5; color: var(--text2); margin-bottom: 0.7rem; }
+.retos-card .reto-mia-cab { color: var(--text3); }
+.retos-card .reto-mia-txt { color: var(--text); }
+.retos-card .reto-area { background: var(--surface); color: var(--text); border-color: var(--border); }
+.retos-preg { font-family: var(--font-display); font-size: 1.05rem; margin: 0.8rem 0 0.2rem; }
+.retos-nada { font-size: 0.85rem; color: var(--text3); margin: 0 0 0.9rem; }
+.retos-grupo { border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.1rem; margin-bottom: 0.9rem; background: var(--surface); }
+.retos-grupo-t { font-family: var(--font-display); font-size: 1.05rem; }
+.retos-grupo-c { font-size: 0.78rem; color: var(--text3); margin: 0.3rem 0 0.7rem; }
+.retos-item { font-size: 0.88rem; line-height: 1.5; padding: 0.6rem 0; border-top: 1px solid var(--border); }
+.retos-item-m { font-size: 0.74rem; color: var(--text3); margin-bottom: 0.2rem; }
