@@ -61,7 +61,7 @@ const RetosUI = (() => {
         ? `Volveré a preguntarte si acertaste, en unos ${dias} días.`
         : 'Te lo volveré a enseñar dentro de un tiempo para ver si sigues pensando lo mismo.';
       return `${cab}<div class="reto-mia"><div class="reto-mia-cab">Tu respuesta · ${cuando}</div><div class="reto-mia-txt">${esc(ult.texto)}</div></div>
-        <div class="reto-hecho">${aviso} <button type="button" class="reto-link" onclick="RetosUI.otra('${lecId}')">Escribir otra</button></div>${explicalo(lecId)}`;
+        <div class="reto-hecho">${aviso} <button type="button" class="reto-link" onclick="RetosUI.otra('${lecId}')">Escribir otra</button>${preguntasDe(lecId).length ? '<br><small>Las preguntas de test de esta lección ya no salen en el repaso; siguen en el test del libro.</small>' : ''}</div>${explicalo(lecId)}`;
     }
     return `${cab}
       <textarea class="reto-area" id="reto-t-${lecId}" rows="3" maxlength="2000" aria-label="Tu respuesta" placeholder="Una a tres líneas. No hay respuesta correcta."></textarea>
@@ -100,10 +100,20 @@ const RetosUI = (() => {
     try {
       const [creada] = await sb('respuestas_reto', { method: 'POST', body: JSON.stringify({ ...fila, usuario_id: USUARIO_ID }) });
       resp.push(creada || fila);
-      if (fila.tipo !== 'explicalo') { saltados.delete(lecId); formNuevo.delete(lecId); }
+      if (fila.tipo !== 'explicalo') { saltados.delete(lecId); formNuevo.delete(lecId); await dormirTest(lecId); }
       toast('Guardado');
       sustituir(lecId);
     } catch (e) { console.warn(e); toast('No se pudo guardar. Prueba de nuevo.'); }
+  }
+  /** Migración suave: al contestar el reto, las tarjetas de test de esa lección salen del repaso (pasan a «dormida»,
+   *  no se borran: el test del libro y la base las conservan, y se pueden volver a activar). Ver docs/retos-pensamiento.md. */
+  const preguntasDe = lecId => (typeof preg !== 'undefined' ? preg : []).filter(p => p.leccion_id === lecId).map(p => p.id);
+  async function dormirTest(lecId) {
+    const ids = preguntasDe(lecId); if (!ids.length) return;
+    try {
+      await sb(`repaso?usuario_id=eq.${USUARIO_ID}&modo=eq.quiz&estado=eq.activa&pregunta_id=in.(${ids.join(',')})`,
+        { method: 'PATCH', body: JSON.stringify({ estado: 'dormida' }) });
+    } catch (e) { console.warn('Retos: no se pudo apartar el test del repaso', e); }
   }
   function saltar(lecId) { saltados.add(lecId); sustituir(lecId); }
   function reabrir(lecId) { saltados.delete(lecId); sustituir(lecId); }
