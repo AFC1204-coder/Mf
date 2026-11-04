@@ -37,10 +37,11 @@ Prompt `tools/libros/prompts/verificador.md` sobre el JSON. Con búsqueda web. D
 1. `node tools/libros/a-sql.js slug.json alta > slug.alta.sql` (libro/lecciones/preguntas ocultos; ids deterministas: repetir no duplica).
 2. Un agente carga el SQL **sin cambiar ni una palabra** con `execute_sql` (por lecciones).
 3. **Comprueba tú la carga**: `node tools/libros/huellas.js slug.json comparar-sql` → ejecuta esa consulta; debe devolver 0 filas. Si hay diferencias, no publiques: recarga lo distinto.
-4. **Puerta (fase publicar)** con `--huellas-ok`: debe decir `publicar`. Publica (solo si todo coincide):
+4. **Puerta (fase publicar)** con `--huellas-ok`: debe decir `publicar`.
+   **Modo actual: aprobación del dueño** (decisión del 5 nov 2026, hasta nuevo aviso). La rutina automática **NO publica**: deja el libro cargado y oculto, con la puerta en `publicar`, marca el candidato `en_revision` con `veredicto_puerta='publicar'` y el informe, y deja una notificación al dueño («Libro listo para revisar: …»). El dueño lo revisa (o pide a Claude que lo publique en una sesión) y entonces se publica:
    `update libros set publico=true, fecha_creacion=now() where id='<id>'; update lecciones set activa=true where libro_id='<id>'; update preguntas set activa=true where libro_id='<id>';`
-   (`node tools/libros/a-sql.js slug.json publicar` lo genera.) La app muestra «Nuevo» 30 días.
-5. Marca el candidato: `update libros_candidatos set estado='publicado', libro_id='<id>', publicado_en=now(), veredicto_puerta='publicar', informe='<json con hallazgos y motivos>'::jsonb, actualizado=now() where id='<id candidato>';`. En una sesión con el dueño, anota además el libro, la confianza y los hallazgos en `docs/libros-nuevos.md` (commit y PR). **La rutina automática no depende de poder escribir en el repositorio**: su registro es la fila de `libros_candidatos`.
+   (`node tools/libros/a-sql.js slug.json publicar` lo genera). La app muestra «Nuevo» 30 días. En una sesión con el dueño presente y su visto bueno explícito se puede publicar directamente.
+5. Al publicar (tras la aprobación) marca el candidato: `update libros_candidatos set estado='publicado', libro_id='<id>', publicado_en=now(), veredicto_puerta='publicar', informe='<json con hallazgos y motivos>'::jsonb, actualizado=now() where id='<id candidato>';`. En una sesión con el dueño, anota además el libro, la confianza y los hallazgos en `docs/libros-nuevos.md` (commit y PR). **La rutina automática no depende de poder escribir en el repositorio**: su registro es la fila de `libros_candidatos`.
 
 ## Revertir
 `delete from preguntas where libro_id='<id>'; delete from lecciones where libro_id='<id>'; delete from libros where id='<id>';` (o solo ocultar con `publico=false`/`activa=false`).

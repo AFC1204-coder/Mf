@@ -35,7 +35,7 @@ Objetivo: que la biblioteca crezca sola sin que se cuelen conceptos erróneos ni
 4. Verificador independiente → corrector si hace falta → segunda verificación si hubo ERROR.
 5. `puerta --fase cargar`: si no es `publicar`, el candidato pasa a `en_revision` (o `descartado` si `rechazar`) con el informe y termina.
 6. Carga oculta (`publico=false`, `activa=false`) y huellas.
-7. `puerta --fase publicar --huellas-ok`: solo entonces publica y marca el candidato `publicado` con fecha, `libro_id` y el informe.
+7. `puerta --fase publicar --huellas-ok`. **Modo actual (5 nov 2026): aprobación del dueño.** La rutina no publica: deja el libro oculto y cargado, marca el candidato `en_revision` con `veredicto_puerta='publicar'` y el informe, y deja una notificación («Libro listo para revisar»). El dueño lo mira y pide publicarlo (o Claude lo publica en una sesión con su visto bueno); entonces el candidato pasa a `publicado` con fecha, `libro_id` e informe. Cuando el dueño se fíe, se cambia este modo a publicación automática.
 8. Registro: queda en `libros_candidatos.informe`; el dueño (o Claude en una sesión) lo vuelca después a `docs/libros-nuevos.md`. La rutina no necesita escribir en el repositorio.
 
 ## Qué no hace la rutina
