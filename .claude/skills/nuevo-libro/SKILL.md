@@ -9,13 +9,17 @@ Proyecto Supabase `aduizdiiacrvpoavjmab` (herramienta `mcp__Supabase__execute_sq
 Prioridad del usuario: **no adquirir conceptos erróneos**. Un fallo estético importa poco; una atribución, cifra, cita o clave falsa, mucho.
 
 ## 0. Antes de empezar
+- Lee `docs/libros-preceptos.md`: son los preceptos de calidad y de utilidad, y **los comprueba `tools/libros/puerta.js`**; si la puerta no dice `publicar`, el libro no se publica solo.
 - Revisa los avisos abiertos: `select * from reportes_contenido where estado='abierto' order by fecha;`. Atiéndelos primero (corrige el texto/clave en la BD y márcalos `corregido` o `descartado`).
-- Tope: **1 libro por ejecución**, y como mucho 2 por semana. Si hay más de 5 avisos abiertos sin atender, no añadas libros: arregla primero.
+- Tope: **2 libros por semana**, contados en la cola y no por «libros recientes» (hay cargas masivas antiguas que falsearían la cuenta):
+  `select count(*) from libros_candidatos where estado='publicado' and publicado_en > now() - interval '7 days';`
+  Si hay más de 5 avisos abiertos sin atender, no añadas libros: arregla primero. Pasa ambos números a la puerta (`--publicados-semana`, `--abiertos`).
 
-## 1. Elegir candidato
-- Libro conocido y que domines con detalle (si dudas de lo que dice, no lo elijas). No debe estar ya: `select 1 from libros where titulo ilike '%…%' or autor ilike '%…%'`.
-- Que encaje con la biblioteca (ensayo/divulgación sobre economía, mente, conducta, biología, pensamiento, desarrollo personal) y cubra huecos: `select eje_principal, count(*) from libros group by 1` (los ejes menos poblados primero: Desarrollo Humano, Neurociencia y Biología).
-- Evita obras con base mayormente anecdótica no verificable.
+## 1. Elegir candidato (de la cola, no improvisado)
+- `select * from libros_candidatos where estado='pendiente';` y elige con `puerta.elegirCandidato(candidatos, corpus)` (`corpus` = `select titulo, autor, eje_principal, sub_eje from libros`): mayor prioridad, hueco poco poblado, sin duplicar, sin temas de riesgo. Márcalo `en_curso`.
+- Si la cola está vacía, **no inventes**: termina informando. El dueño (o Claude en una sesión) añade candidatos con motivo de utilidad.
+- No añadas por tu cuenta libros de salud, dinero o sexualidad: van a `en_revision`.
+- Libro que domines con detalle; si dudas de lo que dice, descártalo (`estado='descartado'`, motivo en `informe`).
 
 ## 2. Generar (agente nuevo)
 Un agente `general-purpose` con el prompt `tools/libros/prompts/generador.md` y: libro, eje, sub_eje **ya existente en el corpus**, ruta `/tmp/…/slug.json`. Debe terminar con `barajar.js` + `lint.js` en OK.
@@ -25,15 +29,16 @@ Prompt `tools/libros/prompts/verificador.md` sobre el JSON. Con búsqueda web. D
 - `rechazar` → no se publica; descarta el libro (anótalo en `docs/libros-nuevos.md`).
 - `corregir` → agente corrector (aplica cada hallazgo: ERROR corregir/eliminar; DUDA suavizar, atribuir bien o eliminar; no añade cifras/citas nuevas sin fuente) y `lint` en OK. Si hubo ERROR de contenido (no solo DUDA), repite la verificación con un verificador nuevo.
 - `publicar` → sigue.
+- **Puerta (fase cargar):** `node tools/libros/puerta.js paquete.json --informes v1.json,v2.json --libros corpus.json --autores tools/libros/autores-corpus.json --fase cargar --publicados-semana N --abiertos M`. Solo si dice `publicar` se carga. Si dice `revisar` → `estado='en_revision'` con el informe; `rechazar` → `descartado`; `esperar` → vuelve a `pendiente`.
 
 ## 4. Cargar en borrador y comprobar
 1. `node tools/libros/a-sql.js slug.json alta > slug.alta.sql` (libro/lecciones/preguntas ocultos; ids deterministas: repetir no duplica).
 2. Un agente carga el SQL **sin cambiar ni una palabra** con `execute_sql` (por lecciones).
 3. **Comprueba tú la carga**: `node tools/libros/huellas.js slug.json comparar-sql` → ejecuta esa consulta; debe devolver 0 filas. Si hay diferencias, no publiques: recarga lo distinto.
-4. Publica (solo si todo coincide):
+4. **Puerta (fase publicar)** con `--huellas-ok`: debe decir `publicar`. Publica (solo si todo coincide):
    `update libros set publico=true, fecha_creacion=now() where id='<id>'; update lecciones set activa=true where libro_id='<id>'; update preguntas set activa=true where libro_id='<id>';`
    (`node tools/libros/a-sql.js slug.json publicar` lo genera.) La app muestra «Nuevo» 30 días.
-5. Anota el libro, la confianza y los hallazgos del verificador en `docs/libros-nuevos.md`; commit y PR.
+5. Marca el candidato: `update libros_candidatos set estado='publicado', libro_id='<id>', publicado_en=now(), veredicto_puerta='publicar', informe='<json con hallazgos y motivos>'::jsonb, actualizado=now() where id='<id candidato>';`. En una sesión con el dueño, anota además el libro, la confianza y los hallazgos en `docs/libros-nuevos.md` (commit y PR). **La rutina automática no depende de poder escribir en el repositorio**: su registro es la fila de `libros_candidatos`.
 
 ## Revertir
 `delete from preguntas where libro_id='<id>'; delete from lecciones where libro_id='<id>'; delete from libros where id='<id>';` (o solo ocultar con `publico=false`/`activa=false`).
