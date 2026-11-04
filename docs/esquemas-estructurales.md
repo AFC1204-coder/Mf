@@ -176,6 +176,19 @@ Quitada: la diana de tres anillos de *Traction* (la lección ya tiene una pirám
 **`circulos` y `carriles` aún no tienen ninguna lección**: las búsquedas no encontraron anillos concéntricos enunciados por el autor
 ni dos líneas de hechos fechados en paralelo. Total acumulado: 44 figuras en 41 lecciones.
 
+### Quinta tanda (4 nov 2026): 12 figuras más
+Tercera pasada (lecciones no vistas antes). De 17 propuestas, el verificador descartó 5 (el bucle de Hoppe, cuyo cierre no dice la
+lección; la escalera de Minervini, con solo un estadio descrito; y tres que repetían una figura ya existente) y corrigió 7 pies o rótulos.
+- **bucle** (1): mercado de limones (*Micromotives and Macrobehavior*; posibilidad lógica, estudios empíricos divididos).
+- **escalera** (4): el camino del aprendizaje (Greene), el ciclo del retador (Dalio; sesgo declarado), los seis estadios de Kurzweil y los
+  tres grados del Estado natural (*Violence and Social Orders*; el pie niega el progreso inevitable).
+- **flujo** (1): regla de los 5 segundos y clusters (Houston; indicio, no prueba de engaño).
+- **embudo** (1): repetición espaciada (cifras de olvido de la lección; el resto es complemento calculado, declarado en el pie).
+- **jerarquia** (3): tres juegos de estatus (Storr), racionalidad diseñada frente a ecológica (*Humanomics*) e ignorancia conocida frente a pura (Kirzner).
+- **iceberg** (1): aranceles, lo visible y lo oculto.
+- **carriles** (1): Darwin, Wallace y Mendel (la primera lección con carriles; solo 2+2 fechas).
+Total acumulado: 56 figuras.
+
 ## Un solo estilo
 Todas las plantillas nuevas reutilizan las clases de las de siempre (`dg-box`, `dg-t`, `dg-d`, `dg-rule`, `dg-dot`, `dg-bar`, `dg-arrow`, los
 tonos `tn-*` y las variables CSS de color y tipografía), así que cambian solas con el tema oscuro, el claro y el modo Kindle. Se
