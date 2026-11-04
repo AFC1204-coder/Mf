@@ -23,11 +23,17 @@ const MUESTRAS = {
   tabla: { cols: ['Sí', 'No'], filas: [{ t: 'Sí', c: ['3', '0'] }, { t: 'No', c: ['5', '1'] }], resaltar: [[1, 1]] },
   arbol: { raiz: 'Todos', ramas: [{ t: '30 %', n: 'A' }, { t: '70 %', n: 'B' }] },
   venn: { conjuntos: [{ t: 'A' }, { t: 'B' }], centro: 'Ambos' },
-  recta: { min: 0, max: 1, marcas: [{ x: 0.2, t: 'a' }, { x: 0.8, t: 'b' }] }
+  recta: { min: 0, max: 1, marcas: [{ x: 0.2, t: 'a' }, { x: 0.8, t: 'b' }] },
+  bucle: { nodos: [{ t: 'A' }, { t: 'B' }, { t: 'C' }], signos: ['+', '+', '−'], nombre: 'Se corrige solo' },
+  embudo: { unidad: 'personas', etapas: [{ t: 'a', v: '100' }, { t: 'b', v: '40' }, { t: 'c', v: '5' }] },
+  escalera: { escalones: [{ t: 'Primero' }, { t: 'Segundo', d: 'Detalle' }, { t: 'Tercero' }] },
+  flujo: { inicio: 'Empieza', decisiones: [{ p: '¿Hay dato?', no: 'Espera' }], final: { t: 'Decide', d: 'Con el dato' } },
+  capas: { capas: [{ t: 'Exterior', d: 'Detalle' }, { t: 'Medio' }, { t: 'Interior' }] },
+  iceberg: { visibles: [{ t: 'Visible' }], ocultos: [{ t: 'Oculto uno' }, { t: 'Oculto dos' }] }
 };
 
 describe('Diagrama — plantillas', () => {
-  it('expone las diecisiete plantillas documentadas (diez cualitativas y siete de matemática sencilla)', () => {
+  it('expone las veintitrés plantillas documentadas (diez cualitativas, siete de matemática sencilla y seis estructurales)', () => {
     expect(Diagrama.plantillas.sort()).toEqual(Object.keys(MUESTRAS).sort());
   });
 
@@ -253,5 +259,57 @@ describe('Diagrama.wrap — espacio duro', () => {
     expect(duro.some(l => l === '%')).toBe(false);
     const normal = Diagrama.wrap('Mueren 400 · 22 %', 70, 14);
     expect(normal.length).toBeGreaterThanOrEqual(duro.length);
+  });
+});
+
+
+describe('Diagrama — plantillas estructurales', () => {
+  const spec = (plantilla, datos) => ({ tipo: 'diagrama', plantilla, titulo: 'T', pie: 'P', datos });
+  const nodos3 = [{ t: 'A' }, { t: 'B' }, { t: 'C' }];
+
+  it('están registradas', () => {
+    ['bucle', 'embudo', 'escalera', 'flujo', 'capas', 'iceberg'].forEach(p => expect(Diagrama.plantillas).toContain(p));
+  });
+  it('bucle: nº par de signos negativos = refuerzo; impar = equilibrio (se calcula, no se escribe)', () => {
+    expect(Diagrama.svg(spec('bucle', { nodos: nodos3, signos: ['+', '+', '+'] }))).toContain('R · Refuerzo');
+    expect(Diagrama.svg(spec('bucle', { nodos: nodos3, signos: ['+', '−', '−'] }))).toContain('R · Refuerzo');
+    expect(Diagrama.svg(spec('bucle', { nodos: nodos3, signos: ['+', '+', '−'] }))).toContain('B · Equilibrio');
+    expect(Diagrama.svg(spec('bucle', { nodos: nodos3, signos: ['-', '-', '-'] }))).toContain('B · Equilibrio');
+  });
+  it('bucle: acepta guion como signo menos y pone un signo por flecha', () => {
+    const s = Diagrama.svg(spec('bucle', { nodos: nodos3, signos: ['+', '-', '+'] }));
+    expect((s.match(/>−</g) || []).length).toBe(1);
+    expect((s.match(/>\+</g) || []).length).toBe(2);
+  });
+  it('embudo: escribe las cifras sin dibujarlas a escala', () => {
+    const s = Diagrama.svg(spec('embudo', { unidad: 'personas', etapas: [{ t: 'a', v: '1.000' }, { t: 'b', v: '200' }, { t: 'c', v: '20' }] }));
+    expect(s).toContain('1.000 personas'); expect(s).toContain('20 personas');
+  });
+  it('escalera: numera de abajo arriba (el 1 es el escalón más bajo)', () => {
+    const s = Diagrama.svg(spec('escalera', { escalones: [{ t: 'Primero' }, { t: 'Segundo' }, { t: 'Tercero' }] }));
+    expect(s.indexOf('>Tercero<')).toBeLessThan(s.indexOf('>Primero<'));
+    expect(s).toContain('Escalera, de abajo arriba: 1. Primero');
+  });
+  it('flujo: «no» a un lado, «sí» sigue hasta el resultado final', () => {
+    const s = Diagrama.svg(spec('flujo', { decisiones: [{ p: '¿Hay dato?', no: 'Espera' }, { p: '¿Se puede comprobar?', no: 'Pregunta' }], final: { t: 'Decide' } }));
+    expect((s.match(/>No</g) || []).length).toBe(2); expect((s.match(/>Sí</g) || []).length).toBe(2);
+    expect(s).toContain('Decide');
+  });
+  it('capas e iceberg se dibujan', () => {
+    expect(Diagrama.svg(spec('capas', { capas: [{ t: 'Exterior' }, { t: 'Interior' }] }))).toContain('Exterior');
+    const ice = Diagrama.svg(spec('iceberg', { visibles: [{ t: 'Visible' }], ocultos: [{ t: 'Oculto 1' }, { t: 'Oculto 2' }] }));
+    expect(ice).toContain('Visible'); expect(ice).toContain('dg-water');
+  });
+  it('devuelven vacío si faltan datos mínimos (no rompen la lección)', () => {
+    expect(Diagrama.svg(spec('bucle', { nodos: [{ t: 'A' }, { t: 'B' }] }))).toBe('');
+    expect(Diagrama.svg(spec('embudo', { etapas: [{ t: 'a' }] }))).toBe('');
+    expect(Diagrama.svg(spec('escalera', { escalones: [] }))).toBe('');
+    expect(Diagrama.svg(spec('flujo', { decisiones: [{ p: '¿x?', no: 'y' }] }))).toBe('');
+    expect(Diagrama.svg(spec('capas', { capas: [{ t: 'a' }] }))).toBe('');
+    expect(Diagrama.svg(spec('iceberg', { visibles: [{ t: 'a' }], ocultos: [{ t: 'b' }] }))).toBe('');
+  });
+  it('escapan el texto (sin inyección)', () => {
+    const s = Diagrama.svg(spec('capas', { capas: [{ t: '<img onerror=x>' }, { t: 'b' }] }));
+    expect(s).not.toContain('<img'); expect(s).toContain('&lt;img');
   });
 });

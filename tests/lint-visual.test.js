@@ -130,3 +130,33 @@ describe('agregar.mjs — figuras adicionales', () => {
     expect(fusionar('diagramas', { L1: [previa] }, { L1: [extra()] }).datos.L1).toHaveLength(1);
   });
 });
+
+
+describe('LintVisual — plantillas estructurales', () => {
+  const lint = (plantilla, datos) => LintVisual.diagrama({ tipo: 'diagrama', plantilla, titulo: 'Título', pie: 'Pie de la figura.', datos });
+  const n3 = [{ t: 'Uno' }, { t: 'Dos' }, { t: 'Tres' }];
+  it('bucle: un signo por flecha y solo + o −', () => {
+    expect(lint('bucle', { nodos: n3, signos: ['+', '+', '−'] })).toEqual([]);
+    expect(lint('bucle', { nodos: n3, signos: ['+', '+'] }).join()).toMatch(/signos/);
+    expect(lint('bucle', { nodos: n3, signos: ['+', 'x', '+'] }).join()).toMatch(/solo \+ o −/);
+  });
+  it('embudo: cifras con dígitos, en todas las etapas y sin crecer', () => {
+    expect(lint('embudo', { etapas: [{ t: 'a', v: '1.000' }, { t: 'b', v: '200' }, { t: 'c', v: '20' }] })).toEqual([]);
+    expect(lint('embudo', { etapas: [{ t: 'a', v: '10' }, { t: 'b', v: '20' }, { t: 'c', v: '5' }] }).join()).toMatch(/no puede crecer/);
+    expect(lint('embudo', { etapas: [{ t: 'a', v: '10' }, { t: 'b' }, { t: 'c', v: '5' }] }).join()).toMatch(/todas deben llevarla/);
+    expect(lint('embudo', { etapas: [{ t: 'a', v: 'muchos' }, { t: 'b', v: 'pocos' }, { t: 'c', v: 'casi nadie' }] }).join()).toMatch(/sin dígitos/);
+  });
+  it('flujo: preguntas de sí o no y resultado final', () => {
+    expect(lint('flujo', { decisiones: [{ p: '¿Hay dato nuevo?', no: 'Espera' }], final: { t: 'Decide' } })).toEqual([]);
+    expect(lint('flujo', { decisiones: [{ p: 'Hay dato nuevo', no: 'Espera' }], final: { t: 'Decide' } }).join()).toMatch(/acabada en/);
+    expect(lint('flujo', { decisiones: [{ p: '¿Hay dato?', no: 'Espera' }] }).join()).toMatch(/resultado final/);
+  });
+  it('escalera, capas e iceberg: límites de elementos', () => {
+    expect(lint('escalera', { escalones: n3 })).toEqual([]);
+    expect(lint('escalera', { escalones: n3.slice(0, 2) }).join()).toMatch(/escalones/);
+    expect(lint('capas', { capas: n3.slice(0, 2) })).toEqual([]);
+    expect(lint('capas', { capas: n3.slice(0, 1) }).join()).toMatch(/capas/);
+    expect(lint('iceberg', { visibles: [{ t: 'Visible' }], ocultos: [{ t: 'Oculto uno' }, { t: 'Oculto dos' }] })).toEqual([]);
+    expect(lint('iceberg', { visibles: [], ocultos: [{ t: 'a' }, { t: 'b' }] }).join()).toMatch(/visibles/);
+  });
+});
