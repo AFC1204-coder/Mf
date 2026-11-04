@@ -68,3 +68,21 @@ al `final`.
 ## Límites del lint
 Títulos de bloque ≤ 40 (en `bucle`, ≤ 28), descripciones ≤ 90, título de la figura ≤ 64, pie ≤ 130. En `flujo`: pregunta ≤ 70,
 salida «no» ≤ 60. `embudo` rechaza cifras que crecen o que no llevan todas las etapas.
+
+## Figuras ya puestas en lecciones (4 nov 2026)
+Se buscaron candidatas con una búsqueda por palabras en toda la biblioteca y se leyó cada lección: **la gran mayoría se descartó**
+(la estructura no estaba en el texto, la lección la desmentía —cerebro «triuno», etapas del duelo— o ya tenía una figura
+equivalente). Las que quedaron pasaron por un verificador independiente, que corrigió 7 de 12 y quitó 2 (el «bucle de escasez»,
+cuyas flechas la lección no establece como causas con signo, y un iceberg redundante con la figura que la lección ya tenía).
+Quedan 10 figuras en 8 lecciones:
+- **bucle** (6): el termostato y los bucles de equilibrio/refuerzo (*Thinking in Systems*), la espiral deuda-deflación de Fisher
+  (*Great Mental Models*), los círculos vicioso y virtuoso (*Why Nations Fail*), la trampa de la adicción y la deriva a bajo
+  rendimiento (*Thinking in Systems*).
+- **escalera** (1): los cuatro niveles de ingresos de Rosling (*Factfulness*).
+- **flujo** (1): los tres tests de la intuición (*Educating Intuition*).
+- **iceberg** (1): el mapa de inmunidad al cambio (*Immunity to Change*).
+- **embudo** (1): los criterios de Graham para el inversor defensivo (*The Intelligent Investor*).
+- **capas**: ninguna, porque ninguna lección candidata describía capas contenidas unas en otras.
+
+Lo que cada verificación cambió: el signo de cada flecha se justifica con una frase de la lección; el pie atribuye («según los
+autores») y separa la «lectura nuestra» de la biblioteca; los umbrales del embudo se contrastaron uno a uno con el texto.
