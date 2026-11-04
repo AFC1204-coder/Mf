@@ -208,6 +208,7 @@ function renderTu() {
     </div>
     <div class="tu-list" style="margin-top:2rem">
       ${fila('Tu ruta', p ? (ruta ? esc(ruta.titulo) + ` · ${ruta.pct}%` : 'Sin ruta fija') + ` · ${p.minutos} min · ${p.dias === 7 ? 'cada día' : p.dias + ' días'}` : 'Elige objetivo, tiempo y días', 'perfilEmpezar()')}
+      ${fila('Tu estudio', 'Constancia, variedad, retención y retos', 'tuEstudio()')}
       ${fila('Guardados', `${favLecs().length} lecciones · ${favLibros().length} libros`, "showView('favoritos')")}
       ${typeof Cuenta !== 'undefined' ? fila('Cuenta', Cuenta.activa() ? esc(Cuenta.email()) + ' · Cerrar sesión' : 'Inicia sesión para tener lo mismo en todos tus dispositivos', 'Cuenta.abrir()') : ''}
       ${fila('Avisos', 'Recordatorio diario y ajustes', 'toggleNotifPanel()')}
@@ -270,4 +271,60 @@ async function perfilSincronizar() {
     LS.set(SES_MODO_K, p.modo);
     if (typeof renderAtril === 'function') renderAtril();
   }
+}
+
+
+/* ── Tu estudio: cómo usas la herramienta (lógica y pruebas en lib/estudio.js; diseño en docs/estudio-uso.md) ── */
+const DIAS_CORTO = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
+async function tuEstudio() {
+  const root = document.getElementById('tu-cont'); if (!root) return;
+  root.innerHTML = '<button class="back-btn" onclick="renderTu()">← Tú</button><p class="tu-nota">Calculando…</p>';
+  let repaso = [], revReto = [];
+  try { repaso = await sbAll(`repaso?select=leccion_id,pregunta_id,nivel,estado,veces_correcta,veces_incorrecta&estado=eq.activa&usuario_id=eq.${SRS_USER}`); } catch (e) {}
+  try { revReto = await sbAll(`revisiones_reto?select=veredicto&usuario_id=eq.${USUARIO_ID}`); } catch (e) {}
+  const rd = typeof RetosUI !== 'undefined' ? RetosUI.datos() : { respuestas: [], activos: 0 };
+  const e = Estudio.analizar({
+    prog, revisiones, repaso, libros, lecs, preg, respuestas: rd.respuestas, revisionesReto: revReto,
+    retosActivos: rd.activos, diaDe: f => Dia.logico(f), hoy: Dia.hoy()
+  });
+  root.innerHTML = '<button class="back-btn" onclick="renderTu()">← Tú</button>' + estudioHtml(e);
+}
+const estBarra = (txt, valor, max, cifra) => `<div class="est-fila"><span class="est-t">${esc(txt)}</span><span class="est-barra"><i style="width:${max ? Math.round(valor / max * 100) : 0}%"></i></span><span class="est-c">${cifra}</span></div>`;
+const estCifra = (n, l) => `<div class="srs-stat"><div class="srs-stat-num">${n == null ? '–' : n}</div><div class="srs-stat-lbl">${l}</div></div>`;
+function estudioHtml(e) {
+  const c = e.constancia, v = e.variedad, r = e.retencion, t = e.retos, pr = t.predicciones;
+  const maxSem = Math.max(1, ...c.semanas.map(s => s.lecciones));
+  const maxDia = Math.max(1, ...c.porDia);
+  const obs = e.observaciones.length
+    ? `<ul class="est-obs">${e.observaciones.map(o => `<li>${esc(o)}</li>`).join('')}</ul>`
+    : '<p class="tu-nota">Todavía hay pocos datos para decir nada fiable. Se irán sumando con el uso.</p>';
+  return `<h1 class="page-title" style="margin-bottom:0.3rem">Tu estudio</h1>
+    <p class="page-sub" style="margin-bottom:1.2rem">Cómo usas la herramienta. Son cifras tuyas, sin comparar con nadie.</p>
+    <p class="sec-label">Lo que se ve</p>${obs}
+
+    <p class="sec-label est-sec">Constancia</p>
+    <div class="srs-stats-grid">${estCifra(c.dias30, 'Días activos (30 d)')}${estCifra(c.actual, 'Racha actual')}${estCifra(c.mejor, 'Mejor racha')}</div>
+    <p class="est-sub">Lecciones distintas por semana (últimas 8)</p>
+    ${c.semanas.map((s, i) => estBarra(i === 7 ? 'Esta semana' : 'Hace ' + (7 - i) + ' sem.', s.lecciones, maxSem, s.lecciones)).join('')}
+    <p class="est-sub">Por día de la semana (${c.nLecturas} lecturas en total)</p>
+    ${c.porDia.map((n, i) => estBarra(DIAS_CORTO[i], n, maxDia, n)).join('')}
+    <p class="est-sub">Franja del día: ${['madrugada', 'mañana', 'tarde', 'noche'].map(k => `${k} ${c.franjas[k]}`).join(' · ')}</p>
+    <p class="tu-nota">Días activos cuenta leer, repasar y contestar retos. Total desde el principio: ${c.diasTotal} días.</p>
+
+    <p class="sec-label est-sec">Variedad</p>
+    <div class="srs-stats-grid">${estCifra(v.librosTocados, 'Libros tocados')}${estCifra(v.libros30, 'En 30 días')}${estCifra(v.terminados, 'Terminados')}</div>
+    ${v.ejes.map(x => estBarra(x.eje, x.lecciones, v.ejes[0].lecciones, `${x.lecciones} · ${x.pct} %`)).join('') || '<p class="tu-nota">Aún no has leído ninguna lección.</p>'}
+    ${v.libroMasLeido ? `<p class="tu-nota">Libro más leído: «${esc(v.libroMasLeido.titulo)}» (${v.libroMasLeido.lecciones} lecciones, ${v.libroMasLeido.pct} % de todo). Empezados sin terminar: ${v.empezadosSinTerminar}.</p>` : ''}
+    ${v.ejesSinTocar.length ? `<p class="tu-nota">Ejes que aún no has tocado: ${v.ejesSinTocar.map(esc).join(', ')}.</p>` : ''}
+
+    <p class="sec-label est-sec">Retención</p>
+    <div class="srs-stats-grid">${estCifra(r.acierto == null ? null : r.acierto + ' %', 'Aciertos en repaso')}${estCifra(r.leccionesEnRepaso, 'Lecciones en repaso')}${estCifra(r.asentadas, 'Asentadas')}</div>
+    <p class="tu-nota">${r.intentos} respuestas en el repaso espaciado${r.intentos < Estudio.MIN.retencion ? ' (aún pocas: no lo tomes como una medida firme)' : ''}.</p>
+    ${r.porEje.filter(x => x.intentos).map(x => estBarra(x.eje, x.acierto || 0, 100, `${x.acierto} % · ${x.intentos}`)).join('')}
+    ${r.fragiles.length ? `<p class="est-sub">Lo que más se te escapa</p>${r.fragiles.map(g => `<div class="est-frag"><b>${esc(g.titulo)}</b> <span>${esc(g.libro)} · ${g.acierto} % en ${g.intentos}</span></div>`).join('')}` : ''}
+
+    <p class="sec-label est-sec">Retos de pensamiento</p>
+    <div class="srs-stats-grid">${estCifra(t.contestados, 'Contestados')}${estCifra(t.explicalo, 'Explícalo')}${estCifra(t.revisiones, 'Revisiones')}</div>
+    ${t.revisiones ? `<p class="tu-nota">Al revisar: lo mismo ${t.igual} · con matices ${t.matizo} · has cambiado ${t.cambio}.</p>` : ''}
+    <p class="tu-nota">Predicciones: ${pr.total} · acertadas ${pr.acerto}, falladas ${pr.fallo}, a medias ${pr.a_medias}, pendientes ${pr.pendientes}${pr.comprobadas >= Estudio.MIN.predicciones ? ` · acierto ${pr.aciertoPct} %` : ''}.</p>`;
 }

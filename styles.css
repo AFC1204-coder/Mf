@@ -3138,3 +3138,15 @@ body.carta #view-lecciones .back-btn { display: none !important; } /* el invitad
 .retos-grupo-c { font-size: 0.78rem; color: var(--text3); margin: 0.3rem 0 0.7rem; }
 .retos-item { font-size: 0.88rem; line-height: 1.5; padding: 0.6rem 0; border-top: 1px solid var(--border); }
 .retos-item-m { font-size: 0.74rem; color: var(--text3); margin-bottom: 0.2rem; }
+
+/* ── Tu estudio ── */
+.est-sec { margin-top: 2rem; }
+.est-obs { margin: 0.6rem 0 0; padding-left: 1.1rem; font-size: 0.92rem; line-height: 1.6; color: var(--text); }
+.est-sub { font-size: 0.74rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text3); margin: 1rem 0 0.4rem; }
+.est-fila { display: grid; grid-template-columns: 6.5rem 1fr 4.5rem; gap: 0.6rem; align-items: center; font-size: 0.8rem; margin: 0.25rem 0; }
+.est-t { color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.est-c { color: var(--text3); text-align: right; font-variant-numeric: tabular-nums; }
+.est-frag { font-size: 0.88rem; padding: 0.5rem 0; border-top: 1px solid var(--border); }
+.est-frag span { display: block; font-size: 0.74rem; color: var(--text3); }
+.est-barra { height: 4px; border-radius: 2px; background: var(--border2); overflow: hidden; }
+.est-barra i { display: block; height: 100%; background: var(--accent); border-radius: 2px; }

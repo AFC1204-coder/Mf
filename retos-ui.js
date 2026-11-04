@@ -204,6 +204,8 @@ const RetosUI = (() => {
       </div>`).join('') || '<p class="retos-nada">Aún no has hecho ninguna predicción.</p>'}`;
   }
 
-  return { cargar, html, tiene, guardar, guardarExplicalo, saltar, reabrir, otra, dictar, bloqueRepaso,
+  const datos = () => ({ respuestas: resp, activos: retos.size });
+
+  return { cargar, html, tiene, datos, guardar, guardarExplicalo, saltar, reabrir, otra, dictar, bloqueRepaso,
     pedirTexto, revisar, resolver, verRegistro, get cargado() { return cargado; } };
 })();
