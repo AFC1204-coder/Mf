@@ -7,8 +7,8 @@
 ═══════════════════════════════════════════ */
 const Cuenta = (() => {
   const K = 'scs2_cuenta', K_EMAIL = 'scs2_cuenta_email', K_SALTAR = 'scs2_cuenta_saltar';
-  /** Mientras sea false se puede «Seguir sin cuenta». Se pondrá a true cuando la base de datos exija la sesión. */
-  const OBLIGATORIA = false;
+  /** true desde el 4 nov 2026: la base de datos exige la sesión del dueño para los datos personales, así que no hay «Seguir sin cuenta». */
+  const OBLIGATORIA = true;
 
   let sesion = null, cargada = false, renovando = null, timer = null;
   let entroPorEnlace = false, errorEnlace = '';
