@@ -41,12 +41,13 @@ nav.biblio-tabs {
 #view-home.active {
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(300px, 0.8fr);
-  grid-template-areas: "hoy mazo" "explorar mazo" "esq esq" "rutas rutas";
-  grid-template-rows: auto 1fr auto auto;
+  grid-template-areas: "libros mazo" "hoy mazo" "explorar mazo" "esq esq" "rutas rutas";
+  grid-template-rows: auto auto auto 1fr auto auto;
   column-gap: var(--col-gap);
   row-gap: var(--sp-6);
   align-items: start;
 }
+#inicio-libros { grid-area: libros; min-width: 0; margin: 0; }
 #inicio-hoy { grid-area: hoy; margin: 0; }
 #inicio-explorar { grid-area: explorar; margin: 0; }
 #inicio-esquemas { grid-area: esq; min-width: 0; margin: 0; }
@@ -55,7 +56,7 @@ nav.biblio-tabs {
 #mazo .mz-card { flex-basis: 92%; max-width: none; min-height: 0; }
 .ie-esq { flex-basis: 23%; max-width: 320px; }
 /* Si no hay mazo, la sesión, buscar y esquemas ocupan todo */
-#view-home.active:has(#mazo:empty) { grid-template-columns: minmax(0, 1fr); grid-template-areas: "hoy" "explorar" "esq" "rutas"; grid-template-rows: auto; }
+#view-home.active:has(#mazo:empty) { grid-template-columns: minmax(0, 1fr); grid-template-areas: "libros" "hoy" "explorar" "esq" "rutas"; grid-template-rows: auto; }
 #view-home.active:has(#mazo:empty) #inicio-hoy, #view-home.active:has(#mazo:empty) #inicio-explorar { max-width: min(60rem, 100%); }
 
 /* ── BIBLIOTECA: filtros fijos a la izquierda, estantería a la derecha ── */

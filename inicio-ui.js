@@ -23,14 +23,41 @@ function inicioHoyHtml() {
     comprueba: () => '1 pregunta',
     lleva: () => 'una acción'
   };
-  const pasos = plan.pasos.map(p => `<li><b>${p.etiqueta}</b><span>${(det[p.k] || (() => ''))(p)}</span></li>`).join('');
   const solo = (sesPrecarga && sesPrecarga.tarjetas && sesPrecarga.tarjetas.length && lec)
     ? `<button type="button" class="ih-ghost" onclick="sesionEmpezar(true)">Solo recordar</button>` : '';
-  return `<div class="ih-card">
-    <p class="ih-k">Tu sesión de hoy · ${plan.minutos} min</p>
-    <ol class="ih-pasos">${pasos}</ol>
-    <div class="ih-acc"><button type="button" class="ih-go" onclick="sesionEmpezar(false)">Empezar</button>${solo}</div>
+  return `<div class="ih-fila">
+    <div class="ih-txt"><p class="ih-k">Sesión de hoy · ${plan.minutos} min</p>
+      <p class="ih-pasos-txt">${plan.pasos.map(p => `${p.etiqueta}${(det[p.k] ? ' ' + det[p.k](p) : '')}`).join(' · ')}</p></div>
+    <div class="ih-acc">${solo}<button type="button" class="ih-go" onclick="sesionEmpezar(false)">Empezar</button></div>
   </div>`;
+}
+
+
+/** 0 · Libros para ti, con su carátula y el motivo. */
+function inicioLibrosHtml() {
+  if (typeof Recomendar === 'undefined' || !libros.length) return '';
+  const hoy = (typeof Dia !== 'undefined') ? Dia.hoy() : new Date().toISOString().slice(0, 10);
+  const leidas = prog.filter(p => p.tipo === 'leccion' && p.resultado === 'correcta')
+    .sort((a, b) => String(b.fecha || '').localeCompare(String(a.fecha || ''))).map(p => p.item_id);
+  const rec = Recomendar.recomendar({
+    libros, lecs, leidas, n: 8,
+    relacionados: (b, n) => Didactica.relacionados(b, libros, lecs, n),
+    esNuevo: b => Novedad.esNuevo(b.fecha_creacion),
+    azar: Mazo.azar(Mazo.semillaDe('lib' + hoy))
+  });
+  if (!rec.length) return '';
+  const tarjeta = r => {
+    const b = r.libro, eje = (typeof getSubEje === 'function' ? getSubEje(b) : '') || b.eje_principal || '';
+    const color = (typeof ejeColor === 'function' ? ejeColor(eje) : '') || '#c9a84c';
+    const marco = `<span class="ir-pl" style="background:linear-gradient(160deg,${color}33,${color}0d)"><span>${esc(b.titulo)}</span></span>`;
+    const img = b.portada_url
+      ? `<img class="ir-img" src="${esc(b.portada_url)}" alt="" loading="lazy" onerror="this.remove()" onload="if(this.naturalWidth<=1)this.remove()">` : '';
+    return `<button type="button" class="ir-lib" onclick="verLibro('${b.id}')" aria-label="${esc(b.titulo)}">
+      <span class="ir-cov">${marco}${img}</span>
+      <span class="ir-t">${esc(b.titulo)}</span>
+      <span class="ir-m${r.tipo === 'nuevo' ? ' nuevo' : ''}">${esc(r.progreso ? r.motivo + ' · ' + r.progreso : r.motivo)}</span></button>`;
+  };
+  return `<p class="sec-label">Para ti</p><div class="ir-fila">${rec.map(tarjeta).join('')}</div>`;
 }
 
 /** 2 · Buscar y temas. */
@@ -87,6 +114,7 @@ function inicioEsquemasHtml() {
 function renderInicio() {
   const poner = (id, html) => { const el = document.getElementById(id); if (el) { el.innerHTML = html; el.hidden = !html; } };
   try { poner('inicio-hoy', inicioHoyHtml()); } catch (e) { poner('inicio-hoy', ''); }
+  try { poner('inicio-libros', lecs && lecs.length ? inicioLibrosHtml() : ''); } catch (e) { poner('inicio-libros', ''); }
   try { poner('inicio-explorar', inicioExplorarHtml()); } catch (e) { poner('inicio-explorar', ''); }
   try { poner('inicio-esquemas', lecs && lecs.length ? inicioEsquemasHtml() : ''); } catch (e) { poner('inicio-esquemas', ''); }
 }
