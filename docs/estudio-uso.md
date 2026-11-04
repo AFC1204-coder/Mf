@@ -19,7 +19,8 @@ Todo sale de datos que ya se guardan (`progreso`, `repaso`, `respuestas_reto`, `
 - «Terminado» = todas las lecciones activas del libro leídas.
 
 ## Límites conocidos
-- «Tiempo por libro» es una estimación: minutos de lectura de la lección (≈190 palabras/min) × las veces leída (primera lectura + relecturas). No mide el tiempo real en pantalla porque no se guarda.
+- **Tiempo real** (desde el 4 nov 2026): `lib/tiempo.js` + `tiempo-ui.js` cuentan los segundos con la lección en pantalla y los guardan por lección y día en `tiempo_lectura` (migración `20261104_tiempo_lectura.sql`, solo la cuenta del dueño). Un segundo cuenta solo con la lección abierta, la pestaña visible y un toque, desplazamiento o tecla en los últimos 90 s; tope de 6 h por lección y día. No hay historial anterior. Se muestra junto a la estimación.
+- «Tiempo por libro» (estimado) es una estimación: minutos de lectura de la lección (≈190 palabras/min) × las veces leída (primera lectura + relecturas). No mide el tiempo real en pantalla porque no se guarda.
 - **Relecturas**: se registran desde que existe esta función (fila `relectura` en `progreso`). Releer cuenta cuando se vuelve a leer la lección entera con los mismos criterios que la lectura automática (tiempo a la vista y llegar al final), como mucho una vez por lección y día. Antes no quedaba rastro, así que el historial de relecturas empieza vacío.
 - El objetivo de esta cifra es ver qué libros te impactan: los que más relees suben solos.
 - «Saltar» un reto no se guarda a propósito, así que no hay tasa de saltos.

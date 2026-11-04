@@ -3875,6 +3875,7 @@ function compartirLibro(){
 /* START */
 init();
 RetosUI.cargar();
+TiempoUI.iniciar();
 // Al volver a la pestaña o a la app, trae lo que se haya leído en el otro dispositivo.
 document.addEventListener('visibilitychange', sincronizarAlVolver);
 window.addEventListener('focus', sincronizarAlVolver);
