@@ -102,3 +102,27 @@ cuya cifra 98 = 9 + 89 es cálculo nuestro y ahora se declara). Quedan **11 figu
 - **embudo** (1): de 1.000 personas a quién está realmente enferma (*Reckoning with Risk*).
 - **capas** (1): el Círculo Dorado de Sinek (tres anillos concéntricos).
 Total con la primera tanda: 21 figuras en 18 lecciones. Siguen sin descubrirse capas «contenidas» en casi ninguna lección.
+
+## Cinco plantillas más: relación y clasificación
+Misma política que las anteriores: **se suman** a la figura que la lección ya tenga, todo sale de la lección y es mejor ninguna que una
+decorativa. Plantillas: `fuerzas`, `red`, `reparto`, `jerarquia` y `posicion` (total: 28).
+
+| La lección describe… | Plantilla | No la uses si… |
+|---|---|---|
+| lo que empuja hacia un cambio y lo que lo frena, alrededor de un estado actual | `fuerzas` | solo es una lista de pros y contras (usa `comparar`) |
+| varias ideas y cómo se relacionan entre sí (A modera a B, B limita a C…) con la relación **dicha por la lección** | `red` | la relación no está enunciada, o es una secuencia (usa `pasos`) o un ciclo causal con signos (usa `bucle`) |
+| cómo se reparte un todo en partes con cifras (50 / 40 / 10 %) | `reparto` | las cifras no están en la lección, o comparas cantidades que no son partes de un todo (usa `barras`) |
+| una clasificación: una categoría general, sus tipos y ejemplos de cada uno | `jerarquia` | los «tipos» no son de la lección, o es una jerarquía de poder/orden (usa `piramide`) |
+| elementos situados según dos dimensiones cualitativas (poco/mucho esfuerzo, poco/mucho efecto) | `posicion` | la colocación sería un invento: si el autor no sitúa los elementos, no la pongas |
+
+**fuerzas** — `{"estado":{"t":"…","d":"…"},"impulsan":[{"t":"…"}],"frenan":[{"t":"…"}],"etiquetaImpulsan":"Empujan","etiquetaFrenan":"Frenan"}` ·
+1–4 por lado. Las flechas apuntan al estado central desde ambos lados.
+**red** — `{"nodos":[{"t":"…"}],"relaciones":[{"de":0,"a":1,"t":"moldean"}]}` · 3–6 nodos y hasta 8 relaciones; `de` y `a` son índices de
+`nodos`; la etiqueta es obligatoria y corta (≤ 14). **Ordena los nodos para que las relaciones principales unan vecinos**: se
+colocan en círculo y las flechas entre nodos opuestos cruzan la figura. Ningún nodo puede quedar sin relación.
+**reparto** — `{"unidad":"%","partes":[{"t":"…","v":50,"d":"…"}],"total":100}` · 2–6 partes con valores positivos; las anchuras son
+proporcionales. Con `%` no pueden sumar más de 100; si suman menos, el resto se pinta aparte como «(calculado)» y **el pie debe
+decir que es el complemento**.
+**jerarquia** — `{"raiz":"…","ramas":[{"t":"…","hijos":[{"t":"…","d":"…"}]}]}` · 2–4 ramas, hasta 4 elementos por rama y 10 en total.
+**posicion** — `{"ejeX":{"izq":"…","der":"…"},"ejeY":{"abajo":"…","arriba":"…"},"puntos":[{"t":"…","x":0.2,"y":0.7,"tono":"ok"}]}` · 2–7
+puntos con x e y entre 0 y 1. Es una colocación cualitativa: **el pie debe decir que es aproximada o ilustrativa**.
