@@ -143,3 +143,18 @@ figuras**:
 Mejoras de motor surgidas al revisarlas: la etiqueta de una relación de la red se coloca donde no tape nodos ni otras etiquetas (y
 debajo si la flecha es corta), el eje de `posicion` no se rellena y el centro de `fuerzas` admite palabras más largas.
 Total acumulado: 33 figuras en 30 lecciones.
+
+## Tres plantillas más: círculos, carriles y balanza (total: 31)
+| La lección describe… | Plantilla | No la uses si… |
+|---|---|---|
+| anillos concéntricos que el autor enuncia como tales (círculos de influencia, de confianza, el círculo dorado) | `circulos` | el anidamiento es una metáfora o no es del autor (usa `capas`, rectangulares, si basta) |
+| dos líneas de hechos con **fechas** que corren en paralelo (dos tradiciones, dos países, dos bandos) | `carriles` | las fechas no están en la lección, o solo hay una línea (usa `tiempo`) |
+| dos lados que se sopesan (costes y beneficios, a favor y en contra) y **la lección dice cuál pesa más** o que se equilibran | `balanza` | la inclinación la decidirías tú: si el autor no la da, usa `equilibrio`, o `comparar` |
+
+**circulos** — `{"anillos":[{"t":"Exterior","d":"…"},{"t":"…"},{"t":"Centro"}]}` · 2–4 anillos, del exterior al centro (t ≤ 24, d ≤ 40).
+**carriles** — `{"carriles":[{"t":"Economía","eventos":[{"f":"1776","t":"…","d":"…"}]},{"t":"Psicología","eventos":[…]}]}` · exactamente 2
+carriles, 1–5 hechos cada uno (≤ 8 en total). Cada hecho lleva una **fecha con dígitos que sale de la lección**; se ordenan por la
+primera cifra de la fecha y **el espaciado no está a escala** (di en el pie «sin escala» si importa).
+**balanza** — `{"izq":{"t":"Beneficios","items":["…"]},"der":{"t":"Costes","items":["…"]},"inclina":"izq"}` · 1–4 elementos por lado;
+`inclina` = `izq`, `der` o `equilibrio` (por defecto). Si se inclina, **el pie debe decir de quién es la conclusión** («Según la
+lección…»): el lint lo exige.
