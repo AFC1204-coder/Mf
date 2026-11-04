@@ -19,7 +19,9 @@ Todo sale de datos que ya se guardan (`progreso`, `repaso`, `respuestas_reto`, `
 - «Terminado» = todas las lecciones activas del libro leídas.
 
 ## Límites conocidos
-- «Tiempo por libro» es una estimación: suma los minutos de lectura de cada lección distinta leída (≈190 palabras/min). No mide el tiempo real en pantalla porque no se guarda; releer una lección no suma.
+- «Tiempo por libro» es una estimación: minutos de lectura de la lección (≈190 palabras/min) × las veces leída (primera lectura + relecturas). No mide el tiempo real en pantalla porque no se guarda.
+- **Relecturas**: se registran desde que existe esta función (fila `relectura` en `progreso`). Releer cuenta cuando se vuelve a leer la lección entera con los mismos criterios que la lectura automática (tiempo a la vista y llegar al final), como mucho una vez por lección y día. Antes no quedaba rastro, así que el historial de relecturas empieza vacío.
+- El objetivo de esta cifra es ver qué libros te impactan: los que más relees suben solos.
 - «Saltar» un reto no se guarda a propósito, así que no hay tasa de saltos.
 - En modo invitado el panel sale vacío (no hay datos personales).
 

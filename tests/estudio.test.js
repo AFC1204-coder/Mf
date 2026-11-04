@@ -44,17 +44,34 @@ describe('Estudio · variedad', () => {
   });
 });
 
-describe('Estudio · tiempo por libro', () => {
-  it('suma minutos de lecciones distintas leídas y ordena por tiempo', () => {
-    const prog = [lee('l1', '2026-11-01T10:00:00'), lee('l1', '2026-11-02T10:00:00'), lee('l3', '2026-11-03T10:00:00'), lee('l5', '2026-11-03T11:00:00')];
-    const minutos = l => ({ l1: 4, l3: 9, l5: 6 })[l.id];
+describe('Estudio · tiempo por libro (con relecturas)', () => {
+  const rel = (id, f) => ({ tipo: 'relectura', item_id: id, fecha: f });
+  const minutos = l => ({ l1: 4, l3: 9, l5: 6 })[l.id];
+  it('cada relectura vuelve a sumar los minutos de la lección', () => {
+    const prog = [lee('l1', '2026-11-01T10:00:00'), rel('l1', '2026-11-02T10:00:00'), rel('l1', '2026-11-03T10:00:00'), lee('l3', '2026-11-03T10:00:00')];
     const v = E.variedad({ prog, libros, lecs, diaDe, hoy: HOY, minutos });
-    expect(v.minutosTotal).toBe(19);                       // l1 cuenta una sola vez
-    expect(v.libroMasTiempo).toMatchObject({ titulo: 'Dos', minutos: 15, pct: 79 });
-    expect(v.tiempoLibros.map(x => x.titulo)).toEqual(['Dos', 'Uno']);
+    expect(v.tiempoLibros[0]).toMatchObject({ titulo: 'Uno', minutos: 12, relecturas: 2, releidas: 1 });   // 4 × (1+2)
+    expect(v.tiempoLibros[1]).toMatchObject({ titulo: 'Dos', minutos: 9, relecturas: 0 });
+    expect(v.libroMasTiempo.titulo).toBe('Uno'); expect(v.minutosTotal).toBe(21);
+    expect(v.relecturas).toBe(2); expect(v.libroMasReleido.titulo).toBe('Uno');
   });
-  it('sin función de minutos, cuenta 1 por lección', () => {
+  it('relecturar no cuenta como lección distinta ni cambia el total leído', () => {
+    const prog = [lee('l1', '2026-11-01T10:00:00'), rel('l1', '2026-11-02T10:00:00'), rel('l1', '2026-11-03T10:00:00')];
+    expect(E.variedad({ prog, libros, lecs, diaDe, hoy: HOY, minutos }).total).toBe(1);
+  });
+  it('un libro con menos lecciones pero muy releído puede superar al más leído', () => {
+    const prog = [lee('l1', '2026-11-01T10:00:00'), lee('l2', '2026-11-01T10:00:00'), lee('l5', '2026-11-01T10:00:00'),
+      rel('l5', '2026-11-02T10:00:00'), rel('l5', '2026-11-03T10:00:00'), rel('l5', '2026-11-04T10:00:00')];
+    const v = E.variedad({ prog, libros, lecs, diaDe, hoy: HOY, minutos: l => 5 });
+    expect(v.libroMasTiempo.titulo).toBe('Dos');                // 20 min vs 10
+    expect(v.libroMasLeido.titulo).toBe('Uno');                 // por lecciones sigue ganando Uno
+  });
+  it('sin relecturas ni minutos, cuenta 1 por lección', () => {
     expect(E.variedad({ prog: [lee('l1', '2026-11-01T10:00:00')], libros, lecs, diaDe, hoy: HOY }).minutosTotal).toBe(1);
+  });
+  it('las relecturas cuentan como actividad del día', () => {
+    const c = E.constancia({ prog: [rel('l1', '2026-11-04T10:00:00')], revisiones: [], respuestas: [], diaDe, hoy: HOY });
+    expect(c.dias30).toBe(1);
   });
 });
 
