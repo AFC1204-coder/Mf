@@ -2606,6 +2606,17 @@ async function marcarCompletada(id, opts={}){
   }
 }
 
+/** Relectura: mismos criterios que la lectura automática (tiempo a la vista y llegar al final).
+ *  Se guarda en `progreso` con tipo «relectura» (no altera las lecciones leídas) y como mucho una por lección y día.
+ *  Alimenta «Tu estudio»: el libro que más relees es el que más tiempo suma. */
+async function registrarRelectura(id){
+  const hoy=Dia.hoy();
+  if(prog.some(p=>p.tipo==='relectura' && p.item_id===id && Dia.logico(p.fecha)===hoy)) return;
+  const fila={tipo:'relectura',item_id:id,resultado:'correcta',fecha:new Date().toISOString()};
+  try{ await sb('progreso',{method:'POST',body:JSON.stringify(fila)}); prog.push(fila); marcarDiaEstudiado(); }
+  catch(e){ console.warn('Relectura:', e); }
+}
+
 /* ═══════════════════════════════════════════
    LECTURA AUTOMÁTICA
    Una lección cuenta como leída, sin pulsar el botón, cuando ha estado a la vista el tiempo
@@ -2615,7 +2626,8 @@ let lecAuto=null;
 function detenerLecturaAuto(){ if(lecAuto){ clearInterval(lecAuto.t); lecAuto=null; } }
 function iniciarLecturaAuto(id){
   detenerLecturaAuto();
-  if(typeof LeidaAuto==='undefined' || modoCarta() || completadasSet().has(id)) return;
+  if(typeof LeidaAuto==='undefined' || modoCarta()) return;
+  const releyendo=completadasSet().has(id);   // ya leída: si se lee de nuevo entera, queda como relectura
   const st={id,seg:0,t:null};
   lecAuto=st;
   const minutos=Didactica.minutosLectura(lecActual);
@@ -2631,7 +2643,7 @@ function iniciarLecturaAuto(id){
     const bottoms=Array.from(bloques,e=>e.getBoundingClientRect().bottom);
     if(LeidaAuto.haLeido({minutos,segundos:st.seg,bottoms,altoVentana:window.innerHeight})){
       clearInterval(st.t); if(lecAuto===st) lecAuto=null;
-      marcarCompletada(id,{auto:true});
+      if(releyendo) registrarRelectura(id); else marcarCompletada(id,{auto:true});
     }
   },1000);
 }
