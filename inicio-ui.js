@@ -27,7 +27,7 @@ function inicioHoyHtml() {
     ? `<button type="button" class="ih-ghost" onclick="sesionEmpezar(true)">Solo recordar</button>` : '';
   return `<div class="ih-fila">
     <div class="ih-txt"><p class="ih-k">Sesión de hoy · ${plan.minutos} min</p>
-      <p class="ih-pasos-txt">${plan.pasos.map(p => `${p.etiqueta}${(det[p.k] ? ' ' + det[p.k](p) : '')}`).join(' · ')}</p></div>
+      <p class="ih-pasos-txt">${plan.pasos.filter(p => p.k !== 'lleva').map(p => `${p.etiqueta}${(det[p.k] ? ' ' + det[p.k](p) : '')}`).join(' · ')}</p></div>
     <div class="ih-acc">${solo}<button type="button" class="ih-go" onclick="sesionEmpezar(false)">Empezar</button></div>
   </div>`;
 }
