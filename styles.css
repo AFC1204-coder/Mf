@@ -3153,3 +3153,4 @@ body.carta #view-lecciones .back-btn { display: none !important; } /* el invitad
 
 /* ── Plantillas estructurales: bucle, embudo, escalera, flujo, capas, iceberg ── */
 .dg-water { fill: none; stroke: var(--c-info, #5b8db8); stroke-opacity: 0.75; stroke-width: 2; stroke-linecap: round; }
+.dg-lab { fill: var(--dg-bg); stroke: var(--dg-rule); stroke-width: 1; }

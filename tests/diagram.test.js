@@ -29,11 +29,16 @@ const MUESTRAS = {
   escalera: { escalones: [{ t: 'Primero' }, { t: 'Segundo', d: 'Detalle' }, { t: 'Tercero' }] },
   flujo: { inicio: 'Empieza', decisiones: [{ p: '¿Hay dato?', no: 'Espera' }], final: { t: 'Decide', d: 'Con el dato' } },
   capas: { capas: [{ t: 'Exterior', d: 'Detalle' }, { t: 'Medio' }, { t: 'Interior' }] },
-  iceberg: { visibles: [{ t: 'Visible' }], ocultos: [{ t: 'Oculto uno' }, { t: 'Oculto dos' }] }
+  iceberg: { visibles: [{ t: 'Visible' }], ocultos: [{ t: 'Oculto uno' }, { t: 'Oculto dos' }] },
+  fuerzas: { estado: { t: 'Estado actual' }, impulsan: [{ t: 'Beneficio' }, { t: 'Apoyo' }], frenan: [{ t: 'Cansancio' }] },
+  red: { nodos: [{ t: 'A' }, { t: 'B' }, { t: 'C' }], relaciones: [{ de: 0, a: 1, t: 'causa' }, { de: 1, a: 2, t: 'limita' }] },
+  reparto: { unidad: '%', partes: [{ t: 'Uno', v: 60 }, { t: 'Dos', v: 40 }] },
+  jerarquia: { raiz: 'Todo', ramas: [{ t: 'Rama A', hijos: [{ t: 'a1' }, { t: 'a2' }] }, { t: 'Rama B', hijos: [{ t: 'b1' }] }] },
+  posicion: { ejeX: { izq: 'Poco', der: 'Mucho' }, ejeY: { abajo: 'Bajo', arriba: 'Alto' }, puntos: [{ t: 'A', x: 0.2, y: 0.8 }, { t: 'B', x: 0.7, y: 0.3 }] }
 };
 
 describe('Diagrama — plantillas', () => {
-  it('expone las veintitrés plantillas documentadas (diez cualitativas, siete de matemática sencilla y seis estructurales)', () => {
+  it('expone las veintiocho plantillas documentadas (diez cualitativas, siete de matemática sencilla, seis estructurales y cinco de relación y clasificación)', () => {
     expect(Diagrama.plantillas.sort()).toEqual(Object.keys(MUESTRAS).sort());
   });
 
@@ -311,5 +316,34 @@ describe('Diagrama — plantillas estructurales', () => {
   it('escapan el texto (sin inyección)', () => {
     const s = Diagrama.svg(spec('capas', { capas: [{ t: '<img onerror=x>' }, { t: 'b' }] }));
     expect(s).not.toContain('<img'); expect(s).toContain('&lt;img');
+  });
+});
+
+
+describe('Diagrama — plantillas de relación y clasificación', () => {
+  const spec = (plantilla, datos) => ({ tipo: 'diagrama', plantilla, titulo: 'T', pie: 'P', datos });
+  it('reparto: las anchuras salen de los valores y el resto se calcula y se marca', () => {
+    const s = Diagrama.svg(spec('reparto', { unidad: '%', partes: [{ t: 'Uno', v: 35 }, { t: 'Dos', v: 25 }] }));
+    expect(s).toContain('Resto'); expect(s).toContain('40 % (calculado)');
+    const completo = Diagrama.svg(spec('reparto', { unidad: '%', partes: [{ t: 'Uno', v: 60 }, { t: 'Dos', v: 40 }] }));
+    expect(completo).not.toContain('Resto');
+  });
+  it('red: dibuja solo relaciones entre nodos que existen y escapa el texto', () => {
+    const s = Diagrama.svg(spec('red', { nodos: [{ t: '<b>x</b>' }, { t: 'B' }, { t: 'C' }], relaciones: [{ de: 0, a: 1, t: 'causa' }, { de: 0, a: 9, t: 'no existe' }] }));
+    expect(s).toContain('causa'); expect(s).not.toContain('no existe'); expect(s).not.toContain('<b>'); expect(s).toContain('&lt;b&gt;');
+  });
+  it('posicion: la colocación sale de x e y y las etiquetas no se pisan', () => {
+    const s = Diagrama.svg(spec('posicion', { ejeX: { izq: 'a', der: 'b' }, ejeY: { abajo: 'c', arriba: 'd' }, puntos: [{ t: 'Uno', x: 0.5, y: 0.5 }, { t: 'Dos', x: 0.5, y: 0.5 }] }));
+    expect(s).toContain('Uno'); expect(s).toContain('Dos');
+    expect(s).toContain('class="dg-axis" fill="none"');       // el eje no debe rellenarse (salía un triángulo negro)
+  });
+  it('fuerzas y jerarquia se dibujan; devuelven vacío si faltan datos', () => {
+    expect(Diagrama.svg(spec('fuerzas', { estado: { t: 'E' }, impulsan: [{ t: 'a' }], frenan: [{ t: 'b' }] }))).toContain('Empujan');
+    expect(Diagrama.svg(spec('fuerzas', { estado: { t: 'E' }, impulsan: [{ t: 'a' }], frenan: [] }))).toBe('');
+    expect(Diagrama.svg(spec('jerarquia', { raiz: 'R', ramas: [{ t: 'A' }, { t: 'B' }] }))).toContain('R');
+    expect(Diagrama.svg(spec('jerarquia', { raiz: 'R', ramas: [{ t: 'A' }] }))).toBe('');
+    expect(Diagrama.svg(spec('red', { nodos: [{ t: 'A' }, { t: 'B' }], relaciones: [] }))).toBe('');
+    expect(Diagrama.svg(spec('reparto', { partes: [{ t: 'A', v: 1 }] }))).toBe('');
+    expect(Diagrama.svg(spec('posicion', { puntos: [{ t: 'A', x: 0.1, y: 0.1 }] }))).toBe('');
   });
 });

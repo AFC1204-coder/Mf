@@ -160,3 +160,34 @@ describe('LintVisual — plantillas estructurales', () => {
     expect(lint('iceberg', { visibles: [], ocultos: [{ t: 'a' }, { t: 'b' }] }).join()).toMatch(/visibles/);
   });
 });
+
+
+describe('LintVisual — plantillas de relación y clasificación', () => {
+  const lint = (plantilla, datos, pie) => LintVisual.diagrama({ tipo: 'diagrama', plantilla, titulo: 'Título', pie: pie || 'Pie de la figura.', datos });
+  it('red: relaciones con índices válidos, etiqueta y sin nodos sueltos', () => {
+    const n = [{ t: 'A' }, { t: 'B' }, { t: 'C' }];
+    expect(lint('red', { nodos: n, relaciones: [{ de: 0, a: 1, t: 'causa' }, { de: 1, a: 2, t: 'limita' }] })).toEqual([]);
+    expect(lint('red', { nodos: n, relaciones: [{ de: 0, a: 7, t: 'x' }] }).join()).toMatch(/índices/);
+    expect(lint('red', { nodos: n, relaciones: [{ de: 0, a: 1 }, { de: 1, a: 2, t: 'x' }] }).join()).toMatch(/sin etiqueta/);
+    expect(lint('red', { nodos: n, relaciones: [{ de: 0, a: 1, t: 'x' }] }).join()).toMatch(/ninguna relación/);
+  });
+  it('reparto: valores positivos, % que no pasan de 100 y pie que declara el resto calculado', () => {
+    expect(lint('reparto', { unidad: '%', partes: [{ t: 'A', v: 60 }, { t: 'B', v: 40 }] })).toEqual([]);
+    expect(lint('reparto', { unidad: '%', partes: [{ t: 'A', v: 70 }, { t: 'B', v: 50 }] }).join()).toMatch(/más de 100/);
+    expect(lint('reparto', { unidad: '%', partes: [{ t: 'A', v: 30 }, { t: 'B', v: 20 }] }).join()).toMatch(/complemento/);
+    expect(lint('reparto', { unidad: '%', partes: [{ t: 'A', v: 30 }, { t: 'B', v: 20 }] }, 'Datos de la lección; el resto es el complemento.')).toEqual([]);
+    expect(lint('reparto', { partes: [{ t: 'A', v: -1 }, { t: 'B', v: 2 }] }).join()).toMatch(/positivo/);
+  });
+  it('posicion: x e y entre 0 y 1 y pie que dice que es aproximada', () => {
+    const d = { ejeX: { izq: 'a', der: 'b' }, ejeY: { abajo: 'c', arriba: 'd' }, puntos: [{ t: 'A', x: 0.2, y: 0.3 }, { t: 'B', x: 0.7, y: 0.6 }] };
+    expect(lint('posicion', d, 'Colocación aproximada, ilustrativa.')).toEqual([]);
+    expect(lint('posicion', d).join()).toMatch(/aproximada o ilustrativa/);
+    expect(lint('posicion', { ...d, puntos: [{ t: 'A', x: 2, y: 0.3 }, { t: 'B', x: 0.7, y: 0.6 }] }, 'Colocación aproximada.').join()).toMatch(/entre 0 y 1/);
+  });
+  it('fuerzas y jerarquia: límites de elementos', () => {
+    expect(lint('fuerzas', { estado: { t: 'E' }, impulsan: [{ t: 'a' }], frenan: [{ t: 'b' }] })).toEqual([]);
+    expect(lint('fuerzas', { estado: { t: 'E' }, impulsan: [], frenan: [{ t: 'b' }] }).join()).toMatch(/impulsan/);
+    expect(lint('jerarquia', { raiz: 'R', ramas: [{ t: 'A', hijos: [{ t: 'a' }] }, { t: 'B' }] })).toEqual([]);
+    expect(lint('jerarquia', { raiz: 'R', ramas: [{ t: 'A' }] }).join()).toMatch(/ramas/);
+  });
+});
