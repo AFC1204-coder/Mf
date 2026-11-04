@@ -115,9 +115,9 @@ decorativa. Plantillas: `fuerzas`, `red`, `reparto`, `jerarquia` y `posicion` (t
 | una clasificación: una categoría general, sus tipos y ejemplos de cada uno | `jerarquia` | los «tipos» no son de la lección, o es una jerarquía de poder/orden (usa `piramide`) |
 | elementos situados según dos dimensiones cualitativas (poco/mucho esfuerzo, poco/mucho efecto) | `posicion` | la colocación sería un invento: si el autor no sitúa los elementos, no la pongas |
 
-**fuerzas** — `{"estado":{"t":"…","d":"…"},"impulsan":[{"t":"…"}],"frenan":[{"t":"…"}],"etiquetaImpulsan":"Empujan","etiquetaFrenan":"Frenan"}` ·
+**fuerzas** — `{"estado":{"t":"…","d":"…"},"impulsan":[{"t":"…"}],"frenan":[{"t":"…"}],"etiquetaImpulsan":"Empujan","etiquetaFrenan":"Frenan"}` (etiquetas ≤ 20) ·
 1–4 por lado. Las flechas apuntan al estado central desde ambos lados.
-**red** — `{"nodos":[{"t":"…"}],"relaciones":[{"de":0,"a":1,"t":"moldean"}]}` · 3–6 nodos y hasta 8 relaciones; `de` y `a` son índices de
+**red** — `{"nodos":[{"t":"…"}],"relaciones":[{"de":0,"a":1,"t":"moldean"}]}` · 3–6 nodos (texto ≤ 32) y hasta 8 relaciones; `de` y `a` son índices de
 `nodos`; la etiqueta es obligatoria y corta (≤ 14). **Ordena los nodos para que las relaciones principales unan vecinos**: se
 colocan en círculo y las flechas entre nodos opuestos cruzan la figura. Ningún nodo puede quedar sin relación.
 **reparto** — `{"unidad":"%","partes":[{"t":"…","v":50,"d":"…"}],"total":100}` · 2–6 partes con valores positivos; las anchuras son
@@ -126,3 +126,20 @@ decir que es el complemento**.
 **jerarquia** — `{"raiz":"…","ramas":[{"t":"…","hijos":[{"t":"…","d":"…"}]}]}` · 2–4 ramas, hasta 4 elementos por rama y 10 en total.
 **posicion** — `{"ejeX":{"izq":"…","der":"…"},"ejeY":{"abajo":"…","arriba":"…"},"puntos":[{"t":"…","x":0.2,"y":0.7,"tono":"ok"}]}` · 2–7
 puntos con x e y entre 0 y 1. Es una colocación cualitativa: **el pie debe decir que es aproximada o ilustrativa**.
+
+### Primeras figuras con las cinco plantillas nuevas (4 nov 2026)
+De ~100 lecciones candidatas, los agentes propusieron 13 figuras; un verificador independiente quitó 1 (la repartición 50/40/10 de
+*The How of Happiness*, redundante con la figura de cifras que la lección ya tiene) y corrigió 10, sobre todo pies que decían «de la
+lección» donde la agrupación era lectura nuestra, una descripción que afirmaba que el donante profesional «vende» sangre, y la
+colocación de «tabaco y alcohol» en el plano de Slovic, que dos lecciones sitúan de forma incompatible (se quitaron). Quedan **12
+figuras**:
+- **jerarquia** (4): clases de emoción de Damasio, tipos de donante de Titmuss (agrupación nuestra), tres modelos de negocio de
+  Christensen y los cuatro apeles de *Verbal Judo*.
+- **fuerzas** (1): lo que empuja y frena el cambio de una convención (Lewis; clasificar en empuje/freno es lectura nuestra).
+- **posicion** (1): el plano de dos dimensiones del riesgo percibido de Slovic (posición aproximada).
+- **reparto** (2): tres grupos de sensibilidad en la muestra de Lionetti (31/40/29 %) y el reparto de tiempo 70/30 de *Make It Stick*
+  (la lección no dice que sea el reparto óptimo).
+- **red** (4): coordinación tácita (Schelling), cooperación (Axelrod), redes fractales (West), elaboración y generación (*Make It Stick*).
+Mejoras de motor surgidas al revisarlas: la etiqueta de una relación de la red se coloca donde no tape nodos ni otras etiquetas (y
+debajo si la flecha es corta), el eje de `posicion` no se rellena y el centro de `fuerzas` admite palabras más largas.
+Total acumulado: 33 figuras en 30 lecciones.
