@@ -7,7 +7,7 @@ Todo sale de datos que ya se guardan (`progreso`, `repaso`, `respuestas_reto`, `
 | Bloque | Cifras | Para qué sirve |
 |---|---|---|
 | Constancia | días activos (30 d), racha actual y mejor, lecciones distintas por semana (8 sem.), por día de la semana, franja del día | Ver el hábito real frente al propósito |
-| Variedad | libros tocados / en 30 días / terminados / empezados sin terminar, reparto por eje, libro más leído, ejes sin tocar | Detectar si lees siempre de lo mismo o dispersas sin terminar |
+| Variedad | libro con más tiempo (estimado), libros tocados / en 30 días / terminados / empezados sin terminar, reparto por eje, libro más leído, ejes sin tocar | Detectar si lees siempre de lo mismo o dispersas sin terminar |
 | Retención | aciertos en el repaso espaciado (total y por eje), lecciones en repaso, asentadas (nivel ≥ 4), lecciones que más se escapan | Saber qué se queda y qué no |
 | Retos | contestados, «Explícalo», revisiones (lo mismo / matices / cambio), predicciones (acertadas, falladas, a medias, pendientes) | Ver cuánto piensas y cuánto cambias de opinión |
 
@@ -19,7 +19,7 @@ Todo sale de datos que ya se guardan (`progreso`, `repaso`, `respuestas_reto`, `
 - «Terminado» = todas las lecciones activas del libro leídas.
 
 ## Límites conocidos
-- No mide tiempo real de lectura (no se guarda); `minutos_lectura` es una estimación de la lección.
+- «Tiempo por libro» es una estimación: suma los minutos de lectura de cada lección distinta leída (≈190 palabras/min). No mide el tiempo real en pantalla porque no se guarda; releer una lección no suma.
 - «Saltar» un reto no se guarda a propósito, así que no hay tasa de saltos.
 - En modo invitado el panel sale vacío (no hay datos personales).
 

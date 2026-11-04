@@ -44,6 +44,20 @@ describe('Estudio · variedad', () => {
   });
 });
 
+describe('Estudio · tiempo por libro', () => {
+  it('suma minutos de lecciones distintas leídas y ordena por tiempo', () => {
+    const prog = [lee('l1', '2026-11-01T10:00:00'), lee('l1', '2026-11-02T10:00:00'), lee('l3', '2026-11-03T10:00:00'), lee('l5', '2026-11-03T11:00:00')];
+    const minutos = l => ({ l1: 4, l3: 9, l5: 6 })[l.id];
+    const v = E.variedad({ prog, libros, lecs, diaDe, hoy: HOY, minutos });
+    expect(v.minutosTotal).toBe(19);                       // l1 cuenta una sola vez
+    expect(v.libroMasTiempo).toMatchObject({ titulo: 'Dos', minutos: 15, pct: 79 });
+    expect(v.tiempoLibros.map(x => x.titulo)).toEqual(['Dos', 'Uno']);
+  });
+  it('sin función de minutos, cuenta 1 por lección', () => {
+    expect(E.variedad({ prog: [lee('l1', '2026-11-01T10:00:00')], libros, lecs, diaDe, hoy: HOY }).minutosTotal).toBe(1);
+  });
+});
+
 describe('Estudio · retención', () => {
   const repaso = [
     { estado: 'activa', leccion_id: 'l1', nivel: 4, veces_correcta: 5, veces_incorrecta: 0 },
