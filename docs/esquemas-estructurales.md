@@ -189,6 +189,15 @@ lección; la escalera de Minervini, con solo un estadio descrito; y tres que rep
 - **carriles** (1): Darwin, Wallace y Mendel (la primera lección con carriles; solo 2+2 fechas).
 Total acumulado: 56 figuras.
 
+### Sexta tanda (4 nov 2026): 14 figuras más
+Cuarta pasada, con las plantillas cuantitativas por un lado y las estructurales por otro. De 16 propuestas, el verificador descartó 1 (Kostolany: la lección ya tenía un `pasos` igual) y la figura más débil (el péndulo de Marks, cuyo cierre es implícito) la retiré yo; corrigió pies y rótulos de casi todas.
+- **formula** (3): hipótesis del deep work (C = T × I; heurística de Newport), reserva fraccionaria (M = 1/c, máximo teórico) y dimensionamiento de posiciones (T = R/D).
+- **barras** (1): variaciones del experimento de Milgram, con la condición estándar como referencia. **cifras** (1): Sherif/Asch; no se usan barras porque el 36,8 % cuenta respuestas y el 70 % sujetos.
+- **tabla** (1): espacio para el error (ejemplos de la biblioteca, no de Housel). **grafica** (2): teoría prospectiva (forma ilustrativa) y ley de Kleiber (exponente ¾, sin escala).
+- **bucle** (3): trampa de la escasez, control o información en el premio (cierre inferido, declarado) y precio natural y de mercado (equilibrio, un solo signo −).
+- **jerarquia** (1): compromisos, amenazas y promesas. **iceberg** (1): motivos ocultos (hipótesis). **red** (1): qué hace difícil un sistema complejo (relaciones de lectura de la biblioteca, declaradas).
+Total acumulado: 70 figuras. Erratas halladas en lecciones (pendientes de decidir): Kleiber (+75 % debería ser ≈ +68 %; «catorce órdenes de magnitud» parecen siete), Asch (70 % frente a ≈75 % de la literatura) y la figura `comparar` de teoría prospectiva («valora ganancias y pérdidas por igual»).
+
 ## Un solo estilo
 Todas las plantillas nuevas reutilizan las clases de las de siempre (`dg-box`, `dg-t`, `dg-d`, `dg-rule`, `dg-dot`, `dg-bar`, `dg-arrow`, los
 tonos `tn-*` y las variables CSS de color y tipografía), así que cambian solas con el tema oscuro, el claro y el modo Kindle. Se
