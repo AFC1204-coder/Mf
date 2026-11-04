@@ -19,7 +19,7 @@ Objetivo: que la biblioteca crezca sola sin que se cuelen conceptos erróneos ni
 4. **Verificación independiente** por un agente distinto del que escribió el libro, con búsqueda web. Si el verificador rechaza, se rechaza. Si hubo algún ERROR de contenido, hace falta **una segunda verificación sobre el texto corregido** y debe salir sin ERROR.
 5. **Lo cargado es lo verificado:** antes de publicar, las huellas `md5` de lo cargado en la base de datos coinciden con el paquete (0 diferencias).
 6. **Temas de riesgo no se publican solos:** consejo accionable de salud, de dinero o de sexualidad pasa a `en_revision` y espera el visto bueno del dueño. Los de baja base empírica (pseudociencia, tipologías) pueden entrar, pero siempre atribuidos («el modelo del libro») y con su crítica en cada lección.
-7. **Máximo 2 libros por semana publicados por la rutina** (se cuentan en `libros_candidatos`, no cualquier libro reciente) y **máximo 5 avisos «¿Algo no cuadra?» abiertos**: si hay más, se atienden antes.
+7. **Sin tope de libros por semana** (decisión del dueño, 5 nov 2026): si hay libros que encajan, se añaden. Solo hay un **aviso de volumen**: a partir de 5 publicados en 7 días (contados en `libros_candidatos`) la rutina deja una notificación al dueño para que valore el consumo de cómputo, y sigue. Y **máximo 5 avisos «¿Algo no cuadra?» abiertos**: si hay más, se atienden antes que cualquier libro nuevo.
 
 ## Preceptos de utilidad (guían la elección y los comprueba la puerta)
 1. **Cubre un hueco o conecta:** se prefieren sub-ejes poco poblados y libros que dialoguen con autores que ya están (la puntuación suma hasta 15 puntos por hueco).
@@ -29,7 +29,7 @@ Objetivo: que la biblioteca crezca sola sin que se cuelen conceptos erróneos ni
 5. **Visuales después:** tras publicar, un esquema por lección y un mapa por libro (herramienta `tools/datos/agregar.mjs`) y, si procede, retos de pensamiento (`docs/retos-pensamiento.md`). Esto lo hace una sesión con el dueño, no la rutina.
 
 ## Flujo (lo que hace la rutina, en orden)
-1. Avisos abiertos > 5 o tope semanal alcanzado → termina sin publicar.
+1. Avisos abiertos > 5 → termina sin publicar. Si ya se publicaron 5 o más en 7 días, además deja una notificación al dueño (volumen alto) y sigue.
 2. Elige candidato (`puerta.elegirCandidato`), lo marca `en_curso`.
 3. Generador (agente) → barajar + lint.
 4. Verificador independiente → corrector si hace falta → segunda verificación si hubo ERROR.
@@ -42,4 +42,4 @@ Objetivo: que la biblioteca crezca sola sin que se cuelen conceptos erróneos ni
 Publicar libros de salud, finanzas o sexualidad; saltarse la segunda verificación; tocar libros ya publicados; cargar nada si las huellas no coinciden. Revertir un libro: `delete` en `preguntas`, `lecciones` y `libros` por `libro_id`, o ocultarlo con `publico=false`.
 
 ## Por qué existe este documento
-La rutina semanal anterior (creada el 12 oct) no llegó a publicar ningún libro: el 1 nov calculó mal su tope (contó como «de esta semana» unos 45 libros de cargas masivas del 25–26 oct) y además no podía abrir PRs porque `gh` no tenía sesión. Ahora el tope se mide solo sobre lo que la propia rutina publicó, la cola evita improvisar candidatos y el registro vive en la base de datos.
+La rutina semanal anterior (creada el 12 oct) no llegó a publicar ningún libro: el 1 nov calculó mal su tope (contó como «de esta semana» unos 45 libros de cargas masivas del 25–26 oct) y no hizo nada; además no podía abrir PRs porque `gh` no tenía sesión. Ahora no hay tope (solo un aviso de volumen sobre lo que publica la propia rutina), la cola evita improvisar candidatos y el registro vive en la base de datos.

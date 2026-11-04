@@ -66,10 +66,13 @@ describe('Puerta de calidad', () => {
     expect(r.veredicto).toBe('revisar');
     expect(r.motivos.join('|')).toMatch(/salud/);
   });
-  it('tope semanal y avisos abiertos: hoy no toca', () => {
-    expect(P.evaluar(base(), ctx({ publicadosSemana: 2 })).veredicto).toBe('esperar');
+  it('sin tope semanal: publicar muchos solo genera un aviso de volumen; los avisos abiertos sí detienen', () => {
+    const muchos = P.evaluar(base(), ctx({ publicadosSemana: 9 }));
+    expect(muchos.veredicto).toBe('publicar');
+    expect(muchos.avisos.join('|')).toMatch(/volumen alto/);
+    expect(P.evaluar(base(), ctx({ publicadosSemana: 2 })).avisos).toEqual([]);
     expect(P.evaluar(base(), ctx({ reportesAbiertos: 6 })).veredicto).toBe('esperar');
-    expect(P.evaluar(base(), ctx({ publicadosSemana: 1, reportesAbiertos: 5 })).veredicto).toBe('publicar');
+    expect(P.evaluar(base(), ctx({ reportesAbiertos: 5 })).veredicto).toBe('publicar');
   });
   it('para publicar hay que haber comprobado las huellas', () => {
     expect(P.evaluar(base(), ctx({ fase: 'publicar' })).veredicto).toBe('rechazar');

@@ -5,7 +5,8 @@
  *   publicar  → cumple todos los preceptos para esta fase;
  *   revisar   → hay algo que una persona debe mirar (riesgo, confianza baja, avisos…); no se publica solo;
  *   rechazar  → no cumple lo mínimo (lint, duplicado, verificador lo rechaza…);
- *   esperar   → hoy no toca (tope semanal, demasiados avisos abiertos).
+ *   esperar   → hoy no toca (demasiados avisos «¿Algo no cuadra?» abiertos).
+ * No hay tope semanal de libros: si se publican muchos, `avisos` lo indica para que la rutina avise al dueño (consumo de cómputo).
  *
  * Uso:  node tools/libros/puerta.js paquete.json --informes v1.json,v2.json --libros corpus.json
  *         [--fase cargar|publicar] [--huellas-ok] [--publicados-semana N] [--abiertos N] [--autores autores.json]
@@ -17,7 +18,7 @@
 })(typeof self !== 'undefined' ? self : this, function (LibroLint) {
   'use strict';
 
-  const TOPE_SEMANAL = 2;
+  const AVISO_SEMANAL = 5;       // no es un tope: a partir de aquí la rutina avisa al dueño del consumo, pero sigue
   const MAX_AVISOS_LINT = 5;
   const MAX_REPORTES_ABIERTOS = 5;
   const norm = s => String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim();
@@ -60,8 +61,9 @@
     const fase = o.fase === 'publicar' ? 'publicar' : 'cargar';
     const rechazos = [], revisar = [], esperar = [];
 
-    // Tope y avisos pendientes: hoy no toca
-    if ((o.publicadosSemana || 0) >= TOPE_SEMANAL) esperar.push(`tope semanal alcanzado (${o.publicadosSemana} de ${TOPE_SEMANAL} publicados por la rutina en 7 días)`);
+    // Avisos pendientes: hoy no toca. (Sin tope de libros por semana: solo se avisa del volumen.)
+    const avisos = [];
+    if ((o.publicadosSemana || 0) >= AVISO_SEMANAL) avisos.push(`volumen alto: ${o.publicadosSemana} libros publicados en 7 días (aviso a partir de ${AVISO_SEMANAL}); avisa al dueño por el consumo de cómputo`);
     if ((o.reportesAbiertos || 0) > MAX_REPORTES_ABIERTOS) esperar.push(`hay ${o.reportesAbiertos} avisos «¿Algo no cuadra?» abiertos (máximo ${MAX_REPORTES_ABIERTOS}): atenderlos primero`);
 
     // 1 · Forma (lint determinista)
@@ -111,7 +113,7 @@
 
     const motivos = [...rechazos.map(m => 'RECHAZO · ' + m), ...revisar.map(m => 'REVISAR · ' + m), ...esperar.map(m => 'ESPERAR · ' + m)];
     const veredicto = rechazos.length ? 'rechazar' : revisar.length ? 'revisar' : esperar.length ? 'esperar' : 'publicar';
-    return { veredicto, motivos, fase, resumen: lint.resumen };
+    return { veredicto, motivos, avisos, fase, resumen: lint.resumen };
   }
 
   /**
@@ -138,7 +140,7 @@
       .map(x => x.c)[0] || null;
   }
 
-  return { TOPE_SEMANAL, MAX_REPORTES_ABIERTOS, evaluar, puntuar, elegirCandidato, esDuplicado, riesgosDe };
+  return { AVISO_SEMANAL, MAX_REPORTES_ABIERTOS, evaluar, puntuar, elegirCandidato, esDuplicado, riesgosDe };
 });
 
 if (require.main === module) {
@@ -159,5 +161,6 @@ if (require.main === module) {
   });
   console.log(JSON.stringify({ veredicto: r.veredicto, fase: r.fase, resumen: r.resumen }));
   r.motivos.forEach(m => console.log(m));
+  (r.avisos || []).forEach(m => console.log('AVISO · ' + m));
   process.exit(r.veredicto === 'publicar' ? 0 : 1);
 }

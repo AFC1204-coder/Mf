@@ -11,9 +11,11 @@ Prioridad del usuario: **no adquirir conceptos erróneos**. Un fallo estético i
 ## 0. Antes de empezar
 - Lee `docs/libros-preceptos.md`: son los preceptos de calidad y de utilidad, y **los comprueba `tools/libros/puerta.js`**; si la puerta no dice `publicar`, el libro no se publica solo.
 - Revisa los avisos abiertos: `select * from reportes_contenido where estado='abierto' order by fecha;`. Atiéndelos primero (corrige el texto/clave en la BD y márcalos `corregido` o `descartado`).
-- Tope: **2 libros por semana**, contados en la cola y no por «libros recientes» (hay cargas masivas antiguas que falsearían la cuenta):
+- **Sin tope de libros por semana** (decisión del dueño). Solo un aviso de volumen: cuenta lo publicado en 7 días,
   `select count(*) from libros_candidatos where estado='publicado' and publicado_en > now() - interval '7 days';`
-  Si hay más de 5 avisos abiertos sin atender, no añadas libros: arregla primero. Pasa ambos números a la puerta (`--publicados-semana`, `--abiertos`).
+  y si son 5 o más, deja una notificación al dueño y sigue:
+  `insert into notificaciones (usuario_id, tipo, titulo, mensaje, icono) values ('default','aviso','Volumen de libros nuevos','Se han publicado N libros en 7 días. Revisa si quieres frenar la rutina para ahorrar cómputo.','📚');`
+  Si hay más de 5 avisos «¿Algo no cuadra?» abiertos sin atender, no añadas libros: arregla primero. Pasa ambos números a la puerta (`--publicados-semana`, `--abiertos`).
 
 ## 1. Elegir candidato (de la cola, no improvisado)
 - `select * from libros_candidatos where estado='pendiente';` y elige con `puerta.elegirCandidato(candidatos, corpus)` (`corpus` = `select titulo, autor, eje_principal, sub_eje from libros`): mayor prioridad, hueco poco poblado, sin duplicar, sin temas de riesgo. Márcalo `en_curso`.
