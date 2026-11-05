@@ -99,3 +99,9 @@ Lo que encontré son comparativas de terceros y blogs de las propias empresas, n
 - La evidencia sobre repaso espaciado y práctica de recuperación es sólida en general pero heterogénea; no se ha medido su efecto en esta app.
 - Las comparativas con otras herramientas vienen de fuentes de calidad desigual.
 - No he probado la app en un móvil real durante este estudio.
+
+## Piloto de ideas clave (5 nov 2026)
+Se escribieron y aplicaron **50 ideas clave** (50 libros distintos) a lecciones que no la tenían; con huellas md5 sin diferencias entre lo verificado y lo guardado. Proceso: generador (agente) → control mecánico `tools/libros/idea-lint.js` (longitud, cifras y vocabulario presentes en la lección, sin comillas ni fórmulas vacías) → verificador independiente contra el texto de la lección (35 correctas, 15 corregidas, 0 descartadas) → corrección → aplicación.
+- **Hallazgo:** el control mecánico por sí solo no basta (el 30 % necesitó corrección humana o de verificador): la crítica de la lección aparecía sin atribuir, se daba más certeza de la que da la lección, se fundían dos cosas distintas o quedaba jerga sin explicar.
+- **Coste:** ≈ 360.000 tokens por 50 lecciones (≈ 7.000 por lección); las 1.555 restantes serían ≈ 11 millones. Decisión del dueño: parar aquí y no ampliar por ahora.
+- Las ideas salen de ≈ 200 caracteres de media (máximo 220) porque llevan la tesis y su salvedad; para fichas del mazo quizá convenga ≤ 160 si se continúa.
