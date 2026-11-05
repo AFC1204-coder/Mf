@@ -1,0 +1,1619 @@
+[
+ {
+  "id": "0414c575-438a-4e6d-bc13-92d936476556",
+  "libro": "The Myth of National Defense",
+  "titulo": "El Fracaso Empírico de la Defensa Estatal: Del 11-S a la Guerra Perpetua",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "La comparación «igual al de los 24 siguientes gobiernos combinados» no aparece en la introducción de Hoppe que pude consultar; los 400.000 millones sí figuran en ella (contraste con la pistola de 50 dólares).",
+    "evidencia": "https://mises.org/online-book/myth-national-defense/introduction (cifra de 400.000 M$ sí; comparación con 24 gobiernos no hallada)",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "con un presupuesto de defensa de 400.000 millones de dólares — igual al de los 24 siguientes gobiernos combinados — fue incapaz",
+     "nuevo": "con un presupuesto de defensa de unos 400.000 millones de dólares fue incapaz"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "«Proporcionó la motivación misma» es más fuerte que lo que dice Hoppe: la introducción sostiene que la política exterior aumentó la probabilidad de un suceso así. «Tropas en más de 100 países» no se pudo comprobar como cifra de Hoppe.",
+    "evidencia": "https://mises.org/online-book/myth-national-defense/introduction",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "(sanciones, tropas en más de 100 países, bombardeos constantes, apoyo a regímenes despóticos) proporcionó la motivación misma para el ataque.",
+     "nuevo": "(sanciones, presencia militar en el exterior, bombardeos, apoyo a regímenes despóticos) aumentó, según Hoppe, la probabilidad de un ataque así."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Eisenhower advirtió de la influencia del complejo militar-industrial, no formuló el diagnóstico de Hoppe sobre el monopolio estatal de la defensa.",
+    "evidencia": "Discurso de despedida de Eisenhower, 1961 (conocimiento sólido)",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "anticipó el mismo diagnóstico desde dentro del sistema",
+     "nuevo": "advirtió desde dentro del sistema de la influencia indebida del complejo militar-industrial"
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "Extender el argumento de Hoppe (monopolio coactivo estatal) a cualquier proveedor de mercado con información asimétrica es extensión de la app, no tesis del autor.",
+    "evidencia": "razonamiento",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "El marco de Hoppe aplica a cualquier relación proveedor-cliente con información asimétrica.",
+     "nuevo": "Es una extensión por analogía: Hoppe habla del monopolio coactivo estatal, no de proveedores de mercado."
+    }
+   }
+  ],
+  "preguntas": [
+   {
+    "pregunta_id": "f1521379-9f58-45ff-bef7-d96607fe5b54",
+    "estado": "ok",
+    "nota": "Clave 0 correcta según el texto; la opción menciona «más de 100 países», cifra no verificada (ver hallazgo)."
+   }
+  ],
+  "notas": "Mises, Bureaucracy, y Taleb (condicional «diría») correctos."
+ },
+ {
+  "id": "096aa04e-896c-4e31-9533-cf75308b5e0e",
+  "libro": "The How of Happiness",
+  "titulo": "Person-Activity Fit: La Personalización de la Felicidad",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "Las cinco dimensiones del Person-Activity Fit Diagnostic son natural, enjoy, value, guilty y situation; «fuente principal de infelicidad» no es una de ellas y «culpa» sí lo es y falta.",
+    "evidencia": "https://thehowofhappiness.com/wp-content/themes/thehowofhappiness/Quiz/fit_diagnostic.html ; https://edbatista.com/2014/12/lyubomirskys-person-activity-fit-diagnostic.html",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "si produce disfrute intrínseco versus obligación, si encaja con tus valores versus contradice tu identidad, si tienes las circunstancias para practicarla versus requiere cambios logísticos imposibles, y si aborda tu fuente principal de infelicidad versus es irrelevante a tu problema real.",
+     "nuevo": "si la disfrutas, si la valoras, si la practicarías por culpa o ansiedad más que por gusto, y si la harías solo porque otros o tu situación te obligan."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "Dice que Lyubomirsky considera la experimentación más fiable que cualquier cuestionario, pero ella misma ofrece un cuestionario (Person-Activity Fit Diagnostic).",
+    "evidencia": "https://thehowofhappiness.com/wp-content/themes/thehowofhappiness/Quiz/fit_diagnostic.html",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Lyubomirsky argumenta que la experimentación personal — probar diferentes actividades durante varias semanas y evaluar sus efectos — es más fiable que cualquier cuestionario o prescripción genérica.",
+     "nuevo": "Lyubomirsky ofrece un cuestionario de ajuste (Person-Activity Fit Diagnostic) para orientar qué actividades practicar."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "«3-4 actividades»: reseñas del libro hablan de elegir cuatro; la cifra de la lección no se confirma.",
+    "evidencia": "https://drhappy.com.au/?p=6831 (reseña) ; no hallada en fuente primaria",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "sino de identificar las 3-4 que mejor se ajustan a tu perfil",
+     "nuevo": "sino de identificar unas pocas que se ajusten mejor a tu perfil"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Clear no describe «señal, rutina, recompensa» (es el bucle de Duhigg); en Atomic Habits son señal, deseo, respuesta y recompensa.",
+    "evidencia": "Clear, Atomic Habits (conocimiento sólido)",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "señal, rutina, recompensa, identidad",
+     "nuevo": "señal, deseo, respuesta, recompensa e identidad"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Se atribuye a Van der Kolk que la gratitud o el perdón pueden ser contraproducentes en personas con trauma; no hallé que lo plantee así: es inferencia de la app.",
+    "evidencia": "razonamiento; sin fuente",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "añade una dimensión crucial: para personas con trauma, ciertas prácticas de gratitud o perdón pueden ser contraproducentes porque activan memorias traumáticas antes de que estén procesadas.",
+     "nuevo": "subraya que el trauma no procesado condiciona cómo responde cada persona a las prácticas de bienestar; aplicarlo a la gratitud o al perdón es una inferencia de la app, no una tesis suya."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "«Chopra prescribe una sola vía» simplifica: el libro propone siete leyes.",
+    "evidencia": "Seven Spiritual Laws of Success (conocimiento sólido)",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Chopra prescribe una sola vía (meditación, dar, desapego)",
+     "nuevo": "Chopra propone un conjunto fijo de siete leyes (entre ellas meditación, dar y desapego) igual para todos"
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "DUDA",
+    "problema": "Falta señalar que el respaldo empírico del ajuste persona-actividad es parcial y los efectos de las intervenciones positivas son modestos.",
+    "evidencia": "razonamiento (meta-análisis posteriores con efectos menores); sin cifra",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "es metodológicamente sólido pero introduce un problema práctico",
+     "nuevo": "es plausible y tiene apoyo empírico parcial, pero introduce un problema práctico"
+    }
+   }
+  ],
+  "preguntas": [
+   {
+    "pregunta_id": "3f9db654-3f77-4b3e-9dc7-00181e5d97fc",
+    "estado": "ok",
+    "nota": "Clave 1 correcta y única. La explicación repite «3-4» y «la experimentación supera cualquier prescripción», que conviene alinear con las correcciones."
+   }
+  ],
+  "notas": "12 actividades intencionales: correcto."
+ },
+ {
+  "id": "0b8b86b3-4546-4231-a6b4-65f53d1f9f93",
+  "libro": "Principles of Neural Science",
+  "titulo": "La Neurona como Unidad de Computación",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "A McGilchrist se le atribuyen «arquitecturas de circuito distintas»; su tesis trata de modos de atención distintos entre hemisferios, no de mecanismos de circuito.",
+    "evidencia": "The Master and His Emissary (conocimiento general)",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "señala que ambos hemisferios usan estos mismos mecanismos básicos pero con arquitecturas de circuito distintas que generan modos de procesamiento cualitativamente diferentes",
+     "nuevo": "sostiene que los dos hemisferios, con la misma biología básica, difieren en su modo de atender al mundo"
+    }
+   }
+  ],
+  "preguntas": [
+   {
+    "pregunta_id": "34ef6de8-0b68-4045-915a-9a49b52904e7",
+    "estado": "ok",
+    "nota": "Clave 1 coherente con el texto y la neurofisiología estándar."
+   }
+  ],
+  "notas": "Zona de disparo, todo-o-nada, firma electrofisiológica, rol de canales: conocimiento sólido (Kandel). Simplificación «código binario» aceptable. Aplicación sobre repetición espaciada razonable."
+ },
+ {
+  "id": "0cee11a6-4c32-4a13-96d8-793b134d1497",
+  "libro": "Why Buddhism Is True",
+  "titulo": "La Pílula Roja: Por Qué los Sentimientos Mienten",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "titulo",
+    "severidad": "ERROR",
+    "problema": "Errata: «Pílula».",
+    "evidencia": "ortografía",
+    "correccion": {
+     "campo": "titulo",
+     "antiguo": "La Pílula Roja: Por Qué los Sentimientos Mienten",
+     "nuevo": "La Píldora Roja: Por Qué los Sentimientos Mienten"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Presenta la dopamina como señal del placer anticipado; el consenso (Schultz, Berridge) es que codifica sobre todo motivación/predicción, no el placer en sí.",
+    "evidencia": "conocimiento sólido",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "el sistema de recompensa está calibrado para anticipar el placer futuro más intensamente que el placer presente.",
+     "nuevo": "el sistema dopaminérgico responde sobre todo a la anticipación de la recompensa (motivación) más que al placer de consumirla."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "La adaptación hedónica no es hallazgo de Gilbert (Brickman y Campbell, 1971); Gilbert estudia el sesgo de impacto.",
+    "evidencia": "conocimiento sólido",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "exactamente la adaptación hedónica que Gilbert documenta y que la evolución necesitaba",
+     "nuevo": "exactamente la adaptación hedónica que describe la psicología del bienestar y que, según Wright, la evolución necesitaba"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Sobreafirma que la psicología evolutiva explica por qué las tres marcas «son verdaderas»; es la tesis de Wright, no un hecho establecido.",
+    "evidencia": "razonamiento; la propia autocorrección lo reconoce",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "La psicología evolutiva proporciona el mecanismo que explica por qué estas tres marcas son verdaderas.",
+     "nuevo": "Wright sostiene que la psicología evolutiva ofrece un mecanismo plausible para buena parte de estas tres marcas; es su tesis, no un hecho establecido."
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "ERROR",
+    "problema": "«Ilusión afectiva» no es término de Wright; el fenómeno se conoce como error de pronóstico afectivo (Gilbert y Wilson).",
+    "evidencia": "conocimiento sólido; no hallé el término en Wright",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "— que Wright llama la ilusión afectiva —",
+     "nuevo": "— conocida en psicología como error de pronóstico afectivo (Gilbert y Wilson) —"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Afirmar que Lembke no desarrolla la dimensión evolutiva es no comprobable; además Lembke centra su libro en el balance placer-dolor.",
+    "evidencia": "razonamiento",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Wright añade la dimensión evolutiva que Lembke no desarrolla:",
+     "nuevo": "Wright pone el acento en la dimensión evolutiva:"
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Sin preguntas activas. Sapolsky/anticipación de dopamina correcto, pero la explicación adaptativa es interpretación de la app."
+ },
+ {
+  "id": "0e2ef0d9-3533-4d2b-b902-6958d54170fd",
+  "libro": "Meditaciones",
+  "titulo": "La práctica diaria del autoexamen — el estoicismo como disciplina, no como doctrina",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "«La pausa entre estímulo y respuesta» es una fórmula moderna de origen incierto (se atribuye a Frankl/Covey sin base); Epicteto habla de examinar las impresiones antes de darles asentimiento.",
+    "evidencia": "https://quoteinvestigator.com/2018/02/18/response/ ; Enchiridion 1",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "la pausa entre estímulo y respuesta que Epicteto identifica como el espacio de la libertad",
+     "nuevo": "el examen de las impresiones antes de darles asentimiento, que Epicteto identifica como el ámbito de la libertad"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Las Meditaciones no contienen una revisión nocturna; ese ejercicio lo describe Séneca (tradición de los Sextios/pitagórica), por lo que «registro de ejecución real» del protocolo completo es exagerado.",
+    "evidencia": "Séneca, De Ira III.36 (conocimiento sólido, no confirmado en búsqueda)",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Marco Aurelio no inventó este protocolo —lo heredó de Epicteto y la tradición pitagórica— pero las Meditaciones son su registro personal de ejecución real, con sus fallos incluidos.",
+     "nuevo": "Marco Aurelio no inventó este protocolo —la revisión nocturna aparece en Séneca y la tradición pitagórica, y Epicteto insiste en examinar las impresiones—, y las Meditaciones son más bien su cuaderno personal de práctica."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "«Año tras año» no se sostiene: el texto es un cuaderno privado de unos pocos años de campaña.",
+    "evidencia": "razonamiento",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "reconoce que sigue fallando en los mismos puntos año tras año",
+     "nuevo": "se reprocha una y otra vez los mismos fallos"
+    }
+   }
+  ],
+  "preguntas": [
+   {
+    "pregunta_id": "5ebce2ea-219d-414d-ae0f-50be06f2b78d",
+    "estado": "ok",
+    "nota": "Clave 0 correcta; interpretación de la app (Hadot) pero distractores claramente falsos."
+   }
+  ],
+  "notas": "Premeditatio matutina (Med. 2.1) correcta. «El documento más honesto que existe» es opinión. Hill (deriva) y Clear (identidad) correctos."
+ },
+ {
+  "id": "1334fbb8-5cb8-431a-962a-64b999dda704",
+  "libro": "Meditaciones",
+  "titulo": "La naturaleza racional y social del ser humano — el deber hacia los demás",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Se atribuye a Marco Aurelio un «deber de autoprotección» que no pude localizar en las Meditaciones.",
+    "evidencia": "sin fuente hallada",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "necesita equilibrar la obligación estoica de justicia con el deber de autoprotección que el propio Marco Aurelio reconoce en otros pasajes.",
+     "nuevo": "necesita equilibrar la obligación estoica de justicia con la prudencia y la autoprotección; es una tensión que plantea la lección, no una tesis explícita de Marco Aurelio."
+    }
+   }
+  ],
+  "preguntas": [
+   {
+    "pregunta_id": "bac1a98d-c253-4f1e-95a9-1d4f803b3ed1",
+    "estado": "ok",
+    "nota": "Clave 2 correcta y única."
+   }
+  ],
+  "notas": "Logos común, cosmopolitismo y justicia con quien actúa mal (p. ej. 2.1, 4.4, 6.44, 9.42): conocimiento sólido."
+ },
+ {
+  "id": "18af52e4-1b57-4cf1-a44d-5cf83145940b",
+  "libro": "How Minds Change",
+  "titulo": "La certeza como estado emocional — por qué sentirnos seguros de algo es diferente a estar en lo correcto",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Mecanismo específico («sistema de recompensa cuando se confirman predicciones», «circuitos subcorticales») no respaldado: Burton habla de una sensación generada por mecanismos cerebrales involuntarios.",
+    "evidencia": "https://www.goodreads.com/author_blog_posts/21268846 ; Kirkus sobre On Being Certain",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "es producida por el sistema de recompensa del cerebro cuando tus predicciones se confirman, no por un proceso",
+     "nuevo": "es una sensación que el cerebro produce de forma involuntaria, no un proceso"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Segunda mención del mecanismo subcortical.",
+    "evidencia": "ídem",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "es una respuesta afectiva generada en circuitos subcorticales, no un certificado",
+     "nuevo": "es una sensación generada por mecanismos cerebrales involuntarios, no un certificado"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "«Los mismos circuitos que las amenazas físicas» es sobreafirmación; el estudio de neuroimagen (Kaplan, Gimbel y Harris, 2016) halló activación de amígdala e ínsula ante creencias políticas desafiadas.",
+    "evidencia": "Kaplan et al., Scientific Reports 2016 (conocimiento sólido)",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "activa los mismos circuitos neurales que procesan las amenazas físicas",
+     "nuevo": "activa respuestas neuronales de amenaza (amígdala e ínsula, según estudios de neuroimagen como el de Kaplan, Gimbel y Harris de 2016)"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Correlación con menor tolerancia a la ambigüedad y más razonamiento motivado: no respaldada.",
+    "evidencia": "sin fuente",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "porque la certeza elevada frecuentemente correlaciona con menor tolerancia a la ambigüedad y mayor razonamiento motivado",
+     "nuevo": "porque la certeza elevada puede ir acompañada de razonamiento motivado"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "Los superpronosticadores de Tetlock no «experimentan menos certeza»: se caracterizan por probabilidades graduadas y actualización frecuente.",
+    "evidencia": "Tetlock y Gardner, Superforecasting (conocimiento sólido)",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "son precisamente quienes experimentan menos la sensación de certeza y son más receptivos a actualizar cuando llega nueva información.",
+     "nuevo": "se caracterizan por expresar probabilidades graduadas y por actualizar con frecuencia cuando llega nueva información."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "Calibración no tiene «relación inversa» con la certeza: calibrar es ajustar la confianza a la frecuencia real de aciertos.",
+    "evidencia": "definición estándar de calibración",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "La calibración y la certeza subjetiva tienen una relación inversa.",
+     "nuevo": "Estar bien calibrado significa que la confianza declarada se ajusta a la frecuencia real de aciertos."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "El Brier Score se asocia a Tetlock/Good Judgment; Silver trata sobre todo la calibración, no el Brier Score como propuesta.",
+    "evidencia": "no confirmado",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "y propone el Brier Score como medida de calibración",
+     "nuevo": "y propone evaluar la calibración (probabilidad declarada frente a frecuencia real)"
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "DUDA",
+    "problema": "«El médico experto frecuentemente tiene razón» choca con la literatura sobre sobreconfianza diagnóstica; la intuición experta solo es fiable en entornos regulares (Kahneman y Klein, 2009).",
+    "evidencia": "Kahneman y Klein, American Psychologist 2009 (conocimiento sólido)",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "el médico experto que siente certeza sobre un diagnóstico frecuentemente tiene razón",
+     "nuevo": "la intuición experta puede ser fiable en entornos regulares con feedback, según Kahneman y Klein"
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "ERROR",
+    "problema": "Predicción atribuida a McRaney que no hace: es un ejercicio inventado por la app.",
+    "evidencia": "no hallada en el libro",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "McRaney predice que al menos una de tus tres certezas máximas será significativamente más provisional cuando examines la evidencia con ese criterio.",
+     "nuevo": "Es un ejercicio propuesto por la app, no una predicción de McRaney: se trata de comparar tu certeza con la evidencia que realmente tienes."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Sin preguntas activas. Certeza como sensación (Burton) y su vínculo con McRaney confirmados."
+ },
+ {
+  "id": "1cae108d-ebcd-4fc7-8447-12140903a4ce",
+  "libro": "The Extended Mind",
+  "titulo": "Pensar con el Cuerpo: La Interocepción como Fuente de Inteligencia",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "El estudio de Kandasamy et al. (2016) fue con operadores de una sala de trading de Londres, no está confirmado que fueran «de futuros»; la sensibilidad cardíaca predijo rentabilidad relativa y permanencia.",
+    "evidencia": "https://lbsresearch.london.edu/id/eprint/2648",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "los traders de futuros que obtienen mejores rendimientos tienen mayor sensibilidad interoceptiva",
+     "nuevo": "los operadores de bolsa con mejores rendimientos tienden a tener mayor sensibilidad interoceptiva"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "Las «posturas expansivas» (power posing) no han replicado en sus efectos hormonales y de asunción de riesgo.",
+    "evidencia": "Ranehill et al. 2015, Psychological Science; Carney (2016) renunció al efecto",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "las personas que adoptan posturas expansivas toman decisiones más arriesgadas y con más confianza",
+     "nuevo": "las posturas expansivas pueden cambiar cómo se siente uno, aunque los efectos hormonales y de conducta de riesgo atribuidos a la «pose de poder» no se han replicado"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "«No son más inteligentes analíticamente» es inferencia de la app (el estudio es correlacional).",
+    "evidencia": "https://www.sciencedaily.com/releases/2016/09/160918214445.htm (matiz: confusión con riesgo/estrés)",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Los traders con mejor interocepción no son más inteligentes analíticamente — perciben con mayor precisión",
+     "nuevo": "Los traders con mejor interocepción obtuvieron mejores resultados en ese estudio; una explicación posible es que perciben con mayor precisión"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Afirmar que mejorar el pensamiento exige entrenar la percepción corporal no está demostrado.",
+    "evidencia": "razonamiento",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "mejorar el pensamiento no requiere solo entrenar el cerebro",
+     "nuevo": "mejorar el pensamiento podría no requerir solo entrenar el cerebro"
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "DUDA",
+    "problema": "«Traders ansiosos… decisiones conservadoras» se presenta como hecho sin fuente; y falta que el marcador somático de Damasio es debatido.",
+    "evidencia": "razonamiento",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "y los traders ansiosos que confían en su interocepción pueden tomar decisiones excesivamente conservadoras",
+     "nuevo": "y quien confía en señales corporales de ansiedad puede interpretarlas como peligro donde no lo hay"
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "DUDA",
+    "problema": "Falta la objeción de que la hipótesis del marcador somático sigue siendo debatida.",
+    "evidencia": "conocimiento general",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "Murphy Paul no desarrolla esta distinción lo suficiente.",
+     "nuevo": "Murphy Paul no desarrolla esta distinción lo suficiente. Además, la hipótesis del marcador somático de Damasio sigue siendo debatida entre neurocientíficos."
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "«Correlaciona empíricamente con mejor toma de decisiones bajo presión» generaliza un estudio pequeño y la tarea de contar latidos es discutida.",
+    "evidencia": "https://lbsresearch.london.edu/id/eprint/2648",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "La capacidad de hacerlo correlaciona empíricamente con mejor toma de decisiones bajo presión.",
+     "nuevo": "En un estudio con operadores de bolsa, la capacidad de hacerlo se asoció con mejores resultados; no está probado que entrenarla mejore las decisiones."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Sin preguntas activas. Gestos en matemáticas (Goldin-Meadow) correcto; Sapolsky/ínsula correcto."
+ },
+ {
+  "id": "1ded1c80-e218-4c3d-9d5e-159b78a79b77",
+  "libro": "Fooled by Randomness",
+  "titulo": "La Estrategia de la Barra: Asimetría como Principio de Diseño",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "La estrategia de la barra se expone en El cisne negro (2007) y Antifrágil, no en un capítulo de Fooled by Randomness (2001), que además no puede «anticipar» Antifrágil como capítulo estratégico.",
+    "evidencia": "https://www.rbcdirectinvesting.com/learn/en/di/hubs/ideas-and-motivation/article/barbell-and-other-investing-strategies/mrqeu0ww (atribuye la barra a The Black Swan); no hallada en FbR",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "El capítulo más directamente estratégico del libro — y el que más claramente anticipa Antifrágil — es el que Taleb dedica a la posición correcta ante la incertidumbre radical:",
+     "nuevo": "Taleb desarrolla la posición correcta ante la incertidumbre radical sobre todo en El cisne negro y Antifrágil (la estrategia de la barra no es un capítulo de Fooled by Randomness):"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "Las proporciones citadas (80-90 % / 10-20 %) no son las de Taleb: en El cisne negro habla de 85-90 % en instrumentos extremadamente seguros y 10-15 % en apuestas muy especulativas.",
+    "evidencia": "https://www.shortform.com/blog/barbell-strategy/ ; RBC Direct Investing (enlace anterior)",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "En inversión: 80-90% en activos completamente seguros y 10-20% en apuestas de muy alta convexidad y riesgo.",
+     "nuevo": "En inversión, Taleb sugiere (en El cisne negro) algo como 85-90% en activos extremadamente seguros y 10-15% en apuestas muy especulativas."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "«Máximo 20 %» deriva de la cifra incorrecta anterior.",
+    "evidencia": "ídem",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "la barra pierde la fracción de riesgo (máximo 20%) pero el core sobrevive intacto",
+     "nuevo": "la barra pierde, como mucho, la pequeña fracción de riesgo, y el núcleo seguro sobrevive"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "No pude confirmar que Taleb presente su puesto de trader como el lado seguro que financiaba su escritura.",
+    "evidencia": "sin fuente hallada",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Taleb menciona su propia posición de trader como el lado seguro que financiaba su escritura —",
+     "nuevo": "Un ejemplo de esa estructura sería un empleo estable que financia la escritura,"
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "DUDA",
+    "problema": "Taleb recomienda efectivo y letras a muy corto plazo para el lado seguro, no bonos del Estado de larga duración; la objeción de 2022 apunta a un hombre de paja parcial.",
+    "evidencia": "https://www.shortform.com/blog/barbell-strategy/ (Treasury bills)",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "los bonos del Estado que Taleb presenta como ejemplo canónico tienen riesgo de duración significativo en entornos de inflación creciente, como demostró 2022",
+     "nuevo": "los bonos del Estado de larga duración tienen un riesgo significativo en entornos de inflación creciente, como demostró 2022 (Taleb apunta más bien a efectivo y letras de muy corto plazo)"
+    }
+   }
+  ],
+  "preguntas": [
+   {
+    "pregunta_id": "272a285c-47c5-4da2-b16b-7169cf0349fb",
+    "estado": "ambigua",
+    "nota": "La opción correcta (índice 0) y la explicación repiten las proporciones 80-90/10-20 y «máximo 10-20 %», que no son las de Taleb (85-90/10-15). La clave sigue siendo la única razonable, pero hay que quitar las cifras de opciones y explicación."
+   },
+   {
+    "pregunta_id": "dff52387-b10e-4db9-ba6f-ffc247ba9bc8",
+    "estado": "ok",
+    "nota": "Clave 1 correcta."
+   }
+  ],
+  "notas": "Convexidad/concavidad como principio: correcto. Conexión con Weinstein y Minervini es síntesis de la app, razonable."
+ },
+ {
+  "id": "1f3b9945-b124-4177-93e2-55c3600e05e2",
+  "libro": "The Theory of Dynamic Efficiency",
+  "titulo": "Empresarialidad y Medioambiente: La Teoría del Libre Mercado Ecológico como Alternativa al Ecologismo Estatista",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "«Los propietarios tienen incentivos para preservar» se presenta como regla; en la práctica depende de la tasa de descuento y del coste de excluir.",
+    "evidencia": "razonamiento (literatura de recursos naturales, p. ej. Clark)",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "esos propietarios tienen incentivos para preservar su valor a largo plazo",
+     "nuevo": "esos propietarios tienen, en principio, incentivos para preservar su valor a largo plazo"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Afirmación comparativa de eficacia sin evidencia presentada.",
+    "evidencia": "sin fuente",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "reduce la contaminación mucho más eficazmente que los estándares regulatorios fijos",
+     "nuevo": "reduce la contaminación, según Huerta de Soto, con más eficacia que los estándares regulatorios fijos"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Buzsáki (Rhythms of the Brain) trata de oscilaciones cerebrales; la analogía con ecosistemas es de la app.",
+    "evidencia": "razonamiento",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Conecta con Buzsáki: los ecosistemas son sistemas complejos con dinámicas similares a las redes neuronales",
+     "nuevo": "Analogía propia de la app (Buzsáki trata de oscilaciones cerebrales, no de ecosistemas): los ecosistemas son sistemas complejos con dinámicas parecidas a las redes neuronales"
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "DUDA",
+    "problema": "Falta la objeción empírica principal a la dicotomía propiedad privada/Estado para los bienes comunes: la obra de Elinor Ostrom (Nobel 2009).",
+    "evidencia": "Ostrom, Governing the Commons (1990) (conocimiento sólido)",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "Ninguna de las dos soluciones es universalmente superior; la elección depende de las condiciones institucionales específicas.",
+     "nuevo": "Ninguna de las dos soluciones es universalmente superior; la elección depende de las condiciones institucionales específicas. Además, los trabajos de Elinor Ostrom muestran que muchas comunidades gestionan recursos comunes con éxito sin propiedad privada ni regulación estatal, lo que cuestiona la dicotomía."
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "Varios autores austriacos (p. ej. Rothbard, Block) critican los mercados de emisiones por ser derechos creados por el Estado; llamarlos «más austriacos» es discutible.",
+    "evidencia": "conocimiento general",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "Los mercados de emisiones —que crean derechos de propiedad sobre la capacidad de absorción atmosférica— son más austriacos que los estándares regulatorios fijos, aunque ambos sean imperfectos.",
+     "nuevo": "Los mercados de emisiones —que crean derechos negociables sobre la capacidad de absorción atmosférica— se acercan más a la lógica de mercado que los estándares fijos, aunque algunos autores austriacos los critican por ser derechos creados por el Estado."
+    }
+   }
+  ],
+  "preguntas": [
+   {
+    "pregunta_id": "40a458ca-3964-4a22-a20e-50193f1e378f",
+    "estado": "ok",
+    "nota": "Clave 0 correcta."
+   }
+  ],
+  "notas": "El capítulo «Entrepreneurship and the theory of free market environmentalism» existe (https://www.jesushuertadesoto.com/wp-content/uploads/2014/04/Contents-Table-of-Contents-and-Acknowledgements.pdf). Aral y Chernóbil como ejemplos son habituales. No pude leer el capítulo para contrastar el detalle del argumento."
+ },
+ {
+  "id": "2095e8c6-3bae-44b6-bb70-77f0aa39b35d",
+  "libro": "Mere Christianity",
+  "titulo": "La ley moral como evidencia — el argumento que no parte de la fe",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Kahneman (Pensar rápido, pensar despacio) no documenta que los juicios morales sean universales ni los explica como heurísticos evolutivos; esa tesis es de Haidt (The Righteous Mind).",
+    "evidencia": "conocimiento sólido (Haidt 2012)",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Kahneman documenta que los juicios morales del Sistema 1 son rápidos, intuitivos y universales — la fenomenología que Lewis describe. La divergencia: Kahneman los explica como heurísticos evolutivos, Lewis como percepción de una realidad moral objetiva.",
+     "nuevo": "Haidt (The Righteous Mind) sostiene que muchos juicios morales son intuiciones rápidas, no razonamientos — algo cercano a la fenomenología que Lewis describe. La divergencia: Haidt las explica como producto de la evolución, Lewis como percepción de una realidad moral objetiva."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Presenta como única disyuntiva «ilusión evolutiva» o realidad trascendente; Lewis la formula así, pero hay posturas (realismo moral no teísta) que la rechazan, y la «ilusión evolutiva» es lenguaje posterior a Lewis.",
+    "evidencia": "razonamiento",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "La honestidad intelectual exige elegir: o la moralidad es ilusión evolutiva, o apunta a algo real más allá de la física.",
+     "nuevo": "Para Lewis la disyuntiva es esa; otras posturas filosóficas (como el realismo moral no teísta) no la aceptan como exhaustiva."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Lewis no presenta su argumento explícitamente como «inferencia a la mejor explicación»; es una lectura posterior.",
+    "evidencia": "razonamiento",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Es inferencia a la mejor explicación — la misma estructura lógica que usa la ciencia.",
+     "nuevo": "Puede leerse como una inferencia a la mejor explicación, estructura habitual también en la ciencia."
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "ERROR",
+    "problema": "Imprecisión: la reciprocidad evolucionó por altruismo recíproco (Trivers); la aptitud inclusiva explica la cooperación entre parientes.",
+    "evidencia": "Hamilton 1964; Trivers 1971 (conocimiento sólido)",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "la cooperación y reciprocidad evolucionaron por fitness inclusiva",
+     "nuevo": "la cooperación y la reciprocidad pueden explicarse por selección de parentesco y altruismo recíproco"
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "Si es convención sí hay base para quejarse de quien incumple (promesas, contratos); lo que se pierde es el carácter universal de la queja.",
+    "evidencia": "razonamiento",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "Si es convención, no tienes base para quejarte de quien la viola.",
+     "nuevo": "Si es solo convención, tu queja pierde el carácter universal que parece reclamar."
+    }
+   }
+  ],
+  "preguntas": [
+   {
+    "pregunta_id": "114be5f1-d385-4ba3-8a62-ebd091a23029",
+    "estado": "ok",
+    "nota": "Clave 0."
+   },
+   {
+    "pregunta_id": "1df9f27d-b233-4b10-a33f-a9238b90ba80",
+    "estado": "ok",
+    "nota": "Clave 1; Lewis abre con la «Law of Human Nature» y las disputas cotidianas."
+   },
+   {
+    "pregunta_id": "e3b43381-a075-44c9-853a-ca9b0f7662df",
+    "estado": "ok",
+    "nota": "Clave 0 (argumento del instinto: la ley moral juzga entre impulsos)."
+   },
+   {
+    "pregunta_id": "02bddd02-a5f4-4ff6-b493-02576f8147a1",
+    "estado": "ok",
+    "nota": "Clave 2 aceptable como lectura; la etiqueta es de la app (ver hallazgo)."
+   }
+  ],
+  "notas": "Punto de partida (disputas cotidianas) y rechazo del instinto y la convención como explicación: fiel a Lewis."
+ },
+ {
+  "id": "225da1c4-dec4-4a01-8eed-3379f1314cb5",
+  "libro": "In Sheep's Clothing",
+  "titulo": "Tácticas de manipulación encubierta (I): negación, minimización y desvío",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "«Precisión clínica» y «las primeras tres… núcleo defensivo» son valoraciones/estructura de la app; Simon lista además mentira, racionalización, atención selectiva, evasión, etc.",
+    "evidencia": "https://lifeclub.org/books/in-sheeps-clothing-george-simon-jr-phd-review-summary (resumen)",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Simon cataloga con precisión clínica las tácticas",
+     "nuevo": "Simon cataloga las tácticas"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Estructura de lista atribuida a Simon no confirmada.",
+    "evidencia": "ídem",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Las primeras tres —negación, minimización y desvío— constituyen el núcleo defensivo del repertorio manipulador.",
+     "nuevo": "Negación, minimización y desvío son tres de las tácticas que Simon describe, junto a otras como la mentira, la racionalización, la atención selectiva o la evasión."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "«Lo que Simon considera el daño más profundo y duradero» no verificado.",
+    "evidencia": "sin fuente",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "lo que Simon considera el daño más profundo y duradero de la manipulación encubierta",
+     "nuevo": "uno de los daños más profundos de la manipulación encubierta"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Kahneman describe efectos de encuadre (framing), no un concepto de «reencuadre».",
+    "evidencia": "conocimiento sólido",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "un correlato en el concepto de 'reencuadre' de Kahneman",
+     "nuevo": "un cierto parecido con los efectos de encuadre (framing) que describe Kahneman"
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "DUDA",
+    "problema": "El catálogo de Simon proviene de observación clínica y divulgación; no son categorías validadas empíricamente (CDO no es un diagnóstico).",
+    "evidencia": "conocimiento general",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "El catálogo de tácticas de Simon, aunque clínicamente preciso, presenta",
+     "nuevo": "El catálogo de tácticas de Simon, aunque útil, no está validado empíricamente y presenta"
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Sin preguntas activas. Distinción neurótico/carácter-disturbado y tácticas de negación, minimización y desvío: coherente con resúmenes del libro. No tuve acceso al texto."
+ },
+ {
+  "id": "234d5589-7706-45e0-b527-7fe3f2f55a43",
+  "libro": "Tao Te King",
+  "titulo": "Los opuestos que se generan mutuamente — la dialéctica sin síntesis",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "El capítulo 2 habla de generación mutua de los opuestos (有無相生); que maximizar un polo active el contrario es una extensión de la app (con ecos en los caps. 9 y 36).",
+    "evidencia": "Tao Te Ching, cap. 2, 9, 36 (conocimiento sólido)",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "No es solo que los conceptos sean relativos — es que el intento de maximizar uno genera automáticamente el otro.",
+     "nuevo": "No es solo que los conceptos sean relativos: el texto habla de generación mutua; la lectura de que maximizar un polo activa el contrario es una extensión de la lección, con ecos de otros capítulos (9, 36)."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "La imagen del agua (cap. 78) es que vence a lo duro por su suavidad; «rodea, penetra, disuelve» es añadido.",
+    "evidencia": "Tao Te Ching, cap. 78",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "El agua no lucha contra la roca: la rodea, la penetra, y eventualmente la disuelve.",
+     "nuevo": "El agua, dice el capítulo 78, vence a lo duro precisamente por su suavidad."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Taleb no formaliza la antifragilidad como la tensión taoísta de opuestos.",
+    "evidencia": "Antifragile (conocimiento sólido)",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "La tensión taoísta entre opuestos es el mecanismo que Taleb formaliza como antifragilidad.",
+     "nuevo": "La lección propone leer la antifragilidad como un eco de esta tensión taoísta; Taleb no la presenta así."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Lo que «rechazaría» Lao-Tse es una inferencia de la app.",
+    "evidencia": "razonamiento",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Lao-Tse rechazaría esta solución: la síntesis hegeliana es solo otro polo que generará su propio opuesto.",
+     "nuevo": "El Tao Te King no ofrece una síntesis; la lección infiere que Lao-Tse la rechazaría por ser solo otro polo."
+    }
+   }
+  ],
+  "preguntas": [
+   {
+    "pregunta_id": "2346b269-c108-4b01-9fff-5fcb35109415",
+    "estado": "ok",
+    "nota": "Clave 2 coherente con el texto (interdefinición); el capítulo 2 sí habla de generación mutua."
+   }
+  ],
+  "notas": "Cita del cap. 2 acorde con las traducciones habituales."
+ },
+ {
+  "id": "2fdfdec1-3e89-4ce1-9e0d-2c1ac5e62e01",
+  "libro": "Tao Te King",
+  "titulo": "El Tao que puede nombrarse — la paradoja del conocimiento que se escapa",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "«No es mística — es epistemología precisa» es una lectura, no la única.",
+    "evidencia": "razonamiento",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Esta apertura no es mística — es una afirmación epistemológica precisa sobre los límites del lenguaje y la representación.",
+     "nuevo": "Esta apertura puede leerse como una afirmación epistemológica sobre los límites del lenguaje y la representación (lectura habitual, no la única)."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "La neurociencia no «confirma» el procesamiento predictivo: es una teoría influyente pero en debate.",
+    "evidencia": "conocimiento general (Clark, Friston; debate abierto)",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "señalando algo que la neurociencia moderna confirma:",
+     "nuevo": "señalando algo que recuerda a la teoría del procesamiento predictivo (influyente, aún en debate):"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Que nombrar refuerce el modelo y reduzca la atención a los datos es hipótesis de la app, no resultado establecido.",
+    "evidencia": "sin fuente",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Cuando nombramos algo, reforzamos el modelo predictivo y reducimos la atención a los datos brutos.",
+     "nuevo": "Es una hipótesis plausible, no un resultado establecido, que nombrar algo refuerce el modelo predictivo y reduzca la atención a los datos brutos."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "El dedo que apunta a la luna es una imagen budista (Chan/Zen), no del Tao Te King.",
+    "evidencia": "conocimiento sólido",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "como un dedo que apunta a la luna. Los 81 capítulos son el dedo, no la luna.",
+     "nuevo": "como un dedo que apunta a la luna (imagen habitual del budismo, no del Tao Te King). Los 81 capítulos serían el dedo, no la luna."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Gödel concierne a sistemas formales aritméticos; extenderlo al lenguaje y la realidad es analogía, no convergencia.",
+    "evidencia": "razonamiento",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Ambos convergen: ningún sistema puede capturar completamente la realidad desde dentro.",
+     "nuevo": "La analogía es sugerente pero limitada: Gödel habla de sistemas formales, no del lenguaje natural ni de la realidad."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Frase inventada puesta entre comillas en boca de Lao-Tse.",
+    "evidencia": "ausente del Tao Te King",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Lao-Tse respondería: \"Exacto — y de eso trata este libro.\"",
+     "nuevo": ""
+    }
+   }
+  ],
+  "preguntas": [
+   {
+    "pregunta_id": "acdc9d7a-379b-42c1-bde4-8102b604b47d",
+    "estado": "ambigua",
+    "nota": "Clave 1 es la mejor opción, pero atribuye al primer verso el mecanismo de «modelos predictivos», que es adición de la app; conviene reescribir la opción y la explicación («la neurociencia confirma esto»)."
+   }
+  ],
+  "notas": "Cita del verso 1 y «81 capítulos» correctos; Tractatus 7 («De lo que no se puede hablar…») correcto."
+ },
+ {
+  "id": "31500f0b-fc16-4943-aa20-283eb2a19663",
+  "libro": "The Myth of National Defense",
+  "titulo": "La Falacia del Bien Público Aplicada a la Defensa Nacional",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "No pude localizar en el capítulo de Block (cap. 9) el argumento del gobierno mundial ni lo de «todo el hemisferio»; se atribuye junto a Hoppe y se usa «demuestran».",
+    "evidencia": "https://mises.org/online-book/myth-national-defense/9-national-defense-and-theory-externalities-public-goods-and-clubs (no leído completo)",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Segundo, si el argumento fuera válido, justificaría un gobierno mundial (la defensa nuclear de EEUU protege no-excluiblemente a todo el hemisferio), pero los defensores del bien público no aceptan esta conclusión lógica de su propio argumento.",
+     "nuevo": "Segundo, se ha señalado que, llevado a su conclusión lógica, el argumento justificaría un gobierno mundial, algo que sus defensores no aceptan."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "«Demuestran» y «devastador» son valoraciones; son argumentos de los autores.",
+    "evidencia": "razonamiento",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Hoppe y Block demuestran que este argumento falla en múltiples niveles.",
+     "nuevo": "Hoppe y Block argumentan que este argumento falla en múltiples niveles."
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "DUDA",
+    "problema": "Generalización histórica excesiva (hay casos de sociedades sin monopolio estatal que duraron siglos, p. ej. la Islandia medieval).",
+    "evidencia": "conocimiento general",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "históricamente, las sociedades sin monopolio de defensa fueron conquistadas por las que sí lo tenían.",
+     "nuevo": "en muchos casos, las sociedades sin monopolio de defensa fueron conquistadas por las que sí lo tenían."
+    }
+   }
+  ],
+  "preguntas": [
+   {
+    "pregunta_id": "bc558627-2142-47c6-a710-8e49f8f41a38",
+    "estado": "ok",
+    "nota": "Clave 3 coherente con la lección; la atribución específica a Block no pude confirmarla."
+   },
+   {
+    "pregunta_id": "3fac1075-189e-4ea8-a9ca-6f7a492bbe01",
+    "estado": "ok",
+    "nota": "Clave 3."
+   }
+  ],
+  "notas": "Mises (comparaciones interpersonales de utilidad) y Huerta de Soto (Socialismo, cálculo económico y función empresarial) bien citados. Capítulo de Block existe en el volumen."
+ },
+ {
+  "id": "36e67c06-75fa-406c-abc1-1ca77044cfd0",
+  "libro": "In Sheep's Clothing",
+  "titulo": "Por qué seguimos siendo engañados: los errores del pensamiento tradicional",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "No pude confirmar que Simon estructure explícitamente «tres errores» así; sí sostiene que se malinterpreta al agresor como neurótico o sufriente.",
+    "evidencia": "https://lifeclub.org/books/in-sheeps-clothing-george-simon-jr-phd-review-summary",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Simon identifica tres errores cognitivos sistemáticos que hacen",
+     "nuevo": "Según esta lección, Simon señala tres errores de pensamiento que hacen"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "La distinción cognitiva/afectiva de la empatía es de la psicología; no pude confirmar que Simon la formule así.",
+    "evidencia": "sin confirmar",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Simon distingue entre empatía cognitiva (entender cómo se siente otro) y empatía afectiva (importarle).",
+     "nuevo": "La psicología distingue entre empatía cognitiva (entender cómo se siente otro) y empatía afectiva (importarle); no pude confirmar que Simon la formule así."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "La proyección empática se parece al sesgo egocéntrico/falso consenso, no a la heurística de representatividad.",
+    "evidencia": "Kahneman y Tversky (conocimiento sólido)",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "la proyección empática es una forma de heurística de representatividad (asumimos que el otro es \"como nosotros\")",
+     "nuevo": "la proyección empática se parece al sesgo egocéntrico o de falso consenso (asumimos que el otro es \"como nosotros\")"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "La falacia narrativa es de Taleb (que Kahneman recoge) y se asocia al Sistema 1 (historias coherentes), no al Sistema 2 racionalizando una amenaza ya percibida.",
+    "evidencia": "Thinking, Fast and Slow, cap. 19 (conocimiento sólido)",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "y la búsqueda de trauma causal es pensamiento narrativo del Sistema 2 que racionaliza lo que el Sistema 1 ya percibió como amenaza.",
+     "nuevo": "y la búsqueda de trauma causal se parece a la falacia narrativa (término de Taleb que Kahneman recoge), asociada a la tendencia del Sistema 1 a construir historias coherentes."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "«Correlato preciso» y «arquitectura que los hace inevitables» exceden lo que dice Kahneman.",
+    "evidencia": "razonamiento",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Simon describe el contenido de los errores; Kahneman proporciona la arquitectura cognitiva que los hace inevitables.",
+     "nuevo": "Simon describe el contenido de los errores; Kahneman aporta un marco general sobre sesgos, no una explicación específica de estos errores."
+    }
+   }
+  ],
+  "preguntas": [
+   {
+    "pregunta_id": "aeadb159-5476-4f5e-bb94-36c58cc9cfc4",
+    "estado": "ok",
+    "nota": "Clave 2."
+   },
+   {
+    "pregunta_id": "a9207fae-eb43-42bf-897c-d37f3a9114be",
+    "estado": "ambigua",
+    "nota": "Clave 3 correcta según el texto, pero la pregunta atribuye a Simon la distinción («que Simon establece»), no confirmada."
+   }
+  ],
+  "notas": "La contraposición neurótico vs. carácter disturbado y la crítica a buscar el «trauma oculto» encajan con las reseñas del libro; no tuve acceso al texto."
+ },
+ {
+  "id": "38935ef8-c2a6-4a47-a991-90940d51b0f9",
+  "libro": "In Sheep's Clothing",
+  "titulo": "Estrategias de defensa: confrontación asertiva y gestión de límites",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Se atribuye a Simon el rechazo del modelo de negociación de Harvard; es de Voss. No pude confirmar que Simon lo trate.",
+    "evidencia": "Voss, Never Split the Difference (conocimiento sólido)",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "ambos autores rechazan el modelo de negociación colaborativa Harvard como inaplicable a interlocutores que no operan de buena fe.",
+     "nuevo": "Voss rechaza el modelo de negociación colaborativa de Harvard (Fisher y Ury); no pude confirmar que Simon se refiera a él."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Voss propone empatía táctica y preguntas calibradas, no «calibración emocional»; y la empatía es justo lo que Simon desaconseja con los CDOs.",
+    "evidencia": "Voss (conocimiento sólido)",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Voss propone técnicas de calibración emocional; Simon propone confrontación directa del comportamiento.",
+     "nuevo": "Voss propone empatía táctica y preguntas calibradas; Simon propone confrontación directa del comportamiento y desaconseja apelar a la empatía del agresor."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "La «convergencia» (mutuo beneficio = señal de debilidad) no es tesis de Voss; Voss se apoya en la empatía, no en la dureza.",
+    "evidencia": "razonamiento",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "La convergencia es que ambos reconocen que con ciertos perfiles, la concesión y la búsqueda de mutuo beneficio son señales de debilidad que aumentan la agresión.",
+     "nuevo": "La convergencia es solo parcial: ambos desconfían de la concesión fácil, pero Voss se apoya en la empatía táctica y Simon la desaconseja con los CDOs."
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "Afirmación atribuida a Simon no confirmada.",
+    "evidencia": "sin fuente",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "Simon sugiere que es mejor no enunciar un límite que enunciarlo y no aplicarlo.",
+     "nuevo": "La idea es coherente con el enfoque de Simon, aunque no pude confirmar que la formule así."
+    }
+   }
+  ],
+  "preguntas": [
+   {
+    "pregunta_id": "440a64a9-44a1-45f7-a850-51bb81679e19",
+    "estado": "ok",
+    "nota": "Clave 1; coherente con la lección."
+   },
+   {
+    "pregunta_id": "a8ff22a9-cec4-4fd6-afbc-2b6afbad6b46",
+    "estado": "ambigua",
+    "nota": "«Primer principio» presupone un orden de Simon que no pude confirmar; la clave 0 es la única coherente con el texto."
+   },
+   {
+    "pregunta_id": "456dfa49-02bc-43db-a3c0-adc9076815ef",
+    "estado": "ok",
+    "nota": "Clave 2; la explicación («peor que no haberlo enunciado») repite el matiz no confirmado."
+   }
+  ],
+  "notas": "Desaconsejar la empatía/explicación con el agresor encaja con los resúmenes del libro; no tuve acceso al texto."
+ },
+ {
+  "id": "3c0b8a3d-da3c-4f9b-b2a7-565f01f348ee",
+  "libro": "In Sheep's Clothing",
+  "titulo": "Tácticas de manipulación encubierta (II): culpabilización, vergüenza y rol de víctima",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "La «clave diagnóstica» que se presenta como de Simon no pude confirmarla.",
+    "evidencia": "sin fuente",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "La clave diagnóstica que Simon ofrece:",
+     "nuevo": "Una clave diagnóstica coherente con el enfoque de Simon:"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Sapolsky trata de estatus y estrés, no de la vergüenza como respuesta fisiológica de sumisión; lo demás es lectura de la app.",
+    "evidencia": "Sapolsky, Why Zebras Don't Get Ulcers / Behave (conocimiento general)",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "la vergüenza induce una respuesta fisiológica de sumisión (descenso en la jerarquía percibida) que el agresor encubierto ha aprendido a activar sin necesidad de confrontación física directa",
+     "nuevo": "la amenaza al estatus social puede inducir una respuesta fisiológica de estrés y sumisión (descenso en la jerarquía percibida), algo que, según la lectura de la lección, el agresor encubierto aprende a activar sin confrontación física directa"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Se atribuye a Simon una explotación de la sensibilidad al estatus formulada en términos de Sapolsky.",
+    "evidencia": "razonamiento",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Simon documenta cómo los agresores explotan exactamente esa sensibilidad.",
+     "nuevo": "La lección lee a Simon en esa clave."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Sin preguntas activas. Guilt-tripping, shaming y playing the victim figuran entre las tácticas de Simon (resúmenes del libro). La distinción culpa/vergüenza es de la psicología, no específicamente de Simon."
+ },
+ {
+  "id": "3d34a588-a6fb-4448-93bb-3535b7fe0b70",
+  "libro": "Analytic Idealism in a Nutshell",
+  "titulo": "El Idealismo Analítico: La Ontología",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "«Bien documentado clínicamente» es una sobreafirmación: la naturaleza del trastorno de identidad disociativo (modelo traumático frente a sociocognitivo) es objeto de debate.",
+    "evidencia": "literatura clínica sobre DID (conocimiento sólido)",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "El mecanismo ya existe y está bien documentado clínicamente.",
+     "nuevo": "Kastrup sostiene que ese mecanismo ya existe; sin embargo, la naturaleza del trastorno de identidad disociativo es objeto de debate clínico."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "La idea del cerebro como «válvula reductora» viene de Bergson y C. D. Broad; Huxley la adopta y la ilustra con su experiencia con mescalina.",
+    "evidencia": "The Doors of Perception (conocimiento sólido)",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Huxley llegó a la misma conclusión experiencialmente (con mescalina)",
+     "nuevo": "Huxley, retomando la idea de Bergson y C. D. Broad, la ilustró con su experiencia con mescalina"
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "DUDA",
+    "problema": "«El TID demuestra» presupone zanjado el debate sobre el TID.",
+    "evidencia": "ídem",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "El TID demuestra que la disociación ES POSIBLE dentro de una mente",
+     "nuevo": "El TID, cuya naturaleza se debate, sugiere que la disociación es posible dentro de una mente"
+    }
+   }
+  ],
+  "preguntas": [
+   {
+    "pregunta_id": "97fb7491-d770-4b39-945d-9eb88c739cf9",
+    "estado": "ok",
+    "nota": "Clave 2."
+   },
+   {
+    "pregunta_id": "d64e3daf-6a51-48f2-b10d-f79aeb1e817a",
+    "estado": "ok",
+    "nota": "Clave 2."
+   },
+   {
+    "pregunta_id": "218104c4-69e0-4645-ad08-b0e1347312da",
+    "estado": "ok",
+    "nota": "Clave 2; la explicación repite «mecanismo bien documentado»/«empíricamente»; conviene suavizarla."
+   },
+   {
+    "pregunta_id": "c7204829-3a6e-435b-be51-567c7934e420",
+    "estado": "ok",
+    "nota": "Clave 1 coherente con la lección; la implicación sobre la muerte es inferencia de Kastrup, no hecho."
+   }
+  ],
+  "notas": "Tesis central (idealismo monista, alters disociados, mundo físico como apariencia) correctamente descrita. No pude consultar el libro."
+ },
+ {
+  "id": "3ec59117-d470-4f4f-af23-d7ff9977f844",
+  "libro": "The Molecule of More",
+  "titulo": "Dopamina versus moléculas H&N — la guerra interna por el presente y el futuro",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "«Gran parte del sufrimiento moderno» es una generalización fuerte para atribuir a los autores.",
+    "evidencia": "sin fuente",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "gran parte del sufrimiento humano moderno proviene de que el sistema dopaminérgico hiperactivado",
+     "nuevo": "parte del sufrimiento humano moderno proviene de que el sistema dopaminérgico hiperactivado"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "Dopamina y serotonina interactúan de formas complejas (a veces se inhiben mutuamente), no hay una «inhibición recíproca» establecida que explique la incapacidad de disfrutar.",
+    "evidencia": "literatura de neuroquímica (conocimiento general)",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Los sistemas dopaminérgico y serotoninérgico tienen interacciones inhibitorias recíprocas en varias regiones del cerebro.",
+     "nuevo": "Los sistemas dopaminérgico y serotoninérgico interactúan de formas complejas y, en algunas regiones, se inhiben mutuamente."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Que la serotonina «facilite el valor del presente» es simplificación del libro.",
+    "evidencia": "ídem",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "activamente inhibe la capacidad de encontrar valor en el presente que la serotonina facilita",
+     "nuevo": "puede dificultar la capacidad de encontrar valor en el presente"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "«La mecánica neurológica de la incapacidad de disfrutar» es hipótesis, no explicación establecida.",
+    "evidencia": "ídem",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Esta es la mecánica neurológica de la incapacidad de disfrutar.",
+     "nuevo": "Es una hipótesis del libro, no una explicación neurológica establecida de la incapacidad de disfrutar."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Equiparar dopamina/H&N con la distinción hemisférica de McGilchrist es lectura de la app; ninguno de los autores la plantea.",
+    "evidencia": "razonamiento",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "La distinción dopamina/H&N de Lieberman es la versión neuroquímica de la distinción hemisférica de McGilchrist:",
+     "nuevo": "La lección propone leer la distinción dopamina/H&N de Lieberman como versión neuroquímica de la distinción hemisférica de McGilchrist (lectura de la app, no tesis de los autores):"
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "ERROR",
+    "problema": "Predicción atribuida a Lieberman y Long (medida directa de la colonización dopaminérgica) que no pude hallar; es criterio de la app.",
+    "evidencia": "sin fuente",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "Lieberman y Long predicen que la dificultad para sostener esos períodos — la urgencia de revisar el teléfono, planificar el siguiente paso, comparar — es la medida directa de cuánto el sistema dopaminérgico ha colonizado tu tiempo de presencia.",
+     "nuevo": "La dificultad para sostener esos períodos —la urgencia de revisar el teléfono, planificar el siguiente paso, comparar— puede darte una pista de cuánto ha ocupado la búsqueda tu tiempo de presencia (criterio de la app, no una medida validada ni una tesis de Lieberman y Long)."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Sin preguntas activas. Marco dopamina vs. moléculas «del aquí y ahora» (serotonina, oxitocina, endorfinas, endocannabinoides) es el del libro según mi conocimiento; no pude verificar por web. Autocorrección razonable sobre oxitocina y serotonina."
+ },
+ {
+  "id": "3f307450-6ecb-4efd-b893-517766ad6d80",
+  "libro": "Life Ascending: The Ten Great Inventions of Evolution",
+  "titulo": "El Origen de la Vida: La Termodinámica Obliga a la Complejidad",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "El argumento termodinámico detallado (gradientes, quimiosmosis heredada de la geoquímica) está más desarrollado en The Vital Question (2015) y en artículos posteriores de Lane; no pude confirmar su alcance en Life Ascending (2009).",
+    "evidencia": "https://www.eurekalert.org/news-releases/667662 ; Lane 2018 BioEssays (fuentes sobre su hipótesis)",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Lane invierte la intuición más arraigada sobre el origen de la vida",
+     "nuevo": "Lane (con más detalle en The Vital Question que en Life Ascending) invierte la intuición más arraigada sobre el origen de la vida"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "«Muestra» y «la solución más eficiente» presentan como probado lo que es hipótesis de Lane, con críticos (p. ej. Baz Jackson).",
+    "evidencia": "fuentes anteriores",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "pero Lane muestra que la forma más eficiente de disipar la energía disponible",
+     "nuevo": "pero Lane argumenta que una forma muy eficiente de disipar la energía disponible"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "ídem.",
+    "evidencia": "ídem",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "es la solución termodinámica más eficiente al problema de disipar gradientes de energía",
+     "nuevo": "sería, según Lane, una solución termodinámica eficiente al problema de disipar gradientes de energía"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "West atribuye las leyes de escala a restricciones de las redes de distribución de energía; llamarlas «consecuencias termodinámicas» y vincularlas al origen de la vida es analogía de la app.",
+    "evidencia": "West, Scale (conocimiento general)",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "documenta que las leyes de escala que gobiernan los organismos son consecuencias termodinámicas — la misma física que Lane describe en el origen produce los patrones de escalamiento que West documenta en organismos maduros.",
+     "nuevo": "documenta leyes de escala en los organismos que atribuye a restricciones físicas de las redes que distribuyen energía; la conexión con el origen de la vida es una analogía de la lección."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "La noción de «constructor» pertenece a la teoría de constructores (Deutsch y Marletto, 2013), posterior a El Comienzo del Infinito (2011).",
+    "evidencia": "Deutsch, Constructor theory (2013)",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Deutsch (El Comienzo del Infinito) añadiría que la vida es un constructor — un sistema capaz de causar transformaciones que de otro modo no ocurrirían.",
+     "nuevo": "La noción de «constructor» (teoría de constructores de Deutsch y Marletto, posterior a El Comienzo del Infinito) permitiría describir la vida como un sistema capaz de causar transformaciones que de otro modo no ocurrirían."
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "DUDA",
+    "problema": "La panspermia no es una hipótesis alternativa sobre el origen químico de la vida (solo lo desplaza).",
+    "evidencia": "razonamiento",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "(mundo RNA, panspermia, fumarolas volcánicas)",
+     "nuevo": "(mundo RNA, fumarolas volcánicas, charcas superficiales)"
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "Presenta como hecho que las burbujas son «atractores»; es analogía de la app.",
+    "evidencia": "razonamiento",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "Las burbujas especulativas, por ejemplo, no son accidentes sino atractores: la estructura de los mercados con apalancamiento y retroalimentación positiva converge en producirlas periódicamente.",
+     "nuevo": "Las burbujas especulativas, por ejemplo, podrían verse como resultado recurrente de la estructura de mercados con apalancamiento y retroalimentación positiva (analogía de la lección, no tesis de Lane)."
+    }
+   }
+  ],
+  "preguntas": [
+   {
+    "pregunta_id": "41d0c0fe-1769-4f38-9d74-68af09c3f64e",
+    "estado": "ok",
+    "nota": "Clave 2."
+   }
+  ],
+  "notas": "Fumarolas alcalinas, gradientes de protones y quimiosmosis (Mitchell, Nobel 1978) correctos; la hipótesis de Lane es sólida pero discutida."
+ },
+ {
+  "id": "4287930e-6304-4dd0-bbcc-a0df342c88ee",
+  "libro": "The Master and His Emissary",
+  "titulo": "Las cuatro fases históricas de la usurpación hemisférica en Occidente",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "titulo+cuerpo",
+    "severidad": "ERROR",
+    "problema": "McGilchrist describe un vaivén del equilibrio hemisférico a lo largo de la historia (con fases de recuperación del hemisferio derecho, como el Romanticismo), no un avance monótono en «cuatro fases» ni una fase «digital».",
+    "evidencia": "https://www.greenspirit.org.uk/bookreviews2/2011/12/13/the-master-and-his-emissary-the-divided-brain-and-the-making-of-the-western-world-by-iain-mcgilchrist/ (balance que oscila); estructura de capítulos del libro",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "como la historia del avance progresivo de la dominancia hemisférica izquierda, con cuatro momentos de aceleración:",
+     "nuevo": "como la historia de un avance de la dominancia hemisférica izquierda con oscilaciones (la lección resume cuatro momentos de aceleración, pero el libro también describe fases de recuperación del hemisferio derecho, como el Romanticismo):"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "El libro es de 2009; lo «digital» y los algoritmos son añadido de la lección.",
+    "evidencia": "fecha de publicación",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "y la modernidad industrial-digital (la cuantificación total de la experiencia).",
+     "nuevo": "y la modernidad industrial y tecnológica (la cuantificación creciente de la experiencia; la dimensión digital es una extrapolación de la lección)."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Los ejemplos actuales (algoritmos, métricas educativas, vacío existencial) son de la lección, no de McGilchrist.",
+    "evidencia": "razonamiento",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "La fase actual — industrial-digital — es la culminación: algoritmos que cuantifican la atención humana,",
+     "nuevo": "La fase actual — industrial-tecnológica — es, para McGilchrist, la culminación; la lección la ilustra con ejemplos propios: algoritmos que cuantifican la atención humana,"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "La teoría generacional de Strauss y Howe es discutida por historiadores; la conexión es analogía de la app.",
+    "evidencia": "conocimiento general",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Conecta con Strauss & Howe: los ciclos históricos de Fourth Turning",
+     "nuevo": "Conecta, como analogía de la app, con Strauss & Howe (teoría generacional discutida por los historiadores): los ciclos históricos de Fourth Turning"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Equiparar el retorno de lo reprimido daimónico (Harpur) con el hemisferio derecho es lectura de la app.",
+    "evidencia": "razonamiento",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "son descripciones del mismo fenómeno desde marcos distintos",
+     "nuevo": "podrían leerse como descripciones del mismo fenómeno desde marcos distintos (lectura de la app)"
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Sin preguntas activas. Recomendación: renombrar el título («cuatro fases»). Heráclito y la perspectiva renacentista como ejemplos son coherentes con la obra; no pude verificar los títulos de capítulos de la parte 2 por web."
+ },
+ {
+  "id": "43afac3c-5277-4c1d-a016-584eef24885a",
+  "libro": "The Sensory Order",
+  "titulo": "Consecuencias filosóficas: epistemología, libre albedrío y los límites de la ciencia",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "El límite de Hayek es que un aparato clasificador debe tener mayor complejidad estructural que lo que explica; «ninguno puede» sin matiz exagera para observadores más complejos.",
+    "evidencia": "https://doaj.org/article/eeb480809bad440aab12e52903231b03 (Gorazda, resumen del argumento de complejidad)",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "porque ninguno puede construir un modelo completo del sistema",
+     "nuevo": "porque ninguno de complejidad comparable puede construir un modelo completo del sistema"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Que Hayek califique el libre albedrío de «pseudoproblema» no pude confirmarlo.",
+    "evidencia": "búsquedas sin resultado sobre esa etiqueta",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "El libre albedrío como cuestión científica es un pseudoproblema",
+     "nuevo": "Para Hayek, el libre albedrío como cuestión científica está mal planteado"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "La reflexividad (el conocimiento modifica el sistema) es más propia de Popper o Soros; Mises basa su dualismo metodológico en la acción con propósito.",
+    "evidencia": "Mises, La Acción Humana (conocimiento sólido)",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "porque los actores económicos son sujetos con conocimiento propio que modifica el sistema cuando se conoce — el observador y lo observado son del mismo tipo.",
+     "nuevo": "porque los actores económicos son sujetos que actúan con propósito y con ideas propias — el observador y lo observado son del mismo tipo (la reflexividad del conocimiento es más característica de Popper o Soros que de Mises)."
+    }
+   }
+  ],
+  "preguntas": [
+   {
+    "pregunta_id": "67c482b4-54e8-48bb-9350-b5e02b24b135",
+    "estado": "ok",
+    "nota": "Clave 2."
+   },
+   {
+    "pregunta_id": "74e99550-c67f-489d-aecd-8747e498d8cf",
+    "estado": "ambigua",
+    "nota": "Clave 0 es la mejor opción, pero la frase «pseudoproblema generado por confundir determinismo con predicción» incluye la etiqueta no confirmada."
+   }
+  ],
+  "notas": "Crítica al empirismo ingenuo y el argumento de la complejidad: fieles a Hayek. Deutsch como contrapunto es de la app."
+ },
+ {
+  "id": "472aad01-ca68-4cf4-9dc0-bf35f3347c93",
+  "libro": "Mindset Secrets for Winning",
+  "titulo": "Las Siete Verdades Nobles del Ganador: El Marco de Responsabilidad Total",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Que Minervini haya «estudiado» a campeones olímpicos y emprendedores como base de invariantes no se confirma; su fuente es sobre todo su experiencia.",
+    "evidencia": "https://newtraderu.com/2023/10/21/mindset-secrets-for-winning-by-mark-minervini (resumen)",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "que Minervini identifica como invariantes entre todos los campeones que estudió — desde atletas olímpicos hasta emprendedores.",
+     "nuevo": "que Minervini presenta como característicos de los ganadores, a partir de su propia experiencia y observación."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "ídem: «todos los campeones que estudió» no verificable.",
+    "evidencia": "ídem",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Minervini documenta que todos los campeones que estudió compartían una comprensión explícita de que",
+     "nuevo": "Minervini sostiene que los ganadores comparten la comprensión de que"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Tetlock mide la calibración de juicios; evaluar «proceso, no resultado» no es su tesis (más cercano a Annie Duke).",
+    "evidencia": "Tetlock y Gardner, Superforecasting",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "evaluar las decisiones por su proceso, no por su resultado",
+     "nuevo": "llevar un registro de aciertos y calibración en lugar de apoyarse en relatos a posteriori"
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "ERROR",
+    "problema": "«Acceso a mentores, capital inicial» no está respaldado: Minervini presenta su camino como autodidacta y con poco capital.",
+    "evidencia": "no hallé respaldo de mentores/capital inicial; las fichas del libro lo presentan como un abandono escolar que llegó a multimillonario (https://newtraderu.com/2023/10/21/mindset-secrets-for-winning-by-mark-minervini). No confirmado con la fuente primaria",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "también incluyó acceso a mentores, capital inicial y el contexto de un mercado alcista extraordinario en los años 90.",
+     "nuevo": "también transcurrió en parte durante un mercado alcista extraordinario en los años 90, lo que conviene tener en cuenta."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Sin preguntas activas. Las «Siete Verdades Nobles», incluidas «ganar es una elección», «eres el propietario de todo» y «el gran logro es un proceso», existen en el libro (listado de la edición ampliada). No pude leer la lista completa. La frase sobre mentores y capital la dejo marcada como no respaldada; verificar si se quiere conservar."
+ }
+]

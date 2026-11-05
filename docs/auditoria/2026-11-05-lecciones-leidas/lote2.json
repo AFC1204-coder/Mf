@@ -1,0 +1,1756 @@
+[
+ {
+  "id": "483969f4-aa27-43f4-b7ac-95f3ba6ce3ae",
+  "libro": "The How of Happiness",
+  "titulo": "Gratitud y Optimismo: Las Dos Intervenciones Más Robustas",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "El estudio de Lyubomirsky, Sheldon y Schkade (2005) comparó anotar bendiciones UNA vez por semana con TRES veces por semana, no con diario; y no midió 'beneficios más sostenidos' sino que solo el grupo semanal mejoró el bienestar.",
+    "evidencia": "https://www.apa.org/monitor/oct06/key ; Lyubomirsky, Sheldon & Schkade 2005, Review of General Psychology; Lyubomirsky & Layous 2013 (el grupo de 3 veces/semana no mejoró).",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "la frecuencia óptima de la práctica de gratitud no es diaria sino semanal. Los participantes que escribían su diario de gratitud una vez por semana mostraban beneficios más sostenidos que los que lo hacían diariamente.",
+     "nuevo": "la frecuencia importa: en un estudio, los participantes que anotaban sus bendiciones una vez por semana mejoraron su bienestar, mientras que los que lo hacían tres veces por semana no mostraron beneficio."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "La explicación (adaptación; semanal acumula experiencias) se presenta como hecho; Lyubomirsky solo sugiere que la práctica más frecuente puede volverse tediosa.",
+    "evidencia": "Misma fuente: explicación sugerida, no demostrada.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "La razón es la adaptación: la práctica diaria se vuelve mecánica y pierde frescura; la semanal permite acumular experiencias suficientes para que el ejercicio requiera reflexión genuina.",
+     "nuevo": "Una explicación plausible es la adaptación: la práctica demasiado frecuente puede volverse mecánica y perder frescura."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Afirma que gratitud y optimismo tienen 'la base experimental más sólida' de las 12 actividades; Lyubomirsky no establece ese ranking (insiste en el ajuste persona-actividad). Contradice además la otra lección (relaciones, flujo y objetivos como 'más potentes').",
+    "evidencia": "No hallado en fuentes; razonamiento: el libro enumera 12 actividades sin jerarquía absoluta.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "la gratitud y el cultivo del optimismo son las que tienen la base experimental más sólida.",
+     "nuevo": "la gratitud y el cultivo del optimismo son dos de las más conocidas y estudiadas."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "'Reducción de la disonancia entre el yo actual y el yo deseado' como beneficio del ejercicio del mejor yo posible no es un resultado documentado que pueda confirmarse.",
+    "evidencia": "Sin fuente localizada (King 2001 midió afecto positivo/bienestar).",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "una sensación de propósito y una reducción de la disonancia entre el yo actual y el yo deseado",
+     "nuevo": "una mayor sensación de propósito"
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "ERROR",
+    "problema": "Recomienda 3 veces por semana 'porque la investigación muestra' que lo diario pierde eficacia: el estudio mostró justo que 3 veces/semana NO funcionó frente a 1 vez/semana. Además la pauta 'cada noche' contradice la recomendación de frecuencia.",
+    "evidencia": "Lyubomirsky, Sheldon & Schkade 2005 (ver apa.org/monitor/oct06/key).",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "Hazlo 3 veces por semana, no diariamente, porque la investigación muestra que la práctica diaria produce habituación y pierde eficacia.",
+     "nuevo": "Hazlo una vez por semana, no más a menudo, porque en el estudio de Lyubomirsky la práctica semanal mejoró el bienestar y la de tres veces por semana no."
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "ERROR",
+    "problema": "'Cada noche' choca con la práctica semanal que la propia lección defiende.",
+    "evidencia": "Coherencia interna.",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "cada noche, escribe tres cosas específicas por las que estás agradecido hoy.",
+     "nuevo": "una vez por semana, escribe tres a cinco cosas específicas por las que estás agradecido."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Búsqueda web confirma 12 actividades y el estudio semanal vs 3 veces/semana. Falta mencionar meta-análisis posteriores con efectos pequeños (p. ej. Davis et al. 2016 sobre gratitud) y que la mejor actividad depende del ajuste persona-actividad."
+ },
+ {
+  "id": "4fcf5afb-16c5-4fc2-814e-fe9e0945b7a9",
+  "libro": "The Master and His Emissary",
+  "titulo": "El yo — quién soy cuando no me estoy definiendo",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Asigna el yo narrativo al hemisferio izquierdo y el experiencial al derecho como si lo dijera 'la neurociencia del self'. Los estudios de foco narrativo vs experiencial (Farb y cols. 2007) asocian prefrontal medial vs ínsula/regiones somatosensoriales, sin una asignación hemisférica limpia.",
+    "evidencia": "Farb et al. 2007, SCAN (conocimiento sólido, no verificado por web).",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "La neurociencia del self distingue dos sistemas: el yo narrativo (medial prefrontal cortex, predominantemente izquierdo) y el yo experiencial (ínsula, cortex somatosensorial derecho).",
+     "nuevo": "Algunos estudios de neuroimagen distinguen entre un modo narrativo del self (asociado a la corteza prefrontal medial) y un modo experiencial (asociado a la ínsula y a regiones somatosensoriales), aunque su asignación a un hemisferio concreto es una simplificación."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Afirma que vipassana, zazen y oración contemplativa 'comparten el mismo mecanismo' (reducir actividad narrativa izquierda): no hay base empírica para esa lateralización.",
+    "evidencia": "Sin fuente; la neurociencia de la meditación apunta a redes (default mode), no a un hemisferio.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "— todas comparten el mismo mecanismo: reducir la actividad narrativa izquierda para permitir que el yo experiencial derecho emerja.",
+     "nuevo": "— y suelen interpretarse como prácticas que reducen el diálogo interno narrativo."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "'Correlato neurocientífico' presentado como hecho; es una hipótesis.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "describen la misma estructura experiencial, que ahora tiene un correlato neurocientífico.",
+     "nuevo": "describen una estructura experiencial parecida, cuya relación con la lateralización cerebral es una hipótesis, no un hecho establecido."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "La 'crisis de identidad moderna como síntoma hemisférico' es interpretación de la app, no hallazgo.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "es un síntoma hemisférico.",
+     "nuevo": "puede leerse, desde el marco de McGilchrist, como un síntoma del predominio del modo izquierdo (una lectura interpretativa, no un hallazgo establecido)."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Sapolsky niega el libre albedrío (Determined, 2023); no afirma que el yo unificado sea 'la misma construcción narrativa izquierdista' de McGilchrist.",
+    "evidencia": "Conocimiento sólido sobre Sapolsky.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "la ilusión del yo libre y unificado que Sapolsky desmonta desde la neurobiología es la misma construcción narrativa izquierdista que McGilchrist describe desde la lateralización.",
+     "nuevo": "Sapolsky cuestiona desde la neurobiología la idea de un yo con libre albedrío; es un paralelismo libre con la crítica de McGilchrist a la narrativa del yo, no una tesis compartida."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "No pude verificar por web qué dice McGilchrist exactamente sobre el yo; la crítica de Sapolsky/Hofstadter es paralelismo de la app. Falta objeción: la dicotomía izquierda/derecha del self y la lateralización 'pop' carecen de apoyo en estudios de neuroimagen (p. ej. Nielsen et al. 2013 no hallaron lateralización de personalidad)."
+ },
+ {
+  "id": "55894779-7d93-41de-b71a-d4eed05e694a",
+  "libro": "Las Leyes de la Naturaleza Humana",
+  "titulo": "La Ley de la Envidia: El Veneno Oculto",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Define la envidia como incluyendo siempre el deseo de que el otro pierda; solo vale para la envidia hostil (la investigación distingue envidia benigna).",
+    "evidencia": "van de Ven, Zeelenberg & Pieters 2009 (conocimiento sólido).",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "La envidia difiere de la admiración en que incluye el deseo implícito de que el otro pierda lo que tiene, no solo de tenerlo uno mismo.",
+     "nuevo": "La envidia hostil difiere de la admiración en que incluye el deseo implícito de que el otro pierda lo que tiene, no solo de tenerlo uno mismo."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "No se puede confirmar que Greene use la dicotomía 'destructiva/transformadora' con esos criterios; sí habla de convertir la envidia en emulación.",
+    "evidencia": "No verificado en el texto.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Greene distingue entre envidia destructiva y envidia transformadora.",
+     "nuevo": "Greene contrapone la envidia que lleva a la hostilidad con la que puede convertirse en admiración y emulación (las etiquetas «destructiva» y «transformadora» son de la app)."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "La 'paradoja' de la distancia percibida es tesis propia de la app y contradice el párrafo anterior (la destructiva se dirige a personas similares, no a inalcanzables).",
+    "evidencia": "Coherencia interna.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "La paradoja que Greene no desarrolla suficientemente es que la línea entre envidia destructiva y envidia transformadora depende menos del objeto de la envidia que de la distancia percibida entre uno mismo y ese objeto.",
+     "nuevo": "Una hipótesis de la app, no de Greene, es que la línea entre ambas podría depender de la distancia percibida entre uno mismo y el objeto de la envidia."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Frase contradictoria con la descripción previa y sin respaldo.",
+    "evidencia": "Coherencia interna.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "La misma persona puede inspirar envidia destructiva cuando parece inalcanzable y transformadora cuando parece accesible.",
+     "nuevo": ""
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Harpur (Daimonic Reality) no es una referencia conocida sobre la envidia; la proyección de la sombra es concepto jungiano, no demostrado en Harpur.",
+    "evidencia": "Sin fuente.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Harpur: la envidia como proyección de la sombra en el otro — el que envidiamos contiene algo que hemos reprimido en nosotros mismos.",
+     "nuevo": "Lectura jungiana, no de Greene: la envidia puede entenderse como proyección de la sombra en el otro."
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "DUDA",
+    "problema": "'Él mismo reconoce que ambas pueden coexistir' no confirmable.",
+    "evidencia": "Sin acceso al texto.",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "poco operacional — él mismo reconoce que ambas pueden coexistir.",
+     "nuevo": "poco operacional, y en la práctica ambas pueden coexistir."
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "'El veneno más eficaz de los equipos' y 'el único antídoto funcional' son afirmaciones absolutas sin evidencia.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "La envidia hacia colegas directos es el veneno más eficaz de los equipos de alto rendimiento — reconocerla y nombrarla (privadamente) es el único antídoto funcional.",
+     "nuevo": "La envidia hacia colegas directos puede dañar a los equipos; reconocerla y nombrarla (privadamente) es un primer paso útil."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "No pude acceder al texto del capítulo de Greene; las etiquetas destructiva/transformadora no pude confirmarlas literalmente. Falta mencionar la distinción de la psicología entre envidia benigna y maliciosa (van de Ven y cols. 2009)."
+ },
+ {
+  "id": "63f4d735-481d-4346-9d81-6e7f67c908cf",
+  "libro": "How Minds Change",
+  "titulo": "La entrevista motivacional — la tecnología del cambio sin confrontación",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "'El método clínico más empíricamente validado' es superlativo no sostenible; hay buena evidencia (meta-análisis) pero no es 'el más'.",
+    "evidencia": "Razonamiento; la EM tiene respaldo meta-analítico moderado.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "es el método clínico más empíricamente validado para producir cambio de comportamiento en personas que no están motivadas para cambiar.",
+     "nuevo": "es un método clínico con respaldo empírico sólido para producir cambio de comportamiento en personas ambivalentes ante el cambio."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Atribuye a McRaney la presentación de la EM como 'aplicación más rigurosa' de los principios del libro; no confirmado.",
+    "evidencia": "Búsqueda web sin resultados que lo respalden.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "McRaney la presenta como la aplicación más rigurosa de los principios que el libro desarrolla:",
+     "nuevo": "Comparte los principios que McRaney desarrolla en el libro:"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "'La razón neurológica' no existe como tal: es una explicación psicológica plausible, no un mecanismo neurológico demostrado.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "La razón neurológica es que articular el propio argumento para el cambio elimina la amenaza a la identidad",
+     "nuevo": "Una explicación plausible es que articular el propio argumento para el cambio reduce la amenaza a la identidad"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Sapolsky muestra que los efectos de la oxitocina dependen del contexto (favorece la prosocialidad hacia el endogrupo, no una apertura general al cambio).",
+    "evidencia": "Sapolsky, Compórtate (conocimiento sólido).",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "aumentan cuando la oxitocina está elevada y la amígdala está en estado de baja amenaza.",
+     "nuevo": "dependen del contexto; la oxitocina, por ejemplo, favorece la conducta prosocial hacia el endogrupo y no es un simple interruptor de apertura al cambio."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Afirma que la EM 'es exactamente el protocolo' que eleva la oxitocina y mantiene la amígdala desactivada: no hay evidencia; es invención de la app presentada como hecho.",
+    "evidencia": "Sin fuente; ni Sapolsky ni McRaney lo afirman.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "La entrevista motivacional es exactamente el protocolo que produce ese estado neurológico: la escucha sin juicio eleva la oxitocina de la conexión social;",
+     "nuevo": "Una hipótesis de la app (no de Sapolsky ni de McRaney) es que la entrevista motivacional favorece un estado de baja amenaza: la escucha sin juicio podría ayudar a ello;"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Continuación de la afirmación anterior: 'estado neuroquímico donde el cambio es posible'.",
+    "evidencia": "Sin fuente.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "la ausencia de confrontación mantiene la amígdala desactivada; el resultado es el estado neuroquímico donde el cambio de creencias es posible.",
+     "nuevo": "la ausencia de confrontación podría mantener baja la reactividad defensiva."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Conclusión sin respaldo ('es el protocolo que activa el estado neurológico correcto').",
+    "evidencia": "Sin fuente.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "La EM no es solo psicología — es el protocolo que activa el estado neurológico correcto para la actualización de creencias.",
+     "nuevo": ""
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "'La regla de las dos preguntas de EM' no es una regla formal de la técnica.",
+    "evidencia": "Razonamiento (Miller & Rollnick no la formulan así).",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "practica la regla de las dos preguntas de EM:",
+     "nuevo": "practica una regla inspirada en la EM (no es una regla formal de la técnica):"
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "'McRaney predice' no confirmable.",
+    "evidencia": "Sin fuente.",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "McRaney predice que la persona llegará sola a identificar las tensiones en su posición si el espacio conversacional es seguro, mucho más efectivamente que si tú las señalas desde fuera.",
+     "nuevo": "La entrevista motivacional sugiere que la persona puede identificar por sí misma las tensiones en su posición si el espacio conversacional es seguro, más a menudo que si tú las señalas desde fuera."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Miller y Rollnick y el origen en alcohol: conocimiento sólido. No pude confirmar por web que McRaney trate la EM como 'la aplicación más rigurosa' (las búsquedas no devolvieron mención). La cadena oxitocina/amígdala es especulación de la app."
+ },
+ {
+  "id": "668e7784-7d5f-4e46-992e-dfd5d23e9f0b",
+  "libro": "El Individuo Soberano",
+  "titulo": "El Estado como empresa de protección — la lógica económica de la soberanía",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "'El marco más original' y presentar la empresa de protección como núcleo del libro es exagerado; el libro se articula sobre la 'lógica de la violencia' y megapolítica, y la idea del Estado como protección está en autores previos.",
+    "evidencia": "https://bitcoinmagazine.com/culture/bitcoin-and-the-sovereign-individual-thesis ; reseñas del libro.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "El marco analítico más original de Rees-Mogg y Davidson es tratar al Estado no como una entidad política con legitimidad moral sino como una empresa de protección que opera en régimen de monopolio territorial.",
+     "nuevo": "Un marco central en la obra de Rees-Mogg y Davidson consiste en tratar al Estado, no como una entidad con legitimidad moral, sino como una organización que vende protección en régimen de monopolio territorial."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "Anacronismo: el libro (1997) no habla de 'contratos inteligentes'; atribuirlo al marco de los autores es incorrecto.",
+    "evidencia": "Búsqueda web: no aparece 'smart contracts' en las reseñas; el libro anticipa criptografía y ciberdinero.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "y si puedo resolver disputas con contratos inteligentes en lugar de tribunales",
+     "nuevo": "y si puedo resolver disputas por vías privadas en lugar de tribunales"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Mises no 'demuestra' que la competencia sea el 'único mecanismo' que haga reflejar el valor real; afirmación exagerada.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Mises en La Acción Humana demuestra que la competencia entre proveedores es el único mecanismo que garantiza que el precio de un servicio refleje su valor real.",
+     "nuevo": "Mises, en La Acción Humana, defiende que la competencia de mercado y el cálculo económico son clave para que los precios reflejen las valoraciones de los participantes."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "The Sovereign Individual es de 1997; el marco 'protección/monopolio' y la competencia entre jurisdicciones sí están en el libro (tasas de violencia, criptografía, ciberdinero). Los contratos inteligentes no aparecen. Falta objeción: varias predicciones del libro (declive del Estado-nación, papel de China/Hong Kong según el prólogo de Thiel a la edición de 2020) han fallado."
+ },
+ {
+  "id": "6ac7fa01-4313-4e9b-9b84-60be1893dc78",
+  "libro": "How Minds Change",
+  "titulo": "Por qué los argumentos no cambian mentes — la ilusión del persuasor racional",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "'Funciona exactamente al revés en la mayoría de los casos' es exagerado: McRaney sostiene que los hechos solos suelen ser insuficientes, no que sean contraproducentes.",
+    "evidencia": "Razonamiento; Wood & Porter 2019.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "a documentar por qué funciona exactamente al revés en la mayoría de los casos de creencias con carga identitaria.",
+     "nuevo": "a documentar por qué, en creencias con carga identitaria, los hechos y argumentos por sí solos suelen ser insuficientes."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "El backfire apenas se replica; la frase 'magnitud cuestionada' es demasiado suave.",
+    "evidencia": "Wood & Porter 2019, The Elusive Backfire Effect, Political Behavior.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "aunque su magnitud ha sido cuestionada en replicaciones recientes,",
+     "nuevo": "aunque las replicaciones recientes (p. ej., Wood y Porter, 2019) apenas lo encuentran,"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Interpretación de la app (Sistema 1 'defensa tribal' suprimiendo al Sistema 2) atribuida a McRaney y Kahneman; ninguno lo formula así.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "McRaney añade la dimensión social: las creencias con carga identitaria activan específicamente el Sistema 1 de defensa tribal, haciendo que el análisis racional del Sistema 2 no solo sea difícil sino activamente suprimido por la activación defensiva.",
+     "nuevo": "Esta es una lectura de la app, no una tesis literal de Kahneman: las creencias con carga identitaria podrían activar respuestas defensivas rápidas que dificultan el análisis deliberado."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Prescripción derivada de la lectura anterior.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "El cambio de creencias genuino requiere desactivar primero el Sistema 1 defensivo antes de que el Sistema 2 analítico tenga acceso a la evidencia.",
+     "nuevo": "Según esta lectura, reducir primero la amenaza defensiva facilitaría el análisis deliberado."
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "DUDA",
+    "problema": "No se puede confirmar que McRaney 'generalice' el backfire; la afirmación sobre el autor es dudosa.",
+    "evidencia": "Búsqueda web sin respaldo.",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "McRaney generaliza el fenómeno del backfire y la resistencia al cambio más de lo que la evidencia actual justifica.",
+     "nuevo": "Conviene no generalizar el fenómeno del backfire ni la resistencia al cambio: la evidencia actual muestra efectos mucho más débiles y dependientes del contexto."
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "'McRaney predice... dramáticamente' sin fuente.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "McRaney predice que el cambio de actitud de confrontación a curiosidad altera dramáticamente la receptividad de la otra persona",
+     "nuevo": "McRaney sugiere que pasar de la confrontación a la curiosidad puede aumentar la receptividad de la otra persona"
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "No pude contrastar por web la postura exacta de McRaney sobre el backfire; sí consta que replicaciones a gran escala (Wood & Porter 2019) casi no lo encuentran."
+ },
+ {
+  "id": "6bad66ef-0b3d-40f6-b4d5-b2dcb4e6d635",
+  "libro": "Cómo Hablar con Cualquiera",
+  "titulo": "El principio unificador — hacer que los demás se sientan alguien especial",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "El 'hallazgo central tras años estudiando' no es verificable; presenta como investigación lo que es observación personal de la autora.",
+    "evidencia": "Sin fuente.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Lowndes documenta su hallazgo central tras años estudiando a los comunicadores más admirados y carismáticos: ninguno de ellos era el más inteligente, el más guapo ni el más educado de su entorno.",
+     "nuevo": "Según Lowndes, lo que distingue a los comunicadores más admirados no es ser los más inteligentes, guapos o educados de su entorno."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "El 'gran bebé' está ligado a una técnica concreta (Big-Baby Pivot: girar el cuerpo hacia el interlocutor), no es 'el mecanismo de todas las técnicas'.",
+    "evidencia": "Resúmenes del libro (fuentes secundarias de baja fiabilidad).",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "El mecanismo psicológico que subyace a todas las técnicas del libro es precisamente este: enterrado en cada adulto hay un gran bebé que necesita reconocimiento de su singularidad.",
+     "nuevo": "Lowndes recurre a la imagen de un gran bebé que hay en cada adulto y que necesita atención (base de su técnica del Big-Baby Pivot)."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Descripción metodológica ('observación directa', microcomportamientos medidos) no verificada; el libro es una colección de trucos de autoayuda sin metodología científica.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Lowndes construye su metodología sobre la observación directa de líderes, vendedores, políticos y comunicadores exitosos, identificando los microcomportamientos específicos que producen este efecto:",
+     "nuevo": "Las técnicas del libro son comportamientos concretos que, según Lowndes, producen este efecto:"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "'Operan por debajo del nivel consciente' no tiene respaldo.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "aprendibles que operan por debajo del nivel consciente del interlocutor.",
+     "nuevo": "aprendibles."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Schafer (Like Switch) presenta señales de amistad (cejas, inclinación de cabeza, sonrisa); decir que son 'casi idénticas' y 'el mismo mecanismo' a Lowndes es exagerado; la 'sonrisa demorada' es de Lowndes.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "documenta exactamente el mismo mecanismo",
+     "nuevo": "aborda un mecanismo parecido"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Ver anterior.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "los indicadores de amistad que activan la percepción de que alguien es seguro y afín son casi idénticos a las técnicas de Lowndes — elevación de cejas, inclinación de cabeza, sonrisa demorada, postura abierta.",
+     "nuevo": "sus indicadores de amistad (como la elevación de cejas, la inclinación de cabeza y la sonrisa) se solapan en parte con algunas técnicas de Lowndes."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Ver anterior.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Ambos libros llegan al mismo conjunto de comportamientos desde direcciones opuestas.",
+     "nuevo": "Ambos libros apuntan a comportamientos parecidos desde perspectivas distintas."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "La dicotomía 'Here I am / There you are' aparece en el libro según descripciones de editorial, pero la frase es anterior (circula atribuida a otros autores). No pude acceder al texto del libro. autores_relacionados incluye Csikszentmihalyi y McGilchrist sin apoyo en el texto."
+ },
+ {
+  "id": "70f95de8-6337-4ea5-8e46-1065e975ea2b",
+  "libro": "La Trampa del Confort",
+  "titulo": "El confort crónico es el desajuste evolutivo que explica la epidemia de debilidad moderna",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "titulo",
+    "severidad": "DUDA",
+    "problema": "'Explica la epidemia de debilidad moderna' sobreatribuye causalidad; el desajuste evolutivo es una hipótesis que contribuye, no explica por sí sola.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "titulo",
+     "antiguo": "El confort crónico es el desajuste evolutivo que explica la epidemia de debilidad moderna",
+     "nuevo": "El confort crónico como desajuste evolutivo que contribuye a la debilidad moderna"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "El término 'problema de la comodidad crónica' no se confirma; el libro se titula The Comfort Crisis y usa 'comfort creep'.",
+    "evidencia": "https://www.booksthatslay.com/the-comfort-crisis-summary/",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Easter denomina a este fenómeno el \"problema de la comodidad crónica\", y su argumento central",
+     "nuevo": "Easter lo llama la «crisis de la comodidad» (The Comfort Crisis), y su argumento central"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "'Se atrofian cuando el estrés desaparece por completo' es demasiado fuerte.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "se atrofian cuando el estrés desaparece por completo.",
+     "nuevo": "pueden debilitarse cuando desaparece por completo el estrés."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Afirma que HPA, glucosa e inmune 'requieren perturbación periódica' como mecanismo establecido; solo está bien establecido para músculo, hueso y sistema cardiovascular.",
+    "evidencia": "Razonamiento (fisiología del ejercicio).",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "el metabolismo de la glucosa, el propio sistema inmune: todos requieren perturbación periódica para mantener su capacidad funcional.",
+     "nuevo": "el metabolismo de la glucosa, el sistema inmune: en distintos grados se adaptan a la demanda que reciben, y algunos (como el músculo, el hueso o el sistema cardiovascular) se deterioran sin estímulo."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Causalidad directa del confort con obesidad, ansiedad, etc. sin matices.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "El resultado es la epidemia de enfermedades metabólicas, la obesidad, la ansiedad crónica de baja intensidad, la incapacidad para tolerar frustración o incomodidad menores que Easter documenta como la patología de la sobreabundancia.",
+     "nuevo": "Según Easter, esta falta de incomodidad contribuye a problemas como las enfermedades metabólicas, la obesidad, la ansiedad y una menor tolerancia a la frustración o a la incomodidad."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Búsqueda web: Easter usa 'comfort creep', hormesis, misogi; no confirmé el término 'problema de la comodidad crónica'. Reseñas critican el carácter individual del consejo. autores_relacionados incluye Taleb, Csikszentmihalyi y Harpur sin base en el texto."
+ },
+ {
+  "id": "7136a511-884f-4fea-9dd7-cd0d4a9e7bab",
+  "libro": "The How of Happiness",
+  "titulo": "Relaciones, Flujo y Objetivos: Los Pilares de la Felicidad Activa",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "Lyubomirsky describe 12 actividades y no identifica tres como las 'más potentes'.",
+    "evidencia": "Conocimiento sólido del libro; lista de 12 actividades.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Lyubomirsky identifica tres dominios de actividad intencional que producen los efectos más potentes sobre el bienestar sostenido:",
+     "nuevo": "Entre las 12 actividades intencionales que describe Lyubomirsky (cuya eficacia, según ella, depende del ajuste con cada persona), tres dominios son especialmente relevantes para el bienestar sostenido:"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "'El predictor más consistente en toda la literatura' es superlativo no sostenible (la salud y otros factores también predicen bienestar).",
+    "evidencia": "Diener & Seligman 2002 (relaciones necesarias, no únicas).",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Las relaciones sociales son el predictor más consistente de bienestar subjetivo en toda la literatura psicológica.",
+     "nuevo": "Las relaciones sociales están entre los predictores más consistentes del bienestar subjetivo."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Comparación 'con más fiabilidad que ingresos, salud o estatus' atribuida a Lyubomirsky no confirmada.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Lyubomirsky documenta que la cantidad y calidad de las relaciones sociales predicen la felicidad con más fiabilidad que los ingresos, la salud o el estatus profesional.",
+     "nuevo": "Lyubomirsky señala que la cantidad y calidad de las relaciones sociales se asocian de forma consistente con la felicidad, más que los ingresos."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "'Dedican más tiempo a nutrir relaciones existentes que a buscar nuevas experiencias individuales' sin fuente.",
+    "evidencia": "Sin fuente.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Las personas más felices dedican más tiempo a nutrir relaciones existentes que a buscar nuevas experiencias individuales.",
+     "nuevo": "Las personas más felices suelen pasar menos tiempo solas y más tiempo con amigos y familia."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Waldinger: el Harvard Study (Vaillant/Waldinger) halló que la satisfacción con las relaciones a los 50 se asocia con mejor salud a los 80; no que prediga la 'felicidad mejor que cualquier otro factor'; y es 'uno de los' estudios más largos.",
+    "evidencia": "Waldinger, TED 2015 (conocimiento sólido, no verificado por web).",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "el estudio longitudinal más largo de la historia confirma que la calidad de las relaciones a los 50 predice la salud y felicidad a los 80 mejor que cualquier otro factor.",
+     "nuevo": "uno de los estudios longitudinales más largos de la historia encontró que la satisfacción con las relaciones a los 50 años se asociaba con mejor salud a los 80."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Newport (Deep Work) no prescribe reducir las relaciones sociales sino la conectividad superficial y las distracciones.",
+    "evidencia": "Conocimiento sólido de Deep Work.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Newport prescribe reducir las relaciones sociales y la conectividad para maximizar la productividad",
+     "nuevo": "Newport prescribe reducir la conectividad superficial (redes sociales, correo, distracciones) para maximizar el trabajo profundo"
+    }
+   }
+  ],
+  "preguntas": [
+   {
+    "pregunta_id": "a47ed17a-80f3-420f-afe6-2aed7fa1c3f8",
+    "estado": "ambigua"
+   }
+  ],
+  "notas": "Lyubomirsky enumera 12 actividades; no jerarquiza tres como 'más potentes' (insiste en el ajuste persona-actividad). Waldinger/Vaillant: la satisfacción con las relaciones a los 50 se asoció con salud a los 80; no 'felicidad mejor que cualquier otro factor'. Contradice la lección de gratitud/optimismo. Pregunta: la opción correcta (relaciones) es defendible, pero el enunciado 'el predictor más consistente según toda la literatura' y la comparación con 'salud' son demasiado fuertes; reformular como 'uno de los predictores más consistentes'."
+ },
+ {
+  "id": "7523ecb9-b1c3-4285-b08b-2e7bfb1c59e5",
+  "libro": "The Dip",
+  "titulo": "El Dip: El Valle Que Separa a los Mejores del Resto",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Los ejemplos del Cliff (adicciones, esquemas Ponzi) no son confirmables como ejemplos de Godin.",
+    "evidencia": "Sin acceso al texto.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "hasta que colapsan catastróficamente, como las adicciones o los esquemas Ponzi.",
+     "nuevo": "hasta que colapsan de golpe."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "La meseta de Ericsson (desarrollo detenido por automatización) se parece al Dip pero no es 'exactamente' lo mismo.",
+    "evidencia": "Ericsson, Peak (conocimiento sólido).",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "es exactamente el Dip aplicado al desarrollo de habilidades",
+     "nuevo": "se parece al Dip aplicado al desarrollo de habilidades"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "DeMarco no usa el concepto de Cul-de-Sac; es lectura de la app.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "DeMarco argumenta que ciertos caminos (el Slowlane) son Cul-de-Sacs disfrazados de Dips",
+     "nuevo": "DeMarco argumenta que el Slowlane es un camino lento y poco fiable hacia la riqueza, lo que podría leerse (lectura de la app) como un Cul-de-Sac disfrazado de Dip"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "La meseta del potencial latente de Clear es una metáfora del cambio gradual (hielo que se funde), no 'neurociencia de la formación de hábitos'.",
+    "evidencia": "Atomic Habits (conocimiento sólido).",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "es el Dip de Godin descrito desde la neurociencia de la formación de hábitos.",
+     "nuevo": "se parece al Dip de Godin, descrito desde la psicología de los hábitos."
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "DUDA",
+    "problema": "No se puede confirmar que Godin no aborde el sesgo de supervivencia.",
+    "evidencia": "Sin acceso al texto.",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "un sesgo de supervivencia que Godin no aborda:",
+     "nuevo": "un sesgo de supervivencia que conviene tener presente:"
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Dip, Cul-de-Sac y Cliff son de Godin; no pude confirmar por web los ejemplos del Cliff. Las conexiones con Ericsson, Taleb, DeMarco y Clear son paralelismos de la app."
+ },
+ {
+  "id": "79856b54-23e0-4fee-b907-a304bad064a2",
+  "libro": "In Sheep's Clothing",
+  "titulo": "El contexto cultural: por qué la sociedad moderna facilita a los manipuladores",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "'Simon cierra el libro con...' y los tres factores culturales no se pueden confirmar en el texto de Simon.",
+    "evidencia": "Descripciones de editorial: permisividad y cultura del derecho; resto sin confirmar.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Simon cierra el libro con una reflexión estructural que trasciende el nivel individual.",
+     "nuevo": "Simon, en su análisis, apunta a factores culturales que van más allá del nivel individual."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Strauss y Howe no hablan de manipuladores ni de 'valores de confrontación directa'; su teoría de ciclos generacionales es además muy discutida. La convergencia con Simon es invención de la app.",
+    "evidencia": "Razonamiento (The Fourth Turning).",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "los ciclos generacionales de fortaleza y debilidad institucional crean períodos donde los valores de confrontación directa y responsabilidad personal se erosionan sistemáticamente.",
+     "nuevo": "su teoría de ciclos generacionales (de validez muy discutida) sitúa épocas de debilitamiento institucional, aunque no habla de manipuladores ni de agresión encubierta."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Ver anterior: marco y recomendación no son de Strauss-Howe ni de Simon.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Simon describe el fenómeno psicológico individual; Strauss-Howe proporciona el marco histórico que explica por qué este fenómeno se intensifica en ciertos momentos del ciclo civilizacional.",
+     "nuevo": "Es un paralelismo de la app, no una tesis de ninguno de los dos autores."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Ver anterior.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Ambos convergen en que la recuperación requiere un reajuste cultural hacia valores de responsabilidad y consecuencia.",
+     "nuevo": ""
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "'Simon sugiere que la incomodidad de confrontar es casi siempre menor...' no confirmable.",
+    "evidencia": "Sin fuente.",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "Simon sugiere que la incomodidad de confrontar directamente es casi siempre menor que el coste acumulado de no hacerlo.",
+     "nuevo": "Pregúntate si la incomodidad de confrontar directamente es menor que el coste acumulado de no hacerlo."
+    }
+   }
+  ],
+  "preguntas": [
+   {
+    "pregunta_id": "8ea3e1cc-840b-4e34-bc7c-0511a8c47222",
+    "estado": "ok"
+   },
+   {
+    "pregunta_id": "130b8b6d-fb59-430d-97bb-7a0617f6705d",
+    "estado": "ok"
+   }
+  ],
+  "notas": "No pude confirmar que el libro cierre con este análisis ni que los tres factores sean de Simon; las descripciones de editorial sí mencionan una cultura de permisividad y derecho. Los resúmenes confirman el victimismo como táctica de agresores encubiertos. Ambas preguntas son coherentes con el texto de la lección; su validez depende de que los factores sean de Simon."
+ },
+ {
+  "id": "7c051b7d-9b49-430f-84bb-709acdc2b93c",
+  "libro": "The Master and His Emissary",
+  "titulo": "El hemisferio izquierdo ha usurpado el control",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "'Pero sí el primero' es una afirmación de prioridad que no puede sostenerse.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "pero sí el primero en articularla como una diferencia ontológica",
+     "nuevo": "pero la articula como una diferencia ontológica"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "'La evidencia neurocientífica es sólida' sobre contexto, ironía y metáfora es exagerado; las asimetrías existen pero la evidencia por función es desigual.",
+    "evidencia": "Razonamiento (neuropsicología del hemisferio derecho).",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "La evidencia neurocientífica es sólida: pacientes con lesiones hemisféricas derechas pierden la capacidad de captar contexto, ironía, metáfora y relaciones implícitas.",
+     "nuevo": "La clínica muestra asimetrías reales: pacientes con lesiones en el hemisferio derecho suelen tener dificultades con el contexto, la ironía, la metáfora y las relaciones implícitas (aunque la evidencia sobre cada función es desigual)."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "'Correlatos medibles' en educación, medicina, economía y derecho: es tesis interpretativa de McGilchrist, no medición.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Esta usurpación no es una metáfora psicológica: tiene correlatos medibles en cómo las sociedades organizan la educación, la medicina, la economía y el derecho.",
+     "nuevo": "Para McGilchrist, esta usurpación se refleja en cómo las sociedades organizan la educación, la medicina, la economía y el derecho (una tesis interpretativa, no una medición)."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Lo mismo: 'son el síntoma de una dominancia hemisférica'.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "son el síntoma civilizacional de una dominancia hemisférica izquierda operando sin el contrapeso del derecho.",
+     "nuevo": "serían, según McGilchrist, el síntoma civilizacional de un predominio del modo de atención izquierdo sin el contrapeso del derecho."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Huxley (siguiendo a Bergson) habla del cerebro como válvula reductora; no es 'el mismo fenómeno'.",
+    "evidencia": "Las puertas de la percepción.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Huxley describe el mismo fenómeno desde la experiencia: el cerebro como filtro reductor.",
+     "nuevo": "Huxley, siguiendo a Bergson, describe el cerebro como válvula reductora de la conciencia; es un paralelismo con McGilchrist, no la misma tesis."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Interpretación de la app (Tao Te King = manual del hemisferio derecho).",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "El Tao Te King es el manual operativo del hemisferio derecho — Wu Wei",
+     "nuevo": "El Tao Te King puede leerse (lectura de la app) como afín al modo de atención derecho — Wu Wei"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Gladwell (Blink) no asocia intuición con hemisferios; es la app quien lo hace.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Gladwell documenta casos donde el juicio rápido del experto (derecho) supera al análisis deliberado (izquierdo).",
+     "nuevo": "Gladwell (Blink) documenta casos donde el juicio rápido del experto supera al análisis deliberado; asociarlo con los hemisferios es una lectura de la app, no de Gladwell."
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "McGilchrist no formula esa predicción; es invención de la app.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "La hipótesis de McGilchrist predice que el paso previo de apertura derecha mejora el análisis izquierdo posterior.",
+     "nuevo": "Es un experimento personal inspirado en McGilchrist, no una predicción formulada por él."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "La autocorrección es sólida. Falta mencionar que la visión 'cerebro izquierdo/derecho' tiene escaso apoyo en estudios de conectividad (Nielsen et al. 2013) y que la neurociencia de McGilchrist es criticada como selectiva. autores_relacionados incluye Hofstadter sin base en el texto."
+ },
+ {
+  "id": "83f3e1ef-1f3a-4d13-b811-70065f9788fd",
+  "libro": "Prometeo Ascendiendo",
+  "titulo": "El Modelo como Herramienta: Relativismo Crítico y Libertad Cognitiva",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Cita entrecomillada atribuida a Wilson no verificable; 'el mapa no es el territorio' es de Korzybski.",
+    "evidencia": "Sin fuente localizada.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Wilson lo socava deliberadamente: \"Todos los modelos están sujetos a revisión. El mapa no es el territorio.\"",
+     "nuevo": "Wilson lo socava deliberadamente, recordando (con Korzybski) que los modelos son revisables y que el mapa no es el territorio."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "Afirma que el modelo 'genera predicciones útiles'; el modelo de ocho circuitos es especulativo y no ha generado predicciones contrastadas.",
+    "evidencia": "Razonamiento: modelo heredado de Leary, sin validación empírica.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "sino porque genera predicciones útiles, abre preguntas que el pensamiento ordinario no formula",
+     "nuevo": "sino porque, según Wilson, abre preguntas que el pensamiento ordinario no formula"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "'Pragmatismo americano' como herencia de Wilson no confirmada; 'hace imposible el fanatismo' es exagerado.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "que Wilson hereda de Korzybski y de la tradición del pragmatismo americano,",
+     "nuevo": "que Wilson hereda sobre todo de Korzybski,"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Exageración.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "hace imposible el fanatismo, dificulta la demagogia, y obliga a vivir con",
+     "nuevo": "reduce el riesgo de fanatismo y obliga a vivir con"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "La lectura del mito de Prometeo ('sin intermediarios') y la equivalencia fuego = reprogramar el cerebro son glosas de la app.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Prometeo robó el fuego de los dioses no para destruirlos sino para que los humanos dejaran de necesitar intermediarios entre ellos y el conocimiento.",
+     "nuevo": "En el mito, Prometeo roba el fuego de los dioses para entregárselo a los humanos."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Ver anterior.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Wilson propone que ese fuego es ahora la capacidad de reprogramar el propio cerebro.",
+     "nuevo": "La lectura de la app es que, en el libro, ese fuego equivale a la capacidad de reprogramar el propio cerebro."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Paralelismo de la app presentado como identidad.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "el superpronosticador de Tetlock es exactamente el tipo de operador de múltiples realidades-túnel que Wilson describe.",
+     "nuevo": "el superpronosticador de Tetlock se parece al operador de múltiples realidades-túnel que Wilson describe (paralelismo de la app)."
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "DUDA",
+    "problema": "Falta la objeción principal: el modelo de ocho circuitos carece de validación neurocientífica.",
+    "evidencia": "Razonamiento (conocimiento sólido).",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "Wilson sugiere esto pero no lo articula con la claridad necesaria.",
+     "nuevo": "Wilson sugiere esto pero no lo articula con la claridad necesaria. Además, el modelo de ocho circuitos (heredado de Timothy Leary) no es un modelo neurocientífico validado: sus afirmaciones sobre el cerebro son especulativas y difícilmente falsables."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Falta la objeción principal: el modelo de ocho circuitos (de Leary) no está validado neurocientíficamente. No pude comprobar la cita literal ni la referencia a 'ontologista guerrillero' en este libro (Wilson usó 'guerrilla ontology' en otras obras). El título original es Prometheus Rising."
+ },
+ {
+  "id": "85337aed-d416-441d-83bf-70853bf7b82d",
+  "libro": "The Obesity Code",
+  "titulo": "Rompiendo Mitos: Las Objeciones al Ayuno Intermitente",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "Afirma que los estudios muestran 'consistentemente' mayor preservación de masa magra que la restricción continua; las revisiones sistemáticas no hallan ventaja clara del ayuno intermitente.",
+    "evidencia": "Revisiones sistemáticas (Cioffi 2018, Headland 2016): pérdida de peso/composición similar.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Los estudios de composición corporal en protocolos de ayuno intermitente muestran consistentemente pérdida de grasa con preservación de masa magra superior a la que produce la restricción calórica continua.",
+     "nuevo": "Algunos estudios de composición corporal en protocolos de ayuno intermitente muestran pérdida de grasa con preservación de masa magra, pero las revisiones sistemáticas no encuentran una ventaja clara sobre la restricción calórica continua."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "'Miles de pacientes' no verificable.",
+    "evidencia": "Sin fuente.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "con la precisión del clínico que ha visto sus efectos en miles de pacientes y con referencia a la evidencia disponible.",
+     "nuevo": "con el enfoque de un clínico que lo ha aplicado en su práctica y con referencia a la evidencia que él considera relevante."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "El efecto protector de la GH sobre el músculo es argumento de Fung, no hecho establecido.",
+    "evidencia": "https://thefastingmethod.com/?p=2362 (fuente de Fung).",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "tiene efecto protector de la masa muscular durante el ayuno.",
+     "nuevo": "tendría, según Fung, un efecto protector de la masa muscular durante el ayuno."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "'2-4 semanas' de adaptación como hecho sin fuente.",
+    "evidencia": "Sin fuente.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "que la mayoría de las personas alcanzan en 2-4 semanas de práctica consistente,",
+     "nuevo": "que, según Fung, muchas personas alcanzan tras varias semanas de práctica consistente,"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Taubes (GCBC) trata la hipótesis dieta-corazón/carbohidratos; extender su patrón al ayuno es de la app.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "las intervenciones que contradicen el consenso calórico son sistemáticamente evaluadas con estándares más exigentes que las intervenciones que lo confirman.",
+     "nuevo": "Taubes sostiene que el consenso dietético se aceptó con estándares de evidencia más laxos que los exigidos a hipótesis alternativas."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Atribuye a Deutsch un argumento inventado y a Kuhn una 'inercia de paradigma' que Deutsch rechaza; además la resistencia del establishment no es evidencia a favor.",
+    "evidencia": "Razonamiento; Deutsch critica a Kuhn.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Deutsch (El Comienzo del Infinito) añadiría que la resistencia a una hipótesis bien fundamentada por parte del establishment no es evidencia en su contra — es evidencia del mecanismo de inercia de paradigma que Kuhn documenta en las revoluciones científicas.",
+     "nuevo": ""
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "La pauta de reducir carbohidratos 2-4 semanas antes y 'el orden importa' no está respaldada con evidencia sólida.",
+    "evidencia": "Sin fuente.",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "La transición a una dieta baja en carbohidratos 2-4 semanas antes de introducir el ayuno hace la adaptación significativamente más suave porque reduce la dependencia de glucosa antes de eliminar su aporte. El orden importa: primero reducir carbohidratos, después extender el ayuno.",
+     "nuevo": "Algunas personas encuentran que reducir antes los carbohidratos hace más llevadera la adaptación al ayuno, aunque la evidencia sólida de que el orden importe es limitada."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Búsqueda web (páginas afines a Fung) confirma los argumentos de Fung sobre músculo, GH e hipoglucemia, pero no evidencia independiente. No pude confirmar que el libro tenga un capítulo dedicado a esto. Faltan objeciones: ensayos aleatorizados (p. ej. TREAT 2020) muestran poco o ningún beneficio de la alimentación en ventana frente al control, y riesgos en diabéticos con medicación, embarazo y trastornos alimentarios."
+ },
+ {
+  "id": "8a5455bd-9bec-4b61-948f-69d50d78305f",
+  "libro": "Burlar al Diablo",
+  "titulo": "La deriva es el enemigo principal del ser humano — no el fracaso",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "El mecanismo de Hill es el 'ritmo hipnótico' del hábito; la explicación de inercia cognitiva/ahorro de energía cerebral es de la app, presentada como de Hill.",
+    "evidencia": "Conocimiento sólido del libro.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "El mecanismo que Hill describe es sorprendentemente moderno: la inercia cognitiva. El cerebro humano está diseñado para conservar energía, y pensar con propósito definido consume mucha más energía que dejarse llevar por el hábito y las circunstancias.",
+     "nuevo": "Hill lo explica mediante el «ritmo hipnótico» del hábito, que arrastra a la persona; una lectura moderna (de la app, no de Hill) lo relaciona con la tendencia del cerebro a ahorrar esfuerzo cognitivo y dejarse llevar por el hábito y las circunstancias."
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "'Condición necesaria para perder el control' es paráfrasis exagerada de Hill.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "es el estado que Hill identifica como la condición necesaria para perder el control de tu propia dirección.",
+     "nuevo": "es, en la lógica de Hill, una forma de deriva."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Steel 2007 (Psychological Bulletin) es real; el 98 % es cifra de Hill (ya señalada como arbitraria). Burlar al Diablo se escribió en 1938 y se publicó en 2011."
+ },
+ {
+  "id": "8eb2e1d6-c70a-42d0-a3a8-80ac7af52b51",
+  "libro": "Verbal Judo",
+  "titulo": "El principio del judo verbal: responder, no reaccionar",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "La metáfora del 'collar del perro policía' no se encuentra; el concepto documentado de Thompson es la 'cara profesional' (professional face).",
+    "evidencia": "https://www.policemag.com/338757/verbal-judo-talk-your-way-through-confrontations ; resúmenes del método.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Thompson usa la metáfora del collar del perro policía: con el collar puesto estás en modo profesional, con reglas claras que no dependen del humor del momento; sin el collar eres tú mismo. La comunicación táctica requiere ponerse el collar antes de cualquier interacción difícil.",
+     "nuevo": "Thompson habla de adoptar una «cara profesional» (professional face) en lugar de una cara personal: en modo profesional actúas con reglas claras que no dependen del humor del momento. La comunicación táctica requiere adoptar esa cara profesional antes de cualquier interacción difícil."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "'Tres principios organizan todo el sistema' no confirmable.",
+    "evidencia": "Sin fuente.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Tres principios organizan todo el sistema.",
+     "nuevo": "Entre las ideas centrales del libro destacan tres."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "La 'paradoja que Thompson identifica' sobre el ego de quienes están en posiciones de autoridad no es verificable.",
+    "evidencia": "Sin fuente.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "La paradoja que Thompson identifica:",
+     "nuevo": "Una paradoja (planteamiento de la app):"
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Búsqueda web confirma 'professional face' y la idea de redirigir la energía; no halló la metáfora del collar de perro policía ni los 'tres principios'. El vínculo con Kahneman está declarado como no usado por Thompson."
+ },
+ {
+  "id": "91eae481-626f-42d3-82cb-09bf63c356b8",
+  "libro": "How Minds Change",
+  "titulo": "La disonancia cognitiva — el motor oculto del cambio y del autoengaño",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "El mecanismo del deep canvassing documentado (Kalla y Broockman) es la toma de perspectiva analógica, no 'crear disonancia'; para la EM la discrepancia sí es un elemento teórico.",
+    "evidencia": "https://www.pbs.org/newshour/science/face-to-face-canvassing-reduces-transgender-prejudice-study-says",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "funcionan precisamente porque crean disonancia entre las creencias actuales y los propios valores del interlocutor",
+     "nuevo": "se han explicado en parte como formas de hacer visible la discrepancia entre las creencias actuales y los propios valores del interlocutor"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Paralelismo de la app presentado como identidad de proceso.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "La psicología de McRaney y la epistemología de Deutsch describen el mismo proceso a niveles diferentes.",
+     "nuevo": "Es un paralelismo de la app entre psicología y epistemología, no una tesis de McRaney ni de Deutsch."
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "'McRaney predice' no confirmable.",
+    "evidencia": "Sin fuente.",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "McRaney predice que el patrón de racionalización que emerge es más revelador sobre tus verdaderas creencias y valores que las creencias que declaras sostener.",
+     "nuevo": "Es un ejercicio de autoobservación inspirado en la teoría de la disonancia; no es una predicción formulada por McRaney."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Festinger 1957 y la crítica a estudios clásicos: conocimiento sólido. No pude confirmar que McRaney trate la disonancia como motor de cambio en los términos descritos."
+ },
+ {
+  "id": "94a66863-9489-4dda-9a3f-b93746341707",
+  "libro": "Dinero, Crédito Bancario y Ciclos Económicos",
+  "titulo": "La teoría austriaca del ciclo económico — Boom, malinversión y crisis",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "No se puede confirmar que Huerta de Soto estructure el ciclo en exactamente 'cinco fases precisas'.",
+    "evidencia": "Sin acceso al texto.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "En su formulación de Huerta de Soto, el ciclo se desarrolla en fases precisas.",
+     "nuevo": "Una presentación de la teoría, siguiendo a Huerta de Soto, ordena el ciclo en fases (el número y el nombre varían según el autor)."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Afirmaciones normativas/empíricas presentadas como hechos (la liquidación es la solución; la recuperación libre es rápida; intervenir prolonga).",
+    "evidencia": "Posición austriaca, discutida.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Esta liquidación no es el problema sino la solución necesaria:",
+     "nuevo": "Para los austriacos, esta liquidación no es el problema sino la solución necesaria:"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Ver anterior.",
+    "evidencia": "Posición austriaca, discutida.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Si el mercado opera libremente, la recuperación es relativamente rápida.",
+     "nuevo": "Según esta teoría, si el mercado opera libremente, la recuperación es relativamente rápida."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Ver anterior.",
+    "evidencia": "Posición austriaca, discutida.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Si el gobierno intenta detener la crisis con nueva expansión crediticia, prolonga la agonía y siembra la semilla del siguiente ciclo.",
+     "nuevo": "Si el gobierno intenta detener la crisis con nueva expansión crediticia, prolongaría la agonía y sembraría la semilla del siguiente ciclo, según esta teoría."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Huerta de Soto 'síntesis más completa' es opinión; el énfasis propio es el análisis jurídico del depósito bancario.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Huerta de Soto ofrece la síntesis más completa, añadiendo el análisis jurídico que los predecesores habían dejado implícito.",
+     "nuevo": "Huerta de Soto ofrece su propia síntesis, con especial énfasis en el análisis jurídico del depósito bancario."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Hayek compartió el Nobel de 1974 con Myrdal por su obra sobre dinero y fluctuaciones; 'le valió' es simplificación.",
+    "evidencia": "Nobel 1974 (conocimiento sólido).",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "que le valió el Nobel en 1974",
+     "nuevo": "con la que está asociado su Nobel de 1974"
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "DUDA",
+    "problema": "Atribuir la objeción de expectativas racionales a Lucas es imprecisa; la formulan críticos de la teoría en general.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "Lucas y los teóricos de las expectativas racionales han planteado esta objeción con fuerza.",
+     "nuevo": "Críticos desde la teoría de las expectativas racionales han planteado esta objeción con fuerza."
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "Indicadores presentados como señales fiables; no son parte canónica de la teoría ni tienen respaldo predictivo.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "Las señales clave en el boom tardío son: crédito creciendo por encima del PIB nominal, tipos reales negativos, sobreinversión en bienes de capital y activos reales, inversión de la curva de tipos.",
+     "nuevo": "Algunas señales que los seguidores de esta teoría suelen vigilar en un boom tardío son: crédito creciendo por encima del PIB nominal, tipos reales bajos o negativos y sobreinversión en bienes de capital y activos reales; no son señales de predicción fiables."
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "Consejo de inversión sin respaldo empírico.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "En tus inversiones, reduce exposición a los sectores más capital-intensivos cuando identifiques señales de fase tardía del boom.",
+     "nuevo": "Ten en cuenta que usar esta teoría para operar en los mercados no tiene respaldo empírico sólido."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Hayek Nobel 1974, Precios y Producción 1931, Mises 1912 y Rothbard 1963: correctos (conocimiento sólido). La lección expone la TACE sin contrastarla con la visión dominante: es teoría minoritaria con evidencia empírica discutida; falta esa objeción general."
+ },
+ {
+  "id": "998b722b-5f74-469c-9f22-7aa35a6f08c9",
+  "libro": "Mindset Secrets for Winning",
+  "titulo": "La Autoimagen del Campeón: El Termostato Interno del Rendimiento",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "El ejemplo numérico del golfista no se pudo verificar.",
+    "evidencia": "Búsqueda web sin resultados.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Minervini lo ilustra con el ejemplo del golfista amateur que juega habitualmente entre 86 y 115.",
+     "nuevo": "El libro lo ilustra con el ejemplo de un golfista amateur que juega habitualmente en un rango de puntuaciones."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Ver anterior.",
+    "evidencia": "Búsqueda web sin resultados.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "programado para el rango 86-115",
+     "nuevo": "programado para su rango habitual"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "'Mecánica precisa y verificable' sobreestima el modelo: es una hipótesis popular, no una mecánica verificada.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "como un termostato interno de rendimiento con una mecánica precisa y verificable.",
+     "nuevo": "como un modelo de termostato interno de rendimiento, una hipótesis más que una mecánica verificada."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Presenta como establecido que una autoimagen por encima de la habilidad rinde mejor bajo presión.",
+    "evidencia": "Sin evidencia localizada.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "La implicación contraintuitiva es que una autoimagen por encima del nivel de habilidad actual produce mejores resultados bajo presión que una autoimagen perfectamente calibrada con la habilidad real.",
+     "nuevo": "Según Minervini, una autoimagen algo por encima del nivel de habilidad actual podría producir mejores resultados bajo presión que una autoimagen perfectamente calibrada con la habilidad real (idea no probada empíricamente)."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Buzsáki (Rhythms of the Brain) no trata la autoimagen: es atribución inventada.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Buzsáki: los patrones oscilatorios establecidos como el sustrato neurológico de la autoimagen — las redes que se activan automáticamente bajo presión.",
+     "nuevo": ""
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "El flow de Csikszentmihalyi depende del equilibrio reto-habilidad, no de la alineación autoimagen-habilidad.",
+    "evidencia": "Csikszentmihalyi, Fluir (conocimiento sólido).",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "la zona de flow como el estado donde la autoimagen y la habilidad están perfectamente alineadas",
+     "nuevo": "la zona de flow como el estado donde el reto y la habilidad están equilibrados"
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "DUDA",
+    "problema": "Se dice que el modelo 'tiene respaldo empírico en la psicología deportiva'; lo respaldado es la relación confianza (autoeficacia)-rendimiento, no el termostato.",
+    "evidencia": "Bandura (conocimiento sólido).",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "El modelo del termostato de rendimiento de Minervini tiene respaldo empírico en la psicología deportiva, pero la prescripción",
+     "nuevo": "La autoeficacia se asocia con el rendimiento en psicología deportiva, pero el modelo del termostato de Minervini no está probado como tal, y la prescripción"
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "El riesgo especial tras nuevos máximos es hipótesis del modelo, no hecho demostrado.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "Anticipar el período de mayor riesgo de errores de ejecución justo después de alcanzar nuevos máximos en la cuenta",
+     "nuevo": "Estar atento a posibles errores de ejecución tras alcanzar nuevos máximos en la cuenta (hipótesis del modelo, no un hecho demostrado)"
+    }
+   }
+  ],
+  "preguntas": [
+   {
+    "pregunta_id": "4b987d28-6b4e-4686-88b7-63517cc4d1e8",
+    "estado": "ok"
+   },
+   {
+    "pregunta_id": "aacec111-5ead-4606-8050-b6055b27ec8a",
+    "estado": "clave_mala",
+    "correccion": {
+     "pregunta_id": "aacec111-5ead-4606-8050-b6055b27ec8a",
+     "correcta_actual": 1,
+     "correcta_propuesta": 2,
+     "motivo": "La opción 2 reproduce literalmente la explicación de la lección (rendimiento bajo presión tiende hacia la autoimagen; ejemplo 8/4 y 6/8) y la explicación de la pregunta la respalda; la opción 1 (reduce el miedo al fracaso) no aparece en el texto."
+    }
+   }
+  ],
+  "notas": "La búsqueda no encontró el ejemplo del golfista 86-115 en este libro (el motivo del termostato de la autoimagen circula desde mucho antes en la literatura de autoayuda). Pregunta 2 con clave mala."
+ },
+ {
+  "id": "a8b9a7c4-04f7-48a3-8471-5d84a85701fb",
+  "libro": "Mindset Secrets for Winning",
+  "titulo": "Vivir con Intención: El Campeón que Trasciende el Rendimiento",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "El 'RAS' (sistema reticular activador) regula la activación/alerta; la idea de 'enfocarlo' con intención es un mito de divulgación.",
+    "evidencia": "Neurociencia básica (conocimiento sólido).",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "La decisión matutina de enfocar el RAS hacia lo que quieres construir,",
+     "nuevo": "La decisión matutina de dirigir tu atención hacia lo que quieres construir,"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "'Sesión en V' es un término no identificado.",
+    "evidencia": "Sin fuente.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "la rutina de práctica deliberada estructurada como sesión en V,",
+     "nuevo": "la rutina de práctica deliberada estructurada,"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "La duración '20-30 minutos' atribuida al libro no se puede confirmar ('priming' es término de Robbins).",
+    "evidencia": "Sin fuente.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "los 20-30 minutos de la mañana dedicados a",
+     "nuevo": "unos minutos de la mañana dedicados a"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Atribuir a Minervini la integración de RPM en su rutina matutina no es verificable.",
+    "evidencia": "Sin fuente.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "como los tres componentes que Minervini integra en su rutina matutina.",
+     "nuevo": "como tres componentes que pueden integrarse en una rutina matutina."
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "La secuencia 5-10-5 parece propuesta de la app.",
+    "evidencia": "Sin fuente.",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "La secuencia: 5 minutos de gratitud y conexión con el propósito,",
+     "nuevo": "Una secuencia orientativa: 5 minutos de gratitud y conexión con el propósito,"
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "No pude verificar el contenido del capítulo. La metáfora del trim tab es de Buckminster Fuller. RPM (Result, Purpose, Massive Action Plan) de Robbins es correcto."
+ },
+ {
+  "id": "aa1116c3-a350-4f8c-a502-817c1230a842",
+  "libro": "How Minds Change",
+  "titulo": "El abandono de cultos y la desradicalización — cambio de creencias en casos extremos",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "No se confirma que McRaney documente a Hassan ni que el mecanismo sea de 'tres fases secuenciales'.",
+    "evidencia": "Búsqueda web sin respaldo.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "El mecanismo que McRaney documenta siguiendo el trabajo de Steven Hassan y otros especialistas opera en tres fases secuenciales.",
+     "nuevo": "El mecanismo que se desprende de los casos que recoge McRaney (y de enfoques como el de Steven Hassan) puede resumirse en tres fases."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Taleb distingue frágil (se daña), robusto (resiste) y antifrágil (mejora); no habla de 'mecanismos de recuperación' de los robustos.",
+    "evidencia": "Taleb, Antifrágil (conocimiento sólido).",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Taleb en Antifrágil describe cómo los sistemas robustos tienen mecanismos de recuperación que los sistemas frágiles carecen.",
+     "nuevo": "Taleb, en Antifrágil, distingue entre sistemas frágiles (que se dañan con los choques), robustos (que los resisten) y antifrágiles (que mejoran con ellos)."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "La extrapolación a identidades diversas es de la app, no de Taleb.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Las personas con identidades robustas y diversas — que no dependen",
+     "nuevo": "Una extrapolación (de la app, no de Taleb) es que las personas con identidades diversas — que no dependen"
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "La búsqueda no encontró mención de Steven Hassan en las reseñas del libro. Hassan (enfoque Strategic Interaction) sí defiende conectar con la persona. Falta mencionar la controversia sobre el 'control mental' en cultos y la base empírica limitada de la desradicalización."
+ },
+ {
+  "id": "aaaf8ec9-7b3a-46b7-8117-dd01a93dfc3e",
+  "libro": "Never Split the Difference",
+  "titulo": "Eso Es Correcto: Validacion vs. Acuerdo",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Las técnicas de escucha activa (no 'todas') buscan el 'that's right'.",
+    "evidencia": "Voss, Never Split the Difference.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "El objetivo de todas las técnicas de Voss converge en provocar",
+     "nuevo": "El objetivo de las técnicas de escucha activa de Voss (reformulación, etiquetado y resumen) es provocar"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "'Posiciones vs intereses reales' es marco de Fisher y Ury, no de Voss.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Antes de ese momento, estás negociando con la posición que el otro muestra; después, puedes negociar con sus intereses reales.",
+     "nuevo": "Según Voss, ese es el momento en que el otro se siente comprendido y se abre a cambiar de posición."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Rogers no llamó 'congruencia' al momento de insight; la congruencia es la alineación entre experiencia, conciencia y expresión (genuinidad del terapeuta).",
+    "evidencia": "Rogers (conocimiento sólido).",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Rogers lo llamaba el momento de congruencia entre la experiencia sentida y su articulación verbal.",
+     "nuevo": "Rogers hablaba de congruencia (alineación entre la experiencia, la conciencia y la expresión), un concepto relacionado pero no idéntico."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "La distinción 'that's right' vs 'you're right' es de Voss (conocimiento sólido, no verificada por web). Falta: las técnicas de Voss tienen escasa validación empírica independiente."
+ },
+ {
+  "id": "adaa96a1-c4c9-4c7d-93a8-2ab25eb099da",
+  "libro": "How Minds Change",
+  "titulo": "Deep canvassing — el método que sí cambia creencias en política",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "'La más rigurosamente validada' es superlativo no confirmado.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "es la técnica de persuasión política que McRaney presenta como la más rigurosamente validada para producir cambio genuino de actitud",
+     "nuevo": "es una técnica de persuasión política que McRaney presenta como bien respaldada por estudios para producir cambio de actitud"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "La comparación de los autores es con el cambio de actitudes hacia gais y lesbianas que llevó más de una década, no 'décadas de cambio demográfico natural'.",
+    "evidencia": "https://prnewswire.com/news-releases/face-to-face-community-outreach-program-tested-by-miami-organization-save--la-lgbt-center-measurably-reduces-anti-transgender-prejudice-new-science-article-reports-300248007.html",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "comparables a décadas de cambio demográfico natural.",
+     "nuevo": "equivalentes, según los autores, al cambio de actitudes hacia gais y lesbianas que llevó más de una década."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Lieberman (The Molecule of More) trata dopamina frente a moléculas del 'aquí y ahora'; no explica el deep canvassing. La cadena oxitocina/amígdala es especulación de la app.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Lieberman en The Molecule of More explica por qué el deep canvassing funciona a nivel neuroquímico:",
+     "nuevo": "Lectura especulativa de la app (Lieberman no trata el deep canvassing):"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Ver anterior.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "el intercambio de experiencias personales activa la oxitocina de la conexión y desactiva la amígdala defensiva, creando exactamente el estado H&N donde las moléculas del presente facilitan la apertura a la experiencia del otro.",
+     "nuevo": "una hipótesis es que el intercambio de experiencias personales favorezca estados de baja amenaza asociados a las moléculas del aquí y ahora que describe Lieberman, pero esto no está demostrado."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Ver anterior.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "La EM de McRaney y el sistema H&N de Lieberman son el mismo fenómeno: la conexión emocional auténtica produce el estado neuroquímico donde el cambio de creencias es posible.",
+     "nuevo": ""
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "'Predicen... más que cualquier argumento basado en datos' no está establecido.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "McRaney y Broockman predicen que este intercambio produce más movimiento de actitud que cualquier argumento basado en datos que puedas presentar.",
+     "nuevo": "Los estudios de Broockman y Kalla sugieren que este tipo de conversación puede mover actitudes de forma duradera; no garantizan que funcione mejor que cualquier argumento con datos."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Verificado: Broockman y Kalla 2016 (Science), Miami, ~500 votantes, resultado persistente 3 meses, comparado por los autores con la reducción del prejuicio hacia gais y lesbianas durante más de una década; el estudio previo fraudulento (LaCour y Green 2014) fue retractado. Fuentes secundarias (NPR, PBS), no el artículo."
+ },
+ {
+  "id": "b3b97349-0940-4ac6-b8e2-db9ba12b7b94",
+  "libro": "In Sheep's Clothing",
+  "titulo": "Cómo piensan los agresores: distorsiones cognitivas que justifican la dominación",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "La lista de cuatro distorsiones es posiblemente una sistematización de la app.",
+    "evidencia": "Búsqueda web sin confirmar.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Simon dedica una parte crucial del libro a cartografiar los patrones de pensamiento que permiten a los agresores encubiertos actuar sin restricción moral interna.",
+     "nuevo": "Simon describe en el libro patrones de pensamiento que permiten a los agresores encubiertos actuar sin restricción moral interna; la lista concreta de cuatro distorsiones que sigue es una sistematización que puede no coincidir con la de Simon."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "'CDO' es un acrónimo no definido ni confirmado.",
+    "evidencia": "Búsqueda web sin respaldo.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "el CDO opera desde la premisa implícita",
+     "nuevo": "el agresor encubierto opera desde la premisa implícita"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "'Simon cita investigación' sobre autoestima elevada no verificable; su tesis (no son inseguros) sí está documentada en reseñas.",
+    "evidencia": "Reseñas del libro.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Simon cita investigación que muestra que los agresores típicamente tienen autoestima elevada",
+     "nuevo": "Simon sostiene que los agresores típicamente no actúan por baja autoestima"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "La Orientación a la Dominancia Social (SDO) es de Sidanius y Pratto, no de Tetlock.",
+    "evidencia": "Pratto, Sidanius et al. 1994, JPSP (conocimiento sólido).",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "el trabajo de Tetlock sobre el pensamiento político: los individuos con alta dominancia social (SDO, Social Dominance Orientation)",
+     "nuevo": "la investigación de Sidanius y Pratto sobre la orientación a la dominancia social (SDO, Social Dominance Orientation): las personas con una SDO alta"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Misma atribución errónea a Tetlock.",
+    "evidencia": "Ver anterior.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Tetlock lo sitúa en el contexto de diferencias individuales estables",
+     "nuevo": "esa investigación lo sitúa en el contexto de diferencias individuales relativamente estables"
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "Etiquetar a alguien como agresor por una reacción desproporcionada es un salto injustificado.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "estás observando probablemente la hipervigilancia de poder de Simon.",
+     "nuevo": "puede deberse a muchas causas (estrés, ansiedad, trauma) y no basta por sí sola para concluir que se trata de un agresor encubierto."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Los resúmenes confirman que Simon rechaza la tesis de la baja autoestima y habla de derecho/privilegio, pero no pude confirmar la lista de cuatro distorsiones ni el acrónimo 'CDO'. Baumeister (1996) matiza: la agresión se asocia a autoestima alta pero inestable (egotismo amenazado)."
+ }
+]
