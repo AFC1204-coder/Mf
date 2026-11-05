@@ -14,11 +14,14 @@ Prioridad del usuario: **no adquirir conceptos erróneos**. Un fallo estético i
 - **Sin tope de libros por semana** (decisión del dueño). Solo un aviso de volumen: cuenta lo publicado en 7 días,
   `select count(*) from libros_candidatos where estado='publicado' and publicado_en > now() - interval '7 days';`
   y si son 5 o más, deja una notificación al dueño y sigue:
-  `insert into notificaciones (usuario_id, tipo, titulo, mensaje, icono) values ('default','aviso','Volumen de libros nuevos','Se han publicado N libros en 7 días. Revisa si quieres frenar la rutina para ahorrar cómputo.','📚');`
+  `insert into notificaciones (usuario_id, tipo, titulo, mensaje, icono) values ('default','nuevo_contenido','Volumen de libros nuevos','Se han publicado N libros en 7 días. Revisa si quieres frenar la rutina para ahorrar cómputo.','📚');`
   Si hay más de 5 avisos «¿Algo no cuadra?» abiertos sin atender, no añadas libros: arregla primero. Pasa ambos números a la puerta (`--publicados-semana`, `--abiertos`).
+
+> **Notificaciones:** la tabla `notificaciones` solo admite los tipos `logro`, `racha`, `repaso` y `nuevo_contenido`; usa `nuevo_contenido`.
 
 ## 1. Elegir candidato (de la cola, no improvisado)
 - `select * from libros_candidatos where estado='pendiente';` y elige con `puerta.elegirCandidato(candidatos, corpus)` (`corpus` = `select titulo, autor, eje_principal, sub_eje from libros`): mayor prioridad, hueco poco poblado, sin duplicar, sin temas de riesgo. Márcalo `en_curso`.
+- **Duplicados por idioma:** muchos libros están con título en español («Fluir», «Cómo Ganar Amigos…»). Antes de generar, busca también por **autor** (`select titulo from libros where autor ilike '%apellido%'`) y descarta si es el mismo libro.
 - Si la cola está vacía, **no inventes**: termina informando. El dueño (o Claude en una sesión) añade candidatos con motivo de utilidad.
 - No añadas por tu cuenta libros de salud, dinero o sexualidad: van a `en_revision`.
 - Libro que domines con detalle; si dudas de lo que dice, descártalo (`estado='descartado'`, motivo en `informe`).
