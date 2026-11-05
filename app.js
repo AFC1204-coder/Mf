@@ -1999,6 +1999,7 @@ function renderRuta(){
    VER LECCION
 ═══════════════════════════════════════════ */
 function verLeccion(id, from=null, skipPush=false, replace=false){
+  if(ttsLeccionId&&ttsLeccionId!==id) ttsStop();   // el audio de otra lección no sigue sonando por debajo
   lecActual=lecs.find(l=>l.id===id);
   if(!lecActual)return;
   if (modoCarta() && cartaLibroId() && lecActual.libro_id !== cartaLibroId()) {
@@ -2154,6 +2155,7 @@ function verLeccion(id, from=null, skipPush=false, replace=false){
   if(cont){ cont.dataset.prev=prev?prev.id:''; cont.dataset.sig=sig?sig.id:''; }
   bindFolioGestos();
   showView('leccion', skipPush, replace);
+  ttsSincronizarUI();
   // Inicializar subrayados si el módulo está disponible
   if(typeof SCSSubrayados !== 'undefined' && SCSSubrayados.init) {
     SCSSubrayados.init(lecActual.id);
@@ -2310,6 +2312,7 @@ let ttsPaused=false;
 let ttsAudio=null;
 let ttsAudioBlob=null;
 let ttsMode=null;
+let ttsLeccionId=null, ttsSilencioUrl=null;
 
 function ttsGetText(){
   if(!lecActual) return '';
@@ -2443,7 +2446,7 @@ function ttsUpdateUI(state){
     stopBtn.style.display='flex';
     dlBtn.style.display=showDl?'flex':'none';
     status.textContent='Reproduciendo…';
-    if(engine) engine.textContent=ttsMode==='cloud'?'Google Cloud':'Voz del navegador';
+    if(engine) engine.textContent=ttsMode==='cloud'?'Google Cloud · sigue con la pantalla apagada':'Voz del navegador · se detiene al apagar la pantalla';
   } else if(state==='paused'){
     playBtn.innerHTML='<svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>';
     playBtn.title='Reanudar';
@@ -2479,6 +2482,9 @@ async function ttsTogglePlay(){
   if(!text){toast('No hay contenido para leer');return;}
 
   ttsStop();
+  ttsDesbloquear();                 // el primer play() debe ocurrir dentro del toque; el audio llega varios segundos después
+  ttsLeccionId=lecActual.id;
+  const idInicio=lecActual.id;
   ttsUpdateUI('loading');
 
   try{
@@ -2488,27 +2494,90 @@ async function ttsTogglePlay(){
       blob=await ttsCallGoogle(text);
       await ttsCachePut(cacheId,blob);
     }
+    if(ttsLeccionId!==idInicio) return;      // mientras se generaba, cambiaste de lección o paraste: no suena nada
     ttsAudioBlob=blob;
     ttsMode='cloud';
     ttsPlayCloud(blob);
   }catch(e){
     console.warn('Google TTS failed, fallback to Web Speech:',e.message);
+    if(ttsLeccionId!==idInicio) return;
     ttsPlayWebSpeech(text);
   }
 }
 
+/** Crea el elemento de audio dentro del gesto del usuario y lo «abre» con un silencio mínimo (iOS/Safari lo exigen). */
+function ttsDesbloquear(){
+  try{
+    if(!ttsSilencioUrl&&typeof AudioLeccion!=='undefined') ttsSilencioUrl=URL.createObjectURL(new Blob([AudioLeccion.silencioWav(0.1)],{type:'audio/wav'}));
+    const a=new Audio();
+    if(ttsSilencioUrl) a.src=ttsSilencioUrl;
+    ttsAudio=a;
+    const p=a.play(); if(p&&p.catch) p.catch(()=>{});
+  }catch(e){ ttsAudio=null; }
+}
+
+/* ── Pantalla de bloqueo / pantalla apagada: la sesión multimedia mantiene el audio y da los controles ── */
+function ttsMediaSession(){
+  if(!('mediaSession' in navigator)||typeof MediaMetadata==='undefined'||typeof AudioLeccion==='undefined') return;
+  try{
+    const libro=lecActual?libros.find(l=>l.id===lecActual.libro_id):null;
+    const ic=(f,t)=>({src:new URL(f,location.href).href,sizes:t});
+    navigator.mediaSession.metadata=new MediaMetadata(AudioLeccion.metadata(lecActual,libro,[ic('icon-192.png','192x192'),ic('icon-512.png','512x512')]));
+    const ms=navigator.mediaSession;
+    const set=(k,f)=>{ try{ ms.setActionHandler(k,f); }catch(e){} };
+    set('play',()=>{ if(ttsAudio&&ttsAudio.paused) ttsAudio.play().catch(()=>{}); });
+    set('pause',()=>{ if(ttsAudio&&!ttsAudio.paused) ttsAudio.pause(); });
+    set('stop',()=>ttsStop());
+    set('seekbackward',d=>{ if(ttsAudio) ttsAudio.currentTime=AudioLeccion.saltar(ttsAudio.currentTime,ttsAudio.duration,-((d&&d.seekOffset)||AudioLeccion.SALTO_S)); });
+    set('seekforward',d=>{ if(ttsAudio) ttsAudio.currentTime=AudioLeccion.saltar(ttsAudio.currentTime,ttsAudio.duration,(d&&d.seekOffset)||AudioLeccion.SALTO_S); });
+    set('seekto',d=>{ if(ttsAudio&&d&&isFinite(d.seekTime)) ttsAudio.currentTime=AudioLeccion.saltar(0,ttsAudio.duration,d.seekTime); });
+  }catch(e){ console.warn('mediaSession:',e.message||e); }
+}
+function ttsMediaEstado(estado){
+  if(!('mediaSession' in navigator)) return;
+  try{
+    navigator.mediaSession.playbackState=estado;
+    if(ttsAudio&&typeof AudioLeccion!=='undefined'&&navigator.mediaSession.setPositionState){
+      const pos=AudioLeccion.posicion(ttsAudio.duration,ttsAudio.currentTime,ttsAudio.playbackRate);
+      if(pos) navigator.mediaSession.setPositionState(pos);
+    }
+  }catch(e){}
+}
+function ttsMediaLimpiar(){
+  if(!('mediaSession' in navigator)) return;
+  try{
+    navigator.mediaSession.playbackState='none';
+    navigator.mediaSession.metadata=null;
+    ['play','pause','stop','seekbackward','seekforward','seekto'].forEach(k=>{ try{ navigator.mediaSession.setActionHandler(k,null); }catch(e){} });
+  }catch(e){}
+}
+
 function ttsPlayCloud(blob){
-  if(ttsAudio){ttsAudio.pause();ttsAudio=null;}
   const url=URL.createObjectURL(blob);
-  ttsAudio=new Audio(url);
-  ttsAudio.onplay=()=>{ if(Ambiente.bed) Ambiente.bed(0.2); ttsUpdateUI('playing'); };
-  ttsAudio.onpause=()=>{ if(!ttsAudio.ended){ if(Ambiente.bed) Ambiente.bed(1); ttsUpdateUI('paused'); } };
-  ttsAudio.onended=()=>{ if(Ambiente.bed) Ambiente.bed(1); ttsUpdateUI('idle'); };
-  ttsAudio.onerror=()=>{
+  const a=ttsAudio||new Audio();
+  a.src=url;
+  ttsAudio=a;
+  let ultimaPos=0;
+  a.onplay=()=>{ if(Ambiente.bed) Ambiente.bed(0.2); ttsUpdateUI('playing'); ttsMediaEstado('playing'); };
+  a.onpause=()=>{ if(!a.ended){ if(Ambiente.bed) Ambiente.bed(1); ttsUpdateUI('paused'); ttsMediaEstado('paused'); } };
+  a.onended=()=>{ if(Ambiente.bed) Ambiente.bed(1); ttsUpdateUI('idle'); ttsMediaLimpiar(); };
+  a.onloadedmetadata=()=>ttsMediaEstado(a.paused?'paused':'playing');
+  a.ontimeupdate=()=>{ const t=Date.now(); if(t-ultimaPos>5000){ ultimaPos=t; ttsMediaEstado(a.paused?'paused':'playing'); } };
+  a.onerror=()=>{
     toast('Error de audio, usando voz del navegador');
     ttsPlayWebSpeech(ttsGetText());
   };
-  ttsAudio.play().catch(()=>ttsPlayWebSpeech(ttsGetText()));
+  ttsMediaSession();
+  a.play().catch(()=>ttsPlayWebSpeech(ttsGetText()));
+}
+
+/** Tras repintar la lección: que el reproductor refleje lo que de verdad está sonando. */
+function ttsSincronizarUI(){
+  if(!document.getElementById('tts-player')) return;
+  if(ttsLeccionId&&lecActual&&ttsLeccionId===lecActual.id){
+    if(ttsMode==='cloud'&&ttsAudio&&ttsAudio.src&&!ttsAudio.ended) ttsUpdateUI(ttsAudio.paused?'paused':'playing');
+    else if(ttsMode==='webspeech'&&window.speechSynthesis&&window.speechSynthesis.speaking) ttsUpdateUI(ttsPaused?'paused':'playing');
+  }
 }
 
 function ttsPlayWebSpeech(text){
@@ -2538,7 +2607,13 @@ function ttsPlayWebSpeech(text){
 
 function ttsStop(){
   if(Ambiente.bed) Ambiente.bed(1);
-  if(ttsAudio){ttsAudio.pause();ttsAudio.currentTime=0;ttsAudio=null;}
+  ttsMediaLimpiar();
+  ttsLeccionId=null;
+  if(ttsAudio){
+    const a=ttsAudio; ttsAudio=null;
+    a.onplay=a.onpause=a.onended=a.onerror=a.ontimeupdate=a.onloadedmetadata=null;   // que su «pausa» tardía no repinte el reproductor
+    a.pause(); try{a.currentTime=0;}catch(e){}
+  }
   const synth=window.speechSynthesis;
   if(synth){synth.cancel();}
   ttsUtterance=null;
