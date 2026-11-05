@@ -1,0 +1,806 @@
+{
+ "0414c575-438a-4e6d-bc13-92d936476556": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "datos.der.items[1]",
+    "antiguo": "El gobierno más poderoso, con 400.000 millones de defensa",
+    "nuevo": "El gobierno más poderoso, con unos 400.000 millones de dólares de defensa",
+    "motivo": "El texto da la cifra como aproximada («unos 400.000 millones de dólares»)."
+   }
+  ]
+ },
+ "096aa04e-896c-4e31-9533-cf75308b5e0e": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "0b8b86b3-4546-4231-a6b4-65f53d1f9f93": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "0cee11a6-4c32-4a13-96d8-793b134d1497": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "0e2ef0d9-3533-4d2b-b902-6958d54170fd": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "1334fbb8-5cb8-431a-962a-64b999dda704": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "18af52e4-1b57-4cf1-a44d-5cf83145940b": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "datos.izq.items[0]",
+    "antiguo": "Lo produce el sistema de recompensa",
+    "nuevo": "Lo genera el cerebro de forma involuntaria",
+    "motivo": "«Sistema de recompensa» no figura en el texto; este habla de mecanismos cerebrales involuntarios (Burton)."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.izq.items[1]",
+    "antiguo": "Cuando tus predicciones se confirman",
+    "nuevo": "No es una verificación lógica de tus creencias",
+    "motivo": "La explicación sobre predicciones confirmadas no está en el texto."
+   }
+  ]
+ },
+ "1cae108d-ebcd-4fc7-8447-12140903a4ce": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "1ded1c80-e218-4c3d-9d5e-159b78a79b77": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "1f3b9945-b124-4177-93e2-55c3600e05e2": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "2095e8c6-3bae-44b6-bb70-77f0aa39b35d": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "225da1c4-dec4-4a01-8eed-3379f1314cb5": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "234d5589-7706-45e0-b527-7fe3f2f55a43": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "2fdfdec1-3e89-4ce1-9e0d-2c1ac5e62e01": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "pie",
+    "antiguo": "Afirmación epistemológica sobre los límites del lenguaje: «El Tao que puede ser nombrado no es el Tao eterno».",
+    "nuevo": "Lectura habitual (no la única): los límites del lenguaje. «El Tao que puede ser nombrado no es el Tao eterno».",
+    "motivo": "El texto presenta la lectura epistemológica como habitual, no única; el pie la daba como hecho."
+   }
+  ]
+ },
+ "31500f0b-fc16-4943-aa20-283eb2a19663": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "pie",
+    "antiguo": "Hoppe demuele el argumento estándar.",
+    "nuevo": "Hoppe y Block critican el argumento estándar.",
+    "motivo": "El texto atribuye la crítica a Hoppe y Block y no la presenta como demolición establecida."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.der.t",
+    "antiguo": "Crítica de Hoppe",
+    "nuevo": "Crítica de Hoppe y Block",
+    "motivo": "Atribución completa según el texto."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.der.items[1]",
+    "antiguo": "Demolición del argumento de bienes públicos",
+    "nuevo": "Sostienen que el argumento falla en varios niveles",
+    "motivo": "Evita dar por demostrada la refutación; es la tesis de los autores."
+   }
+  ]
+ },
+ "36e67c06-75fa-406c-abc1-1ca77044cfd0": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "38935ef8-c2a6-4a47-a991-90940d51b0f9": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "3c0b8a3d-da3c-4f9b-b2a7-565f01f348ee": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "3d34a588-a6fb-4448-93bb-3535b7fe0b70": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "3ec59117-d470-4f4f-af23-d7ff9977f844": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "pie",
+    "antiguo": "La guerra interna por el presente y el futuro.",
+    "nuevo": "Hipótesis de Lieberman y Long: dos sistemas en tensión por el presente y el futuro.",
+    "motivo": "El texto aclara que es una hipótesis del libro, no una explicación neurológica establecida; además los sistemas «no son opuestos»."
+   }
+  ]
+ },
+ "3f307450-6ecb-4efd-b893-517766ad6d80": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "datos.der.items[1]",
+    "antiguo": "La termodinámica obliga a la complejidad",
+    "nuevo": "Según Lane, los sistemas organizados disipan eficazmente gradientes de energía",
+    "motivo": "Afirmación presentada como hecho; el texto la atribuye a Lane («sería, según Lane»)."
+   }
+  ]
+ },
+ "4287930e-6304-4dd0-bbcc-a0df342c88ee": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "datos.pasos[3].t",
+    "antiguo": "Avance progresivo",
+    "nuevo": "Modernidad industrial y tecnológica",
+    "motivo": "El cuarto momento del texto es la modernidad industrial-tecnológica; la figura solo tenía tres épocas y un paso genérico."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.pasos[3].d",
+    "antiguo": "Cada momento acelera la dominancia izquierda",
+    "nuevo": "Para McGilchrist, la culminación de la asimetría",
+    "motivo": "Ajuste al texto."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "pie",
+    "antiguo": "McGilchrist traza una historia cultural de Occidente.",
+    "nuevo": "McGilchrist traza una historia cultural de Occidente como avance de la dominancia izquierda, con oscilaciones (p. ej. el Romanticismo).",
+    "motivo": "Omitía las oscilaciones que el texto menciona; evita sugerir un avance lineal sin retrocesos."
+   }
+  ]
+ },
+ "43afac3c-5277-4c1d-a016-584eef24885a": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "datos.pasos[3].t",
+    "antiguo": "Límites de la ciencia",
+    "nuevo": "División de las ciencias",
+    "motivo": "El texto habla de la división entre ciencias naturales y sociales, no de límites de la ciencia en general."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.pasos[3].d",
+    "antiguo": "Y consecuencias sobre el libre albedrío",
+    "nuevo": "Objetividad completa imposible en las sociales; además, el libre albedrío",
+    "motivo": "Precisión según el texto."
+   }
+  ]
+ },
+ "472aad01-ca68-4cf4-9dc0-bf35f3347c93": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "pie",
+    "antiguo": "Minervini: invariantes entre los campeones que estudió.",
+    "nuevo": "Minervini presenta siete principios que, según él, caracterizan a los ganadores, desde su experiencia y observación.",
+    "motivo": "«Que estudió» y «invariantes» no están en el texto; Minervini lo plantea desde experiencia propia."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.nodos[1].d",
+    "antiguo": "Atletas olímpicos y emprendedores",
+    "nuevo": "Los ganadores, según su observación",
+    "motivo": "El texto no menciona atletas olímpicos ni emprendedores."
+   }
+  ]
+ },
+ "483969f4-aa27-43f4-b7ac-95f3ba6ce3ae": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "titulo",
+    "antiguo": "Las dos intervenciones más robustas",
+    "nuevo": "Dos intervenciones muy estudiadas",
+    "motivo": "El texto las describe como «de las más conocidas y estudiadas», no como «las más robustas»."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.izq.items[2]",
+    "antiguo": "Mejora medible y sostenida del bienestar",
+    "nuevo": "Incrementos medibles aunque modestos en varios estudios",
+    "motivo": "«Sostenida» no figura; el texto dice «medibles aunque modestos, en varios estudios»."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.der.items[0]",
+    "antiguo": "Su cultivo tiene base experimental sólida",
+    "nuevo": "Visualizar el mejor yo posible (escribir unos 20 minutos)",
+    "motivo": "La solidez experimental no está en el texto; se sustituye por el mecanismo descrito."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.der.items[1]",
+    "antiguo": "Como la gratitud",
+    "nuevo": "También entre las más conocidas y estudiadas",
+    "motivo": "Ajuste al texto."
+   }
+  ]
+ },
+ "4fcf5afb-16c5-4fc2-814e-fe9e0945b7a9": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "datos.der.items[1]",
+    "antiguo": "Es una construcción",
+    "nuevo": "La narrativa es una construcción",
+    "motivo": "Tal como estaba, parecía decir que el yo en sí es una construcción, lo contrario de lo que dice el texto (la construcción es la narrativa)."
+   }
+  ]
+ },
+ "55894779-7d93-41de-b71a-d4eed05e694a": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "63f4d735-481d-4346-9d81-6e7f67c908cf": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "datos.der.items[0]",
+    "antiguo": "El método clínico más validado empíricamente",
+    "nuevo": "Método clínico con respaldo empírico sólido",
+    "motivo": "Superlativo no sustentado; el texto dice «respaldo empírico sólido»."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.der.items[1]",
+    "antiguo": "Para quien no está motivado a cambiar",
+    "nuevo": "Para personas ambivalentes ante el cambio",
+    "motivo": "El texto habla de personas ambivalentes, no de falta de motivación."
+   }
+  ]
+ },
+ "668e7784-7d5f-4e46-992e-dfd5d23e9f0b": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "datos.izq.items[1]",
+    "antiguo": "Sirve al bien común",
+    "nuevo": "Se le presume legitimidad moral",
+    "motivo": "«Bien común» no figura en el texto."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.der.items[1]",
+    "antiguo": "Provee servicios como cualquier empresa",
+    "nuevo": "Provee servicios, pero es el único proveedor y su precio es obligatorio",
+    "motivo": "«Como cualquier empresa» contradice el texto, que subraya las diferencias (monopolio y precio obligatorio)."
+   }
+  ]
+ },
+ "6ac7fa01-4313-4e9b-9b84-60be1893dc78": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "titulo",
+    "antiguo": "Los argumentos no cambian mentes",
+    "nuevo": "Los argumentos solos suelen no bastar",
+    "motivo": "El texto limita la afirmación a creencias con carga identitaria y habla de «suelen ser insuficientes»."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.der.items[0]",
+    "antiguo": "Los argumentos no suelen cambiar mentes",
+    "nuevo": "En creencias con carga identitaria, hechos y argumentos por sí solos suelen ser insuficientes",
+    "motivo": "Generalización excesiva."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.der.items[1]",
+    "antiguo": "El libro explica por qué",
+    "nuevo": "Según McRaney, la creencia forma parte de la identidad",
+    "motivo": "Contenido real de la explicación, según el texto."
+   }
+  ]
+ },
+ "6bad66ef-0b3d-40f6-b4d5-b2dcb4e6d635": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "70f95de8-6337-4ea5-8e46-1065e975ea2b": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "7136a511-884f-4fea-9dd7-cd0d4a9e7bab": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "7523ecb9-b1c3-4285-b08b-2e7bfb1c59e5": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "pie",
+    "antiguo": "Un patrón predecible en toda actividad que vale la pena.",
+    "nuevo": "Según Godin, un patrón predecible en casi toda actividad que vale la pena.",
+    "motivo": "El texto dice «casi toda» y atribuye la tesis a Godin."
+   }
+  ]
+ },
+ "79856b54-23e0-4fee-b907-a304bad064a2": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "datos.der.items[1]",
+    "antiguo": "Que recompensan la agresividad",
+    "nuevo": "Que recompensan la agresividad encubierta y penalizan la confrontación directa",
+    "motivo": "Precisión según el texto."
+   }
+  ]
+ },
+ "7c051b7d-9b49-430f-84bb-709acdc2b93c": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "pie",
+    "antiguo": "El cerebro no es una unidad homogénea.",
+    "nuevo": "Según McGilchrist, el cerebro no es una unidad homogénea (la evidencia sobre cada función es desigual).",
+    "motivo": "La dicotomía hemisférica es tesis de McGilchrist y el texto matiza que la evidencia es desigual."
+   }
+  ]
+ },
+ "83f3e1ef-1f3a-4d13-b811-70065f9788fd": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "datos.der.items[0]",
+    "antiguo": "«Todos los modelos están sujetos a revisión»",
+    "nuevo": "Los modelos son revisables",
+    "motivo": "Se presentaba como cita textual de Wilson algo que es paráfrasis del texto."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.der.items[1]",
+    "antiguo": "«El mapa no es el territorio»",
+    "nuevo": "El mapa no es el territorio (Korzybski)",
+    "motivo": "La frase procede de Korzybski; el texto indica que Wilson la recuerda con él."
+   }
+  ]
+ },
+ "85337aed-d416-441d-83bf-70853bf7b82d": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "titulo",
+    "antiguo": "Mitos sobre el ayuno intermitente",
+    "nuevo": "Objeciones al ayuno intermitente según Fung",
+    "motivo": "Calificar las objeciones de «mitos» es juicio de Fung, no un hecho establecido."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "pie",
+    "antiguo": "Fung responde con la precisión del clínico.",
+    "nuevo": "Fung responde desde su práctica clínica; las revisiones sistemáticas no hallan ventaja clara sobre la restricción calórica continua.",
+    "motivo": "El pie elogiaba a Fung; el texto matiza que la evidencia no es concluyente."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.der.items[0]",
+    "antiguo": "Experiencia con miles de pacientes",
+    "nuevo": "Experiencia clínica propia",
+    "motivo": "«Miles de pacientes» no figura en el texto."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.der.items[1]",
+    "antiguo": "Con referencia a la evidencia disponible",
+    "nuevo": "Con la evidencia que él considera relevante",
+    "motivo": "Fiel al texto."
+   }
+  ]
+ },
+ "8a5455bd-9bec-4b61-948f-69d50d78305f": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "pie",
+    "antiguo": "El mecanismo que describe Hill es la inercia cognitiva.",
+    "nuevo": "Hill habla del «ritmo hipnótico» del hábito; la lectura como inercia cognitiva es de la app.",
+    "motivo": "El texto aclara que esa lectura moderna es de la app, no de Hill."
+   }
+  ]
+ },
+ "8eb2e1d6-c70a-42d0-a3a8-80ac7af52b51": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "91eae481-626f-42d3-82cb-09bf63c356b8": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "94a66863-9489-4dda-9a3f-b93746341707": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "pie",
+    "antiguo": "Boom, malinversión y crisis.",
+    "nuevo": "Presentación de la teoría siguiendo a Huerta de Soto; el número de fases varía según el autor.",
+    "motivo": "La figura simplificaba y presentaba la teoría como establecida."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.pasos[2].t",
+    "antiguo": "Malinversión",
+    "nuevo": "Tensión insostenible",
+    "motivo": "La tercera fase del texto es la tensión insostenible."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.pasos[2].d",
+    "antiguo": "Se distorsionan las inversiones",
+    "nuevo": "Inversión y consumo compiten por los mismos recursos escasos",
+    "motivo": "Ajuste al texto."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.pasos[3].t",
+    "antiguo": "Crisis",
+    "nuevo": "Crisis y liquidación",
+    "motivo": "Nombre de la fase en el texto."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.pasos[3].d",
+    "antiguo": "Se revela el error",
+    "nuevo": "Los proyectos marginales dejan de ser rentables",
+    "motivo": "Ajuste al texto."
+   }
+  ]
+ },
+ "998b722b-5f74-469c-9f22-7aa35a6f08c9": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "pie",
+    "antiguo": "Mindset Secrets for Winning.",
+    "nuevo": "Mindset Secrets for Winning: una hipótesis, más que una mecánica verificada.",
+    "motivo": "El texto advierte que el termostato es una hipótesis, no un mecanismo verificado."
+   }
+  ]
+ },
+ "a8b9a7c4-04f7-48a3-8471-5d84a85701fb": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "aa1116c3-a350-4f8c-a502-817c1230a842": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "datos.der.items[0]",
+    "antiguo": "Laboratorios naturales del cambio",
+    "nuevo": "Para McRaney, laboratorios naturales del cambio",
+    "motivo": "Atribución a McRaney."
+   }
+  ]
+ },
+ "aaaf8ec9-7b3a-46b7-8117-dd01a93dfc3e": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "pie",
+    "antiguo": "Antes negocias con su posición; después, con sus intereses reales.",
+    "nuevo": "Según Voss, «eso es correcto» indica que el otro se siente comprendido.",
+    "motivo": "«Intereses reales» no figura en el texto."
+   }
+  ]
+ },
+ "adaa96a1-c4c9-4c7d-93a8-2ab25eb099da": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "pie",
+    "antiguo": "La técnica de persuasión política más rigurosamente validada.",
+    "nuevo": "Según McRaney, una técnica de persuasión política bien respaldada por estudios (Broockman y Kalla).",
+    "motivo": "El superlativo no está en el texto."
+   }
+  ]
+ },
+ "b3b97349-0940-4ac6-b8e2-db9ba12b7b94": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 1,
+    "ruta": "pie",
+    "antiguo": "Lectura de la biblioteca de Simon. Él los ve casi fijos; la autocorrección los cree maleables.",
+    "nuevo": "Sistematización de la lección; puede no coincidir con la lista de Simon.",
+    "motivo": "Atribuye a Simon una postura («casi fijos») que el texto no recoge; el texto dice que la lista es de la lección."
+   },
+   {
+    "indice_figura": 1,
+    "ruta": "datos.ocultos[0].t",
+    "antiguo": "Minimización del daño propio",
+    "nuevo": "Minimización del daño causado",
+    "motivo": "Error: se trata de minimizar el daño que se causa a otros."
+   }
+  ]
+ },
+ "c0020283-74d9-4b93-8acf-ebc69094e75d": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "c12133d2-1a16-45d6-b3bf-5f879d708d41": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "c4d4bb59-50f7-4a1c-a68f-d75aba7c4b75": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "ca249bf0-b5b8-457c-a65b-b16b8b2ca9b5": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "pie",
+    "antiguo": "El silencio, para Chopra, es la atención vuelta sobre sí misma.",
+    "nuevo": "Planteamiento de Chopra: el silencio es la atención vuelta sobre sí misma; no un hecho establecido.",
+    "motivo": "Tesis metafísicas de Chopra presentadas sin matiz."
+   }
+  ]
+ },
+ "ca47d173-cf79-4cea-81c7-77305d5ae141": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "datos.izq.items[0]",
+    "antiguo": "Se comparan menos",
+    "nuevo": "Parecen verse menos afectadas por saber que otros les superan",
+    "motivo": "El texto no dice que se comparen menos, sino que les afecta menos."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.izq.items[1]",
+    "antiguo": "Si lo hacen, hacia abajo (con quienes están peor)",
+    "nuevo": "Hallazgo de Lyubomirsky y Ross (1997)",
+    "motivo": "La comparación «hacia abajo» no figura en el texto."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.der.items[0]",
+    "antiguo": "Se comparan constantemente",
+    "nuevo": "Reaccionan mucho más a lo que hacen los demás",
+    "motivo": "Ajuste al texto."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.der.items[1]",
+    "antiguo": "Siempre hacia arriba (con quienes están mejor)",
+    "nuevo": "Tanto a comparaciones favorables como desfavorables",
+    "motivo": "El texto dice que reaccionan a ambas; «siempre hacia arriba» lo contradice."
+   }
+  ]
+ },
+ "cef9820b-84ca-4800-b3da-dc601fa14575": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "pie",
+    "antiguo": "Navarro: la respuesta no es ingenuidad.",
+    "nuevo": "Planteamiento de la lección (no atribuible a Navarro): la respuesta no es ingenuidad.",
+    "motivo": "El texto aclara que la pregunta y los mecanismos no son del libro de Navarro."
+   }
+  ]
+ },
+ "d2506e5d-5dee-4a90-856f-99530c33afeb": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "d511c2fa-af62-4bd3-9374-4613fd356eee": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "d57645c5-a223-49f4-beac-1bc3e602d12f": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "datos.niveles[3].d",
+    "antiguo": "El peor de los gobernantes",
+    "nuevo": "Al que desprecian",
+    "motivo": "Redundante y omitía el criterio del texto."
+   }
+  ]
+ },
+ "d67d75d3-7bca-41c8-97b0-48730cbd1bf3": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "datos.izq.items[1]",
+    "antiguo": "Dogma de la revolución científica del siglo XVII",
+    "nuevo": "Para Harpur, la revolución científica del siglo XVII la estableció como dogma",
+    "motivo": "Es valoración de Harpur."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.der.t",
+    "antiguo": "Anima Mundi",
+    "nuevo": "Anima Mundi (según Harpur)",
+    "motivo": "Tesis de Harpur presentada como hecho."
+   }
+  ]
+ },
+ "d6cccd42-5191-424e-a65a-7a9c28e7dc71": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "d7dbb9af-e018-44ea-9f1e-dd65afcf9779": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "pie",
+    "antiguo": "Cómo se reparte la varianza de la felicidad.",
+    "nuevo": "Según Lyubomirsky; modelo simplificado, más heurística motivacional que descripción precisa.",
+    "motivo": "La corrección del texto presenta 50/10/40 como modelo simplificado, no como hecho."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "titulo",
+    "antiguo": "El modelo de Lyubomirsky",
+    "nuevo": "El modelo de Lyubomirsky (simplificado)",
+    "motivo": "Refuerza la naturaleza aproximada de las cifras."
+   }
+  ]
+ },
+ "db1d8367-4e9c-494b-9bb8-556e5d4eecfa": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "pie",
+    "antiguo": "La tiranía del tiempo lineal.",
+    "nuevo": "Según Strauss y Howe; su patrón cíclico puede ser propio del mundo anglosajón.",
+    "motivo": "Tesis de los autores con salvedad del texto."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.der.items[0]",
+    "antiguo": "Ciclos que se repiten",
+    "nuevo": "Patrones que se repiten aunque los contenidos cambien",
+    "motivo": "Precisión según el texto."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.der.items[1]",
+    "antiguo": "El libro identifica tres concepciones del tiempo",
+    "nuevo": "El libro distingue tres concepciones: caótico, lineal y cíclico",
+    "motivo": "Ese ítem no pertenecía a la columna cíclica en sentido propio; se aclara."
+   }
+  ]
+ },
+ "db747204-8b1b-41a7-8541-70db61889d0e": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "dfcb3613-0469-43e1-bde1-8a7cfadf8635": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "datos.der.items[1]",
+    "antiguo": "Los datos de las guerras del siglo XX lo muestran",
+    "nuevo": "El coste se socializa: pagan todos, deciden y ganan pocos",
+    "motivo": "Las cifras de Rummel son posteriores a Rothbard y controvertidas; «los datos lo muestran» presentaba como probado lo que es tesis."
+   }
+  ]
+ },
+ "e2f0e6e3-1fe6-44de-9401-b062d848bfea": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "pie",
+    "antiguo": "Dawes y Hastie.",
+    "nuevo": "Dawes y Hastie adoptan la interpretación bayesiana, controvertida en filosofía de la probabilidad.",
+    "motivo": "El texto señala la controversia."
+   }
+  ]
+ },
+ "e64bbd27-15c8-4dbd-b4e1-975dc10d7842": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "e759abd7-096c-4cfb-8d56-ab9f8eea5e47": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "datos.izq.t",
+    "antiguo": "No es",
+    "nuevo": "En la mayoría de casos no es",
+    "motivo": "El texto dice «la mayoría de problemas crónicos»."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.der.t",
+    "antiguo": "Sí es",
+    "nuevo": "Sí es, según Patterson",
+    "motivo": "Atribución de la tesis."
+   }
+  ]
+ },
+ "e800cd97-0f6e-46e6-939e-8c446fbd46b3": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "ee57b24c-70c6-451a-8023-08e68defb2f7": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "f6417b1f-6cea-4c29-97f1-14fccb3fa084": {
+  "estado": "CORREGIR",
+  "fixes": [
+   {
+    "indice_figura": 0,
+    "ruta": "datos.centro",
+    "antiguo": "No hay CEO",
+    "nuevo": "Para Wright, no hay CEO",
+    "motivo": "Es la conclusión de Wright, no un hecho establecido."
+   },
+   {
+    "indice_figura": 0,
+    "ruta": "datos.nodos[0].d",
+    "antiguo": "Fodor",
+    "nuevo": "Raíces en Fodor; versión masiva de Cosmides y Tooby",
+    "motivo": "Fodor defendía una modularidad mucho más limitada."
+   }
+  ]
+ },
+ "f67f269f-2fd7-4408-8840-4fd550e53ec8": {
+  "estado": "OK",
+  "fixes": []
+ },
+ "fb0c6cec-1b5d-4844-bd2b-578c6fe513c6": {
+  "estado": "OK",
+  "fixes": []
+ }
+}
