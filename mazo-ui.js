@@ -103,7 +103,7 @@ function mazoFichaHtml(f, i, n) {
       <h3 class="mz-t">${esc(lec.titulo)}</h3><p class="mz-src">${mazoFuente(lec)}</p>
       <p class="mz-txt">${esc(Mazo.extracto(lec.idea_clave, fig ? 220 : 380))}</p>
       ${amp ? `<div class="mz-amp">${amp}</div>` : ''}
-      <div class="mz-acc">${amp ? `<button type="button" class="mz-btn ghost mz-ampliar" onclick="mazoAmpliar(${i})">Ampliar</button>` : ''}${leer}</div>${pie}</article>`;
+      <div class="mz-acc">${amp ? `<button type="button" class="mz-btn ghost mz-ampliar" onclick="mazoAmpliar(${i})">Ampliar</button>` : ''}${leer}<button type="button" class="mz-btn ghost" onclick="TarjetaUI.abrir('${lec.id}')">Compartir</button></div>${pie}</article>`;
   }
   if (f.tipo === 'matiz' && lec) return `<article class="mz-card mz-matiz">
       <p class="mz-k">El matiz</p><h3 class="mz-t">${esc(lec.titulo)}</h3><p class="mz-src">${mazoFuente(lec)}</p>

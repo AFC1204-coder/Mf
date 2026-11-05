@@ -2053,7 +2053,7 @@ function verLeccion(id, from=null, skipPush=false, replace=false){
     ).join('')+`</nav>`;
   }
   if(lecActual.idea_clave){
-    html+=`<aside class="idea-clave"><div class="idea-label">Idea clave</div><p>${esc(lecActual.idea_clave)}</p></aside>`;
+    html+=`<aside class="idea-clave"><div class="idea-label">Idea clave</div><p>${esc(lecActual.idea_clave)}</p><button type="button" class="idea-share" onclick="TarjetaUI.abrir('${lecActual.id}')">Compartir idea</button></aside>`;
   }
   const mapa = esquemaDeLibro(libro);
   if (mapa) {

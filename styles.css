@@ -3260,3 +3260,28 @@ body.carta #view-lecciones .back-btn { display: none !important; } /* el invitad
   #eje-filters .eje-pill, #eje-filters-sub .eje-pill { flex: 0 0 auto; white-space: nowrap; }
   #eje-filters-sub { min-height: 0; }
 }
+
+/* ═══ Tarjeta de idea para compartir ═══ */
+.tj-overlay { position: fixed; inset: 0; z-index: 400; display: flex; align-items: flex-end; justify-content: center; }
+.tj-overlay[hidden] { display: none; }
+.tj-fondo { position: absolute; inset: 0; background: rgba(0,0,0,.72); }
+.tj-hoja { position: relative; width: min(520px, 100%); max-height: 100dvh; overflow-y: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 18px 18px 0 0; padding: 0.9rem 1.1rem calc(1.1rem + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 0.8rem; }
+.tj-cab { display: flex; justify-content: space-between; align-items: center; font-family: var(--font-ui); font-size: 0.74rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text2); }
+.tj-x { background: none; border: 0; color: var(--text3); font-size: 1.1rem; min-width: 44px; min-height: 44px; cursor: pointer; }
+.tj-prev { display: flex; justify-content: center; }
+#tj-canvas { width: auto; height: auto; max-width: 100%; max-height: 52vh; border-radius: 8px; box-shadow: 0 8px 30px rgba(0,0,0,.5); }
+.tj-opc { display: flex; flex-wrap: wrap; gap: 0.6rem 1rem; align-items: center; }
+.tj-seg { display: inline-flex; border: 1px solid var(--border); border-radius: 999px; overflow: hidden; }
+.tj-seg button[hidden] { display: none; }
+.tj-seg button { background: none; border: 0; padding: 0 1rem; min-height: 38px; color: var(--text2); font-family: var(--font-ui); font-size: 0.8rem; cursor: pointer; }
+.tj-seg button.on { background: var(--accent-bg, rgba(201,168,76,.15)); color: var(--accent); }
+.tj-chk { display: inline-flex; gap: 0.45rem; align-items: center; color: var(--text2); font-family: var(--font-ui); font-size: 0.85rem; min-height: 38px; cursor: pointer; }
+.tj-chk[hidden] { display: none; }
+.tj-nota { min-height: 1.1em; margin: 0; font-family: var(--font-body); font-style: italic; font-size: 0.85rem; color: var(--text3); }
+.tj-acc { display: flex; gap: 0.8rem; align-items: center; }
+.tj-go { flex: 1; min-height: 50px; background: var(--accent); color: #1a140c; border: 0; cursor: pointer; font-family: var(--font-ui); font-size: 0.82rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500; }
+.tj-ghost { background: none; border: 1px solid var(--border); color: var(--text2); min-height: 50px; padding: 0 1.2rem; cursor: pointer; font-family: var(--font-ui); font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; }
+body.tj-abierta { overflow: hidden; }
+.idea-share { margin-top: 0.5rem; background: none; border: 1px solid var(--border); color: var(--text2); border-radius: 999px; padding: 0 0.9rem; min-height: 34px; font-family: var(--font-ui); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; }
+.idea-share:hover { color: var(--accent); border-color: var(--accent); }
+@media (min-width: 700px) { .tj-overlay { align-items: center; } .tj-hoja { border-radius: 18px; } }
