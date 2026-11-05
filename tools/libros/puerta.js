@@ -118,7 +118,7 @@
 
   /**
    * Puntuación de utilidad de un candidato (0–100+): su prioridad, más un empujón si el hueco del eje/sub-eje está poco poblado,
-   * menos si es de tema de riesgo. `corpus` = [{eje_principal, sub_eje}] de los libros existentes.
+   * más hasta 12 si presenta rasgos de «esencia atemporal» (preferencia, no requisito), menos si es de tema de riesgo. `corpus` = [{eje_principal, sub_eje}] de los libros existentes.
    */
   function puntuar(c, corpus) {
     let s = Number(c.prioridad) || 50;
@@ -126,6 +126,8 @@
     const total = (corpus || []).length || 1;
     const cuota = mismo / total;                     // 0 = hueco vacío
     s += Math.round(15 * (1 - Math.min(1, cuota * 6)));
+    // «Esencia atemporal» (preferencia del dueño, no requisito): 0–3 rasgos (dura, pregunta recurrente, destila un principio); suma hasta 12 puntos y nunca excluye
+    s += 4 * Math.max(0, Math.min(3, Number(c.esencia) || 0));
     const texto = [c.titulo, c.motivo].join(' ');
     if (Object.values(RIESGO).some(r => r.test(texto))) s -= 30;
     return s;

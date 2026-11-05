@@ -26,7 +26,8 @@ Objetivo: que la biblioteca crezca sola sin que se cuelen conceptos erróneos ni
 2. **Cada lección sirve para actuar:** todas traen una aplicación práctica concreta (≥ 120 caracteres) y al menos la mitad conectan con otros autores de la biblioteca (≥ 200 caracteres).
 3. **Cada lección trae su crítica:** la autocorrección nombra límites reales (replicación, sesgos, alcance), no vaguedades.
 4. **Preferir lo que el dueño usa:** aprendizaje, hábitos, decisión, economía, historia de las ideas, biología y mente. Se evitan las obras de base mayormente anecdótica e invariablemente promocional.
-5. **Visuales después:** tras publicar, un esquema por lección y un mapa por libro (herramienta `tools/datos/agregar.mjs`) y, si procede, retos de pensamiento (`docs/retos-pensamiento.md`). Esto lo hace una sesión con el dueño, no la rutina.
+5. **Esencia atemporal (preferencia del dueño, 5 nov 2026; nunca un requisito):** entre los libros posibles, se prefieren los que capturan algo esencial y duradero: se siguen leyendo décadas después o son fundacionales; responden a una pregunta recurrente (cómo vivir, conocer, cooperar, morir, crear); destilan un principio en vez de seguir una moda. Se anota en `libros_candidatos.esencia` (0 = sin valorar, 1–3 = cuántos rasgos presenta) y **suma hasta 12 puntos** en la puntuación; un libro sin esencia sigue siendo elegible. Tampoco excluye el criterio de temas: se prefieren **temas aún poco cubiertos pero conectados** con lo que ya hay.
+6. **Visuales después:** tras publicar, un esquema por lección y un mapa por libro (herramienta `tools/datos/agregar.mjs`) y, si procede, retos de pensamiento (`docs/retos-pensamiento.md`). Esto lo hace una sesión con el dueño, no la rutina.
 
 ## Flujo (lo que hace la rutina, en orden)
 1. Avisos abiertos > 5 → termina sin publicar. Si ya se publicaron 5 o más en 7 días, además deja una notificación al dueño (volumen alto) y sigue.
