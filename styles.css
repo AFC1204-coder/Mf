@@ -3250,3 +3250,13 @@ body.carta #view-lecciones .back-btn { display: none !important; } /* el invitad
 .ih-pasos-txt { margin: 0; font-family: var(--font-body); font-style: italic; font-size: 0.86rem; color: var(--text2); }
 .ih-fila .ih-acc { flex: 0 0 auto; gap: 6px; flex-wrap: nowrap; }
 .ih-fila .ih-go { flex: 0 0 auto; min-height: 44px; padding: 0 1.2rem; }
+
+/* Filtros de la biblioteca: solo lo que tiene libros, con su número, y en una sola fila que se desliza en el móvil */
+.eje-n { opacity: 0.55; font-weight: 400; margin-left: 0.15rem; font-variant-numeric: tabular-nums; }
+.eje-pill.active .eje-n { opacity: 0.8; }
+@media (max-width: 899px) {
+  #eje-filters, #eje-filters-sub { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-left: calc(var(--sp-4, 1rem) * -1); margin-right: calc(var(--sp-4, 1rem) * -1); padding-left: var(--sp-4, 1rem); padding-right: var(--sp-4, 1rem); }
+  #eje-filters::-webkit-scrollbar, #eje-filters-sub::-webkit-scrollbar { display: none; }
+  #eje-filters .eje-pill, #eje-filters-sub .eje-pill { flex: 0 0 auto; white-space: nowrap; }
+  #eje-filters-sub { min-height: 0; }
+}
