@@ -84,6 +84,22 @@ describe('Puerta de calidad', () => {
   });
 });
 
+describe('Elección de candidatos · esencia atemporal', () => {
+  const corpus = [{ titulo: 'Existente', autor: 'A', sub_eje: 'Economía' }];
+  const c = (titulo, o = {}) => Object.assign({ titulo, autor: 'X ' + titulo, estado: 'pendiente', prioridad: 50, sub_eje: 'Economía', esencia: 0 }, o);
+  it('la esencia atemporal suma puntos, pero no excluye a quien no la tiene', () => {
+    expect(P.puntuar(c('Clásico', { esencia: 3 }), corpus)).toBe(P.puntuar(c('Normal'), corpus) + 12);
+    expect(P.puntuar(c('Clásico', { esencia: 9 }), corpus)).toBe(P.puntuar(c('Normal'), corpus) + 12);   // tope
+    expect(P.puntuar(c('Sin valorar', { esencia: undefined }), corpus)).toBe(P.puntuar(c('Normal'), corpus));
+    const r = P.elegirCandidato([c('Normal', { prioridad: 80 })], corpus);
+    expect(r.titulo).toBe('Normal');                                   // sin esencia sigue siendo elegible
+  });
+  it('a igual prioridad gana el que presenta esencia, y una prioridad mucho mayor sigue ganando', () => {
+    expect(P.elegirCandidato([c('A', { prioridad: 60 }), c('B', { prioridad: 60, esencia: 2 })], corpus).titulo).toBe('B');
+    expect(P.elegirCandidato([c('A', { prioridad: 90 }), c('B', { prioridad: 60, esencia: 3 })], corpus).titulo).toBe('A');
+  });
+});
+
 describe('Elección de candidatos', () => {
   const corpus = [{ titulo: 'Existente', autor: 'A', sub_eje: 'Economía' }, { titulo: 'Otro', autor: 'B', sub_eje: 'Economía' }, { titulo: 'Tres', autor: 'C', sub_eje: 'Economía' }];
   const c = (titulo, o = {}) => Object.assign({ titulo, autor: 'X ' + titulo, estado: 'pendiente', prioridad: 50, sub_eje: 'Economía' }, o);

@@ -21,6 +21,7 @@ Prioridad del usuario: **no adquirir conceptos erróneos**. Un fallo estético i
 
 ## 1. Elegir candidato (de la cola, no improvisado)
 - `select * from libros_candidatos where estado='pendiente';` y elige con `puerta.elegirCandidato(candidatos, corpus)` (`corpus` = `select titulo, autor, eje_principal, sub_eje from libros`): mayor prioridad, hueco poco poblado, sin duplicar, sin temas de riesgo. Márcalo `en_curso`.
+- **Preferencias del dueño (suman, no excluyen):** libros que capturen algo esencial y atemporal (anótalo en `esencia` 0–3) y de temas aún poco cubiertos pero relacionados con lo que ya hay. Al proponer candidatos nuevos, valora `esencia` y razona el tema en `motivo`; nunca descartes un libro solo por no ser un «clásico».
 - **Duplicados por idioma:** muchos libros están con título en español («Fluir», «Cómo Ganar Amigos…»). Antes de generar, busca también por **autor** (`select titulo from libros where autor ilike '%apellido%'`) y descarta si es el mismo libro.
 - Si la cola está vacía, **no inventes**: termina informando. El dueño (o Claude en una sesión) añade candidatos con motivo de utilidad.
 - No añadas por tu cuenta libros de salud, dinero o sexualidad: van a `en_revision`.
