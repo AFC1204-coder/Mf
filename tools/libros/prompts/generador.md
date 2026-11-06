@@ -37,3 +37,10 @@ Escribe el JSON en la ruta que se te indique con este esquema (sin comentarios):
    "preguntas":[{"texto","opciones":[4],"correcta":0,"explicacion","dificultad":2}]}]}
 `eje_principal` ∈ {Pensamiento y Civilización, Psicología y Conducta, Economía y Mercados, Neurociencia y Biología, Desarrollo Humano}.
 Después ejecuta `node tools/libros/barajar.js <ruta>` y `node tools/libros/lint.js <ruta> tools/libros/autores-corpus.json`, y corrige hasta que diga OK (los AVISOS revísalos con criterio).
+
+## Lecciones de los libros anteriores (los verificadores las encontraron una y otra vez)
+- **No cites de memoria nombres de personas, cargos, capítulos, títulos de ensayos ni anécdotas concretas** salvo que estés seguro: es lo que más falla (un cargo atribuido a la persona equivocada, una escena descrita al revés, una expresión que no es del libro). Si dudas, di «el libro discute…» o elimina el detalle.
+- **No confundas autores homónimos** en `conexion_cruzada` y `autores_relacionados`: comprueba en el corpus que el apellido es la persona (Michael vs Karl Polanyi, etc.) y no atribuyas tesis a ese autor sobre este libro.
+- **Libros de memorias, relatos o naturaleza**: cuenta lo que el autor cuenta como «cuenta que…», sin presentar anécdotas como hechos contrastados; la lección debe sostenerse con ideas generales (método, actitud, mirada), no con detalles de escena.
+- **Síntesis de la app** (tus ejemplos, tus clasificaciones, tus enlaces con otros autores) se rotulan como «esta lección propone», «una lectura»; nunca «el libro dice».
+- No pongas cifras ni años salvo el de publicación del libro.
