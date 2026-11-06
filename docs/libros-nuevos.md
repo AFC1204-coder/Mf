@@ -557,3 +557,10 @@ Añadido a petición del usuario: Psicología y Conducta / Interpersonal, 5 lecc
 
 - **Tratamiento editorial:** divulgación popular cuyo modelo de cuatro colores viene de la tradición DISC (Marston, *Emotions of Normal People*, 1928) y tiene un respaldo empírico débil frente a los cinco grandes. Todo se expone como «el modelo del libro»; cada lección lleva su crítica (validez y fiabilidad, efecto Barnum/Forer, encasillamiento, anécdotas sin estudio controlado, baja falsabilidad) y se recoge que psicólogos y divulgadores suecos lo han calificado de pseudociencia. Las aplicaciones hablan de conducta en una situación, nunca de etiquetar personas.
 - **Límite:** ningún verificador pudo leer el libro ni hallar su índice; lo que se atribuye a capítulos concretos se suavizó o se eliminó. Confianza media.
+
+## *The Hour Between Dog and Wolf* (John Coates, 2012) — noviembre 2026
+
+Añadido a petición del usuario (portada enviada): Neurociencia y Biología / Neurociencia, 5 lecciones y 17 preguntas (el riesgo se decide también con el cuerpo, efecto ganador y testosterona, cortisol y estrés agudo frente a crónico, dopamina y anticipación, «entre el perro y el lobo» y la intuición). Proceso habitual: una verificación independiente (0 ERROR, 5 DUDA menores, suavizadas), carga oculta, huellas `md5` con 0 diferencias y publicación, más un esquema por lección y el mapa del libro.
+
+- **Tratamiento editorial:** sin cifras ni citas literales salvo el dato de la muestra del estudio de Coates y Herbert (2008, 17 operadores). La dirección causal «ganar sube la testosterona y eso aumenta el riesgo» y el papel de la dopamina en los mercados se exponen como hipótesis de Coates; cada lección lleva su límite (evidencia humana desigual, muestras pequeñas, intuición fiable solo en entornos estables).
+- **Límite:** el verificador no pudo leer el libro (solo reseñas y el estudio base); no se incluyeron las propuestas de política del autor. El marco novedad-incertidumbre-falta de control se atribuye a «la investigación que Coates recoge», no a él. Confianza media.
