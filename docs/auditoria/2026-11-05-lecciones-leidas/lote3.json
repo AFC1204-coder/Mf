@@ -1,0 +1,1283 @@
+[
+ {
+  "id": "c0020283-74d9-4b93-8acf-ebc69094e75d",
+  "libro": "How Minds Change",
+  "titulo": "La identidad como ancla de las creencias — por qué cambiar de opinión amenaza al yo",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Se atribuye a McRaney la lectura de las creencias identitarias como strange loop de Hofstadter; es una síntesis de la app.",
+    "evidencia": "McRaney no usa ese marco en How Minds Change (reseñas y resúmenes del libro no lo mencionan); razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "McRaney describe cómo las creencias identitarias son exactamente ese tipo de estructura: la creencia produce comportamientos que confirman la identidad que produce la creencia.",
+     "nuevo": "Esta lección propone (no es una tesis de McRaney) leer las creencias identitarias como un caso de ese tipo de estructura: la creencia produce comportamientos que confirman la identidad que produce la creencia."
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "ERROR",
+    "problema": "Se dice que McRaney llama steel-manning al ejercicio; el término no aparece asociado al libro.",
+    "evidencia": "Búsqueda: reseñas del libro hablan de deep canvassing, street epistemology y entrevista motivacional; nada sobre steel-manning.",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "El ejercicio es el que McRaney llama steel-manning: entender la posición contraria",
+     "nuevo": "El ejercicio es una forma de steel-manning (término ajeno a McRaney): entender la posición contraria"
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "DUDA",
+    "problema": "Se afirma que McRaney aborda la dimensión social «sin suficiente profundidad»; el libro dedica mucho espacio a la identidad grupal, la pertenencia y los ex miembros de sectas. No verificable.",
+    "evidencia": "Publishers Weekly cita el libro sobre amenaza a la identidad de grupo; resúmenes destacan el papel de la comunidad.",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "McRaney aborda esto pero no con suficiente profundidad.",
+     "nuevo": ""
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Se presenta como «contribución más importante de McRaney» una explicación (razonamiento motivado, memoria selectiva, elección de fuentes, diseño evolutivo de la coherencia identitaria) que es mayormente la síntesis de la app.",
+    "evidencia": "Razonamiento: son conceptos estándar de la psicología social, no una tesis distintiva del libro.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Una de las contribuciones más importantes de McRaney es explicar con precisión por qué",
+     "nuevo": "McRaney explica, en parte, por qué"
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "El resto (razonamiento motivado, etc.) es psicología estándar. Un tercio del cuerpo («diseñado evolutivamente», coste evolutivo) es especulación de la app."
+ },
+ {
+  "id": "c12133d2-1a16-45d6-b3bf-5f879d708d41",
+  "libro": "The Molecule of More",
+  "titulo": "El error de predicción dopaminérgico — el mecanismo que rige el aprendizaje y la motivación",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Se presenta como tesis de Buzsáki/Lieberman que dopamina e hipocampo implementan juntos el ciclo predicción-error; es una síntesis de la app sin fuente.",
+    "evidencia": "Buzsáki describe theta y secuencias hipocampales; no vincula así el error de predicción de Schultz. Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "La dopamina y el hipocampo implementan juntos el ciclo de predicción-error-actualización que es el mecanismo básico del aprendizaje en vertebrados.",
+     "nuevo": "Relacionar dopamina e hipocampo en un ciclo de predicción-error-actualización es una hipótesis de esta lección, no una tesis de Buzsáki ni de Lieberman."
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "Contradice la propia lección (el placer no es dopaminérgico) y atribuye a los autores una predicción sobre «placer subjetivo» no verificada.",
+    "evidencia": "Coherencia interna con la lección d2506e5d y con el libro (placer = moléculas H&N).",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "predicen que la disminución de la experiencia subjetiva de placer corresponde a la reducción del error de predicción dopaminérgico",
+     "nuevo": "sugieren que la pérdida de intensidad de la actividad se relaciona con la reducción del error de predicción dopaminérgico"
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Cuerpo OK: Schultz y los tres estados del error de predicción (Schultz, Dayan y Montague 1997), experimentos con primates y jugo (autocorreccion correcta). Conocimiento sólido."
+ },
+ {
+  "id": "c4d4bb59-50f7-4a1c-a68f-d75aba7c4b75",
+  "libro": "Thinking in Bets",
+  "titulo": "La Vida es Póker, No Ajedrez",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Afirma que «el análisis probabilístico muestra» que la jugada de Carroll era razonable; es la tesis de Duke, muy discutida por la mayoría de comentaristas.",
+    "evidencia": "Búsqueda: Duke defiende la llamada (baja probabilidad de intercepción); casi todos los analistas la consideraron indefendible en su momento.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "pero el análisis probabilístico de la jugada muestra que era una decisión razonable con un resultado desafortunado",
+     "nuevo": "pero Duke sostiene que era una decisión defendible con un resultado desafortunado, aunque la jugada sigue siendo discutida"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "La «falacia narrativa» es concepto de The Black Swan, no de Fooled by Randomness (suerte vs. habilidad).",
+    "evidencia": "Conocimiento sólido sobre la obra de Taleb.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Taleb (Fooled by Randomness) como la falacia narrativa aplicada al éxito",
+     "nuevo": "Taleb (Fooled by Randomness) como la confusión entre suerte y habilidad en el éxito"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Tetlock mide a los superpronosticadores con puntuaciones de Brier sobre muchas predicciones; «evaluar por calibración del proceso» es una interpretación.",
+    "evidencia": "Good Judgment Project: puntuación Brier de resultados.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "los superpronosticadores se distinguen precisamente por evaluar sus predicciones por calibración del proceso, no por aciertos individuales",
+     "nuevo": "los superpronosticadores se distinguen por medir su acierto con puntuaciones de calibración (Brier) sobre muchas predicciones, no por casos individuales"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Se atribuye a Weinstein y Minervini la separación proceso/resultado aplicada al stop loss; es aplicación de la app.",
+    "evidencia": "Ninguno de los dos formula así el concepto; razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Weinstein y Minervini implementan esta separación operativamente: un stop loss que se ejecuta no es una mala decisión — es una buena decisión cuyo resultado fue negativo.",
+     "nuevo": "Aplicada al trading (lectura de esta lección, no tesis de Weinstein ni de Minervini), un stop loss que se ejecuta no es una mala decisión sino una decisión cuyo resultado fue negativo."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Resulting, Super Bowl XLIX y póker vs. ajedrez: OK (conocimiento sólido y búsqueda)."
+ },
+ {
+  "id": "ca249bf0-b5b8-457c-a65b-b16b8b2ca9b5",
+  "libro": "The Seven Spiritual Laws of Success",
+  "titulo": "La Ley de Potencialidad Pura: El Silencio Como Fuente de Poder",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Huxley (Las puertas de la percepción) no es «neurociencia temprana» ni habla de prácticas contemplativas: toma de Bergson/C. D. Broad la idea del cerebro como válvula reductora y la liga a la mescalina.",
+    "evidencia": "Conocimiento sólido sobre el ensayo de Huxley (1954).",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Huxley (Las Puertas de la Percepción) complementa desde la neurociencia temprana: la conciencia ordinaria es una reducción funcional de una conciencia mucho más amplia que las prácticas contemplativas restauran parcialmente.",
+     "nuevo": "Huxley (Las Puertas de la Percepción) ofrece una idea afín, tomada de Bergson y Broad: el cerebro actúa como válvula reductora de una conciencia más amplia; Huxley la vincula a la mescalina, no a la meditación."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "«La misma experiencia fenomenológica» entre Tolle y Chopra es una afirmación fuerte sin respaldo.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "pero ambos señalan la misma experiencia fenomenológica",
+     "nuevo": "pero ambos apuntan a experiencias que esta lección considera afines"
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "DUDA",
+    "problema": "Cortisol y coherencia gamma como efectos «medibles y beneficiosos» de la meditación está sobrestimado (gamma se ha hallado sobre todo en meditadores expertos; cortisol, evidencia mixta).",
+    "evidencia": "Lutz et al. 2004 (monjes expertos); revisiones sobre cortisol y mindfulness con resultados mixtos.",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "La meditación produce efectos neurológicos medibles y beneficiosos — reducción de cortisol, aumento de coherencia gamma, mejora de la regulación emocional —",
+     "nuevo": "La meditación se asocia a cambios neurológicos medibles y a beneficios como una mejor regulación emocional (la evidencia sobre cortisol o actividad gamma es más limitada y mixta) —"
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "DUDA",
+    "problema": "Se atribuye a Kandel (un manual) una explicación concreta de los beneficios de la meditación.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "Kandel (Principles of Neural Science) explicaría los mismos beneficios mediante neuroplasticidad sin necesidad de invocar campos de potencialidad pura.",
+     "nuevo": "Una explicación neurocientífica convencional atribuiría los mismos beneficios a la neuroplasticidad, sin necesidad de invocar campos de potencialidad pura."
+    }
+   }
+  ],
+  "preguntas": [
+   {
+    "pregunta_id": "bf062546-ab51-449e-a613-030720c82ecb",
+    "estado": "ok"
+   },
+   {
+    "pregunta_id": "e5e31f83-9d49-411f-969d-3d97d9b62ba7",
+    "estado": "ok"
+   }
+  ],
+  "notas": "Las tres prácticas de la primera ley (silencio/meditación 30 min dos veces al día, no-juicio, contacto con la naturaleza) coinciden con el libro (conocimiento sólido)."
+ },
+ {
+  "id": "ca47d173-cf79-4cea-81c7-77305d5ae141",
+  "libro": "The How of Happiness",
+  "titulo": "La Trampa de la Comparación Social y la Adaptación Hedónica",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Lyubomirsky y Ross (1997): las personas infelices reaccionan a la información comparativa (sobre todo desfavorable); las felices se ven menos afectadas. No se demostró que «se comparen hacia abajo».",
+    "evidencia": "Resumen del estudio (J. Pers. Soc. Psychol. 73, 1141): felices afectados solo por un compañero más lento.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "las personas más felices se comparan menos, y cuando se comparan, lo hacen hacia abajo (con quienes están peor) más que hacia arriba (con quienes están mejor)",
+     "nuevo": "las personas más felices parecen verse menos afectadas por la información de que otros les superan (Lyubomirsky y Ross, 1997)"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Idem: «exactamente lo contrario... hacia arriba constantemente» no es lo que muestra el estudio.",
+    "evidencia": "Idem.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Las personas menos felices hacen exactamente lo contrario — se comparan constantemente hacia arriba, produciendo una insatisfacción crónica independiente de sus circunstancias objetivas.",
+     "nuevo": "Las personas menos felices reaccionan mucho más a lo que hacen los demás, tanto a las comparaciones favorables como a las desfavorables."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "«Cualquier mejora»: la adaptación hedónica es incompleta en algunos casos (p. ej. desempleo, discapacidad grave).",
+    "evidencia": "Lucas et al., estudios longitudinales (conocimiento sólido).",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "la capacidad del cerebro para normalizar cualquier mejora circunstancial",
+     "nuevo": "la tendencia a normalizar muchas mejoras circunstanciales"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Fromm: la oposición tener/ser está en ¿Tener o ser?, no en El arte de amar, y Fromm no dice que la comparación sea inherente al modo tener.",
+    "evidencia": "Conocimiento sólido sobre Fromm.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "La divergencia más productiva es con Fromm (El Arte de Amar): Fromm argumenta que la comparación es inherente al modo tener pero ausente en el modo ser — cuando tu identidad no depende de tus posesiones, la comparación pierde su poder.",
+     "nuevo": "Una lectura afín a Fromm (¿Tener o ser?, no El arte de amar) sugiere que cuando la identidad no depende de las posesiones la comparación pierde su poder; es una extrapolación de esta lección, no una tesis explícita de Fromm."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "La prueba social de Cialdini (imitar lo que hacen otros) no es lo mismo que la comparación social de estatus.",
+    "evidencia": "Conocimiento sólido sobre Influencia.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Cialdini (Influencia) proporciona el mecanismo social: el principio de prueba social significa que evaluamos nuestra situación mirando qué tienen los demás, convirtiendo la comparación en un sesgo automático y no en una elección consciente.",
+     "nuevo": "Cialdini (Influencia) describe un mecanismo afín, la prueba social: tendemos a guiarnos por lo que hacen los demás (no es lo mismo que la comparación social de estatus, aunque esta lección los relaciona)."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Easter (The Comfort Crisis) no es una obra de neurobiología.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "complementa la adaptación hedónica desde la neurobiología:",
+     "nuevo": "ofrece un argumento afín a la adaptación hedónica:"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "La tolerancia dopaminérgica no es «el mecanismo biológico exacto» de la adaptación hedónica (afirmación sobrecargada).",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "la tolerancia dopaminérgica es el mecanismo biológico exacto de la adaptación hedónica.",
+     "nuevo": "la tolerancia dopaminérgica es un mecanismo biológico plausible, entre otros, de la adaptación hedónica."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Variación y apreciación como antídotos: coherente con Sheldon y Lyubomirsky (2012). Origen evolutivo de la comparación en cazadores-recolectores es especulación presentada como hecho (no corregida)."
+ },
+ {
+  "id": "cef9820b-84ca-4800-b3da-dc601fa14575",
+  "libro": "Dangerous Personalities",
+  "titulo": "Por Qué las Personalidades Peligrosas Pasan Desapercibidas",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "Se presenta como estructura del libro de Navarro una pregunta y tres mecanismos (sesgo de normalidad, encantamiento inicial, coste social de nombrar el problema) que no figuran en su índice: el libro se organiza por tipos de personalidad (narcisista, inestable, paranoide, depredador...).",
+    "evidencia": "Búsqueda: capítulos 1-3 = narcisista, emocionalmente inestable, paranoide; ningún capítulo sobre sesgos de ceguera. Síntesis de la app.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Navarro abre con una pregunta que estructura todo el libro:",
+     "nuevo": "Esta lección plantea una pregunta (no es una estructura verificada del libro de Navarro):"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "«Navarro documenta» el efecto de encantamiento inicial: atribución no verificable.",
+    "evidencia": "Idem.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Navarro documenta que esta primera impresión crea un marco",
+     "nuevo": "Esta lección sostiene (sin que pueda atribuirse a Navarro) que esta primera impresión crea un marco"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Navarro, ex agente del FBI, escribe desde la experiencia clínica/policial; «describe empíricamente» es una exageración.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Navarro describe empíricamente lo que Kahneman explica mecanísticamente.",
+     "nuevo": "El vínculo entre Navarro y Kahneman es una lectura de esta lección."
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "ERROR",
+    "problema": "Se critica a Navarro por presentar «tres mecanismos» que él no presenta.",
+    "evidencia": "Idem.",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "Navarro presenta los tres mecanismos de ceguera como si fueran igualmente operativos en todas las personas, pero la investigación en psicología diferencial muestra varianza significativa",
+     "nuevo": "Los tres mecanismos de ceguera descritos aquí probablemente no operan igual en todas las personas, pues la psicología diferencial sugiere varianza"
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "DUDA",
+    "problema": "Afirmación empírica («alta necesidad de afiliación» más susceptible al encantamiento) sin fuente; y «el libro no diferencia» no verificado.",
+    "evidencia": "No encontrado.",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "Personas con alta necesidad de afiliación son más susceptibles al encantamiento inicial.",
+     "nuevo": ""
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "DUDA",
+    "problema": "«El libro no diferencia...» sin verificación.",
+    "evidencia": "Idem.",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "El libro no diferencia suficientemente cómo estos sesgos varían según el perfil psicológico del observador.",
+     "nuevo": "Esta variación según el perfil psicológico del observador es una hipótesis razonable, no un resultado establecido."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Lección casi toda síntesis de la app presentada como contenido del libro. Valorar reescribirla o eliminarla."
+ },
+ {
+  "id": "d2506e5d-5dee-4a90-856f-99530c33afeb",
+  "libro": "The Molecule of More",
+  "titulo": "La dopamina no es la molécula del placer — es la del querer",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Kahneman no asocia el yo que recuerda con objetivos/proyectos futuros ni con la dopamina.",
+    "evidencia": "El yo que recuerda evalúa experiencias pasadas (regla pico-final); conocimiento sólido.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "el yo que recuerda construye narrativas sobre objetivos logrados y proyectos futuros — que es exactamente el dominio dopaminérgico.",
+     "nuevo": "el yo que recuerda construye narrativas sobre lo vivido. Asociar esto con el dominio dopaminérgico es una analogía de esta lección, no una tesis de Kahneman ni de Lieberman."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Kahneman no formula una tensión hedónico/eudaimónico en esos términos ni la liga a moléculas.",
+    "evidencia": "Idem.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "La tensión entre bienestar hedónico (yo que experimenta, H&N) y bienestar eudaimónico (yo que persigue objetivos, dopamina) que Kahneman describe es exactamente la tensión molecular que Lieberman y Long formalizan.",
+     "nuevo": "Kahneman no distingue bienestar hedónico y eudaimónico en estos términos; la correspondencia con las moléculas H&N y la dopamina es una analogía de esta lección."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "La atribución de la satisfacción real a serotonina, oxitocina y endorfinas es simplificación del libro, expuesta como hecho.",
+    "evidencia": "El libro agrupa estas moléculas como H&N; la neurociencia del «gusto» (Berridge) es más compleja (opioides, endocannabinoides).",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "La satisfacción real — la que sientes cuando obtienes lo que querías — no es dopaminérgica: es producida por las moléculas del aquí y ahora (serotonina, oxitocina, endorfinas) que Lieberman llama H&N.",
+     "nuevo": "Según Lieberman y Long, la satisfacción real — la que sientes cuando obtienes lo que querías — no es dopaminérgica: la producen sobre todo las moléculas del aquí y ahora (serotonina, oxitocina, endorfinas, entre otras) que ellos llaman H&N; es una simplificación."
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "«Lieberman y Long predicen» una asimetría cuantitativa: no verificable.",
+    "evidencia": "No encontrado.",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "Lieberman y Long predicen que la anticipación será consistentemente más intensa que la satisfacción.",
+     "nuevo": "Según el marco de Lieberman y Long cabría esperar que la anticipación sea a menudo más intensa que la satisfacción (no es una predicción cuantitativa del libro)."
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "«Siempre decepcione»: absoluto.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "el motor de búsqueda está diseñado para que la posesión siempre decepcione relativamente al deseo",
+     "nuevo": "el motor de búsqueda tiende a que la posesión decepcione relativamente al deseo"
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Núcleo (Schultz, error de predicción, mesolímbica vs. mesocortical): OK. La autocorrección podría citar la distinción querer/gustar de Berridge, base real de la idea."
+ },
+ {
+  "id": "d511c2fa-af62-4bd3-9374-4613fd356eee",
+  "libro": "Prometeo Ascendiendo",
+  "titulo": "Evolución Cuántica: El Cerebro como Antena de Posibilidades",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "El colapso de la función de onda no requiere un observador consciente; «al ser observados» induce a error.",
+    "evidencia": "Física cuántica estándar (medición/decoherencia).",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "en estados definidos al ser observados",
+     "nuevo": "en estados definidos al medirse (la medición no requiere un observador consciente)"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Se presenta como hecho («no es una metáfora... es un proceso neurológico concreto») la tesis especulativa de Wilson.",
+    "evidencia": "La propia autocorreccion dice que son extrapolaciones no ciencia.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "La idea que permanece: la evolución de la conciencia no es una metáfora espiritual. Es un proceso neurológico concreto de activación de circuitos latentes, accesible mediante práctica, tecnología y elección consciente.",
+     "nuevo": "La idea que plantea Wilson: la evolución de la conciencia no sería una metáfora espiritual sino un proceso neurológico de activación de circuitos latentes, accesible mediante práctica, tecnología y elección consciente (tesis especulativa, no establecida)."
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "DUDA",
+    "problema": "Falta la objeción física clave: las correlaciones no locales no permiten transmitir información, así que no respaldan telepatía ni precognición.",
+    "evidencia": "Teorema de no-señalización (conocimiento sólido).",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "La física cuántica es real y profunda; las extrapolaciones a la conciencia, por ahora, son metáforas fértiles, no ciencia.",
+     "nuevo": "La física cuántica es real y profunda; las extrapolaciones a la conciencia, por ahora, son metáforas fértiles, no ciencia. Además, las correlaciones no locales no permiten transmitir información, por lo que no sustentan telepatía ni precognición."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Comprobado: experimentos de Aspect 1982; en Prometheus Rising (1983) Wilson intercambia el orden de Leary y el circuito VII es metaprogramación (VI neurogenético/morfogenético) y el VIII el cuántico no local. Las conexiones con Deutsch, Hofstadter y Taleb son hipotéticas («argumentaría», «consideraría»)."
+ },
+ {
+  "id": "d57645c5-a223-49f4-beac-1bc3e602d12f",
+  "libro": "Tao Te King",
+  "titulo": "El sabio gobernante — liderazgo que no se nota",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "«Los estudios... muestran consistentemente» que la autogestión supera a la jerarquía: Laloux y Hamel se basan en estudios de casos y defensa teórica, no en evidencia comparativa sistemática.",
+    "evidencia": "Reinventing Organizations (casos seleccionados); sin metaanálisis que lo respalde.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "los estudios de organizaciones de alto rendimiento (Laloux en Reinventing Organizations, Hamel en The Future of Management) muestran consistentemente que las estructuras de autogestión superan a las jerárquicas en entornos complejos.",
+     "nuevo": "autores como Laloux (Reinventing Organizations) y Hamel (The Future of Management) defienden, a partir de estudios de casos, que las estructuras de autogestión pueden superar a las jerárquicas en entornos complejos; la evidencia comparativa sistemática es limitada."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Lao-Tse no describe un «mecanismo» de orden emergente; es lectura moderna (la propia conexión cruzada dice que Lao-Tse se queda en la prescripción).",
+    "evidencia": "Incoherencia interna.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "El mecanismo que Lao-Tse describe es el del orden emergente:",
+     "nuevo": "Una lectura moderna de Lao-Tse lo interpreta como orden emergente:"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Equiparar el orden espontáneo de Hayek con el wu wei es analogía de la app.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "El orden espontáneo del mercado es la versión hayek-iana del wu wei político de Lao-Tse.",
+     "nuevo": "El orden espontáneo del mercado puede leerse como un paralelo hayekiano del wu wei político de Lao-Tse (analogía de esta lección, no de Hayek)."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Comprobado: capítulo 17 (mejor gobernante, el pueblo apenas sabe que existe; luego amado, temido, despreciado) y capítulo 60 («gobernar un gran país es como cocinar un pez pequeño»); capítulo 57 sobre no-acción. Se aceptan las traducciones del español."
+ },
+ {
+  "id": "d67d75d3-7bca-41c8-97b0-48730cbd1bf3",
+  "libro": "El Fuego Secreto de los Filósofos",
+  "titulo": "El Alma del Mundo — Anima Mundi y la Naturaleza como Ser Vivo",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Deutsch (parroquialismo) critica explicaciones centradas en lo humano y defiende explicaciones naturalistas; no respalda un alma del mundo. La conexión invierte su posición.",
+    "evidencia": "The Beginning of Infinity; conocimiento sólido.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Conecta con la crítica de Deutsch al parroquialismo: nuestra visión de la naturaleza como máquina es un sesgo cultural enorme que limita qué preguntas hacemos y qué respuestas podemos concebir.",
+     "nuevo": "Deutsch, cuya crítica al parroquialismo se dirige a las explicaciones centradas en lo humano, probablemente rechazaría atribuir alma o propósito a la naturaleza; la conexión con Harpur es débil."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "«Consecuencia directa» de la crisis ecológica: tesis fuerte atribuida a Harpur sin verificar.",
+    "evidencia": "No verificable sin el libro.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "la crisis ecológica contemporánea es la consecuencia directa de tratar la naturaleza como recurso",
+     "nuevo": "la crisis ecológica contemporánea es, en buena parte, consecuencia de tratar la naturaleza como recurso"
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Galileo (Il Saggiatore, 1623, libro de la naturaleza en lengua matemática): OK. No pude verificar en texto las tesis atribuidas a Harpur; la «tradición de 2.500 años» y «físicos cuánticos» son plausibles."
+ },
+ {
+  "id": "d6cccd42-5191-424e-a65a-7a9c28e7dc71",
+  "libro": "Compórtate",
+  "titulo": "El comportamiento no tiene una sola causa — tiene una cadena causal completa",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "autocorreccion",
+    "severidad": "ERROR",
+    "problema": "Sapolsky rechaza explícitamente el reduccionismo en Compórtate; decir que tiene un sesgo reduccionista que no reconoce es falso.",
+    "evidencia": "Tesis central del libro (multinivel, rechazo del reduccionismo).",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "es empíricamente poderoso pero tiene un sesgo reduccionista que él mismo no reconoce: presenta la cadena causal biológica como la explicación completa del comportamiento, eliminando implícitamente la agencia.",
+     "nuevo": "es empíricamente poderoso, y Sapolsky rechaza explícitamente el reduccionismo, pero su cadena causal deja poco espacio a la agencia: concluye que el libre albedrío es ilusorio."
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "DUDA",
+    "problema": "Objeción filosófica presentada como refutación («no puede auto-aplicarse»); falta la réplica compatibilista, la objeción real.",
+    "evidencia": "Debate sobre libre albedrío y determinismo.",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "Pero este determinismo biologicista no puede auto-aplicarse: si Sapolsky está biológicamente determinado a creer en el determinismo, su argumento pierde fuerza normativa.",
+     "nuevo": "Los filósofos compatibilistas discuten que el determinismo implique la ausencia de responsabilidad moral."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Se atribuye a Csikszentmihalyi una «capa evolutiva» (cerebro diseñado para alta activación) que no es suya.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Csikszentmihalyi añade la capa evolutiva al flujo: el cerebro está diseñado para estados de alta activación con propósito, no para el ocio pasivo.",
+     "nuevo": ""
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Se atribuye a Minervini una tesis sobre estados fisiológicos incongruentes.",
+    "evidencia": "Minervini insiste en disciplina y psicología; no en fisiología.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Minervini aborda el mismo problema desde los mercados: la arquitectura mental falla no por falta de conocimiento sino por estados fisiológicos incongruentes.",
+     "nuevo": "Minervini insiste desde los mercados en que fallar suele deberse más a la disciplina y la psicología que a la falta de conocimiento técnico (paralelo que establece esta lección)."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Afirmación gratuita sobre Deida y Jerr, no verificable.",
+    "evidencia": "No verificable.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Deida y Jerr ignoran esta multicausalidad — sus marcos colapsan cuando se aplican a personas con biología o historia que no encaja en el arquetipo.",
+     "nuevo": ""
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Los detalles del ejemplo (cortisol por discusión, receptores de serotonina, etc.) parecen del autor de la lección, no de Sapolsky.",
+    "evidencia": "El esquema de escalas temporales es de Sapolsky; los detalles se inventan para ilustrar.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Sapolsky organiza todo el libro como un zoom progresivo hacia atrás en el tiempo. Un hombre dispara un arma. ¿Por qué?",
+     "nuevo": "Sapolsky organiza todo el libro como un zoom progresivo hacia atrás en el tiempo. Ilustremos con un ejemplo (los detalles concretos son de esta lección): un hombre dispara un arma. ¿Por qué?"
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Estructura por escalas temporales (segundos, minutos, días, infancia, genes, evolución, cultura): OK. Libre albedrío ilusorio: posición explícita de Sapolsky."
+ },
+ {
+  "id": "d7dbb9af-e018-44ea-9f1e-dd65afcf9779",
+  "libro": "The How of Happiness",
+  "titulo": "El Modelo 40%: La Arquitectura Científica de la Felicidad",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "ERROR",
+    "problema": "Interpreta el 50% como «tu nivel de felicidad»: es una proporción de varianza entre personas (herencia poblacional), no una parte de tu felicidad fijada.",
+    "evidencia": "Brown y Rohrer 2020 (J. Happiness Stud. 21): el modelo describe varianza poblacional, no lo que un individuo puede cambiar.",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "Acepta operativamente que el 50% de tu nivel de felicidad basal es genético — esto no es resignación sino liberación",
+     "nuevo": "Ten en cuenta que, según el modelo, cerca del 50% de las diferencias de felicidad entre personas se asocia a la genética (no que el 50% de tu felicidad esté fijado) — esto no es resignación sino liberación"
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "«El 40% que sí controlas» repite el error anterior.",
+    "evidencia": "Idem.",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "Enfoca tu energía en el 40% que sí controlas: actividades intencionales.",
+     "nuevo": "Enfoca tu energía en las actividades intencionales, donde tienes margen de influencia."
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "DUDA",
+    "problema": "Falta la crítica principal: Brown y Rohrer (2020) y la concesión de Sheldon y Lyubomirsky (2019) de que el gráfico circular ha agotado su utilidad y que los efectos son menores de lo estimado.",
+    "evidencia": "https://link.springer.com/10.1007/s10902-019-00128-4 y revisión de Sheldon y Lyubomirsky (2019), J. Positive Psychology.",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "El modelo funciona mejor como heurística motivacional que como descripción precisa de la arquitectura de la felicidad.",
+     "nuevo": "Brown y Rohrer (2020) criticaron el modelo porque describe varianza poblacional y no lo que un individuo puede cambiar, y los propios Sheldon y Lyubomirsky (2019) reconocieron que el gráfico circular ha agotado su utilidad y que los efectos de las actividades son menores de lo que pensaron. El modelo funciona mejor como heurística motivacional que como descripción precisa de la arquitectura de la felicidad."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Adaptación «notablemente rápida» a mejoras y deterioros: la adaptación es incompleta en algunos casos.",
+    "evidencia": "Lucas et al.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "los seres humanos se adaptan notablemente rápido tanto a las mejoras como a los deterioros de sus circunstancias, volviendo a un nivel basal de felicidad tras un periodo de ajuste.",
+     "nuevo": "los seres humanos tienden a adaptarse a muchas mejoras y deterioros de sus circunstancias, volviendo hacia un nivel basal de felicidad, aunque la adaptación es incompleta en algunos casos (por ejemplo, desempleo o discapacidad grave)."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Las escalas de Lyubomirsky (felicidad subjetiva, satisfacción vital) son valoraciones globales, más cercanas al yo que recuerda; la lección dice lo contrario y atribuye a Kahneman una objeción que no formuló.",
+    "evidencia": "Escala de felicidad subjetiva (Lyubomirsky y Lepper 1999).",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Lyubomirsky opera principalmente sobre el bienestar experimentado pero sus mediciones frecuentemente capturan el bienestar recordado — una tensión metodológica que Kahneman señalaría.",
+     "nuevo": "Las escalas que usa Lyubomirsky (como su escala de felicidad subjetiva) son valoraciones globales y retrospectivas, es decir, más cercanas al yo que recuerda que al que experimenta; es una observación de esta lección, no de Kahneman."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "El «nunca suficiente» de Housel es codicia/objetivo móvil; equipararlo a la adaptación hedónica es analogía.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "su concepto de nunca suficiente es la adaptación hedónica de Lyubomirsky aplicada al dinero.",
+     "nuevo": "su concepto de nunca suficiente puede leerse como un paralelo de la adaptación hedónica aplicada al dinero."
+    }
+   }
+  ],
+  "preguntas": [
+   {
+    "pregunta_id": "ccaca800-2c9a-427d-90c0-0c8b072ded43",
+    "estado": "ok"
+   },
+   {
+    "pregunta_id": "c1d8d445-e6d7-4577-a193-aa9767bf6f22",
+    "estado": "ok"
+   }
+  ],
+  "notas": "50/10/40 y las 12 actividades: OK (Lyubomirsky, Sheldon y Schkade 2005; libro de 2007)."
+ },
+ {
+  "id": "db1d8367-4e9c-494b-9bb8-556e5d4eecfa",
+  "libro": "The Fourth Turning",
+  "titulo": "El tiempo lineal vs el tiempo cíclico — la ceguera que impide ver el patrón",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "autocorreccion",
+    "severidad": "ERROR",
+    "problema": "Se califica de «sólida» la evidencia del ciclo saecular angloamericano; la teoría generacional de Strauss y Howe es muy criticada por historiadores y científicos sociales como periodización selectiva y poco falsable.",
+    "evidencia": "Crítica académica habitual a la teoría generacional (conocimiento sólido).",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "La evidencia es sólida para la historia angloamericana desde el siglo XV, pero su extensión a civilizaciones no occidentales es más especulativa.",
+     "nuevo": "Strauss y Howe sostienen que el patrón se observa en la historia angloamericana desde el siglo XV, pero muchos historiadores y científicos sociales lo consideran una periodización selectiva y poco falsable, y su extensión a otras civilizaciones es más especulativa."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "No pude confirmar el texto del capítulo sobre las tres concepciones del tiempo (caótico, lineal, cíclico); es coherente con el libro. El paralelo con Soros es síntesis de la app. La idea_clave ya está bien matizada."
+ },
+ {
+  "id": "db747204-8b1b-41a7-8541-70db61889d0e",
+  "libro": "Loonshots",
+  "titulo": "Las ideas revolucionarias mueren por la física de los grupos, no por su falta de mérito",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "autocorreccion",
+    "severidad": "ERROR",
+    "problema": "Bahcall sí propone una ecuación para el tamaño crítico (el «número mágico», con fracción de capital, tramo de control, adecuación y crecimiento salarial por promoción).",
+    "evidencia": "Resúmenes del libro (Shortform y otros): M ≈ E·S²·F/G.",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "Bahcall no proporciona ecuaciones ni umbrales cuantificables que permitan determinar en qué punto exacto una organización cruzó la masa crítica.",
+     "nuevo": "Bahcall propone una ecuación para el tamaño crítico (el número mágico), pero sus parámetros son difíciles de medir en organizaciones reales y su validez predictiva no está establecida."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "El radar «casi cancelado antes de la Batalla de Gran Bretaña» no se sostiene (la cadena Chain Home estaba operativa en 1939); Bahcall habla del radar en el contexto de Vannevar Bush.",
+    "evidencia": "Historia del radar británico (conocimiento sólido).",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "el radar (casi cancelado antes de la Batalla de Gran Bretaña)",
+     "nuevo": "el radar"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Penicilina «rechazada durante una década»: lo que hubo fue un lapso de unos doce años entre el descubrimiento (1928) y su desarrollo clínico (1940-41).",
+    "evidencia": "Historia de la penicilina.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "la penicilina (rechazada durante una década)",
+     "nuevo": "la penicilina (tardó cerca de una década en desarrollarse como fármaco)"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "«bush (árbitro)»: Bush-Vail son las reglas que Bahcall nombra por Vannevar Bush y Theodore Vail, no un rol llamado «bush».",
+    "evidencia": "Resúmenes del libro.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "un líder que funciona como bush (árbitro) entre ambos",
+     "nuevo": "un líder que actúa como árbitro entre ambos (en la línea de las reglas Bush-Vail que Bahcall toma de Vannevar Bush y Theodore Vail)"
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Artistas/soldados, loonshots, cambios de fase y tamaño crítico: OK. El detalle de «riesgo personal vs. recompensa» es simplificación del modelo de Bahcall. Jobs y el teléfono: conocimiento sólido (Isaacson)."
+ },
+ {
+  "id": "dfcb3613-0469-43e1-bde1-8a7cfadf8635",
+  "libro": "The Myth of National Defense",
+  "titulo": "Guerra, Estado y la Producción de Inseguridad: El Argumento de Rothbard",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "Los «170 millones» son la estimación de democidio de R. J. Rummel (169 millones de muertos por gobiernos fuera del combate), no «muertos en guerras», y no la cita Rothbard (ensayo de 1963; Rummel publica en 1994).",
+    "evidencia": "https://fff.org/explore-freedom/article/book-review-death-government/ (169.198.000 democidio; con combatientes, unos 203 millones).",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Los datos son contundentes: las guerras del siglo XX mataron a más de 170 millones de personas, la inmensa mayoría por acción directa de Estados contra sus propios ciudadanos o los de otros Estados. Ningún agente privado en la historia se acerca a estas cifras de destrucción.",
+     "nuevo": "Según las estimaciones de R. J. Rummel (muy posteriores al ensayo de Rothbard, de 1963), los gobiernos del siglo XX mataron a unos 170 millones de personas fuera del combate (democidio), a lo que se suman decenas de millones de muertos en combate; es una estimación controvertida."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "La formulación como «externalidad negativa» no es de Rothbard.",
+    "evidencia": "Ensayo War, Peace, and the State (mises.org).",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Rothbard argumenta que la guerra es una externalidad negativa de la existencia del Estado, no un problema que el Estado resuelve.",
+     "nuevo": "Rothbard sostiene que el Estado es un agente central de la guerra moderna, no un remedio contra ella (la formulación en términos de externalidad es de esta lección)."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "Rothbard no dice que toda guerra convencional entre Estados viole necesariamente el principio de no-agresión: su criterio es que la guerra solo es legítima si la violencia se limita estrictamente a los criminales; excluye las armas nucleares y los bombardeos aéreos, no toda guerra convencional.",
+    "evidencia": "https://mises.org/online-book/myth-national-defense/2-war-peace-and-state (arco y flecha vs. nucleares y bombas aéreas convencionales).",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "La guerra convencional entre Estados viola necesariamente el principio de no-agresión porque no puede dirigirse exclusivamente contra agresores — siempre implica daño colateral a civiles inocentes que no son parte del conflicto.",
+     "nuevo": "Para Rothbard, la guerra solo es legítima si la violencia se limita estrictamente a los criminales; las armas nucleares, y también los bombardeos aéreos convencionales, no pueden dirigirse solo contra agresores."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Principles (2017) no documenta ese colapso fiscal imperial; Dalio lo trata en The Changing World Order (2021).",
+    "evidencia": "Conocimiento sólido sobre la obra de Dalio.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Dalio en Principles documenta que los imperios que socializan costes militares terminan en colapso fiscal.",
+     "nuevo": "Dalio, en sus trabajos sobre el ciclo de los imperios (más en The Changing World Order que en Principles), señala el sobregasto militar y la deuda entre los factores del declive imperial."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Minervini: la regla es limitar pérdidas; «asumir personalmente» es parafraseo forzado.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Minervini en Trade Like a Stock Market Wizard insiste en que la primera regla del trading es asumir personalmente las pérdidas de tus decisiones — exactamente lo que los Estados no hacen en guerra.",
+     "nuevo": "Minervini en Trade Like a Stock Market Wizard insiste en limitar las pérdidas y asumir la responsabilidad de las propias decisiones — algo que, según el argumento de esta lección, los Estados no hacen en guerra."
+    }
+   },
+   {
+    "donde": "autocorreccion",
+    "severidad": "DUDA",
+    "problema": "El caso de Somalia como violencia «comparable» a la estatal es discutido: algunos estudios (Leeson) sostienen que mejoró tras 1991.",
+    "evidencia": "Literatura sobre Somalia sin Estado (Leeson 2007).",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "señores de la guerra privados han producido niveles de violencia comparables en regiones como Somalia, Afganistán y zonas de conflicto en África central",
+     "nuevo": "señores de la guerra privados han producido violencia grave en regiones como Afganistán o zonas de África central (el caso de Somalia es discutido: algunos estudios sostienen que su situación mejoró tras el colapso estatal de 1991)"
+    }
+   }
+  ],
+  "preguntas": [
+   {
+    "pregunta_id": "58df6978-b798-4405-8b9c-1e12727bccc1",
+    "estado": "ambigua",
+    "correccion": {
+     "pregunta_id": "58df6978-b798-4405-8b9c-1e12727bccc1",
+     "correcta_actual": 1,
+     "correcta_propuesta": 1,
+     "motivo": "La clave es coherente con la lección, pero el enunciado atribuye a Rothbard y a «guerras» una cifra de democidio de Rummel: reescribir (según las estimaciones de Rummel, democidio) o eliminar."
+    }
+   },
+   {
+    "pregunta_id": "273f7c72-d907-4c8c-9214-97e25c630194",
+    "estado": "ok"
+   },
+   {
+    "pregunta_id": "54e82914-86ef-415d-8a1f-4f7450e289bd",
+    "estado": "ambigua",
+    "correccion": {
+     "pregunta_id": "54e82914-86ef-415d-8a1f-4f7450e289bd",
+     "correcta_actual": 1,
+     "correcta_propuesta": 1,
+     "motivo": "La clave se mantiene respecto al texto, pero «necesariamente» no es la tesis de Rothbard (ver hallazgo del cuerpo); reformular como «guerra que no puede dirigirse solo contra agresores»."
+    }
+   },
+   {
+    "pregunta_id": "6ba53187-e47d-49eb-80cb-9374b471140c",
+    "estado": "ok"
+   }
+  ],
+  "notas": "Rothbard, War, Peace, and the State está en el volumen (sección 1, cap. 2). El argumento de la defensa privada que desincentiva la agresión es más de Hoppe que de Rothbard (Q2 ok respecto al texto de la lección)."
+ },
+ {
+  "id": "e2f0e6e3-1fe6-44de-9401-b062d848bfea",
+  "libro": "Rational Choice in an Uncertain World",
+  "titulo": "Probabilidad como grado de creencia: el marco bayesiano",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Se atribuye a Dawes y Hastie la defensa del bayesianismo filosófico y de un «bayesianismo pragmático»; el libro es sobre juicio y decisión, no un tratado de filosofía de la probabilidad.",
+    "evidencia": "No verificable sin el libro.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Dawes y Hastie defienden la interpretación bayesiana de la probabilidad:",
+     "nuevo": "Según esta lección, Dawes y Hastie adoptan la interpretación bayesiana (subjetiva) de la probabilidad:"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "«El libro defiende un bayesianismo pragmático»: no verificable.",
+    "evidencia": "Idem.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "El libro defiende un bayesianismo pragmático: usar previas razonables y dejar que la evidencia las modifique progresivamente.",
+     "nuevo": "Una postura pragmática es usar previas razonables y dejar que la evidencia las modifique progresivamente."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "La abducción de Peirce no converge con Bayes de manera directa.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Converge con la lógica de la abducción de Peirce.",
+     "nuevo": ""
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Regla de Bayes, previas, Jaynes (máxima entropía), frecuentismo de Neyman y Pearson: OK (conocimiento sólido)."
+ },
+ {
+  "id": "e64bbd27-15c8-4dbd-b4e1-975dc10d7842",
+  "libro": "The Sensory Order",
+  "titulo": "Consciencia, atención y pensamiento conceptual",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Csikszentmihalyi no describe el flujo como sincronía entre clasificación consciente e inconsciente; el flujo exige atención plena. Es reinterpretación de la app.",
+    "evidencia": "Fluir (Csikszentmihalyi): absorción y atención concentrada.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Csikszentmihalyi en Fluir describe el estado de flujo como aquel en que el sistema de clasificación consciente y el inconsciente operan en sincronía perfecta",
+     "nuevo": "Csikszentmihalyi en Fluir describe el flujo como absorción plena en una tarea; esta lección lo reinterpreta con el vocabulario de Hayek (consciente e inconsciente en sincronía)"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Continuación de la reinterpretación anterior.",
+    "evidencia": "Idem.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "la tarea no requiere supervisión consciente porque el sistema de clasificación inconsciente la gestiona completamente, liberando la consciencia para el nivel de abstracción más alto",
+     "nuevo": "en esta lectura, parte de la tarea se automatiza y la atención queda libre para niveles más altos"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Buzsáki no afirma que las oscilaciones gamma coordinen «exactamente» la clasificación de Hayek.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Buzsáki añade el mecanismo temporal: las oscilaciones gamma coordinan exactamente los procesos de clasificación paralela que Hayek describe.",
+     "nuevo": "Buzsáki describe las oscilaciones gamma como un posible mecanismo de coordinación temporal entre redes neuronales; relacionarlas con la clasificación paralela de Hayek es una analogía de esta lección."
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "Se pone en boca de Hayek una explicación específica del aprendizaje de habilidades (consciente → inconsciente).",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "Hayek diría que lo que ocurre es que el sistema de clasificación consciente construye",
+     "nuevo": "Una lectura hayekiana, extrapolada por esta lección, sería que el sistema de clasificación consciente construye"
+    }
+   }
+  ],
+  "preguntas": [
+   {
+    "pregunta_id": "2929424a-cc1f-49df-b264-d1da8c2ddd69",
+    "estado": "ok"
+   },
+   {
+    "pregunta_id": "d086f805-15f5-4dc5-8ed6-fbcadeab1c77",
+    "estado": "ok"
+   }
+  ],
+  "notas": "Conceptos como clases de clases, clasificación por debajo del umbral consciente y problema duro de Chalmers (1995): coherentes con Hayek (conocimiento sólido, sin verificar en el texto)."
+ },
+ {
+  "id": "e759abd7-096c-4cfb-8d56-ab9f8eea5e47",
+  "libro": "Crucial Confrontations",
+  "titulo": "El Problema de las Conversaciones que Nadie Tiene",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "autocorreccion",
+    "severidad": "DUDA",
+    "problema": "Se afirma que Patterson presenta el silencio «casi exclusivamente» como error de habilidad; el método también trata la disposición (motivación) y la seguridad. No verificable.",
+    "evidencia": "No verificable sin el libro.",
+    "correccion": {
+     "campo": "autocorreccion",
+     "antiguo": "Patterson et al. presentan el silencio ante problemas crónicos casi exclusivamente como un error de habilidad — si supieras cómo tener la conversación, la tendrías.",
+     "nuevo": "Patterson et al. tienden a presentar el silencio ante problemas crónicos como un déficit de habilidad o de disposición que el método puede corregir."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Planteamiento general plausible y coherente con el libro (resumen, no verificado en texto). Contenido por lo demás OK."
+ },
+ {
+  "id": "e800cd97-0f6e-46e6-939e-8c446fbd46b3",
+  "libro": "In Sheep's Clothing",
+  "titulo": "El espectro de la agresividad: personalidades overt y covert",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Simon no articula su análisis con las armas de Cialdini; es una relación de la app.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "el agresor encubierto utiliza sistemáticamente la reciprocidad, la prueba social y la simpatía como vectores de manipulación.",
+     "nuevo": "un agresor encubierto puede aprovechar principios como la reciprocidad o la simpatía como vectores de manipulación (relación que establece esta lección, no Simon)."
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "Un malestar difuso no es «la firma» del agresor encubierto (la propia autocorreccion reconoce otras explicaciones).",
+    "evidencia": "Coherencia interna.",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "Ese patrón —malestar sin causa aparente— es la firma del agresor encubierto.",
+     "nuevo": "Ese patrón —malestar sin causa aparente— puede ser una señal, pero no prueba que haya un agresor encubierto: tiene otras explicaciones."
+    }
+   },
+   {
+    "donde": "aplicacion_practica",
+    "severidad": "DUDA",
+    "problema": "«Amnesia emocional que estos perfiles inducen deliberadamente»: concepto no de Simon.",
+    "evidencia": "No encontrado.",
+    "correccion": {
+     "campo": "aplicacion_practica",
+     "antiguo": "El registro escrito rompe la amnesia emocional que estos perfiles inducen deliberadamente.",
+     "nuevo": "El registro escrito ayuda a ver patrones que de otro modo se olvidan o se racionalizan."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "«Ausencia de conciencia sobre su impacto»: ambiguo; Simon sostiene que estos agresores conocen sus tácticas y les falta preocupación (conciencia moral) por el daño.",
+    "evidencia": "Simon, In Sheep's Clothing (conocimiento sólido).",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "la ausencia de conciencia sobre su impacto en otros y la renuncia a cualquier forma de reciprocidad",
+     "nuevo": "la falta de preocupación por su impacto en otros y la renuncia a cualquier forma de reciprocidad"
+    }
+   }
+  ],
+  "preguntas": [
+   {
+    "pregunta_id": "dfb665d1-2f36-4289-ae8e-a73bc6933138",
+    "estado": "ok"
+   }
+  ],
+  "notas": "Distinción overt/covert-aggressive y tácticas (culpar, victimizarse, etc.): OK (Simon 1996)."
+ },
+ {
+  "id": "ee57b24c-70c6-451a-8023-08e68defb2f7",
+  "libro": "Rational Choice in an Uncertain World",
+  "titulo": "La estructura de las decisiones bajo incertidumbre",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "Se mezcla «valor esperado» con utilidad esperada (el texto lo define con utilidades).",
+    "evidencia": "Teoría de la utilidad esperada (conocimiento sólido).",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "escoge la opción que maximiza el valor esperado: la suma del producto de cada utilidad por su probabilidad",
+     "nuevo": "escoge la opción que maximiza la utilidad esperada: la suma del producto de cada utilidad por su probabilidad"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "La organización del libro («presentando primero su estructura formal») y los «cuatro elementos» no pude verificarlos.",
+    "evidencia": "No verificable sin el libro.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Dawes y Hastie organizan el campo de la teoría de la decisión presentando primero su estructura formal:",
+     "nuevo": "Dawes y Hastie presentan la teoría de la decisión a partir de su estructura formal:"
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Savage vs. von Neumann-Morgenstern (riesgo vs. incertidumbre con estados) y Gigerenzer: OK."
+ },
+ {
+  "id": "f6417b1f-6cea-4c29-97f1-14fccb3fa084",
+  "libro": "Why Buddhism Is True",
+  "titulo": "La Mente Modular: El CEO que No Existe",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "La modularidad de Fodor (1983) es limitada a sistemas de entrada y él criticó la modularidad masiva de Cosmides y Tooby; no es una teoría «desarrollada por Fodor y elaborada» por ellos.",
+    "evidencia": "Fodor, The Mind Doesn't Work That Way (2000).",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "La teoría modular — desarrollada por Jerry Fodor y elaborada por psicólogos evolutivos como Leda Cosmides y John Tooby —",
+     "nuevo": "La teoría modular de la mente — con raíces en Jerry Fodor (cuya modularidad era mucho más limitada) y defendida en su versión masiva por psicólogos evolutivos como Leda Cosmides y John Tooby —"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "«El capítulo más influyente científicamente» y «de forma original»: valoraciones no verificables.",
+    "evidencia": "Reseñas: Wright usa el modelo modular de la mente de la psicología evolutiva y de Gazzaniga.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "El capítulo más influyente del libro científicamente es el que Wright dedica a",
+     "nuevo": "Uno de los capítulos centrales del libro es el que Wright dedica a"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "«Lo que Wright desarrolla de forma original»: la conexión módulos-no-yo la hacen otros antes.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "Lo que Wright desarrolla de forma original es la conexión",
+     "nuevo": "Lo que Wright desarrolla es la conexión"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "«Validación meditativa directa»: sobrerrepresenta la fuerza del argumento de Wright.",
+    "evidencia": "Reseñas: el propio Wright admite que el modelo es más especulativo que establecido.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "La validación meditativa de este modelo es directa:",
+     "nuevo": "Según Wright, la experiencia meditativa respalda este modelo:"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "McGilchrist no rechaza el yo unificado como agente.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Ambos rechazan el modelo del yo como agente ejecutivo unificado y proponen en su lugar una arquitectura más compleja y menos centralizada.",
+     "nuevo": "Ambos describen una mente menos unificada de lo que parece, aunque McGilchrist no defiende que el yo sea una ilusión."
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "Wright rechaza un «CEO» consciente (cita de las reseñas: no hay yo único, ni CEO consciente que dirija); OK. Las comillas de «el pensamiento se piensa solo» no pude verificarlas."
+ },
+ {
+  "id": "f67f269f-2fd7-4408-8840-4fd550e53ec8",
+  "libro": "Tao Te King",
+  "titulo": "El poder del vacío — lo que no está es lo que funciona",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "cuerpo",
+    "severidad": "ERROR",
+    "problema": "Raichle halló que las tareas añaden solo un 5 % aproximado al gasto energético del cerebro, que ya es altísimo en reposo; no que el cerebro esté «más activo» en reposo que en tareas intensas.",
+    "evidencia": "https://news.vumc.org/lens/the-brain-at-rest/ y Raichle (la «energía oscura» del cerebro: 60-80 % no ligado a tareas).",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "las investigaciones de Marcus Raichle sobre la Default Mode Network (red de modo por defecto) muestran que el cerebro es más activo metabólicamente durante el descanso no dirigido que durante las tareas cognitivas intensas.",
+     "nuevo": "las investigaciones de Marcus Raichle sobre la Default Mode Network (red de modo por defecto) muestran que el cerebro gasta casi la misma energía en reposo que durante las tareas (las tareas añaden solo un 5 % aproximado) y que la red por defecto es muy activa cuando no hay una tarea dirigida."
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "La consolidación y la creatividad durante la ensoñación son hipótesis, no resultados de Raichle.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "es donde el cerebro consolida aprendizajes, genera conexiones inesperadas y procesa experiencias emocionalmente complejas",
+     "nuevo": "es un estado en el que, según varias líneas de investigación, el cerebro podría contribuir a consolidar aprendizajes y generar asociaciones nuevas (la evidencia es sugerente, no definitiva)"
+    }
+   },
+   {
+    "donde": "cuerpo",
+    "severidad": "DUDA",
+    "problema": "«Las organizaciones más eficaces»: absoluto sin fuente.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "cuerpo",
+     "antiguo": "las organizaciones e individuos más eficaces mantienen deliberadamente capacidad sin usar — slack estratégico.",
+     "nuevo": "muchas organizaciones e individuos eficaces mantienen deliberadamente capacidad sin usar — slack estratégico."
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "ERROR",
+    "problema": "Buzsáki: la consolidación depende de ondas lentas, husos y ripples durante el sueño y el reposo, no de «theta y delta en reposo»; la creatividad no es tesis suya.",
+    "evidencia": "Buzsáki, Rhythms of the Brain (conocimiento sólido).",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "describe cómo las oscilaciones neurales en estado de reposo (ritmos theta y delta) son esenciales para la consolidación de memoria y la creatividad",
+     "nuevo": "describe el papel de las oscilaciones neurales durante el reposo y el sueño (por ejemplo, ondas lentas y ripples) en la consolidación de la memoria"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "«El sustrato neurológico exacto» del vacío del Tao: sobreafirmación.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "el sustrato neurológico exacto del",
+     "nuevo": "un posible paralelo neurológico del"
+    }
+   },
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Taleb vincula antifragilidad con opcionalidad y variabilidad; el exceso de capacidad es redundancia/robustez, no «la fuente de antifragilidad».",
+    "evidencia": "Antifragile (Taleb), conocimiento sólido.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "Taleb conecta directamente: el slack (exceso de capacidad) es la fuente de antifragilidad.",
+     "nuevo": "Taleb conecta en parte: la redundancia (exceso de capacidad) aporta robustez frente a perturbaciones, idea cercana al slack."
+    }
+   }
+  ],
+  "preguntas": [
+   {
+    "pregunta_id": "d717a8f3-468f-4f52-aeb2-0179844ef095",
+    "estado": "ambigua",
+    "correccion": {
+     "pregunta_id": "d717a8f3-468f-4f52-aeb2-0179844ef095",
+     "correcta_actual": 2,
+     "correcta_propuesta": 2,
+     "motivo": "Los «grados de libertad» son una lectura moderna de la lección, no el principio del capítulo 11 (la utilidad nace del vacío); reformular como «según la lectura de esta lección»."
+    }
+   }
+  ],
+  "notas": "Cita del capítulo 11 (radios, vasija, puertas y ventanas): OK, coherente con las traducciones habituales."
+ },
+ {
+  "id": "fb0c6cec-1b5d-4844-bd2b-578c6fe513c6",
+  "libro": "Crucial Confrontations",
+  "titulo": "CPR: Qué Confrontar y Cuándo",
+  "veredicto": "corregir",
+  "hallazgos": [
+   {
+    "donde": "conexion_cruzada",
+    "severidad": "DUDA",
+    "problema": "Se presenta como aplicación del pensamiento sistémico de Meadows algo que Patterson no formula así.",
+    "evidencia": "Razonamiento.",
+    "correccion": {
+     "campo": "conexion_cruzada",
+     "antiguo": "La jerarquía de Patterson es una aplicación del pensamiento sistémico a las conversaciones difíciles",
+     "nuevo": "La jerarquía de Patterson puede leerse como una aplicación del pensamiento sistémico a las conversaciones difíciles (lectura de esta lección, no de Patterson)"
+    }
+   }
+  ],
+  "preguntas": [],
+  "notas": "CPR = Content, Pattern, Relationship: existe en el libro y está bien descrito (conocimiento sólido)."
+ }
+]
