@@ -1580,6 +1580,7 @@ function renderLibros(){
     return `<div class="libro-card${isDone?' completado':''}" onclick="verLibro('${libro.id}')">
       ${isDone?'<div class="libro-done-badge">✓ 100%</div>':(Novedad.esNuevo(libro.fecha_creacion)?'<div class="libro-nuevo-badge">Nuevo</div>':'')}
       ${coverHTML}
+      ${libro.descripcion_breve?`<button class="libro-info-btn" type="button" aria-label="Ver descripción del libro" aria-expanded="false" onclick="toggleDescLibro(event,this)">i</button><div class="libro-desc" onclick="event.stopPropagation();cerrarDescLibro(this.closest('.libro-card'))">${esc(libro.descripcion_breve)}</div>`:''}
       <div class="libro-body">
         <div class="libro-title">${tHL}</div>
         <div class="libro-autor">${aHL}</div>
@@ -1606,6 +1607,26 @@ function renderLibros(){
       libro.portada_url=url;
     });
   });
+}
+
+/* Descripción sencilla del libro sobre la carátula (botón «i») */
+function cerrarDescLibro(card){
+  if(!card)return;
+  card.classList.remove('desc-abierta');
+  const b=card.querySelector('.libro-info-btn');
+  if(b){b.setAttribute('aria-expanded','false');b.textContent='i';}
+}
+function toggleDescLibro(ev,btn){
+  ev.stopPropagation();
+  const card=btn.closest('.libro-card');
+  if(!card)return;
+  if(card.classList.contains('desc-abierta')){cerrarDescLibro(card);return;}
+  const d=card.querySelector('.libro-desc');
+  const w=card.querySelector('.libro-cover-wrap');
+  if(d)d.style.height=(w&&w.offsetHeight?w.offsetHeight:190)+'px';
+  card.classList.add('desc-abierta');
+  btn.setAttribute('aria-expanded','true');
+  btn.textContent='×';
 }
 
 function makePlaceholder(icon, eje){
