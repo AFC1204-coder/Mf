@@ -1,2 +1,11 @@
 node_modules/
 supabase/.temp/
+.env
+.env.*
+!.env.example
+tools/video/.venv/
+tools/video/output/
+tools/video/__pycache__/
+tools/video/**/__pycache__/
+tools/audio/output/
+tools/audio/__pycache__/

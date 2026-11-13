@@ -1224,6 +1224,7 @@ mark.hl { background:var(--hl); color:#000; border-radius:2px; padding:0 1px; }
   transition:var(--trans); flex-shrink:0;
 }
 .tts-btn:hover { background:#58a6ff18; }
+.tts-btn.active { background:var(--accent-bg); color:var(--accent); border:1px solid var(--accent-dim); }
 .tts-btn:active { transform:scale(0.92); }
 .tts-btn.tts-play { background:#58a6ff20; width:40px; height:40px; min-height:40px; }
 .tts-btn.tts-play:hover { background:#58a6ff35; }

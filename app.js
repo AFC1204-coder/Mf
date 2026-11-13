@@ -2095,6 +2095,9 @@ function verLeccion(id, from=null, skipPush=false, replace=false){
       <span class="tts-engine" id="tts-engine"></span>
     </div>
     <span class="tts-status" id="tts-status"></span>
+    <button class="tts-btn${ttsAudiolibro?' active':''}" id="tts-book-btn" onclick="ttsToggleAudiolibro()" title="Modo audiolibro: encadena las lecciones del libro">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    </button>
     <button class="tts-btn" id="tts-download-btn" onclick="ttsDownload()" title="Descargar MP3" style="display:none">
       <svg viewBox="0 0 24 24"><path d="M12 16l-6-6h4V4h4v6h4l-6 6z"/><rect x="4" y="18" width="16" height="2" rx="1"/></svg>
     </button>
@@ -2322,7 +2325,7 @@ function bindFolioGestos(){
    TTS — Google Cloud TTS (directo) + Web Speech API fallback
    Cache local en IndexedDB para no regenerar audio
 ═══════════════════════════════════════════ */
-const GCLOUD_TTS_KEY='AIzaSyAr_AtWkVbr6FAZbAlT3h5gSt9o4D_vnE0';
+const GCLOUD_TTS_KEY='AIzaSyCrcDVLPXQpQVyb0FJGo7J66BJWug4FnWc';
 const GCLOUD_TTS_URL='https://texttospeech.googleapis.com/v1beta1/text:synthesize';
 const TTS_CACHE_DB='scs-tts-cache-v3';
 const TTS_CACHE_STORE='audio';
@@ -2334,6 +2337,30 @@ let ttsAudio=null;
 let ttsAudioBlob=null;
 let ttsMode=null;
 let ttsLeccionId=null, ttsSilencioUrl=null;
+let ttsAudiolibro=localStorage.getItem('mf_audiolibro')==='1';
+
+function ttsToggleAudiolibro(){
+  ttsAudiolibro=!ttsAudiolibro;
+  try{ localStorage.setItem('mf_audiolibro',ttsAudiolibro?'1':'0'); }catch(e){}
+  const btn=document.getElementById('tts-book-btn');
+  if(btn) btn.classList.toggle('active',ttsAudiolibro);
+  toast(ttsAudiolibro?'Modo audiolibro activado: seguirá con la siguiente lección':'Modo audiolibro desactivado');
+}
+
+function ttsLeccionVecina(delta){
+  if(!lecActual||!Array.isArray(lecs)) return null;
+  const delLibro=lecs.filter(l=>l.libro_id===lecActual.libro_id).sort((a,b)=>(a.orden||0)-(b.orden||0));
+  const idx=delLibro.findIndex(l=>l.id===lecActual.id);
+  if(idx<0) return null;
+  return delLibro[idx+delta]||null;
+}
+
+function ttsAvanzarAudiolibro(){
+  const sig=ttsLeccionVecina(1);
+  if(!sig){ toast('Fin del libro'); return; }
+  verLeccion(sig.id);
+  setTimeout(()=>{ if(lecActual&&lecActual.id===sig.id) ttsTogglePlay(); },120);
+}
 
 function ttsGetText(){
   if(!lecActual) return '';
@@ -2344,14 +2371,10 @@ function ttsGetText(){
     .replace(/\s+/g,' ')
     .trim();
   const parts=[];
+  const tit=clean(lecActual.titulo);
+  if(tit) parts.push(tit+'.');
   const cuerpo=clean(lecActual.cuerpo);
   if(cuerpo) parts.push(cuerpo);
-  const man=clean(lecActual.aplicacion_practica);
-  if(man && (!cuerpo || !cuerpo.toLowerCase().includes(man.slice(0,40).toLowerCase()))) parts.push('Mañana. '+man);
-  const cruce=clean(lecActual.conexion_cruzada);
-  if(cruce) parts.push('Cruce. '+cruce);
-  const giro=clean(lecActual.autocorreccion);
-  if(giro) parts.push('El giro. '+giro);
   return parts.join(' ');
 }
 
@@ -2509,7 +2532,7 @@ async function ttsTogglePlay(){
   ttsUpdateUI('loading');
 
   try{
-    const cacheId=lecActual.id+'-v4';
+    const cacheId=lecActual.id+'-v5';
     let blob=await ttsCacheGet(cacheId);
     if(!blob){
       blob=await ttsCallGoogle(text);
@@ -2581,7 +2604,7 @@ function ttsPlayCloud(blob){
   let ultimaPos=0;
   a.onplay=()=>{ if(Ambiente.bed) Ambiente.bed(0.2); ttsUpdateUI('playing'); ttsMediaEstado('playing'); };
   a.onpause=()=>{ if(!a.ended){ if(Ambiente.bed) Ambiente.bed(1); ttsUpdateUI('paused'); ttsMediaEstado('paused'); } };
-  a.onended=()=>{ if(Ambiente.bed) Ambiente.bed(1); ttsUpdateUI('idle'); ttsMediaLimpiar(); };
+  a.onended=()=>{ if(Ambiente.bed) Ambiente.bed(1); ttsUpdateUI('idle'); ttsMediaLimpiar(); if(ttsAudiolibro) ttsAvanzarAudiolibro(); };
   a.onloadedmetadata=()=>ttsMediaEstado(a.paused?'paused':'playing');
   a.ontimeupdate=()=>{ const t=Date.now(); if(t-ultimaPos>5000){ ultimaPos=t; ttsMediaEstado(a.paused?'paused':'playing'); } };
   a.onerror=()=>{
@@ -2618,7 +2641,7 @@ function ttsPlayWebSpeech(text){
   if(esVoice) ttsUtterance.voice=esVoice;
 
   ttsUtterance.onstart=()=>{ if(Ambiente.bed) Ambiente.bed(0.2); ttsUpdateUI('playing'); };
-  ttsUtterance.onend=()=>{ if(Ambiente.bed) Ambiente.bed(1); ttsUpdateUI('idle'); };
+  ttsUtterance.onend=()=>{ if(Ambiente.bed) Ambiente.bed(1); ttsUpdateUI('idle'); if(ttsAudiolibro) ttsAvanzarAudiolibro(); };
   ttsUtterance.onerror=()=>ttsUpdateUI('idle');
   ttsUtterance.onpause=()=>ttsUpdateUI('paused');
   ttsUtterance.onresume=()=>ttsUpdateUI('playing');
