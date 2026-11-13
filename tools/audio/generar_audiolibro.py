@@ -134,8 +134,10 @@ def main(argv: list[str] | None = None) -> int:
         raise LookupError(f"El libro {book['titulo']!r} no tiene lecciones activas.")
 
     out_dir = AUDIO_DIR / "output" / _slugify(book["titulo"])
+    upload_dir = out_dir / "upload_ready"
     tmp_dir = out_dir / "_tmp"
     out_dir.mkdir(parents=True, exist_ok=True)
+    upload_dir.mkdir(parents=True, exist_ok=True)
     tmp_dir.mkdir(parents=True, exist_ok=True)
 
     tts = get_tts_engine(engine=args.engine, voice=args.voice)
@@ -149,6 +151,22 @@ def main(argv: list[str] | None = None) -> int:
 
     for idx, lec in enumerate(lessons, start=1):
         out_mp3 = out_dir / f"{idx:02d}_{lec['id']}.mp3"
+        upload_mp3 = upload_dir / f"{lec['id']}.mp3"
+        if upload_mp3.exists() and upload_mp3.stat().st_size > 10_000 and out_mp3.exists():
+            dur = _compress_speech_mp3([out_mp3], out_mp3)
+            size_b = out_mp3.stat().st_size
+            total_dur += dur
+            total_bytes += size_b
+            print(f"  ↷ {idx:02d}/{len(lessons)} {lec['titulo'][:48]} — ya generado ({size_b // 1024} KB)")
+            manifest_items.append({
+                "orden": idx, "id": lec["id"], "titulo": lec["titulo"],
+                "archivo": out_mp3.name, "duracion_s": round(dur, 1),
+                "bytes": size_b, "motor": "cached", "voz": args.voice or "cached",
+            })
+            m3u_lines.append(f"#EXTINF:{int(round(dur))},{idx:02d}. {lec['titulo']}")
+            m3u_lines.append(out_mp3.name)
+            continue
+
         parts = [f"Lección {idx}: {lec['titulo']}."]
         if lec.get("cuerpo"):
             parts.append(_clean_for_tts(lec["cuerpo"]))
@@ -160,7 +178,7 @@ def main(argv: list[str] | None = None) -> int:
         used_voice = ""
         for c_idx, ch in enumerate(chunks, start=1):
             if args.engine != "edge" and (idx > 1 or c_idx > 1):
-                time.sleep(1.5)
+                time.sleep(20 if args.engine == "gemini" else 2)
             cp = tmp_dir / f"{idx:02d}_{c_idx:02d}.mp3"
             res = tts.synthesize(ch, cp, voice=args.voice)
             chunk_paths.append(res.audio_path)
@@ -168,6 +186,7 @@ def main(argv: list[str] | None = None) -> int:
             used_voice = res.voice
 
         dur = _compress_speech_mp3(chunk_paths, out_mp3)
+        upload_mp3.write_bytes(out_mp3.read_bytes())
         size_b = out_mp3.stat().st_size
         total_dur += dur
         total_bytes += size_b

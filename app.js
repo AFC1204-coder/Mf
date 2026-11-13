@@ -2327,6 +2327,7 @@ function bindFolioGestos(){
 ═══════════════════════════════════════════ */
 const GCLOUD_TTS_KEY='AIzaSyCrcDVLPXQpQVyb0FJGo7J66BJWug4FnWc';
 const GCLOUD_TTS_URL='https://texttospeech.googleapis.com/v1beta1/text:synthesize';
+const AUDIO_BUCKET_URL=`${SB_URL}/storage/v1/object/public/audiolibros`;
 const TTS_CACHE_DB='scs-tts-cache-v3';
 const TTS_CACHE_STORE='audio';
 const TTS_MAX_BYTES=4800;
@@ -2510,6 +2511,15 @@ function ttsUpdateUI(state){
   }
 }
 
+async function ttsFetchPreGenerated(id){
+  try{
+    const r=await fetch(`${AUDIO_BUCKET_URL}/${id}.mp3`);
+    if(!r.ok) return null;
+    const b=await r.blob();
+    return b&&b.size>1000?b:null;
+  }catch(e){ return null; }
+}
+
 /* ── Main toggle ── */
 async function ttsTogglePlay(){
   if(ttsMode==='cloud'&&ttsAudio){
@@ -2535,7 +2545,8 @@ async function ttsTogglePlay(){
     const cacheId=lecActual.id+'-v5';
     let blob=await ttsCacheGet(cacheId);
     if(!blob){
-      blob=await ttsCallGoogle(text);
+      blob=await ttsFetchPreGenerated(lecActual.id);
+      if(!blob) blob=await ttsCallGoogle(text);
       await ttsCachePut(cacheId,blob);
     }
     if(ttsLeccionId!==idInicio) return;      // mientras se generaba, cambiaste de lección o paraste: no suena nada
