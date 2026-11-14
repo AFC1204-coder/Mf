@@ -16,4 +16,10 @@ describe('Novedad', () => {
   it('una fecha futura no cuenta', () => {
     expect(N.esNuevo('2026-12-01T00:00:00Z', ahora)).toBe(false);
   });
+  it('formatea la fecha de incorporación en español', () => {
+    expect(N.fechaCorta('2026-11-05T12:00:00Z')).toBe('5 nov 2026');
+    expect(N.fechaCorta('2026-03-05T12:00:00Z')).toBe('5 mar 2026');
+    expect(N.fechaCorta(null)).toBe('');
+    expect(N.fechaCorta('basura')).toBe('');
+  });
 });
