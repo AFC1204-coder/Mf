@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 from .infographic import prepare_infographic
 from .renderer import assemble_video
 from .scriptwriter import export_script_markdown, generate_script
-from .supabase_client import fetch_lesson
+from .supabase_client import fetch_book, fetch_lesson
 from .tts import get_tts_engine
 from .visuals import fetch_scene_story_shots
 
@@ -41,8 +41,9 @@ def main(argv: list[str] | None = None) -> int:
         prog="python -m tools.video.cli",
         description="Genera un vídeo vertical (9:16, 60-90 s) a partir de una lección de Mente Fría.",
     )
-    parser.add_argument("query", help="ID (UUID) o título (exacto o parcial) de la lección en Supabase.")
-    parser.add_argument("--engine", choices=["auto", "gemini", "edge"], default=None, help="Motor TTS (por defecto: auto).")
+    parser.add_argument("query", help="ID (UUID) o título (exacto o parcial) de la lección o libro en Supabase.")
+    parser.add_argument("--book", action="store_true", help="Fuerza la búsqueda como libro completo (resumen de sus lecciones clave).")
+    parser.add_argument("--engine", choices=["auto", "gemini", "edge", "kokoro"], default=None, help="Motor TTS (por defecto: auto).")
     parser.add_argument("--voice", default=None, help="Nombre de la voz (ej. Aoede, Charon, es-ES-AlvaroNeural, es-ES-ElviraNeural).")
     parser.add_argument(
         "--gemini-model",
@@ -61,8 +62,8 @@ def main(argv: list[str] | None = None) -> int:
 
     args = parser.parse_args(argv)
 
-    print(f"1/5 · Leyendo lección desde Supabase: {args.query!r}...")
-    lesson = fetch_lesson(args.query)
+    print(f"1/5 · Leyendo {'libro' if args.book else 'contenido'} desde Supabase: {args.query!r}...")
+    lesson = fetch_book(args.query) if args.book else fetch_lesson(args.query)
     print(f"      ✓ {lesson.titulo} ({lesson.libro_titulo} · {lesson.libro_autor})")
 
     out_dir = Path(args.out_dir) if args.out_dir else (VIDEO_DIR / "output" / _slugify(lesson.titulo))

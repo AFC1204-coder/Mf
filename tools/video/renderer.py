@@ -89,17 +89,16 @@ def render_story_hud(
     script: VideoScript,
     total_scenes: int,
     out_png: Path,
-    infographic_png: Path | None = None,
 ) -> Path:
-    """Genera una capa RGBA transparente con cabecera Mente Fría, titular e infografía opcional."""
+    """Capa RGBA limpia: en Escena 1 muestra el gancho editorial; en 2..N deja respirar la historia visual."""
     accent = _eje_color(script.eje)
     hud = Image.new("RGBA", (WIDTH, HEIGHT), (0, 0, 0, 0))
     draw = ImageDraw.Draw(hud)
 
-    f_brand = _font("Outfit-Regular.ttf", 26, 600)
+    f_brand = _font("Outfit-Regular.ttf", 26, 700)
     f_meta = _font("Outfit-Regular.ttf", 24, 500)
-    f_tag = _font("Outfit-Regular.ttf", 23, 700)
-    f_head = _font("PlayfairDisplay-Bold.ttf", 52, 700)
+    f_tag = _font("Outfit-Regular.ttf", 24, 700)
+    f_head = _font("PlayfairDisplay-Bold.ttf", 60, 700)
     f_book = _font("SourceSerif4-Regular.ttf", 26, 400)
 
     # Cabecera superior
@@ -119,50 +118,67 @@ def render_story_hud(
     r, g, b = _hex_to_rgb(accent)
     draw.rounded_rectangle([76, bar_y, 76 + fill_w, bar_y + 5], radius=3, fill=(r, g, b, 240))
 
-    # Píldora de escena + titular editorial con sombra suave
+    # Píldora de capítulo
     tag_text = scene.tag.upper()
     tb = draw.textbbox((0, 0), tag_text, font=f_tag)
-    pill_w = (tb[2] - tb[0]) + 42
+    pill_w = (tb[2] - tb[0]) + 44
     pill_x = 76
-    pill_y = 195
+    pill_y = 192
     draw.rounded_rectangle(
-        [pill_x, pill_y, pill_x + pill_w, pill_y + 42],
-        radius=21,
-        fill=(14, 14, 14, 200),
-        outline=(r, g, b, 230),
+        [pill_x, pill_y, pill_x + pill_w, pill_y + 44],
+        radius=22,
+        fill=(12, 12, 12, 205),
+        outline=(r, g, b, 235),
         width=2,
     )
-    draw.text((pill_x + 21, pill_y + 8), tag_text, font=f_tag, fill=(r, g, b, 255))
+    draw.text((pill_x + 22, pill_y + 9), tag_text, font=f_tag, fill=(r, g, b, 255))
 
-    lines = _wrap_lines(scene.on_screen, f_head, WIDTH - 152, draw)[:3]
-    ty = pill_y + 66
-    for i, line in enumerate(lines):
-        col = (232, 197, 106, 255) if (scene.kind == "gancho" and i == 0) else (237, 232, 223, 255)
-        draw.text((78, ty + 3), line, font=f_head, fill=(0, 0, 0, 175))
-        draw.text((76, ty), line, font=f_head, fill=col)
-        ty += 64
-
-    # Si esta escena lleva la infografía real de la lección, encajarla limpia en el centro
-    if scene.show_infographic and infographic_png and infographic_png.exists():
-        with Image.open(infographic_png) as raw_info:
-            info = raw_info.convert("RGB")
-            info.thumbnail((900, 560), Image.Resampling.LANCZOS)
-            iw, ih = info.size
-            ix = (WIDTH - iw) // 2
-            iy = max(ty + 48, 660)
-            mask = Image.new("L", (iw, ih), 0)
-            ImageDraw.Draw(mask).rounded_rectangle([0, 0, iw, ih], radius=22, fill=255)
-            hud.paste(info, (ix, iy), mask)
-            draw.rounded_rectangle([ix - 2, iy - 2, ix + iw + 2, iy + ih + 2], radius=24, outline=(r, g, b, 220), width=2)
+    # Solo en Escena 1 (gancho) o Cierre mostramos titular grande; en escenas 2..N la foto manda
+    if scene.kind == "gancho":
+        lines = _wrap_lines(scene.on_screen, f_head, WIDTH - 152, draw)[:4]
+        ty = pill_y + 82
+        for i, line in enumerate(lines):
+            col = (232, 197, 106, 255) if i == 0 else (237, 232, 223, 255)
+            draw.text((78, ty + 4), line, font=f_head, fill=(0, 0, 0, 190))
+            draw.text((76, ty), line, font=f_head, fill=col)
+            ty += 74
 
     # Crédito discreto al pie (debajo de los subtítulos)
     attr = f"{script.book_title}" + (f" · {script.book_author}" if script.book_author else "")
     ab = draw.textbbox((0, 0), attr[:58], font=f_book)
-    draw.text(((WIDTH - (ab[2] - ab[0])) // 2, 1745), attr[:58], font=f_book, fill=(168, 160, 148, 220))
+    draw.text(((WIDTH - (ab[2] - ab[0])) // 2, 1745), attr[:58], font=f_book, fill=(180, 172, 160, 230))
 
     out_png.parent.mkdir(parents=True, exist_ok=True)
     hud.save(out_png)
     return out_png
+
+
+def _render_infographic_bg(script: VideoScript, infographic_png: Path, out_jpg: Path) -> Path:
+    """Crea un plano dedicado 9:16 para la infografía de la lección sin tapar caras."""
+    accent = _eje_color(script.eje)
+    bg = Image.new("RGB", (WIDTH, HEIGHT), "#080808")
+    _draw_glow(bg, accent)
+    draw = ImageDraw.Draw(bg)
+
+    f_sub = _font("Outfit-Regular.ttf", 28, 700)
+    lbl = "EL ESQUEMA CLAVE"
+    lb = draw.textbbox((0, 0), lbl, font=f_sub)
+    draw.text(((WIDTH - (lb[2] - lb[0])) // 2, 410), lbl, font=f_sub, fill="#e8c56a")
+
+    with Image.open(infographic_png) as raw_info:
+        info = raw_info.convert("RGB")
+        info.thumbnail((940, 680), Image.Resampling.LANCZOS)
+        iw, ih = info.size
+        ix = (WIDTH - iw) // 2
+        iy = 480 + (720 - ih) // 2
+        mask = Image.new("L", (iw, ih), 0)
+        ImageDraw.Draw(mask).rounded_rectangle([0, 0, iw, ih], radius=24, fill=255)
+        bg.paste(info, (ix, iy), mask)
+        draw.rounded_rectangle([ix - 2, iy - 2, ix + iw + 2, iy + ih + 2], radius=26, outline=accent, width=2)
+
+    out_jpg.parent.mkdir(parents=True, exist_ok=True)
+    bg.save(out_jpg, quality=94)
+    return out_jpg
 
 
 def _render_fallback_bg(script: VideoScript, out_jpg: Path) -> Path:
@@ -295,107 +311,130 @@ def _fmt_srt_time(sec: float) -> str:
 
 
 def _build_subtitle_chunks(
-    scene_timings: list[tuple[float, list[WordTiming]]],
-) -> list[tuple[float, float, str]]:
-    """Agrupa las palabras en frases cortas de 4-5 palabras con tiempos absolutos."""
-    chunks_out: list[tuple[float, float, str]] = []
+    scene_timings: list[tuple[float, list[WordTiming], str]],
+) -> list[tuple[float, float, list[tuple[str, float, float]]]]:
+    """Agrupa en bloques de 3-4 palabras restaurando puntuación y conservando tiempos por palabra."""
+    chunks_out: list[tuple[float, float, list[tuple[str, float, float]]]] = []
     offset_s = 0.0
-    for scene_dur, words in scene_timings:
+    for scene_dur, words, narration in scene_timings:
         if not words:
             offset_s += scene_dur
             continue
 
-        grouped: list[list[WordTiming]] = []
-        cur: list[WordTiming] = []
+        orig_tokens = [
+            t for t in narration.split()
+            if any(ch.isalnum() for ch in t)
+        ]
+        aligned: list[tuple[str, float, float]] = []
+        for idx, wt in enumerate(words):
+            label = orig_tokens[idx] if (len(orig_tokens) == len(words)) else wt.text
+            aligned.append((label, offset_s + wt.start_s, offset_s + wt.end_s))
+
+        grouped: list[list[tuple[str, float, float]]] = []
+        cur: list[tuple[str, float, float]] = []
         cur_chars = 0
-        for wt in words:
-            wlen = len(wt.text) + 1
-            if cur and (len(cur) >= 5 or cur_chars + wlen > 30):
+        for item in aligned:
+            wlen = len(item[0]) + 1
+            if cur and (len(cur) >= 4 or cur_chars + wlen > 26):
                 grouped.append(cur)
-                cur = [wt]
-                cur_chars = len(wt.text)
+                cur = [item]
+                cur_chars = len(item[0])
             else:
-                cur.append(wt)
+                cur.append(item)
                 cur_chars += wlen
+            if item[0].rstrip("\"'»”)").endswith((".", "!", "?", "…")):
+                grouped.append(cur)
+                cur = []
+                cur_chars = 0
         if cur:
             grouped.append(cur)
 
         for idx, ch in enumerate(grouped):
-            start = offset_s + ch[0].start_s
+            start = ch[0][1]
             if idx + 1 < len(grouped):
-                end = offset_s + grouped[idx + 1][0].start_s
+                end = grouped[idx + 1][0][1]
             else:
-                end = offset_s + min(scene_dur, ch[-1].end_s + 0.25)
+                end = offset_s + min(scene_dur, ch[-1][2] - offset_s + 0.25)
             end = max(start + 0.25, end)
-            line_text = " ".join(w.text for w in ch).replace("\n", " ").strip()
-            chunks_out.append((round(start, 3), round(end, 3), line_text))
+            chunks_out.append((round(start, 3), round(end, 3), ch))
 
         offset_s += scene_dur
     return chunks_out
 
 
-def write_srt_subtitles(chunks: list[tuple[float, float, str]], out_srt: Path) -> Path:
+def write_srt_subtitles(chunks: list[tuple[float, float, list[tuple[str, float, float]]]], out_srt: Path) -> Path:
     lines: list[str] = []
-    for i, (start, end, text) in enumerate(chunks, start=1):
-        lines.extend([str(i), f"{_fmt_srt_time(start)} --> {_fmt_srt_time(end)}", text, ""])
+    for i, (start, end, word_items) in enumerate(chunks, start=1):
+        txt = " ".join(w[0] for w in word_items)
+        lines.extend([str(i), f"{_fmt_srt_time(start)} --> {_fmt_srt_time(end)}", txt, ""])
     out_srt.write_text("\n".join(lines), encoding="utf-8")
     return out_srt
 
 
 def _render_subtitle_overlay_track(
-    chunks: list[tuple[float, float, str]],
+    chunks: list[tuple[float, float, list[tuple[str, float, float]]]],
     total_duration: float,
     work_dir: Path,
 ) -> Path:
-    """Genera un archivo de vídeo RGBA con los subtítulos sincronizados usando Pillow + concat."""
+    """Genera subtítulos estilo karaoke (palabra activa en dorado #e8c56a) con Pillow + concat."""
     sub_dir = work_dir / "subs"
     sub_dir.mkdir(parents=True, exist_ok=True)
-    sub_h = 280
-    f_sub = _font("Outfit-Regular.ttf", 50, 600)
+    sub_h = 260
+    f_sub = _font("Outfit-Regular.ttf", 54, 700)
 
     blank_png = sub_dir / "blank.png"
     Image.new("RGBA", (WIDTH, sub_h), (0, 0, 0, 0)).save(blank_png)
 
     entries: list[tuple[Path, float]] = []
     cursor = 0.0
+    frame_counter = 0
 
-    for idx, (start, end, text) in enumerate(chunks, start=1):
+    for start, end, word_items in chunks:
         if start > cursor + 0.04:
             entries.append((blank_png, start - cursor))
             cursor = start
 
-        dur = max(0.15, end - cursor)
-        png_path = sub_dir / f"sub_{idx:03d}.png"
-        im = Image.new("RGBA", (WIDTH, sub_h), (0, 0, 0, 0))
-        draw = ImageDraw.Draw(im)
+        # Calcular ancho total de la línea centrada
+        full_text = " ".join(w[0] for w in word_items)
+        draw_tmp = ImageDraw.Draw(Image.new("RGBA", (10, 10)))
+        tb = draw_tmp.textbbox((0, 0), full_text, font=f_sub)
+        total_w = tb[2] - tb[0]
+        text_h = tb[3] - tb[1]
 
-        lines = _wrap_lines(text, f_sub, WIDTH - 180, draw)[:2]
-        line_h = 62
-        text_h = len(lines) * line_h
-        max_w = max((draw.textbbox((0, 0), ln, font=f_sub)[2] for ln in lines), default=200)
-
-        box_w = min(WIDTH - 100, max_w + 68)
-        box_h = text_h + 38
+        box_w = min(WIDTH - 80, total_w + 68)
+        box_h = max(86, text_h + 40)
         bx0 = (WIDTH - box_w) // 2
         by0 = (sub_h - box_h) // 2
-        draw.rounded_rectangle(
-            [bx0, by0, bx0 + box_w, by0 + box_h],
-            radius=24,
-            fill=(17, 17, 17, 240),
-            outline=(56, 56, 56, 255),
-            width=2,
-        )
 
-        ty = by0 + 16
-        for ln in lines:
-            lb = draw.textbbox((0, 0), ln, font=f_sub)
-            lx = (WIDTH - (lb[2] - lb[0])) // 2
-            draw.text((lx, ty), ln, font=f_sub, fill=(237, 232, 223, 255))
-            ty += line_h
+        for w_idx, (w_text, w_start, w_end) in enumerate(word_items):
+            seg_start = max(cursor, w_start if w_idx > 0 else cursor)
+            seg_end = word_items[w_idx + 1][1] if (w_idx + 1 < len(word_items)) else end
+            seg_dur = max(0.08, seg_end - seg_start)
 
-        im.save(png_path)
-        entries.append((png_path, dur))
-        cursor += dur
+            frame_counter += 1
+            png_path = sub_dir / f"sub_{frame_counter:04d}.png"
+            im = Image.new("RGBA", (WIDTH, sub_h), (0, 0, 0, 0))
+            draw = ImageDraw.Draw(im)
+            draw.rounded_rectangle(
+                [bx0, by0, bx0 + box_w, by0 + box_h],
+                radius=24,
+                fill=(10, 10, 10, 238),
+                outline=(62, 62, 62, 255),
+                width=2,
+            )
+
+            # Dibujar palabra por palabra con la activa en dorado (#e8c56a)
+            x_cur = (WIDTH - total_w) // 2
+            y_text = by0 + (box_h - 56) // 2 - 4
+            for j, (tok, _, _) in enumerate(word_items):
+                col = (232, 197, 106, 255) if j == w_idx else (237, 232, 223, 255)
+                draw.text((x_cur, y_text), tok, font=f_sub, fill=col)
+                adv = draw.textbbox((0, 0), tok + " ", font=f_sub)[2]
+                x_cur += adv
+
+            im.save(png_path)
+            entries.append((png_path, seg_dur))
+            cursor += seg_dur
 
     if total_duration > cursor + 0.04:
         entries.append((blank_png, total_duration - cursor))
@@ -419,16 +458,23 @@ def assemble_video(
     scene_shots: list[list[Path]] | None = None,
     infographic_png: Path | None = None,
 ) -> Path:
-    """Renderiza las escenas en formato historia cinematográfica 9:16 y exporta el MP4 final."""
+    """Renderiza las escenas en formato historia cinematográfica 9:16 con xfade y subtítulos karaoke."""
     hud_dir = work_dir / "hud"
     clips_dir = work_dir / "clips"
     hud_dir.mkdir(parents=True, exist_ok=True)
     clips_dir.mkdir(parents=True, exist_ok=True)
 
     fallback_bg = _render_fallback_bg(script, work_dir / "fallback_bg.jpg")
-    clip_paths: list[Path] = []
+    info_bg = (
+        _render_infographic_bg(script, infographic_png, work_dir / "infographic_bg.jpg")
+        if (infographic_png and infographic_png.exists())
+        else None
+    )
+
+    clip_meta: list[tuple[Path, float]] = []
     audio_paths: list[Path] = []
-    scene_timings: list[tuple[float, list[WordTiming]]] = []
+    scene_timings: list[tuple[float, list[WordTiming], str]] = []
+    xfade_d = 0.35
 
     shots_per_scene = scene_shots or [[] for _ in script.scenes]
     for scene, tts_res, shots in zip(script.scenes, tts_results, shots_per_scene):
@@ -438,89 +484,80 @@ def assemble_video(
             script=script,
             total_scenes=len(script.scenes),
             out_png=hud_png,
-            infographic_png=infographic_png if scene.show_infographic else None,
         )
 
         dur = tts_res.duration_s
         usable_shots = [p for p in shots if p.exists()] or [fallback_bg]
+        if scene.show_infographic and info_bg is not None:
+            usable_shots = [usable_shots[0], info_bg]
+
         if len(usable_shots) == 1:
             sub_segs = [(usable_shots[0], dur, 0)]
         else:
-            d1 = round(dur * 0.5, 3)
-            d2 = max(0.5, round(dur - d1, 3))
+            d1 = round(dur * 0.48, 3)
+            d2 = max(0.6, round(dur - d1, 3))
             sub_segs = [(usable_shots[0], d1, 0), (usable_shots[1], d2, 1)]
 
         for sub_idx, (bg_img, sub_dur, dir_mode) in enumerate(sub_segs, start=1):
-            n_frames = max(12, int(round(sub_dur * FPS)))
+            # Añadir xfade_d al clip (se solapará con el siguiente) para mantener sincronía exacta
+            clip_dur = sub_dur + xfade_d
+            n_frames = max(15, int(round(clip_dur * FPS)))
             clip_mp4 = clips_dir / f"clip_{scene.index:02d}_{sub_idx}.mp4"
             if dir_mode == 0:
                 zoom_expr = "min(zoom+0.00055,1.08)"
             else:
                 zoom_expr = "if(eq(on,1),1.08,max(zoom-0.00055,1.0))"
-            fade_out_start = max(0.0, sub_dur - 0.18)
 
             vf_bg = (
                 f"zoompan=z='{zoom_expr}':"
                 f"x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':"
                 f"d={n_frames}:s={WIDTH}x{HEIGHT}:fps={FPS}"
             )
-            fc = (
-                f"[0:v]{vf_bg}[bg];"
-                f"[bg][1:v]overlay=0:0:shortest=1,"
-                f"fade=t=in:st=0:d=0.18,fade=t=out:st={fade_out_start:.3f}:d=0.18[v]"
-            )
+            fc = f"[0:v]{vf_bg}[bg];[bg][1:v]overlay=0:0:shortest=1[v]"
             subprocess.run(
                 [
-                    "ffmpeg",
-                    "-y",
-                    "-i",
-                    str(bg_img),
-                    "-loop",
-                    "1",
-                    "-i",
-                    str(hud_png),
-                    "-filter_complex",
-                    fc,
-                    "-map",
-                    "[v]",
-                    "-t",
-                    f"{sub_dur:.3f}",
-                    "-c:v",
-                    "libx264",
-                    "-pix_fmt",
-                    "yuv420p",
-                    "-r",
-                    str(FPS),
+                    "ffmpeg", "-y",
+                    "-i", str(bg_img),
+                    "-loop", "1", "-i", str(hud_png),
+                    "-filter_complex", fc,
+                    "-map", "[v]",
+                    "-t", f"{clip_dur:.3f}",
+                    "-c:v", "libx264", "-pix_fmt", "yuv420p", "-r", str(FPS),
                     str(clip_mp4),
                 ],
                 capture_output=True,
                 check=True,
             )
-            clip_paths.append(clip_mp4)
+            clip_meta.append((clip_mp4, sub_dur))
 
         audio_paths.append(tts_res.audio_path)
-        scene_timings.append((dur, tts_res.word_timings))
+        scene_timings.append((dur, tts_res.word_timings, scene.narration))
 
-    # Concatenar vídeo y audio por separado
-    video_list = work_dir / "videos.txt"
-    video_list.write_text(
-        "\n".join(f"file '{p.resolve()}'" for p in clip_paths) + "\n",
-        encoding="utf-8",
-    )
-    audio_list = work_dir / "audios.txt"
-    audio_list.write_text(
-        "\n".join(f"file '{p.resolve()}'" for p in audio_paths) + "\n",
-        encoding="utf-8",
-    )
-
+    # Encadenar clips con xfade suave (sin pantallazos negros)
     raw_video = work_dir / "raw_video.mp4"
+    if len(clip_meta) == 1:
+        raw_video.write_bytes(clip_meta[0][0].read_bytes())
+    else:
+        v_inputs: list[str] = []
+        xf_filters: list[str] = []
+        for idx, (cp, _) in enumerate(clip_meta):
+            v_inputs.extend(["-i", str(cp)])
+        prev = "[0:v]"
+        offset_acc = clip_meta[0][1]
+        for idx in range(1, len(clip_meta)):
+            out_lbl = "[vout]" if idx == len(clip_meta) - 1 else f"[vx{idx}]"
+            xf_filters.append(
+                f"{prev}[{idx}:v]xfade=transition=fade:duration={xfade_d}:offset={offset_acc:.3f}{out_lbl}"
+            )
+            prev = out_lbl
+            offset_acc += clip_meta[idx][1]
+        subprocess.run(
+            ["ffmpeg", "-y", *v_inputs, "-filter_complex", ";".join(xf_filters), "-map", "[vout]", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-r", str(FPS), str(raw_video)],
+            capture_output=True,
+            check=True,
+        )
+
     voiceover = work_dir / "voiceover.mp3"
-    subprocess.run(
-        ["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", str(video_list), "-c", "copy", str(raw_video)],
-        capture_output=True,
-        check=True,
-    )
-    # Concatenar audios con filter_complex para tolerar distintas tasas entre Gemini TTS y Edge TTS
     audio_inputs: list[str] = []
     filter_parts: list[str] = []
     for i, ap in enumerate(audio_paths):
@@ -533,8 +570,8 @@ def assemble_video(
         check=True,
     )
 
-    # Subtítulos sincronizados (SRT + pista RGBA Pillow) + mux final
-    total_dur = sum(d for d, _ in scene_timings)
+    # Subtítulos karaoke + normalización de volumen (-16 LUFS) + mux final
+    total_dur = sum(d for d, _, _ in scene_timings)
     chunks = _build_subtitle_chunks(scene_timings)
     write_srt_subtitles(chunks, out_mp4.with_suffix(".srt"))
     subs_concat = _render_subtitle_overlay_track(chunks, total_dur, work_dir)
@@ -542,39 +579,14 @@ def assemble_video(
     out_mp4.parent.mkdir(parents=True, exist_ok=True)
     subprocess.run(
         [
-            "ffmpeg",
-            "-y",
-            "-i",
-            str(raw_video),
-            "-f",
-            "concat",
-            "-safe",
-            "0",
-            "-i",
-            str(subs_concat),
-            "-i",
-            str(voiceover),
-            "-filter_complex",
-            "[0:v][1:v]overlay=0:1390:shortest=1[v]",
-            "-map",
-            "[v]",
-            "-map",
-            "2:a",
-            "-c:v",
-            "libx264",
-            "-preset",
-            "medium",
-            "-crf",
-            "20",
-            "-pix_fmt",
-            "yuv420p",
-            "-c:a",
-            "aac",
-            "-b:a",
-            "192k",
-            "-movflags",
-            "+faststart",
-            "-shortest",
+            "ffmpeg", "-y",
+            "-i", str(raw_video),
+            "-f", "concat", "-safe", "0", "-i", str(subs_concat),
+            "-i", str(voiceover),
+            "-filter_complex", "[0:v][1:v]overlay=0:1390:shortest=1[v];[2:a]loudnorm=I=-16:TP=-1.5:LRA=11[a]",
+            "-map", "[v]", "-map", "[a]",
+            "-c:v", "libx264", "-preset", "medium", "-crf", "23", "-pix_fmt", "yuv420p",
+            "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", "-shortest",
             str(out_mp4),
         ],
         capture_output=True,

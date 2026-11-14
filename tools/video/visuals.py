@@ -28,6 +28,14 @@ KEYWORD_VISUALS: list[tuple[tuple[str, ...], list[str]]] = [
     (("poder", "corte", "rey", "jerarquía"), ["chess king shadow", "classical architecture columns"]),
     (("decisión", "camino", "elección", "futuro"), ["fork in forest path", "compass map wooden table"]),
     (("hábito", "rutina", "práctica", "semana"), ["open notebook fountain pen", "morning coffee desk sunlight"]),
+    (("persuasión", "influencia", "retórica", "discurso"), ["vintage microphone dark stage", "orator podium hall"]),
+    (("sesgo", "ilusión", "error", "mente", "cerebro"), ["optical illusion shadow light", "mirror reflection dark"]),
+    (("inversión", "dinero", "capital", "mercado", "riqueza"), ["gold coins dark table", "architectural vault stone"]),
+    (("riesgo", "incertidumbre", "azar", "probabilidad"), ["dice wooden table shadow", "stormy sea lighthouse"]),
+    (("estoicismo", "virtud", "calma", "templanza", "filosofía"), ["marble bust roman statue", "quiet stone courtyard"]),
+    (("historia", "imperio", "guerra", "antiguo"), ["roman ruins columns dusk", "ancient parchment scroll"]),
+    (("liderazgo", "equipo", "mando", "autoridad"), ["rowing crew synchronization", "ship helm captain"]),
+    (("emoción", "miedo", "ira", "ansiedad", "calma"), ["still lake reflection mist", "silhouette window rain"]),
 ]
 
 FALLBACK_STORY_SHOTS = [
@@ -65,6 +73,12 @@ def _story_queries_for_scene(scene: Scene, lesson: LessonData) -> list[str]:
     return queries[:2]
 
 
+SKIP_TITLE_WORDS = (
+    "diagram", "chart", "graph", "map", "logo", "icon", "flag",
+    "coat_of_arms", "signature", "stamp", "text", "page", "scan", "pdf",
+)
+
+
 def _search_wikimedia_image(query: str, used_urls: set[str]) -> str | None:
     try:
         resp = requests.get(
@@ -74,7 +88,7 @@ def _search_wikimedia_image(query: str, used_urls: set[str]) -> str | None:
                 "generator": "search",
                 "gsrsearch": f"filetype:bitmap {query}",
                 "gsrnamespace": 6,
-                "gsrlimit": 8,
+                "gsrlimit": 12,
                 "prop": "imageinfo",
                 "iiprop": "url|size|mime",
                 "iiurlwidth": 1280,
@@ -86,9 +100,12 @@ def _search_wikimedia_image(query: str, used_urls: set[str]) -> str | None:
         if not resp.ok:
             return None
         pages = resp.json().get("query", {}).get("pages", {}).values()
-        # Preferir imágenes de buena resolución y formato jpg/png
+        # Preferir fotografías nítidas y evitar escaneos/diagramas/mapas
         candidates: list[tuple[int, str]] = []
         for p in pages:
+            title_low = (p.get("title") or "").lower()
+            if any(bad in title_low for bad in SKIP_TITLE_WORDS):
+                continue
             ii = (p.get("imageinfo") or [{}])[0]
             mime = ii.get("mime", "")
             w = ii.get("width") or 0
@@ -100,7 +117,6 @@ def _search_wikimedia_image(query: str, used_urls: set[str]) -> str | None:
                 continue
             if w < 700 or h < 500:
                 continue
-            # Bonus si es vertical o cuadrada (encaja mejor en 9:16)
             score = (2000 if h >= w else 1000) + min(w, 2000)
             candidates.append((score, url))
 
@@ -128,13 +144,13 @@ def _grade_vertical_cinema(src_path: Path, dst_path: Path, width: int = 1080, he
         grad = Image.new("RGBA", (width, height), (8, 8, 8, 0))
         px = grad.load()
         for y in range(height):
-            if y < 520:
-                a = int(205 * (1.0 - y / 520.0))
+            if y < 560:
+                a = max(45, int(215 * (1.0 - y / 560.0)))
             elif y > height - 680:
                 t = (y - (height - 680)) / 680.0
-                a = int(235 * (t ** 1.1))
+                a = max(45, int(235 * (t ** 1.1)))
             else:
-                a = 55
+                a = 45
             for x in range(width):
                 px[x, y] = (8, 8, 8, a)
 
