@@ -1584,6 +1584,7 @@ function renderLibros(){
       <div class="libro-body">
         <div class="libro-title">${tHL}</div>
         <div class="libro-autor">${aHL}</div>
+        ${Novedad.fechaCorta(libro.fecha_creacion)?`<div class="libro-fecha">Añadido ${Novedad.fechaCorta(libro.fecha_creacion)}</div>`:''}
         <div class="libro-footer">
           <div class="libro-prog-wrap">
             <div class="libro-prog-bar"><div class="libro-prog-fill" style="width:${pct}%"></div></div>
@@ -1857,6 +1858,7 @@ function renderLibroHero(){
       <div class="libro-hero-info">
         <div class="libro-hero-title">${esc(l.titulo)}</div>
         <div class="libro-hero-autor">${esc(l.autor)}</div>
+        ${Novedad.fechaCorta(l.fecha_creacion)?`<div class="libro-hero-fecha">Añadido a la biblioteca el ${Novedad.fechaCorta(l.fecha_creacion)}</div>`:''}
         ${l.descripcion_breve?`<div class="libro-hero-desc">${esc(l.descripcion_breve)}</div>`:''}
         <div class="libro-hero-stats">
           <span class="libro-hero-stat"><span>${lecsL.length}</span> lecciones</span>
