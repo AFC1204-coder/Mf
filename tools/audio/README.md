@@ -23,3 +23,11 @@ Salida en `tools/audio/output/<libro>/`:
 ## Qué se lee
 Título, cuerpo y, al final, **«El giro»** (la autocorrección de la lección: críticas y límites). Es el mismo texto que lee la app en directo. Si ya tenías MP3 generados antes de este cambio, regenera con `--force` y vuelve a subirlos al bucket `audiolibros`.
 
+
+## Elegir la voz de oído
+```bash
+# Genera un MP3 por voz sobre un trozo real de una lección (cuerpo + «El giro»):
+tools/video/.venv/bin/python -m tools.audio.probar_voces "La felicidad no se persigue directamente"
+# Solo las gratuitas de Edge (no necesitan clave):  añade  --solo edge
+```
+Deja las muestras en `tools/audio/output/muestras/<lección>/`. Las de Gemini (Charon, Aoede, Fenrir, Kore) solo salen si `tools/video/.env` tiene `GEMINI_API_KEY`.
