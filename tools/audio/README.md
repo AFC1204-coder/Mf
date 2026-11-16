@@ -19,3 +19,7 @@ Salida en `tools/audio/output/<libro>/`:
 - `01_<uuid>.mp3`, `02_<uuid>.mp3`, …
 - `audiolibro.m3u` (lista de reproducción ordenada)
 - `manifest.json` (duración, tamaño en bytes, motor y voz por lección)
+
+## Qué se lee
+Título, cuerpo y, al final, **«El giro»** (la autocorrección de la lección: críticas y límites). Es el mismo texto que lee la app en directo. Si ya tenías MP3 generados antes de este cambio, regenera con `--force` y vuelve a subirlos al bucket `audiolibros`.
+

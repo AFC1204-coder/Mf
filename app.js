@@ -2378,6 +2378,10 @@ function ttsGetText(){
   if(tit) parts.push(tit+'.');
   const cuerpo=clean(lecActual.cuerpo);
   if(cuerpo) parts.push(cuerpo);
+  // La autocorrección (críticas y límites de lo que se acaba de oír) también se escucha:
+  // sin ella, el audio daría la versión sin matices.
+  const giro=clean(lecActual.autocorreccion);
+  if(giro) parts.push('El giro. '+giro);
   return parts.join(' ');
 }
 
@@ -2544,7 +2548,7 @@ async function ttsTogglePlay(){
   ttsUpdateUI('loading');
 
   try{
-    const cacheId=lecActual.id+'-v5';
+    const cacheId=lecActual.id+'-v6';
     let blob=await ttsCacheGet(cacheId);
     if(!blob){
       blob=await ttsFetchPreGenerated(lecActual.id);

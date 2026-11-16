@@ -113,6 +113,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("book", help="Título (exacto o parcial) o UUID del libro en Supabase.")
     parser.add_argument("--engine", choices=["auto", "gemini", "edge"], default="edge", help="Motor TTS (por defecto: edge para lotes rápidos sin cuota).")
     parser.add_argument("--voice", default=None, help="Voz (ej. es-ES-AlvaroNeural, es-ES-ElviraNeural, Charon).")
+    parser.add_argument("--force", action="store_true", help="Regenera los MP3 aunque ya existan (útil tras cambiar el texto que se lee).")
     parser.add_argument("--merge", action="store_true", help="Crea también un único audiolibro_completo.mp3.")
     args = parser.parse_args(argv)
 
@@ -128,7 +129,7 @@ def main(argv: list[str] | None = None) -> int:
 
     book = books[0]
     lessons = _sb_get(
-        f"lecciones?libro_id=eq.{book['id']}&activa=eq.true&select=id,titulo,orden,cuerpo,aplicacion_practica&order=orden.asc"
+        f"lecciones?libro_id=eq.{book['id']}&activa=eq.true&select=id,titulo,orden,cuerpo,aplicacion_practica,autocorreccion&order=orden.asc"
     )
     if not lessons:
         raise LookupError(f"El libro {book['titulo']!r} no tiene lecciones activas.")
@@ -152,7 +153,7 @@ def main(argv: list[str] | None = None) -> int:
     for idx, lec in enumerate(lessons, start=1):
         out_mp3 = out_dir / f"{idx:02d}_{lec['id']}.mp3"
         upload_mp3 = upload_dir / f"{lec['id']}.mp3"
-        if upload_mp3.exists() and upload_mp3.stat().st_size > 10_000 and out_mp3.exists():
+        if not args.force and upload_mp3.exists() and upload_mp3.stat().st_size > 10_000 and out_mp3.exists():
             dur = _compress_speech_mp3([out_mp3], out_mp3)
             size_b = out_mp3.stat().st_size
             total_dur += dur
@@ -170,6 +171,9 @@ def main(argv: list[str] | None = None) -> int:
         parts = [f"Lección {idx}: {lec['titulo']}."]
         if lec.get("cuerpo"):
             parts.append(_clean_for_tts(lec["cuerpo"]))
+        # Igual que en la app: la autocorrección (críticas y límites) también se escucha.
+        if lec.get("autocorreccion"):
+            parts.append("El giro. " + _clean_for_tts(lec["autocorreccion"]))
         full_text = "\n\n".join(parts)
 
         chunks = _chunk_text(full_text, max_chars=1800 if args.engine != "edge" else 6000)
