@@ -111,7 +111,7 @@ def main(argv: list[str] | None = None) -> int:
         description="Genera los MP3 de todas las lecciones activas de un libro de Mente Fría.",
     )
     parser.add_argument("book", help="Título (exacto o parcial) o UUID del libro en Supabase.")
-    parser.add_argument("--engine", choices=["auto", "gemini", "edge"], default="edge", help="Motor TTS (por defecto: edge para lotes rápidos sin cuota).")
+    parser.add_argument("--engine", choices=["auto", "gemini", "edge", "kokoro"], default="edge", help="Motor TTS (por defecto: edge para lotes rápidos sin cuota).")
     parser.add_argument("--voice", default=None, help="Voz (ej. es-ES-AlvaroNeural, es-ES-ElviraNeural, Charon).")
     parser.add_argument("--force", action="store_true", help="Regenera los MP3 aunque ya existan (útil tras cambiar el texto que se lee).")
     parser.add_argument("--merge", action="store_true", help="Crea también un único audiolibro_completo.mp3.")
@@ -176,12 +176,12 @@ def main(argv: list[str] | None = None) -> int:
             parts.append("El giro. " + _clean_for_tts(lec["autocorreccion"]))
         full_text = "\n\n".join(parts)
 
-        chunks = _chunk_text(full_text, max_chars=1800 if args.engine != "edge" else 6000)
+        chunks = _chunk_text(full_text, max_chars=1800 if args.engine not in ("edge", "kokoro") else 6000)
         chunk_paths: list[Path] = []
         used_engine = ""
         used_voice = ""
         for c_idx, ch in enumerate(chunks, start=1):
-            if args.engine != "edge" and (idx > 1 or c_idx > 1):
+            if args.engine not in ("edge", "kokoro") and (idx > 1 or c_idx > 1):
                 time.sleep(20 if args.engine == "gemini" else 2)
             cp = tmp_dir / f"{idx:02d}_{c_idx:02d}.mp3"
             res = tts.synthesize(ch, cp, voice=args.voice)

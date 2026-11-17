@@ -1,0 +1,4 @@
+# Solo para el motor local Kokoro (voces gratuitas es: em_santa, em_alex, ef_dora). Pesado: incluye PyTorch.
+# Además: brew install espeak-ng
+kokoro>=0.9.4
+numpy

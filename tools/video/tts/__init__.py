@@ -8,6 +8,7 @@ from pathlib import Path
 from .base import TTSEngine, TTSQuotaOrUnavailableError, TTSResult
 from .edge_tts_engine import EdgeTTSEngine
 from .gemini_tts import GeminiTTSEngine
+from .kokoro_tts import KokoroTTSEngine
 
 
 class AutoTTSEngine(TTSEngine):
@@ -51,4 +52,6 @@ def get_tts_engine(
         return GeminiTTSEngine(model=gemini_model, voice=voice)
     if mode == "edge":
         return EdgeTTSEngine(voice=voice)
+    if mode == "kokoro":
+        return KokoroTTSEngine(voice=voice)
     return AutoTTSEngine(gemini_model=gemini_model, voice=voice)

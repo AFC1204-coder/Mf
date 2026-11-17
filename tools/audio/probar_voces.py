@@ -5,8 +5,8 @@ Uso (desde la raíz del repositorio, con el entorno de tools/video ya instalado)
     tools/video/.venv/bin/python -m tools.audio.probar_voces "La felicidad no se persigue directamente"
 
 Lee un trozo del cuerpo + «El giro» (la autocorrección), como hará el audiolibro, y genera un MP3 por voz en
-`tools/audio/output/muestras/<lección>/`. Las voces de Gemini solo se prueban si hay GEMINI_API_KEY en
-`tools/video/.env`; las de Edge no necesitan clave.
+`tools/audio/output/muestras/<lección>/`. Edge y Kokoro (local) no necesitan clave; las de Gemini solo se prueban si hay GEMINI_API_KEY en
+`tools/video/.env`. Kokoro necesita su instalación extra (ver tools/audio/README.md).
 """
 
 from __future__ import annotations
@@ -20,6 +20,7 @@ from urllib.parse import quote
 from tools.audio.generar_audiolibro import AUDIO_DIR, _clean_for_tts, _load_env, _sb_get, _slugify
 from tools.video.tts.edge_tts_engine import EdgeTTSEngine
 from tools.video.tts.gemini_tts import GeminiTTSEngine
+from tools.video.tts.kokoro_tts import KOKORO_VOICES, KokoroTTSEngine
 
 VOCES_EDGE = ["es-ES-AlvaroNeural", "es-ES-ElviraNeural", "es-ES-XimenaNeural"]
 VOCES_GEMINI = ["Charon", "Aoede", "Fenrir", "Kore"]
@@ -60,7 +61,7 @@ def _buscar_leccion(q: str) -> dict:
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("leccion", help="Título (exacto o parcial) o UUID de una lección activa.")
-    ap.add_argument("--solo", choices=["edge", "gemini"], help="Probar solo un motor.")
+    ap.add_argument("--solo", choices=["edge", "kokoro", "gemini"], help="Probar solo un motor.")
     args = ap.parse_args(argv)
 
     _load_env()
@@ -71,9 +72,11 @@ def main(argv: list[str] | None = None) -> int:
     print(f"Lección: {lec['titulo']}\nTexto de muestra: {len(texto)} caracteres\nSalida: {out}\n")
 
     motores: list[tuple[str, object, list[str]]] = []
-    if args.solo != "gemini":
+    if args.solo in (None, "edge"):
         motores.append(("edge", EdgeTTSEngine(), VOCES_EDGE))
-    if args.solo != "edge":
+    if args.solo in (None, "kokoro"):
+        motores.append(("kokoro", KokoroTTSEngine(), KOKORO_VOICES))
+    if args.solo in (None, "gemini"):
         g = GeminiTTSEngine()
         if g.api_key:
             motores.append(("gemini", g, VOCES_GEMINI))

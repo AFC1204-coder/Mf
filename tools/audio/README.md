@@ -31,3 +31,15 @@ tools/video/.venv/bin/python -m tools.audio.probar_voces "La felicidad no se per
 # Solo las gratuitas de Edge (no necesitan clave):  añade  --solo edge
 ```
 Deja las muestras en `tools/audio/output/muestras/<lección>/`. Las de Gemini (Charon, Aoede, Fenrir, Kore) solo salen si `tools/video/.env` tiene `GEMINI_API_KEY`.
+
+## Kokoro (voz local gratuita, sin clave ni límite)
+Voces en español: `em_santa`, `em_alex` (masculinas) y `ef_dora` (femenina). Licencia Apache 2.0.
+```bash
+brew install espeak-ng
+tools/video/.venv/bin/pip install -r tools/audio/requirements-kokoro.txt   # pesado: incluye PyTorch
+tools/video/.venv/bin/python -m tools.audio.probar_voces "La felicidad no se persigue directamente" --solo kokoro
+# y para generar un libro con esa voz:
+tools/video/.venv/bin/python -m tools.audio.generar_audiolibro "Fluir" --engine kokoro --voice em_santa
+```
+La primera vez descarga el modelo (~330 MB). `--speed` no existe: la velocidad se ajusta con `KOKORO_SPEED` en `tools/video/.env` (por defecto 0,95).
+
