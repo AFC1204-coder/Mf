@@ -3,7 +3,7 @@ supabase/.temp/
 .env
 .env.*
 !.env.example
-tools/video/.venv/
+tools/video/.venv*/
 tools/video/output/
 tools/video/__pycache__/
 tools/video/**/__pycache__/

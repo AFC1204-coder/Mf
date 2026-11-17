@@ -35,11 +35,12 @@ Deja las muestras en `tools/audio/output/muestras/<lección>/`. Las de Gemini (C
 ## Kokoro (voz local gratuita, sin clave ni límite)
 Voces en español: `em_santa`, `em_alex` (masculinas) y `ef_dora` (femenina). Licencia Apache 2.0.
 ```bash
-brew install espeak-ng
-tools/video/.venv/bin/pip install -r tools/audio/requirements-kokoro.txt   # pesado: incluye PyTorch
-tools/video/.venv/bin/python -m tools.audio.probar_voces "La felicidad no se persigue directamente" --solo kokoro
+brew install espeak-ng python@3.12          # Kokoro NO funciona con Python 3.13+ (solo 3.10–3.12)
+/opt/homebrew/bin/python3.12 -m venv tools/video/.venv312
+tools/video/.venv312/bin/pip install -r tools/video/requirements.txt -r tools/audio/requirements-kokoro.txt   # pesado: incluye PyTorch
+tools/video/.venv312/bin/python -m tools.audio.probar_voces "La felicidad no se persigue directamente" --solo kokoro
 # y para generar un libro con esa voz:
-tools/video/.venv/bin/python -m tools.audio.generar_audiolibro "Fluir" --engine kokoro --voice em_santa
+tools/video/.venv312/bin/python -m tools.audio.generar_audiolibro "Fluir" --engine kokoro --voice em_santa
 ```
 La primera vez descarga el modelo (~330 MB). `--speed` no existe: la velocidad se ajusta con `KOKORO_SPEED` en `tools/video/.env` (por defecto 0,95).
 
