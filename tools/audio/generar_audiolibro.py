@@ -76,12 +76,15 @@ def _chunk_text(text: str, max_chars: int = 1800) -> list[str]:
     return chunks
 
 
+BITRATE = "40k"  # voz hablada mono: 40 kbps ≈ 18 MB/hora; se cambia con --bitrate
+
+
 def _compress_speech_mp3(inputs: list[Path], out_mp3: Path) -> float:
-    """Une los fragmentos (si hay varios) y comprime a MP3 hablado mono 64 kbps."""
+    """Une los fragmentos (si hay varios) y comprime a MP3 hablado mono (BITRATE)."""
     out_mp3.parent.mkdir(parents=True, exist_ok=True)
     if len(inputs) == 1:
         subprocess.run(
-            ["ffmpeg", "-y", "-i", str(inputs[0]), "-ac", "1", "-ar", "24000", "-b:a", "64k", str(out_mp3)],
+            ["ffmpeg", "-y", "-i", str(inputs[0]), "-ac", "1", "-ar", "24000", "-b:a", BITRATE, str(out_mp3)],
             capture_output=True,
             check=True,
         )
@@ -92,7 +95,7 @@ def _compress_speech_mp3(inputs: list[Path], out_mp3: Path) -> float:
             cmd.extend(["-i", str(p)])
             parts.append(f"[{idx}:a]")
         fc = "".join(parts) + f"concat=n={len(inputs)}:v=0:a=1[aout]"
-        cmd.extend(["-filter_complex", fc, "-map", "[aout]", "-ac", "1", "-ar", "24000", "-b:a", "64k", str(out_mp3)])
+        cmd.extend(["-filter_complex", fc, "-map", "[aout]", "-ac", "1", "-ar", "24000", "-b:a", BITRATE, str(out_mp3)])
         subprocess.run(cmd, capture_output=True, check=True)
 
     res = subprocess.run(
@@ -110,12 +113,33 @@ def main(argv: list[str] | None = None) -> int:
         prog="python -m tools.audio.generar_audiolibro",
         description="Genera los MP3 de todas las lecciones activas de un libro de Mente Fría.",
     )
-    parser.add_argument("book", help="Título (exacto o parcial) o UUID del libro en Supabase.")
+    parser.add_argument("book", nargs="?", help="Título (exacto o parcial) o UUID del libro en Supabase (o usa --all).")
+    parser.add_argument("--all", action="store_true", help="Todos los libros públicos, uno tras otro (los ya generados se saltan; se puede interrumpir y reanudar).")
+    parser.add_argument("--bitrate", default="40k", help="Bitrate del MP3 mono (por defecto 40k).")
     parser.add_argument("--engine", choices=["auto", "gemini", "edge", "kokoro"], default="edge", help="Motor TTS (por defecto: edge para lotes rápidos sin cuota).")
     parser.add_argument("--voice", default=None, help="Voz (ej. es-ES-AlvaroNeural, es-ES-ElviraNeural, Charon).")
     parser.add_argument("--force", action="store_true", help="Regenera los MP3 aunque ya existan (útil tras cambiar el texto que se lee).")
     parser.add_argument("--merge", action="store_true", help="Crea también un único audiolibro_completo.mp3.")
     args = parser.parse_args(argv)
+    global BITRATE
+    BITRATE = args.bitrate
+
+    if args.all:
+        libros = _sb_get("libros?publico=eq.true&select=id,titulo&order=fecha_creacion.asc,titulo.asc")
+        print(f"{len(libros)} libros públicos.")
+        extra = ["--engine", args.engine, "--bitrate", args.bitrate] + (["--voice", args.voice] if args.voice else []) + (["--force"] if args.force else [])
+        fallos = 0
+        for n, b in enumerate(libros, start=1):
+            print(f"\n=== [{n}/{len(libros)}] {b['titulo']} ===")
+            try:
+                main([b["id"]] + extra)
+            except Exception as exc:  # un libro que falle no debe parar el resto
+                fallos += 1
+                print(f"  ✗ {b['titulo']}: {exc}")
+        print(f"\nTerminado. Libros con error: {fallos}")
+        return 1 if fallos else 0
+    if not args.book:
+        parser.error("indica un libro o usa --all")
 
     q = args.book.strip()
     if re.match(r"^[0-9a-fA-F-]{36}$", q):

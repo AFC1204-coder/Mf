@@ -44,3 +44,19 @@ tools/video/.venv312/bin/python -m tools.audio.generar_audiolibro "Fluir" --engi
 ```
 La primera vez descarga el modelo (~330 MB). `--speed` no existe: la velocidad se ajusta con `KOKORO_SPEED` en `tools/video/.env` (por defecto 0,95).
 
+
+## Flujo completo: voz em_santa en todas las lecciones
+1. **Generar** (en el Mac; se puede interrumpir y reanudar, salta lo ya hecho):
+   ```bash
+   tools/video/.venv312/bin/python -m tools.audio.generar_audiolibro "Fluir" --engine kokoro --voice em_santa   # un libro de prueba
+   tools/video/.venv312/bin/python -m tools.audio.generar_audiolibro --all --engine kokoro --voice em_santa     # todos los libros públicos
+   ```
+   Deja `output/<libro>/upload_ready/<id-de-la-lección>.mp3` (MP3 mono, 40 kbps por defecto; `--bitrate` lo cambia).
+2. **Subir** al bucket público `audiolibros` (la app los reproduce antes que la voz en directo):
+   ```bash
+   tools/video/.venv312/bin/python -m tools.audio.subir_audios --dry-run   # cuántos y cuánto pesan
+   tools/video/.venv312/bin/python -m tools.audio.subir_audios
+   ```
+   Necesita `SUPABASE_SERVICE_KEY` en `tools/video/.env` (Project Settings → API → «service_role»). Es una clave con acceso total: nunca a git, ni al chat, ni a la app.
+3. **Espacio:** mira Supabase → Settings → Usage → Storage antes de subir todo; los planes gratuitos tienen un límite pequeño de almacenamiento.
+4. Si regeneras MP3 de lecciones que ya se escucharon en un móvil, sube la versión de caché de audio en `app.js` (`-v6` → `-v7`) para que no reproduzca la copia antigua.
