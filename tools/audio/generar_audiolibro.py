@@ -82,7 +82,9 @@ BITRATE = "40k"  # voz hablada mono: 40 kbps ≈ 18 MB/hora; se cambia con --bit
 def _compress_speech_mp3(inputs: list[Path], out_mp3: Path) -> float:
     """Une los fragmentos (si hay varios) y comprime a MP3 hablado mono (BITRATE)."""
     out_mp3.parent.mkdir(parents=True, exist_ok=True)
-    if len(inputs) == 1:
+    if len(inputs) == 1 and inputs[0] == out_mp3:
+        pass  # ya comprimido: ffmpeg no puede escribir sobre su propia entrada; solo medimos la duración
+    elif len(inputs) == 1:
         subprocess.run(
             ["ffmpeg", "-y", "-i", str(inputs[0]), "-ac", "1", "-ar", "24000", "-b:a", BITRATE, str(out_mp3)],
             capture_output=True,

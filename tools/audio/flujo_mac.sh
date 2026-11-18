@@ -60,7 +60,7 @@ if [ "${#LIBROS[@]}" -gt 0 ]; then
   for L in "${LIBROS[@]}"; do
     echo; echo "=== $L ==="
     "$PY" -m tools.audio.generar_audiolibro "$L" --engine kokoro --voice "$VOZ" --bitrate "$BITRATE" || \
-      echo "Aviso: falló «$L» (revisa arriba)."
+      echo "Aviso: falló «${L}» (revisa arriba)."
   done
 else
   "$PY" -m tools.audio.generar_audiolibro --all --engine kokoro --voice "$VOZ" --bitrate "$BITRATE" || \
