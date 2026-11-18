@@ -1,0 +1,200 @@
+/* Fotogramas del vídeo (1080×1920). Todo lleva el prefijo vf- para no chocar con styles.css,
+   que se carga antes solo para que los esquemas (.dg) se vean igual que en la app. */
+@font-face { font-family: 'VF Outfit'; src: url('fonts/Outfit-Regular.ttf'); font-weight: 100 900; }
+@font-face { font-family: 'VF Playfair'; src: url('fonts/PlayfairDisplay-Bold.ttf'); font-weight: 400 900; }
+@font-face { font-family: 'VF Playfair'; src: url('fonts/PlayfairDisplay-Italic.ttf'); font-weight: 400 900; font-style: italic; }
+@font-face { font-family: 'VF Serif'; src: url('fonts/SourceSerif4-Regular.ttf'); font-weight: 200 900; }
+
+:root {
+  --accent: #c9a84c;
+  --vf-bg: #080808;
+  --vf-surface: #111111;
+  --vf-surface2: #171717;
+  --vf-border: #2a2a2a;
+  --vf-text: #ede8df;
+  --vf-text2: #a8a094;
+  --vf-text3: #6a645c;
+  --vf-ok: #4fae84;
+  --vf-mal: #d9695f;
+  --tone: var(--accent);
+}
+html, body.vf {
+  margin: 0 !important; padding: 0 !important; width: 1080px; height: 1920px; overflow: hidden;
+  background: var(--vf-bg) !important; color: var(--vf-text);
+  font-family: 'VF Outfit', sans-serif; -webkit-font-smoothing: antialiased;
+  animation: none !important; opacity: 1 !important; transform: none !important;
+}
+body.vf * { box-sizing: border-box; }
+body.vf.tone-mal { --tone: var(--vf-mal); }
+body.vf.tone-ok { --tone: var(--vf-ok); }
+
+.vf-frame { position: absolute; inset: 0; overflow: hidden; }
+.vf-glow {
+  position: absolute; left: 50%; top: -420px; width: 1500px; height: 1300px; transform: translateX(-50%);
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 17%, transparent), transparent 70%);
+}
+.vf-photo { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: 0.42; }
+.vf-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(#080808e6, #08080888 35%, #080808f2 78%); }
+
+/* ── cabecera: marca, libro y posición en la serie ── */
+.vf-hd { position: absolute; left: 76px; right: 76px; top: 84px; }
+.vf-hd-row { display: flex; justify-content: space-between; align-items: baseline; }
+.vf-brand { font-size: 26px; font-weight: 700; letter-spacing: 0.18em; color: var(--accent); }
+.vf-counter { font-size: 24px; font-weight: 600; letter-spacing: 0.12em; color: var(--vf-text2); }
+.vf-hd-book {
+  margin-top: 14px; font-family: 'VF Serif', serif; font-size: 28px; font-style: italic; color: var(--vf-text2);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* ── índice de la clase: la misma secuencia en todas las lecciones ── */
+.vf-rail { display: flex; gap: 10px; margin-top: 30px; }
+.vf-rail-i { flex: 1; min-width: 0; }
+.vf-rail-i i { display: block; height: 6px; border-radius: 3px; background: #ffffff1f; }
+.vf-rail-i b {
+  display: block; margin-top: 12px; font-size: 23px; font-weight: 500; letter-spacing: 0.02em; color: var(--vf-text3);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.vf-rail-i.done i { background: color-mix(in srgb, var(--accent) 55%, transparent); }
+.vf-rail-i.done b { color: var(--vf-text2); }
+.vf-rail-i.on i { background: var(--accent); }
+.vf-rail-i.on b { color: var(--accent); font-weight: 700; }
+
+/* ── escenario: todo en em para poder encoger el conjunto si no cabe ── */
+.vf-stage {
+  position: absolute; left: 76px; right: 76px; top: 318px; height: 1046px; font-size: 12.6px;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.vf-stage.top { justify-content: flex-start; }
+.vf-kicker {
+  display: flex; align-items: center; gap: 1.4em; font-size: 2.6em; font-weight: 700; letter-spacing: 0.2em; color: var(--tone);
+  margin-bottom: 1.5em;
+}
+.vf-kicker::before { content: ''; width: 2.2em; height: 0.16em; border-radius: 0.1em; background: var(--tone); flex: none; }
+.vf-kicker .vf-step { margin-left: auto; letter-spacing: 0.08em; color: var(--vf-text2); font-weight: 600; }
+
+.vf-eje {
+  align-self: flex-start; font-size: 2.3em; font-weight: 600; letter-spacing: 0.14em; color: var(--accent);
+  border: 0.09em solid color-mix(in srgb, var(--accent) 60%, transparent); border-radius: 2em; padding: 0.5em 1.1em; margin-bottom: 2.2em;
+}
+.vf-title { font-family: 'VF Playfair', serif; font-weight: 700; font-size: 8em; line-height: 1.12; margin: 0; color: var(--vf-text); text-wrap: balance; }
+.vf-title.long { font-size: 6.6em; }
+.vf-title.xlong { font-size: 5.6em; }
+.vf-rule { width: 9em; height: 0.5em; border-radius: 0.25em; background: var(--accent); margin: 4em 0 3.2em; }
+.vf-byline b { display: block; font-family: 'VF Serif', serif; font-weight: 600; font-size: 3.8em; line-height: 1.25; color: var(--vf-text); }
+.vf-byline span { display: block; margin-top: 0.35em; font-size: 3em; color: var(--vf-text2); }
+
+.vf-route { display: flex; flex-wrap: wrap; gap: 1.5em; margin-top: 4.6em; align-items: center; }
+.vf-route i { width: 2.2em; height: 2.2em; border-radius: 50%; border: 0.25em solid #ffffff33; }
+.vf-route i.done { background: color-mix(in srgb, var(--accent) 55%, transparent); border-color: transparent; }
+.vf-route i.on { width: 3.4em; height: 3.4em; background: var(--accent); border-color: transparent; box-shadow: 0 0 0 0.8em color-mix(in srgb, var(--accent) 22%, transparent); }
+.vf-route.many { gap: 1em; }
+.vf-route.many i { width: 1.7em; height: 1.7em; }
+.vf-route.many i.on { width: 2.6em; height: 2.6em; }
+
+.vf-big {
+  font-family: 'VF Playfair', serif; font-weight: 700; font-size: 6.4em; line-height: 1.22; color: var(--vf-text);
+  padding-left: 0.55em; border-left: 0.14em solid var(--tone); text-wrap: pretty;
+}
+.vf-big.long { font-size: 5.4em; }
+.vf-big.xlong { font-size: 4.7em; }
+.vf-sub { font-family: 'VF Serif', serif; font-size: 3.4em; font-style: italic; color: var(--vf-text2); margin-bottom: 1.2em; line-height: 1.3; }
+
+.vf-anchor { font-family: 'VF Serif', serif; font-weight: 500; font-size: 5.6em; line-height: 1.3; color: var(--vf-text); text-wrap: pretty; }
+.vf-anchor.long { font-size: 4.8em; }
+.vf-anchor.xlong { font-size: 4.2em; }
+.vf-card {
+  background: color-mix(in srgb, var(--tone) 7%, var(--vf-surface)); border: 0.2em solid color-mix(in srgb, var(--tone) 45%, transparent);
+  border-radius: 3.2em; padding: 4.4em 4.2em;
+}
+.vf-chips { display: flex; flex-wrap: wrap; gap: 1.4em; margin-top: 4em; min-height: 6.2em; }
+.vf-chip {
+  font-size: 3em; font-weight: 600; color: var(--tone); padding: 0.5em 0.95em; border-radius: 2em;
+  background: color-mix(in srgb, var(--tone) 13%, transparent); border: 0.07em solid color-mix(in srgb, var(--tone) 55%, transparent);
+  opacity: 0;
+}
+.vf-chip.on { opacity: 1; }
+
+.vf-ref { display: flex; align-items: center; gap: 2em; margin-bottom: 3.4em; }
+.vf-ref .n {
+  flex: none; width: 2.1em; height: 2.1em; border-radius: 50%; font-size: 4em; font-weight: 700; color: var(--accent);
+  border: 0.07em solid var(--accent); display: flex; align-items: center; justify-content: center; font-family: 'VF Playfair', serif;
+}
+.vf-ref .t { font-size: 3.6em; font-weight: 600; line-height: 1.25; color: var(--vf-text2); }
+
+/* ── esquema ── */
+.vf-fig { background: var(--vf-surface); border: 0.2em solid var(--vf-border); border-radius: 3.2em; padding: 3.6em 3em 3em; }
+.vf-fig-title { font-family: 'VF Playfair', serif; font-weight: 700; font-size: 4.6em; line-height: 1.2; color: var(--vf-text); margin: 0 0 0.8em; }
+.vf-fig .dg { margin: 0 !important; padding: 0 !important; border: 0 !important; background: transparent !important; cursor: default; --dg-bg: #111111; --dg-ink: #ede8df; --dg-ink2: #b3ab9e; --dg-rule: #3a3a3a; }
+.vf-fig .dg-svg { font-family: 'VF Outfit', sans-serif; display: block; margin: 0 auto; }
+.vf-fig-pie { font-family: 'VF Serif', serif; font-style: italic; font-size: 2.9em; line-height: 1.35; color: var(--vf-text2); margin-top: 1em; }
+
+/* ── pregunta ── */
+.vf-q { font-family: 'VF Playfair', serif; font-weight: 700; font-size: 4.9em; line-height: 1.25; margin: 0 0 1em; text-wrap: pretty; }
+.vf-opts { display: flex; flex-direction: column; gap: 1.6em; }
+.vf-opt {
+  display: flex; gap: 1.8em; align-items: center; padding: 2em 2.4em; border-radius: 2.4em;
+  background: var(--vf-surface2); border: 0.2em solid var(--vf-border);
+}
+.vf-opt .l {
+  flex: none; width: 1.9em; height: 1.9em; border-radius: 50%; font-size: 3.2em; font-weight: 700; color: var(--vf-text2);
+  border: 0.07em solid #ffffff40; display: flex; align-items: center; justify-content: center;
+}
+.vf-opt .o { font-size: 3.3em; line-height: 1.3; color: var(--vf-text); }
+.vf-opt.ok { background: color-mix(in srgb, var(--vf-ok) 16%, var(--vf-surface)); border-color: var(--vf-ok); }
+.vf-opt.ok .l { background: var(--vf-ok); border-color: var(--vf-ok); color: #06140d; }
+.vf-opt.dim { opacity: 0.32; }
+.vf-think { display: flex; align-items: center; gap: 1.6em; margin-top: 2.6em; min-height: 7em; font-size: 1em; }
+.vf-think span { font-size: 3em; font-weight: 600; letter-spacing: 0.06em; color: var(--vf-text2); }
+.vf-think b {
+  width: 2em; height: 2em; border-radius: 50%; font-size: 3.4em; font-weight: 700; color: var(--vf-bg); background: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+}
+.vf-why { font-family: 'VF Serif', serif; font-size: 3.2em; line-height: 1.38; color: var(--vf-text2); }
+.vf-hide { visibility: hidden; }
+
+/* ── mapa del libro y recorrido ── */
+.vf-nodes, .vf-items { display: flex; flex-direction: column; gap: 1.8em; }
+.vf-node, .vf-item {
+  display: flex; align-items: center; gap: 2.4em; padding: 2em 2.6em; border-radius: 2.4em;
+  background: var(--vf-surface); border: 0.2em solid var(--vf-border); opacity: 0;
+}
+.vf-node.shown, .vf-item.shown { opacity: 1; }
+.vf-node.on, .vf-item.on { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 9%, var(--vf-surface)); }
+.vf-node .ic { flex: none; width: 7em; height: 7em; border-radius: 50%; background: color-mix(in srgb, var(--accent) 14%, transparent); display: flex; align-items: center; justify-content: center; }
+.vf-node .ic svg { width: 3.8em; height: 3.8em; fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.vf-node b { display: block; font-size: 3.7em; font-weight: 700; line-height: 1.2; color: var(--vf-text); }
+.vf-node span { display: block; margin-top: 0.3em; font-size: 3em; line-height: 1.3; color: var(--vf-text2); }
+.vf-central {
+  margin-top: 2.4em; padding: 2.6em 3em; border-radius: 2.4em; border: 0.2em solid color-mix(in srgb, var(--accent) 60%, transparent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent); opacity: 0;
+}
+.vf-central.shown { opacity: 1; }
+.vf-central small { display: block; font-size: 2.3em; font-weight: 700; letter-spacing: 0.2em; color: var(--accent); margin-bottom: 0.7em; }
+.vf-central p { margin: 0; font-family: 'VF Playfair', serif; font-style: italic; font-size: 3.9em; line-height: 1.3; color: var(--vf-text); }
+.vf-item { padding: 1.6em 2.4em; gap: 2em; }
+.vf-item .n { flex: none; width: 2em; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 4em; color: var(--accent); text-align: center; }
+.vf-item .t { font-size: 3.4em; font-weight: 500; line-height: 1.25; color: var(--vf-text); }
+.vf-items.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2em 1.6em; }
+.vf-items.cols .vf-item { padding: 1.2em 1.6em; gap: 1.2em; }
+.vf-items.cols .vf-item .n { font-size: 3em; }
+.vf-items.cols .vf-item .t { font-size: 2.5em; }
+
+/* ── cierre ── */
+.vf-next { margin-top: 4.4em; padding: 2.8em 3.2em; border-radius: 2.6em; background: var(--vf-surface); border: 0.2em solid var(--vf-border); }
+.vf-next small { display: block; font-size: 2.4em; font-weight: 700; letter-spacing: 0.18em; color: var(--accent); margin-bottom: 0.7em; }
+.vf-next b { display: block; font-family: 'VF Serif', serif; font-weight: 600; font-size: 4em; line-height: 1.25; color: var(--vf-text); }
+.vf-related { margin-top: 3em; font-size: 2.7em; line-height: 1.5; color: var(--vf-text2); }
+.vf-related em { font-style: normal; font-weight: 700; letter-spacing: 0.14em; color: var(--vf-text3); margin-right: 0.8em; font-size: 0.86em; }
+.vf-credit { margin-top: 3.4em; font-family: 'VF Serif', serif; font-style: italic; font-size: 3em; color: var(--vf-text2); }
+
+/* ── presentación del libro ── */
+.vf-cover { display: flex; gap: 4em; align-items: flex-end; margin-bottom: 4em; }
+.vf-cover img { width: 30em; border-radius: 1.4em; box-shadow: 0 2em 6em #000c; border: 0.15em solid #ffffff22; }
+.vf-count { font-size: 2.8em; font-weight: 600; letter-spacing: 0.12em; color: var(--vf-text2); margin-top: 1.6em; }
+.vf-desc { font-family: 'VF Serif', serif; font-size: 3.7em; line-height: 1.42; color: var(--vf-text2); margin-top: 1.4em; text-wrap: pretty; }
+
+/* El esquema es la pieza que más espacio necesita: su escena va más apretada. */
+body.vf.k-esquema .vf-kicker { margin-bottom: 0.9em; }
+body.vf.k-esquema .vf-fig { padding: 2.6em 2em 2.2em; }
+body.vf.k-esquema .vf-fig-title { font-size: 3.7em; margin-bottom: 0.6em; }
+body.vf.k-esquema .vf-fig-pie { font-size: 2.6em; margin-top: 0.8em; }

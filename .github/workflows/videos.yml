@@ -1,0 +1,93 @@
+name: Vídeos didácticos
+
+# Se lanza a mano (también desde el móvil): Actions → «Vídeos didácticos» → Run workflow.
+# Genera la serie de un libro (presentación + lecciones + repaso) o las siguientes series pendientes
+# y las deja como artefacto descargable. No escribe en el repositorio ni en Supabase.
+# Voz: Edge TTS (gratis, sin clave). Con el secreto GEMINI_API_KEY se puede elegir Gemini.
+
+on:
+  workflow_dispatch:
+    inputs:
+      libro:
+        description: 'Título (o id) del libro. Vacío = siguientes libros pendientes de la biblioteca'
+        type: string
+        default: ''
+      formato:
+        description: 'clase (lección completa) o corto (60-90 s)'
+        type: choice
+        options: [clase, corto]
+        default: clase
+      motor:
+        description: 'Motor de voz (mudo = previsualización sin voz)'
+        type: choice
+        options: [edge, auto, gemini, mudo]
+        default: edge
+      voz:
+        description: 'Voz (vacío = la del motor por defecto)'
+        type: string
+        default: ''
+      limite:
+        description: 'Con «libro» vacío: cuántos libros como máximo'
+        type: string
+        default: '1'
+      unir:
+        description: 'Unir además cada libro en un solo vídeo con capítulos'
+        type: boolean
+        default: true
+      solo_guion:
+        description: 'Solo guiones y control de calidad (sin voz ni vídeo)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  generar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Dependencias
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          pip install -q -r tools/video/requirements.txt
+      - name: Pruebas del generador
+        run: python -m unittest discover -s tools/video/tests -t .
+      - name: Generar
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          LIBRO: ${{ inputs.libro }}
+          FORMATO: ${{ inputs.formato }}
+          MOTOR: ${{ inputs.motor }}
+          VOZ: ${{ inputs.voz }}
+          LIMITE: ${{ inputs.limite }}
+          UNIR: ${{ inputs.unir }}
+          SOLO_GUION: ${{ inputs.solo_guion }}
+        run: |
+          args=(--format "$FORMATO" --engine "$MOTOR")
+          if [ -n "$VOZ" ]; then args+=(--voice "$VOZ"); fi
+          if [ "$UNIR" = "true" ]; then args+=(--merge); fi
+          if [ "$SOLO_GUION" = "true" ]; then args+=(--script-only); fi
+          if [ -n "$LIBRO" ]; then
+            python -m tools.video.cli libro "$LIBRO" "${args[@]}"
+          else
+            python -m tools.video.cli biblioteca --limit "$LIMITE" "${args[@]}"
+          fi
+      - name: Guardar resultado
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: videos-${{ github.run_number }}
+          path: |
+            tools/video/output/
+            !tools/video/output/_cache/
+          if-no-files-found: warn
+          retention-days: 14

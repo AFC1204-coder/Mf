@@ -1,47 +1,110 @@
-"""Renderizador de vídeo vertical 9:16 (1080x1920) con la estética de Mente Fría."""
+"""Montaje: une fotogramas, voz y subtítulos de un episodio en un MP4 vertical (1080×1920).
+
+La línea de tiempo la manda la voz: cada escena dura lo que su locución (más una pausa para
+asimilar) y cada cambio en pantalla entra en la palabra que lo nombra. El vídeo se arma como una
+lista de imágenes fijas con su duración (con fundidos precalculados) y una sola pasada de ffmpeg.
+"""
 
 from __future__ import annotations
 
+import array
+import hashlib
+import shutil
 import subprocess
-import textwrap
+import wave
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
-from .scriptwriter import Scene, VideoScript
-from .tts.base import TTSResult, WordTiming
+from .frames import WIDTH, episode_pages, render_frames
+from .scriptwriter import Episode
+from .tts.base import TTSEngine, WordTiming
 
-WIDTH = 1080
-HEIGHT = 1920
 FPS = 30
+SAMPLE_RATE = 48000
 FONTS_DIR = Path(__file__).resolve().parent / "assets" / "fonts"
 
-EJE_COLORS = {
-    "economia": "#c9a84c",
-    "economía": "#c9a84c",
-    "psicologia": "#9b59b6",
-    "psicología": "#9b59b6",
-    "filosofia": "#5dade2",
-    "filosofía": "#5dade2",
-    "neurociencia": "#1abc9c",
-    "desarrollo": "#e67e22",
-    "historia": "#e74c3c",
-    "ciencia": "#00bcd4",
-}
+LEAD_IN_S = 0.35  # silencio antes de la primera palabra
+FADE_SCENE_S = 0.40  # fundido entre escenas
+FADE_BEAT_S = 0.24  # fundido cuando aparece un elemento dentro de la escena
+FADE_STEP_S = 1 / 15  # resolución de los fundidos
+SUB_Y = 1390  # franja de subtítulos (debajo del escenario)
+SUB_H = 260
 
 
-def _eje_color(eje: str) -> str:
-    key = (eje or "").strip().lower()
-    for k, color in EJE_COLORS.items():
-        if k in key:
-            return color
-    return "#c9a84c"
+@dataclass
+class SceneTiming:
+    start_s: float
+    speech_s: float  # duración de la voz (0 si la escena no tiene)
+    total_s: float  # voz + pausa, o el silencio fijado
+    words: list[tuple[str, float, float]] = field(default_factory=list)  # (palabra mostrada, inicio, fin) relativos
 
 
-def _hex_to_rgb(hex_color: str) -> tuple[int, int, int]:
-    h = hex_color.lstrip("#")
-    return tuple(int(h[i : i + 2], 16) for i in (0, 2, 4))  # type: ignore[return-value]
+@dataclass
+class RenderInfo:
+    video: Path
+    duration_s: float
+    chapters: list[tuple[str, float]]  # (sección, segundo de inicio)
+    voices: list[str]
+    frames: int
+    thumbnail: Path | None = None
 
+
+# ───────────────────────── audio ─────────────────────────
+
+def _decode_pcm(audio_path: Path) -> bytes:
+    """Cualquier audio → PCM 16 bits mono a 48 kHz (para sumar duraciones con exactitud de muestra)."""
+    res = subprocess.run(
+        ["ffmpeg", "-v", "error", "-i", str(audio_path), "-f", "s16le", "-ac", "1", "-ar", str(SAMPLE_RATE), "pipe:1"],
+        capture_output=True,
+        check=True,
+    )
+    return res.stdout
+
+
+def _silence(seconds: float) -> bytes:
+    return b"\x00\x00" * max(0, int(round(seconds * SAMPLE_RATE)))
+
+
+def align_words(tokens: list[str], timings: list[WordTiming], duration_s: float) -> list[tuple[str, float, float]]:
+    """Asigna a cada palabra del texto mostrado su tramo de audio.
+
+    Si el motor devuelve una marca por palabra, se usan tal cual; si no cuadran (el motor parte o
+    une palabras, o el texto para la voz lleva algún cambio), se interpolan sobre las marcas.
+    """
+    if not tokens:
+        return []
+    if not timings:
+        paso = duration_s / len(tokens)
+        return [(t, round(i * paso, 3), round((i + 1) * paso, 3)) for i, t in enumerate(tokens)]
+    if len(timings) == len(tokens):
+        return [(t, w.start_s, max(w.end_s, w.start_s + 0.04)) for t, w in zip(tokens, timings)]
+    n, m = len(tokens), len(timings)
+    out: list[tuple[str, float, float]] = []
+    for i, t in enumerate(tokens):
+        a = timings[min(m - 1, int(i * m / n))]
+        b = timings[min(m - 1, max(int(i * m / n), int((i + 1) * m / n) - 1))]
+        out.append((t, a.start_s, max(b.end_s, a.start_s + 0.04)))
+    return out
+
+
+def _spoken_tokens(narration: str) -> tuple[list[str], list[int]]:
+    """Palabras que se pronuncian (las rayas sueltas no) y, para cada token del texto, su posición entre ellas."""
+    hablados: list[str] = []
+    mapa: list[int] = []
+    for tok in narration.split():
+        if any(ch.isalnum() for ch in tok):
+            mapa.append(len(hablados))
+            hablados.append(tok)
+        else:
+            mapa.append(max(0, len(hablados) - 1))
+            if hablados:
+                hablados[-1] = f"{hablados[-1]} {tok}"  # la raya no suena, pero se ve junto a su palabra
+    return hablados, mapa
+
+
+# ───────────────────────── subtítulos ─────────────────────────
 
 def _font(filename: str, size: int, weight: int | None = None) -> ImageFont.FreeTypeFont:
     f = ImageFont.truetype(str(FONTS_DIR / filename), size)
@@ -53,543 +116,356 @@ def _font(filename: str, size: int, weight: int | None = None) -> ImageFont.Free
     return f
 
 
-def _draw_glow(img: Image.Image, color_hex: str) -> None:
-    r, g, b = _hex_to_rgb(color_hex)
-    overlay = Image.new("RGBA", img.size, (0, 0, 0, 0))
-    draw = ImageDraw.Draw(overlay)
-    cx, cy = WIDTH // 2, 340
-    for radius, alpha in [(520, 14), (360, 18), (220, 22)]:
-        draw.ellipse(
-            [cx - radius, cy - radius, cx + radius, cy + radius],
-            fill=(r, g, b, alpha),
-        )
-    combined = Image.alpha_composite(img.convert("RGBA"), overlay)
-    img.paste(combined.convert("RGB"))
+Chunk = tuple[float, float, list[tuple[str, float, float]]]
 
 
-def _wrap_lines(text: str, font: ImageFont.FreeTypeFont, max_width: int, draw: ImageDraw.ImageDraw) -> list[str]:
-    words = text.split()
-    lines: list[str] = []
-    current = ""
-    for w in words:
-        candidate = f"{current} {w}".strip()
-        bbox = draw.textbbox((0, 0), candidate, font=font)
-        if bbox[2] - bbox[0] <= max_width or not current:
-            current = candidate
-        else:
-            lines.append(current)
-            current = w
-    if current:
-        lines.append(current)
-    return lines
-
-
-def render_story_hud(
-    scene: Scene,
-    script: VideoScript,
-    total_scenes: int,
-    out_png: Path,
-) -> Path:
-    """Capa RGBA limpia: en Escena 1 muestra el gancho editorial; en 2..N deja respirar la historia visual."""
-    accent = _eje_color(script.eje)
-    hud = Image.new("RGBA", (WIDTH, HEIGHT), (0, 0, 0, 0))
-    draw = ImageDraw.Draw(hud)
-
-    f_brand = _font("Outfit-Regular.ttf", 26, 700)
-    f_meta = _font("Outfit-Regular.ttf", 24, 500)
-    f_tag = _font("Outfit-Regular.ttf", 24, 700)
-    f_head = _font("PlayfairDisplay-Bold.ttf", 60, 700)
-    f_book = _font("SourceSerif4-Regular.ttf", 26, 400)
-
-    # Cabecera superior
-    draw.text((76, 86), "MENTE FRÍA", font=f_brand, fill=(232, 197, 106, 255))
-    eje_label = (script.eje or "BIBLIOTECA").upper()[:22]
-    draw.text((266, 88), f"·  {eje_label}", font=f_meta, fill=(210, 202, 190, 230))
-
-    counter = f"{scene.index:02d} / {total_scenes:02d}"
-    cb = draw.textbbox((0, 0), counter, font=f_meta)
-    draw.text((WIDTH - 76 - (cb[2] - cb[0]), 88), counter, font=f_meta, fill=(210, 202, 190, 230))
-
-    # Barra de progreso
-    bar_y = 140
-    bar_w = WIDTH - 152
-    draw.rounded_rectangle([76, bar_y, 76 + bar_w, bar_y + 5], radius=3, fill=(255, 255, 255, 45))
-    fill_w = max(24, int(bar_w * (scene.index / total_scenes)))
-    r, g, b = _hex_to_rgb(accent)
-    draw.rounded_rectangle([76, bar_y, 76 + fill_w, bar_y + 5], radius=3, fill=(r, g, b, 240))
-
-    # Píldora de capítulo
-    tag_text = scene.tag.upper()
-    tb = draw.textbbox((0, 0), tag_text, font=f_tag)
-    pill_w = (tb[2] - tb[0]) + 44
-    pill_x = 76
-    pill_y = 192
-    draw.rounded_rectangle(
-        [pill_x, pill_y, pill_x + pill_w, pill_y + 44],
-        radius=22,
-        fill=(12, 12, 12, 205),
-        outline=(r, g, b, 235),
-        width=2,
-    )
-    draw.text((pill_x + 22, pill_y + 9), tag_text, font=f_tag, fill=(r, g, b, 255))
-
-    # Solo en Escena 1 (gancho) o Cierre mostramos titular grande; en escenas 2..N la foto manda
-    if scene.kind == "gancho":
-        lines = _wrap_lines(scene.on_screen, f_head, WIDTH - 152, draw)[:4]
-        ty = pill_y + 82
-        for i, line in enumerate(lines):
-            col = (232, 197, 106, 255) if i == 0 else (237, 232, 223, 255)
-            draw.text((78, ty + 4), line, font=f_head, fill=(0, 0, 0, 190))
-            draw.text((76, ty), line, font=f_head, fill=col)
-            ty += 74
-
-    # Crédito discreto al pie (debajo de los subtítulos)
-    attr = f"{script.book_title}" + (f" · {script.book_author}" if script.book_author else "")
-    ab = draw.textbbox((0, 0), attr[:58], font=f_book)
-    draw.text(((WIDTH - (ab[2] - ab[0])) // 2, 1745), attr[:58], font=f_book, fill=(180, 172, 160, 230))
-
-    out_png.parent.mkdir(parents=True, exist_ok=True)
-    hud.save(out_png)
-    return out_png
-
-
-def _render_infographic_bg(script: VideoScript, infographic_png: Path, out_jpg: Path) -> Path:
-    """Crea un plano dedicado 9:16 para la infografía de la lección sin tapar caras."""
-    accent = _eje_color(script.eje)
-    bg = Image.new("RGB", (WIDTH, HEIGHT), "#080808")
-    _draw_glow(bg, accent)
-    draw = ImageDraw.Draw(bg)
-
-    f_sub = _font("Outfit-Regular.ttf", 28, 700)
-    lbl = "EL ESQUEMA CLAVE"
-    lb = draw.textbbox((0, 0), lbl, font=f_sub)
-    draw.text(((WIDTH - (lb[2] - lb[0])) // 2, 410), lbl, font=f_sub, fill="#e8c56a")
-
-    with Image.open(infographic_png) as raw_info:
-        info = raw_info.convert("RGB")
-        info.thumbnail((940, 680), Image.Resampling.LANCZOS)
-        iw, ih = info.size
-        ix = (WIDTH - iw) // 2
-        iy = 480 + (720 - ih) // 2
-        mask = Image.new("L", (iw, ih), 0)
-        ImageDraw.Draw(mask).rounded_rectangle([0, 0, iw, ih], radius=24, fill=255)
-        bg.paste(info, (ix, iy), mask)
-        draw.rounded_rectangle([ix - 2, iy - 2, ix + iw + 2, iy + ih + 2], radius=26, outline=accent, width=2)
-
-    out_jpg.parent.mkdir(parents=True, exist_ok=True)
-    bg.save(out_jpg, quality=94)
-    return out_jpg
-
-
-def _render_fallback_bg(script: VideoScript, out_jpg: Path) -> Path:
-    img = Image.new("RGB", (WIDTH, HEIGHT), "#080808")
-    _draw_glow(img, _eje_color(script.eje))
-    out_jpg.parent.mkdir(parents=True, exist_ok=True)
-    img.save(out_jpg, quality=90)
-    return out_jpg
-    accent = _eje_color(script.eje)
-    img = Image.new("RGB", (WIDTH, HEIGHT), "#080808")
-    _draw_glow(img, accent)
-    draw = ImageDraw.Draw(img)
-
-    f_brand = _font("Outfit-Regular.ttf", 26, 600)
-    f_meta = _font("Outfit-Regular.ttf", 24, 500)
-    f_tag = _font("Outfit-Regular.ttf", 24, 700)
-    f_book = _font("SourceSerif4-Regular.ttf", 30, 400)
-
-    # Top header
-    draw.text((84, 96), "MENTE FRÍA", font=f_brand, fill="#c9a84c")
-    eje_label = (script.eje or "BIBLIOTECA").upper()[:22]
-    draw.text((280, 98), f"·  {eje_label}", font=f_meta, fill="#a8a094")
-
-    counter = f"{scene.index:02d} / {total_scenes:02d}"
-    cb = draw.textbbox((0, 0), counter, font=f_meta)
-    draw.text((WIDTH - 84 - (cb[2] - cb[0]), 98), counter, font=f_meta, fill="#a8a094")
-
-    # Progress bar
-    bar_y = 154
-    bar_w = WIDTH - 168
-    draw.rounded_rectangle([84, bar_y, 84 + bar_w, bar_y + 6], radius=3, fill="#222222")
-    fill_w = max(24, int(bar_w * (scene.index / total_scenes)))
-    draw.rounded_rectangle([84, bar_y, 84 + fill_w, bar_y + 6], radius=3, fill=accent)
-
-    # Main editorial card
-    card_top, card_bot = 230, 1340
-    draw.rounded_rectangle(
-        [72, card_top, WIDTH - 72, card_bot],
-        radius=32,
-        fill="#111111",
-        outline="#222222",
-        width=2,
-    )
-    # Subtle top accent bar inside card
-    draw.rounded_rectangle([120, card_top, WIDTH - 120, card_top + 4], radius=2, fill=accent)
-
-    # Scene tag pill
-    tag_text = scene.tag.upper()
-    tb = draw.textbbox((0, 0), tag_text, font=f_tag)
-    pill_w = (tb[2] - tb[0]) + 48
-    pill_x = (WIDTH - pill_w) // 2
-    pill_y = card_top + 56
-    draw.rounded_rectangle([pill_x, pill_y, pill_x + pill_w, pill_y + 48], radius=24, fill="#1c1c1c", outline=accent, width=2)
-    draw.text((pill_x + 24, pill_y + 10), tag_text, font=f_tag, fill=accent)
-
-    has_visual = bool(visual_img and visual_img.exists())
-
-    if has_visual and visual_img is not None:
-        # Titular arriba + imagen secuencial o infografía centrada + pie de libro
-        f_title = _font("PlayfairDisplay-Bold.ttf", 46, 700)
-        lines = _wrap_lines(scene.on_screen, f_title, WIDTH - 210, draw)[:3]
-        ty = pill_y + 78
-        for i, line in enumerate(lines):
-            lb = draw.textbbox((0, 0), line, font=f_title)
-            color = "#e8c56a" if (scene.kind == "gancho" and i == 0) else "#ede8df"
-            draw.text(((WIDTH - (lb[2] - lb[0])) // 2, ty), line, font=f_title, fill=color)
-            ty += 58
-
-        img_area_top = max(ty + 28, 520)
-        img_area_bot = card_bot - 96
-        center_y = (img_area_top + img_area_bot) // 2
-        max_h = max(360, img_area_bot - img_area_top - 20)
-        _paste_rounded(
-            img,
-            visual_img,
-            box_center_y=center_y,
-            max_w=840,
-            max_h=min(580, max_h),
-            radius=20,
-            border_color=accent if scene.show_infographic else "#2e2e2e",
-        )
-
-        attr = f"{script.book_title}" + (f" · {script.book_author}" if script.book_author else "")
-        ab = draw.textbbox((0, 0), attr[:54], font=f_book)
-        draw.text(((WIDTH - (ab[2] - ab[0])) // 2, card_bot - 68), attr[:54], font=f_book, fill="#a8a094")
-    else:
-        # Big centered statement
-        font_size = 66 if len(scene.on_screen) <= 65 else 56
-        f_head = _font("PlayfairDisplay-Bold.ttf", font_size, 700)
-        lines = _wrap_lines(scene.on_screen, f_head, WIDTH - 230, draw)[:6]
-        line_h = int(font_size * 1.28)
-        block_h = len(lines) * line_h
-        start_y = card_top + ((card_bot - card_top) - block_h) // 2 - 20
-
-        for i, line in enumerate(lines):
-            lb = draw.textbbox((0, 0), line, font=f_head)
-            lx = (WIDTH - (lb[2] - lb[0])) // 2
-            color = "#e8c56a" if (scene.kind == "gancho" and i == 0) else "#ede8df"
-            draw.text((lx, start_y + i * line_h), line, font=f_head, fill=color)
-
-        # Divider line
-        div_y = start_y + block_h + 44
-        if div_y < card_bot - 120:
-            draw.rounded_rectangle([WIDTH // 2 - 64, div_y, WIDTH // 2 + 64, div_y + 4], radius=2, fill=accent)
-
-        # Book + author attribution inside card footer
-        attr = f"{script.book_title}" + (f" · {script.book_author}" if script.book_author else "")
-        attr_lines = textwrap.wrap(attr, width=42)[:2]
-        ay = card_bot - 108
-        for al in attr_lines:
-            ab = draw.textbbox((0, 0), al, font=f_book)
-            draw.text(((WIDTH - (ab[2] - ab[0])) // 2, ay), al, font=f_book, fill="#a8a094")
-            ay += 38
-
-    out_png.parent.mkdir(parents=True, exist_ok=True)
-    img.save(out_png)
-    return out_png
+def build_subtitle_chunks(timings: list[SceneTiming]) -> list[Chunk]:
+    """Bloques de 3-4 palabras que nunca cruzan el final de una frase, con el tiempo de cada palabra."""
+    chunks: list[Chunk] = []
+    for st in timings:
+        if not st.words:
+            continue
+        absolutas = [(w, st.start_s + a, st.start_s + b) for w, a, b in st.words]
+        grupos: list[list[tuple[str, float, float]]] = []
+        cur: list[tuple[str, float, float]] = []
+        chars = 0
+        for item in absolutas:
+            largo = len(item[0]) + 1
+            if cur and (len(cur) >= 4 or chars + largo > 26):
+                grupos.append(cur)
+                cur, chars = [item], len(item[0])
+            else:
+                cur.append(item)
+                chars += largo
+            if item[0].rstrip("\"'»”)").endswith((".", "!", "?", "…")):
+                grupos.append(cur)
+                cur, chars = [], 0
+        if cur:
+            grupos.append(cur)
+        fin_voz = st.start_s + st.speech_s
+        for i, g in enumerate(grupos):
+            inicio = g[0][1]
+            fin = grupos[i + 1][0][1] if i + 1 < len(grupos) else min(fin_voz + 0.25, st.start_s + st.total_s)
+            chunks.append((round(inicio, 3), round(max(inicio + 0.25, fin), 3), g))
+    return chunks
 
 
 def _fmt_srt_time(sec: float) -> str:
-    sec = max(0.0, sec)
-    h = int(sec // 3600)
-    m = int((sec % 3600) // 60)
-    s = int(sec % 60)
-    ms = int(round((sec - int(sec)) * 1000))
-    if ms >= 1000:
-        s += 1
-        ms = 0
+    ms_total = int(round(max(0.0, sec) * 1000))
+    h, resto = divmod(ms_total, 3_600_000)
+    m, resto = divmod(resto, 60_000)
+    s, ms = divmod(resto, 1000)
     return f"{h:02d}:{m:02d}:{s:02d},{ms:03d}"
 
 
-def _build_subtitle_chunks(
-    scene_timings: list[tuple[float, list[WordTiming], str]],
-) -> list[tuple[float, float, list[tuple[str, float, float]]]]:
-    """Agrupa en bloques de 3-4 palabras restaurando puntuación y conservando tiempos por palabra."""
-    chunks_out: list[tuple[float, float, list[tuple[str, float, float]]]] = []
-    offset_s = 0.0
-    for scene_dur, words, narration in scene_timings:
-        if not words:
-            offset_s += scene_dur
+def _split_balanced(frase: list[tuple[str, float, float]], max_words: int = 14) -> list[list[tuple[str, float, float]]]:
+    """Parte una frase larga en trozos parecidos, cortando en una coma si hay una cerca."""
+    n = len(frase)
+    if n <= max_words:
+        return [frase]
+    partes = -(-n // max_words)
+    trozos: list[list[tuple[str, float, float]]] = []
+    inicio = 0
+    for k in range(1, partes):
+        ideal = round(k * n / partes)
+        candidatos = [j for j in range(max(inicio + 3, ideal - 3), min(n - 2, ideal + 3)) if frase[j - 1][0].rstrip("\"'»”)").endswith((",", ";", ":"))]
+        corte = min(candidatos, key=lambda j: abs(j - ideal)) if candidatos else ideal
+        if corte <= inicio:
             continue
-
-        orig_tokens = [
-            t for t in narration.split()
-            if any(ch.isalnum() for ch in t)
-        ]
-        aligned: list[tuple[str, float, float]] = []
-        for idx, wt in enumerate(words):
-            label = orig_tokens[idx] if (len(orig_tokens) == len(words)) else wt.text
-            aligned.append((label, offset_s + wt.start_s, offset_s + wt.end_s))
-
-        grouped: list[list[tuple[str, float, float]]] = []
-        cur: list[tuple[str, float, float]] = []
-        cur_chars = 0
-        for item in aligned:
-            wlen = len(item[0]) + 1
-            if cur and (len(cur) >= 4 or cur_chars + wlen > 26):
-                grouped.append(cur)
-                cur = [item]
-                cur_chars = len(item[0])
-            else:
-                cur.append(item)
-                cur_chars += wlen
-            if item[0].rstrip("\"'»”)").endswith((".", "!", "?", "…")):
-                grouped.append(cur)
-                cur = []
-                cur_chars = 0
-        if cur:
-            grouped.append(cur)
-
-        for idx, ch in enumerate(grouped):
-            start = ch[0][1]
-            if idx + 1 < len(grouped):
-                end = grouped[idx + 1][0][1]
-            else:
-                end = offset_s + min(scene_dur, ch[-1][2] - offset_s + 0.25)
-            end = max(start + 0.25, end)
-            chunks_out.append((round(start, 3), round(end, 3), ch))
-
-        offset_s += scene_dur
-    return chunks_out
+        trozos.append(frase[inicio:corte])
+        inicio = corte
+    trozos.append(frase[inicio:])
+    return trozos
 
 
-def write_srt_subtitles(chunks: list[tuple[float, float, list[tuple[str, float, float]]]], out_srt: Path) -> Path:
+def write_srt(timings: list[SceneTiming], out_srt: Path) -> Path:
+    """Subtítulos por frase (para subir junto al vídeo): más legibles que los de 3-4 palabras."""
     lines: list[str] = []
-    for i, (start, end, word_items) in enumerate(chunks, start=1):
-        txt = " ".join(w[0] for w in word_items)
-        lines.extend([str(i), f"{_fmt_srt_time(start)} --> {_fmt_srt_time(end)}", txt, ""])
+    n = 0
+    for st in timings:
+        frase: list[tuple[str, float, float]] = []
+        for i, item in enumerate(st.words):
+            frase.append(item)
+            if item[0].rstrip("\"'»”)").endswith((".", "!", "?", "…")) or i == len(st.words) - 1:
+                for trozo in _split_balanced(frase):
+                    n += 1
+                    ini = st.start_s + trozo[0][1]
+                    fin = st.start_s + trozo[-1][2]
+                    lines += [str(n), f"{_fmt_srt_time(ini)} --> {_fmt_srt_time(max(fin, ini + 0.4))}", " ".join(w for w, _, _ in trozo), ""]
+                frase = []
     out_srt.write_text("\n".join(lines), encoding="utf-8")
     return out_srt
 
 
-def _render_subtitle_overlay_track(
-    chunks: list[tuple[float, float, list[tuple[str, float, float]]]],
-    total_duration: float,
-    work_dir: Path,
-) -> Path:
-    """Genera subtítulos estilo karaoke (palabra activa en dorado #e8c56a) con Pillow + concat."""
-    sub_dir = work_dir / "subs"
-    sub_dir.mkdir(parents=True, exist_ok=True)
-    sub_h = 260
+def _subtitle_track(chunks: list[Chunk], total_s: float, sub_dir: Path) -> Path:
+    """Pista de subtítulos con la palabra activa resaltada: una imagen por palabra, unidas con `concat`."""
+    if sub_dir.exists():
+        shutil.rmtree(sub_dir)
+    sub_dir.mkdir(parents=True)
     f_sub = _font("Outfit-Regular.ttf", 54, 700)
-
-    blank_png = sub_dir / "blank.png"
-    Image.new("RGBA", (WIDTH, sub_h), (0, 0, 0, 0)).save(blank_png)
+    medida = ImageDraw.Draw(Image.new("RGBA", (10, 10)))
+    blank = sub_dir / "blank.png"
+    Image.new("RGBA", (WIDTH, SUB_H), (0, 0, 0, 0)).save(blank, compress_level=1)
 
     entries: list[tuple[Path, float]] = []
     cursor = 0.0
-    frame_counter = 0
-
-    for start, end, word_items in chunks:
+    n = 0
+    for start, end, words in chunks:
         if start > cursor + 0.04:
-            entries.append((blank_png, start - cursor))
+            entries.append((blank, start - cursor))
             cursor = start
-
-        # Calcular ancho total de la línea centrada
-        full_text = " ".join(w[0] for w in word_items)
-        draw_tmp = ImageDraw.Draw(Image.new("RGBA", (10, 10)))
-        tb = draw_tmp.textbbox((0, 0), full_text, font=f_sub)
-        total_w = tb[2] - tb[0]
-        text_h = tb[3] - tb[1]
-
+        texto = " ".join(w[0] for w in words)
+        tb = medida.textbbox((0, 0), texto, font=f_sub)
+        total_w, text_h = tb[2] - tb[0], tb[3] - tb[1]
         box_w = min(WIDTH - 80, total_w + 68)
         box_h = max(86, text_h + 40)
-        bx0 = (WIDTH - box_w) // 2
-        by0 = (sub_h - box_h) // 2
-
-        for w_idx, (w_text, w_start, w_end) in enumerate(word_items):
-            seg_start = max(cursor, w_start if w_idx > 0 else cursor)
-            seg_end = word_items[w_idx + 1][1] if (w_idx + 1 < len(word_items)) else end
-            seg_dur = max(0.08, seg_end - seg_start)
-
-            frame_counter += 1
-            png_path = sub_dir / f"sub_{frame_counter:04d}.png"
-            im = Image.new("RGBA", (WIDTH, sub_h), (0, 0, 0, 0))
+        bx0, by0 = (WIDTH - box_w) // 2, (SUB_H - box_h) // 2
+        avances = [medida.textbbox((0, 0), w[0] + " ", font=f_sub)[2] for w in words]
+        for i, (_, w_start, _) in enumerate(words):
+            seg_start = max(cursor, w_start if i > 0 else cursor)
+            seg_end = words[i + 1][1] if i + 1 < len(words) else end
+            seg_dur = max(0.06, seg_end - seg_start)
+            n += 1
+            png = sub_dir / f"sub_{n:05d}.png"
+            im = Image.new("RGBA", (WIDTH, SUB_H), (0, 0, 0, 0))
             draw = ImageDraw.Draw(im)
-            draw.rounded_rectangle(
-                [bx0, by0, bx0 + box_w, by0 + box_h],
-                radius=24,
-                fill=(10, 10, 10, 238),
-                outline=(62, 62, 62, 255),
-                width=2,
-            )
-
-            # Dibujar palabra por palabra con la activa en dorado (#e8c56a)
-            x_cur = (WIDTH - total_w) // 2
-            y_text = by0 + (box_h - 56) // 2 - 4
-            for j, (tok, _, _) in enumerate(word_items):
-                col = (232, 197, 106, 255) if j == w_idx else (237, 232, 223, 255)
-                draw.text((x_cur, y_text), tok, font=f_sub, fill=col)
-                adv = draw.textbbox((0, 0), tok + " ", font=f_sub)[2]
-                x_cur += adv
-
-            im.save(png_path)
-            entries.append((png_path, seg_dur))
+            draw.rounded_rectangle([bx0, by0, bx0 + box_w, by0 + box_h], radius=24, fill=(10, 10, 10, 238), outline=(62, 62, 62, 255), width=2)
+            x = (WIDTH - total_w) // 2
+            y = by0 + (box_h - 56) // 2 - 4
+            for j, (tok, _, _) in enumerate(words):
+                draw.text((x, y), tok, font=f_sub, fill=(232, 197, 106, 255) if j == i else (237, 232, 223, 255))
+                x += avances[j]
+            im.save(png, compress_level=1)
+            entries.append((png, seg_dur))
             cursor += seg_dur
+    if total_s > cursor + 0.02:
+        entries.append((blank, total_s - cursor))
+    return _write_concat(entries, sub_dir / "subs.txt")
 
-    if total_duration > cursor + 0.04:
-        entries.append((blank_png, total_duration - cursor))
 
-    concat_txt = sub_dir / "subs_concat.txt"
-    lines_txt: list[str] = []
+def _write_concat(entries: list[tuple[Path, float]], out_txt: Path) -> Path:
+    lines: list[str] = []
     for p, d in entries:
-        lines_txt.append(f"file '{p.resolve()}'")
-        lines_txt.append(f"duration {d:.3f}")
+        lines.append(f"file '{p.resolve().as_posix()}'")
+        lines.append(f"duration {d:.4f}")
     if entries:
-        lines_txt.append(f"file '{entries[-1][0].resolve()}'")
-    concat_txt.write_text("\n".join(lines_txt) + "\n", encoding="utf-8")
-    return concat_txt
+        lines.append(f"file '{entries[-1][0].resolve().as_posix()}'")  # el demuxer necesita repetir el último
+    out_txt.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return out_txt
 
 
-def assemble_video(
-    script: VideoScript,
-    tts_results: list[TTSResult],
+# ───────────────────────── imagen ─────────────────────────
+
+def _blend_frames(a: Path, b: Path, steps: int, blend_dir: Path) -> list[Path]:
+    """Fotogramas intermedios de un fundido de `a` a `b` (se guardan y se reutilizan)."""
+    clave = hashlib.sha256(f"{a.name}|{b.name}|{steps}".encode()).hexdigest()[:16]
+    outs = [blend_dir / f"b_{clave}_{i}.png" for i in range(steps)]
+    if all(p.exists() for p in outs):
+        return outs
+    blend_dir.mkdir(parents=True, exist_ok=True)
+    with Image.open(a) as ia, Image.open(b) as ib:
+        ia, ib = ia.convert("RGB"), ib.convert("RGB")
+        for i, p in enumerate(outs):
+            Image.blend(ia, ib, (i + 1) / (steps + 1)).save(p, compress_level=1)
+    return outs
+
+
+def _video_entries(cuts: list[tuple[float, Path, bool]], total_s: float, blend_dir: Path) -> list[tuple[Path, float]]:
+    """De una lista de cortes (segundo, imagen, ¿cambia de escena?) a imágenes con duración, con fundidos."""
+    entries: list[tuple[Path, float]] = []
+    for i, (t0, png, new_scene) in enumerate(cuts):
+        t1 = cuts[i + 1][0] if i + 1 < len(cuts) else total_s
+        slot = t1 - t0
+        if slot <= 0:
+            continue
+        fade = 0.0
+        if i > 0 and cuts[i - 1][1] != png:
+            fade = FADE_SCENE_S if new_scene else FADE_BEAT_S
+            if slot < fade + 0.2:
+                fade = 0.0
+        if fade:
+            steps = max(2, int(round(fade / FADE_STEP_S)))
+            for b in _blend_frames(cuts[i - 1][1], png, steps, blend_dir):
+                entries.append((b, fade / steps))
+        entries.append((png, slot - fade))
+    return entries
+
+
+# ───────────────────────── episodio ─────────────────────────
+
+def _chapters_file(chapters: list[tuple[str, float]], total_s: float, episode: Episode, out: Path) -> Path:
+    def esc(v: str) -> str:
+        return "".join("\\" + c if c in "=;#\\\n" else c for c in v)
+
+    lines = [";FFMETADATA1", f"title={esc(episode.title)}", f"album={esc(episode.book_title)}"]
+    if episode.book_author:
+        lines.append(f"artist={esc(episode.book_author)}")
+    if episode.number:
+        lines.append(f"track={episode.number}/{episode.total}")
+    for i, (name, start) in enumerate(chapters):
+        end = chapters[i + 1][1] if i + 1 < len(chapters) else total_s
+        lines += ["[CHAPTER]", "TIMEBASE=1/1000", f"START={int(start * 1000)}", f"END={int(end * 1000)}", f"title={esc(name)}"]
+    out.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return out
+
+
+def render_episode(
+    episode: Episode,
+    tts: TTSEngine,
     work_dir: Path,
     out_mp4: Path,
-    scene_shots: list[list[Path]] | None = None,
-    infographic_png: Path | None = None,
-) -> Path:
-    """Renderiza las escenas en formato historia cinematográfica 9:16 con xfade y subtítulos karaoke."""
-    hud_dir = work_dir / "hud"
-    clips_dir = work_dir / "clips"
-    hud_dir.mkdir(parents=True, exist_ok=True)
-    clips_dir.mkdir(parents=True, exist_ok=True)
+    frames_dir: Path | None = None,
+    voice: str | None = None,
+    photo: Path | None = None,
+    log=print,
+) -> RenderInfo:
+    """Renderiza un episodio completo. Devuelve duración, capítulos (para la descripción) y voces usadas."""
+    work_dir.mkdir(parents=True, exist_ok=True)
+    out_mp4.parent.mkdir(parents=True, exist_ok=True)
+    frames_dir = frames_dir or (work_dir / "frames")
 
-    fallback_bg = _render_fallback_bg(script, work_dir / "fallback_bg.jpg")
-    info_bg = (
-        _render_infographic_bg(script, infographic_png, work_dir / "infographic_bg.jpg")
-        if (infographic_png and infographic_png.exists())
-        else None
-    )
+    # 1 · Fotogramas.
+    states, pages = episode_pages(episode, photo)
+    pngs = render_frames(pages, frames_dir)
+    log(f"      ✓ {len(set(pngs))} fotogramas")
 
-    clip_meta: list[tuple[Path, float]] = []
-    audio_paths: list[Path] = []
-    scene_timings: list[tuple[float, list[WordTiming], str]] = []
-    xfade_d = 0.35
-
-    shots_per_scene = scene_shots or [[] for _ in script.scenes]
-    for scene, tts_res, shots in zip(script.scenes, tts_results, shots_per_scene):
-        hud_png = hud_dir / f"hud_{scene.index:02d}.png"
-        render_story_hud(
-            scene=scene,
-            script=script,
-            total_scenes=len(script.scenes),
-            out_png=hud_png,
-        )
-
-        dur = tts_res.duration_s
-        usable_shots = [p for p in shots if p.exists()] or [fallback_bg]
-        if scene.show_infographic and info_bg is not None:
-            usable_shots = [usable_shots[0], info_bg]
-
-        if len(usable_shots) == 1:
-            sub_segs = [(usable_shots[0], dur, 0)]
+    # 2 · Voz, escena a escena, y línea de tiempo.
+    pcm = bytearray(_silence(LEAD_IN_S))
+    timings: list[SceneTiming] = []
+    voices: list[str] = []
+    cursor = LEAD_IN_S
+    audio_dir = work_dir / "audio"
+    for i, scene in enumerate(episode.scenes):
+        if scene.narration:
+            res = tts.synthesize(scene.speech, audio_dir / f"escena_{i + 1:02d}.mp3", voice=voice)
+            datos = _decode_pcm(res.audio_path)
+            speech_s = len(datos) / 2 / SAMPLE_RATE
+            etiqueta = f"{res.engine_name} · {res.voice}"
+            if etiqueta not in voices:
+                voices.append(etiqueta)
+            hablados, _ = _spoken_tokens(scene.narration)
+            palabras = align_words(hablados, res.word_timings, speech_s)
+            total = speech_s + scene.pause_after_s
+            pcm += datos + _silence(scene.pause_after_s)
+            timings.append(SceneTiming(cursor, speech_s, total, palabras))
         else:
-            d1 = round(dur * 0.48, 3)
-            d2 = max(0.6, round(dur - d1, 3))
-            sub_segs = [(usable_shots[0], d1, 0), (usable_shots[1], d2, 1)]
+            total = scene.hold_s + scene.pause_after_s
+            pcm += _silence(total)
+            timings.append(SceneTiming(cursor, 0.0, total, []))
+        cursor += timings[-1].total_s
+    # La duración real es la del audio (las pausas se redondean a muestras).
+    total_s = len(pcm) / 2 / SAMPLE_RATE
+    log(f"      ✓ locución: {total_s / 60:.1f} min [{', '.join(voices) or 'sin voz'}]")
 
-        for sub_idx, (bg_img, sub_dur, dir_mode) in enumerate(sub_segs, start=1):
-            # Añadir xfade_d al clip (se solapará con el siguiente) para mantener sincronía exacta
-            clip_dur = sub_dur + xfade_d
-            n_frames = max(15, int(round(clip_dur * FPS)))
-            clip_mp4 = clips_dir / f"clip_{scene.index:02d}_{sub_idx}.mp4"
-            if dir_mode == 0:
-                zoom_expr = "min(zoom+0.00055,1.08)"
-            else:
-                zoom_expr = "if(eq(on,1),1.08,max(zoom-0.00055,1.0))"
+    # 3 · Cuándo entra cada estado.
+    cuts: list[tuple[float, Path, bool]] = []
+    for st, png in zip(states, pngs):
+        scene = episode.scenes[st.scene_index]
+        tm = timings[st.scene_index]
+        es_inicio = st.at_word == 0 and st.at_s == 0.0
+        if es_inicio:
+            t = 0.0 if st.scene_index == 0 else tm.start_s
+        elif st.at_s is not None:
+            t = tm.start_s + st.at_s
+        else:
+            _, mapa = _spoken_tokens(scene.narration)
+            pos = mapa[min(len(mapa) - 1, max(0, st.at_word or 0))] if mapa else 0
+            t = tm.start_s + (tm.words[min(pos, len(tm.words) - 1)][1] if tm.words else 0.0)
+        t = min(max(t, cuts[-1][0] if cuts else 0.0), max(0.0, tm.start_s + tm.total_s - 0.12))
+        cuts.append((t, png, es_inicio))
 
-            vf_bg = (
-                f"zoompan=z='{zoom_expr}':"
-                f"x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':"
-                f"d={n_frames}:s={WIDTH}x{HEIGHT}:fps={FPS}"
-            )
-            fc = f"[0:v]{vf_bg}[bg];[bg][1:v]overlay=0:0:shortest=1[v]"
-            subprocess.run(
-                [
-                    "ffmpeg", "-y",
-                    "-i", str(bg_img),
-                    "-loop", "1", "-i", str(hud_png),
-                    "-filter_complex", fc,
-                    "-map", "[v]",
-                    "-t", f"{clip_dur:.3f}",
-                    "-c:v", "libx264", "-pix_fmt", "yuv420p", "-r", str(FPS),
-                    str(clip_mp4),
-                ],
-                capture_output=True,
-                check=True,
-            )
-            clip_meta.append((clip_mp4, sub_dur))
+    blend_dir = work_dir / "fundidos"
+    video_txt = _write_concat(_video_entries(cuts, total_s, blend_dir), work_dir / "video.txt")
 
-        audio_paths.append(tts_res.audio_path)
-        scene_timings.append((dur, tts_res.word_timings, scene.narration))
+    # 4 · Capítulos: dónde empieza cada sección del índice.
+    chapters: list[tuple[str, float]] = []
+    con_seccion = [i for i, s in enumerate(episode.scenes) if s.section]
+    for i, (scene, tm) in enumerate(zip(episode.scenes, timings)):
+        nombre = scene.section or ("Inicio" if (not con_seccion or i < con_seccion[0]) else "Cierre")
+        if not chapters or chapters[-1][0] != nombre:
+            chapters.append((nombre, 0.0 if not chapters else round(tm.start_s, 2)))
 
-    # Encadenar clips con xfade suave (sin pantallazos negros)
-    raw_video = work_dir / "raw_video.mp4"
-    if len(clip_meta) == 1:
-        raw_video.write_bytes(clip_meta[0][0].read_bytes())
-    else:
-        v_inputs: list[str] = []
-        xf_filters: list[str] = []
-        for idx, (cp, _) in enumerate(clip_meta):
-            v_inputs.extend(["-i", str(cp)])
-        prev = "[0:v]"
-        offset_acc = clip_meta[0][1]
-        for idx in range(1, len(clip_meta)):
-            out_lbl = "[vout]" if idx == len(clip_meta) - 1 else f"[vx{idx}]"
-            xf_filters.append(
-                f"{prev}[{idx}:v]xfade=transition=fade:duration={xfade_d}:offset={offset_acc:.3f}{out_lbl}"
-            )
-            prev = out_lbl
-            offset_acc += clip_meta[idx][1]
-        subprocess.run(
-            ["ffmpeg", "-y", *v_inputs, "-filter_complex", ";".join(xf_filters), "-map", "[vout]", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-r", str(FPS), str(raw_video)],
-            capture_output=True,
-            check=True,
-        )
+    # 5 · Subtítulos y audio.
+    chunks = build_subtitle_chunks(timings)
+    write_srt(timings, out_mp4.with_suffix(".srt"))
+    subs_txt = _subtitle_track(chunks, total_s, work_dir / "subs")
+    wav = work_dir / "locucion.wav"
+    with wave.open(str(wav), "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(SAMPLE_RATE)
+        w.writeframes(bytes(pcm))
+    con_voz = any(array.array("h", bytes(pcm[: 2 * SAMPLE_RATE * 30])))  # el motor «mudo» no se normaliza
+    meta = _chapters_file(chapters, total_s, episode, work_dir / "capitulos.txt")
 
-    voiceover = work_dir / "voiceover.mp3"
-    audio_inputs: list[str] = []
-    filter_parts: list[str] = []
-    for i, ap in enumerate(audio_paths):
-        audio_inputs.extend(["-i", str(ap)])
-        filter_parts.append(f"[{i}:a]")
-    concat_filter = "".join(filter_parts) + f"concat=n={len(audio_paths)}:v=0:a=1[aout]"
-    subprocess.run(
-        ["ffmpeg", "-y", *audio_inputs, "-filter_complex", concat_filter, "-map", "[aout]", "-c:a", "libmp3lame", "-q:a", "2", str(voiceover)],
+    # 6 · Mezcla final.
+    audio_filter = "[2:a]loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000[a]" if con_voz else "[2:a]anull[a]"
+    cmd = [
+        "ffmpeg", "-y", "-v", "error",
+        "-f", "concat", "-safe", "0", "-i", str(video_txt),
+        "-f", "concat", "-safe", "0", "-i", str(subs_txt),
+        "-i", str(wav),
+        "-f", "ffmetadata", "-i", str(meta),
+        "-filter_complex", f"[0:v]fps={FPS},format=yuv420p[bg];[bg][1:v]overlay=0:{SUB_Y}:eof_action=pass[v];{audio_filter}",
+        "-map", "[v]", "-map", "[a]", "-map_metadata", "3", "-map_chapters", "3",
+        "-t", f"{total_s:.3f}",
+        "-c:v", "libx264", "-preset", "veryfast", "-crf", "21", "-pix_fmt", "yuv420p", "-r", str(FPS),
+        "-c:a", "aac", "-b:a", "160k", "-ar", "48000",
+        "-movflags", "+faststart",
+        str(out_mp4),
+    ]
+    res = subprocess.run(cmd, capture_output=True, text=True)
+    if res.returncode != 0 or not out_mp4.exists():
+        raise RuntimeError(f"ffmpeg falló al montar {out_mp4.name}: {res.stderr.strip()[-600:]}")
+
+    thumb = out_mp4.with_name("miniatura.png")
+    shutil.copyfile(pngs[0], thumb)
+    return RenderInfo(out_mp4, round(total_s, 2), chapters, voices, len(set(pngs)), thumb)
+
+
+def probe_duration(path: Path) -> float:
+    res = subprocess.run(
+        ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", str(path)],
         capture_output=True,
+        text=True,
         check=True,
     )
+    return float(res.stdout.strip())
 
-    # Subtítulos karaoke + normalización de volumen (-16 LUFS) + mux final
-    total_dur = sum(d for d, _, _ in scene_timings)
-    chunks = _build_subtitle_chunks(scene_timings)
-    write_srt_subtitles(chunks, out_mp4.with_suffix(".srt"))
-    subs_concat = _render_subtitle_overlay_track(chunks, total_dur, work_dir)
 
-    out_mp4.parent.mkdir(parents=True, exist_ok=True)
-    subprocess.run(
+def merge_videos(parts: list[tuple[str, Path]], out_mp4: Path, title: str, author: str = "") -> list[tuple[str, float]]:
+    """Une los episodios en un solo vídeo del libro (sin recodificar) con un capítulo por episodio."""
+    work = out_mp4.parent / "_unir"
+    work.mkdir(parents=True, exist_ok=True)
+    chapters: list[tuple[str, float]] = []
+    cursor = 0.0
+    lista = []
+    for name, p in parts:
+        chapters.append((name, round(cursor, 2)))
+        cursor += probe_duration(p)
+        lista.append(f"file '{p.resolve().as_posix()}'")
+    (work / "lista.txt").write_text("\n".join(lista) + "\n", encoding="utf-8")
+
+    def esc(v: str) -> str:
+        return "".join("\\" + c if c in "=;#\\\n" else c for c in v)
+
+    meta = [";FFMETADATA1", f"title={esc(title)}"] + ([f"artist={esc(author)}"] if author else [])
+    for i, (name, start) in enumerate(chapters):
+        end = chapters[i + 1][1] if i + 1 < len(chapters) else cursor
+        meta += ["[CHAPTER]", "TIMEBASE=1/1000", f"START={int(start * 1000)}", f"END={int(end * 1000)}", f"title={esc(name)}"]
+    (work / "capitulos.txt").write_text("\n".join(meta) + "\n", encoding="utf-8")
+    res = subprocess.run(
         [
-            "ffmpeg", "-y",
-            "-i", str(raw_video),
-            "-f", "concat", "-safe", "0", "-i", str(subs_concat),
-            "-i", str(voiceover),
-            "-filter_complex", "[0:v][1:v]overlay=0:1390:shortest=1[v];[2:a]loudnorm=I=-16:TP=-1.5:LRA=11[a]",
-            "-map", "[v]", "-map", "[a]",
-            "-c:v", "libx264", "-preset", "medium", "-crf", "23", "-pix_fmt", "yuv420p",
-            "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", "-shortest",
-            str(out_mp4),
+            "ffmpeg", "-y", "-v", "error",
+            "-f", "concat", "-safe", "0", "-i", str(work / "lista.txt"),
+            "-f", "ffmetadata", "-i", str(work / "capitulos.txt"),
+            "-map", "0", "-map_metadata", "1", "-map_chapters", "1",
+            "-c", "copy", "-movflags", "+faststart", str(out_mp4),
         ],
         capture_output=True,
-        check=True,
+        text=True,
     )
-    return out_mp4
+    if res.returncode != 0:
+        raise RuntimeError(f"ffmpeg falló al unir el libro: {res.stderr.strip()[-500:]}")
+    shutil.rmtree(work, ignore_errors=True)
+    return chapters

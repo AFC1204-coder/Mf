@@ -1,15 +1,11 @@
-"""Buscador y procesador de secuencias fotográficas cinematográficas (Wikimedia Commons) para Mente Fría."""
+"""Fondo fotográfico opcional (Wikimedia Commons) para portadas y cierres. Se activa con --photos."""
 
 from __future__ import annotations
 
-import re
 from pathlib import Path
 
 import requests
 from PIL import Image, ImageEnhance, ImageOps
-
-from .scriptwriter import Scene
-from .supabase_client import LessonData
 
 HEADERS = {"User-Agent": "MenteFriaVideo/1.0 (https://github.com/AFC1204-coder/Mf)"}
 
@@ -46,31 +42,15 @@ FALLBACK_STORY_SHOTS = [
 ]
 
 
-def _story_queries_for_scene(scene: Scene, lesson: LessonData) -> list[str]:
-    text = f"{scene.on_screen} {scene.narration}".lower()
+def backdrop_queries(text: str, position: int = 0) -> list[str]:
+    """Consultas de fotografía para un texto: por palabras clave y, si no hay, un fondo neutro."""
+    low = text.lower()
     queries: list[str] = []
-
     for keywords, q_list in KEYWORD_VISUALS:
-        if any(k in text for k in keywords):
-            for q in q_list:
-                if q not in queries:
-                    queries.append(q)
-        if len(queries) >= 2:
-            break
-
-    if scene.kind == "gancho" and len(queries) < 2:
-        queries.extend(["silhouette sunset dramatic sky", "sunlight breaking dark clouds"])
-    elif scene.kind == "cierre" and len(queries) < 2:
-        queries = ["open notebook fountain pen", "person walking sunrise path"]
-
-    fb = FALLBACK_STORY_SHOTS[(scene.index - 1) % len(FALLBACK_STORY_SHOTS)]
-    for q in fb:
-        if len(queries) >= 2:
-            break
-        if q not in queries:
-            queries.append(q)
-
-    return queries[:2]
+        if any(k in low for k in keywords):
+            queries.extend(q for q in q_list if q not in queries)
+    queries.extend(q for q in FALLBACK_STORY_SHOTS[position % len(FALLBACK_STORY_SHOTS)] if q not in queries)
+    return queries
 
 
 SKIP_TITLE_WORDS = (
@@ -159,25 +139,17 @@ def _grade_vertical_cinema(src_path: Path, dst_path: Path, width: int = 1080, he
     return dst_path
 
 
-def fetch_scene_story_shots(
-    scene: Scene,
-    lesson: LessonData,
-    out_dir: Path,
-    used_urls: set[str],
-    num_shots: int = 2,
-) -> list[Path]:
-    """Obtiene 1-2 fotografías cinematográficas gratuitas (sin marca de agua) para contar la escena."""
-    out_dir.mkdir(parents=True, exist_ok=True)
-    queries = _story_queries_for_scene(scene, lesson)
-    shots: list[Path] = []
+def fetch_backdrop(text: str, out_jpg: Path, used_urls: set[str] | None = None, position: int = 0) -> Path | None:
+    """Fotografía libre (Wikimedia Commons) recortada a 9:16 y oscurecida, para el fondo de portadas y cierres.
 
-    for idx, query in enumerate(queries[:num_shots], start=1):
-        out_jpg = out_dir / f"scene_{scene.index:02d}_shot_{idx}.jpg"
-        if out_jpg.exists() and out_jpg.stat().st_size > 15_000:
-            shots.append(out_jpg)
-            continue
-
-        img_url = _search_wikimedia_image(query, used_urls)
+    Es ambiente, no contenido: nunca sustituye al esquema ni al texto. Devuelve None si no hay red o no hay foto.
+    """
+    out_jpg.parent.mkdir(parents=True, exist_ok=True)
+    if out_jpg.exists() and out_jpg.stat().st_size > 15_000:
+        return out_jpg
+    usados = used_urls if used_urls is not None else set()
+    for query in backdrop_queries(text, position)[:3]:
+        img_url = _search_wikimedia_image(query, usados)
         if not img_url:
             continue
         try:
@@ -187,8 +159,7 @@ def fetch_scene_story_shots(
                 raw_dl.write_bytes(r.content)
                 _grade_vertical_cinema(raw_dl, out_jpg)
                 raw_dl.unlink(missing_ok=True)
-                shots.append(out_jpg)
+                return out_jpg
         except Exception as exc:
             print(f"[visuals] Error descargando imagen ({query}): {exc}")
-
-    return shots
+    return None
