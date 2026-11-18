@@ -1,13 +1,25 @@
 #!/usr/bin/env bash
 # Flujo completo en el Mac: entorno -> generar todos los libros con em_santa -> dry-run -> (confirmación) -> subir.
-# Uso:   tools/audio/flujo_mac.sh            # todo el flujo, pregunta antes de subir
-#        tools/audio/flujo_mac.sh --sin-subir # se detiene tras el dry-run
+# Uso:   tools/audio/flujo_mac.sh                      # todos los libros públicos, pregunta antes de subir
+#        tools/audio/flujo_mac.sh --sin-subir           # se detiene tras el dry-run
+#        tools/audio/flujo_mac.sh --bitrate 32k         # MP3 más ligeros (por defecto 40k)
+#        tools/audio/flujo_mac.sh --libros "Fluir" "Maestría"   # solo esos libros (título o UUID)
+# Se pueden combinar. Un bitrate nuevo solo afecta a MP3 aún no generados (los existentes se saltan).
 # Es reanudable: salta lo ya generado. Nunca imprime ni escribe SUPABASE_SERVICE_KEY.
 set -euo pipefail
 
 VOZ="em_santa"
 SOLO_GENERAR=0
-[ "${1:-}" = "--sin-subir" ] && SOLO_GENERAR=1
+BITRATE="40k"
+LIBROS=()
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --sin-subir) SOLO_GENERAR=1; shift ;;
+    --bitrate) BITRATE="${2:?falta el valor de --bitrate}"; shift 2 ;;
+    --libros) shift; while [ $# -gt 0 ] && [ "${1#--}" = "$1" ]; do LIBROS+=("$1"); shift; done ;;
+    *) echo "Opción desconocida: $1"; exit 2 ;;
+  esac
+done
 
 RAIZ="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$RAIZ"
@@ -41,11 +53,19 @@ fi
 grep -q '^SUPABASE_URL=.\+' "$ENV" && grep -q '^SUPABASE_ANON_KEY=.\+' "$ENV" \
   || { echo "No pude fijar SUPABASE_URL / SUPABASE_ANON_KEY."; exit 1; }
 
-echo "== 3/5 Generar todos los libros con $VOZ (puede tardar; reanudable) =="
+echo "== 3/5 Generar con $VOZ a $BITRATE (puede tardar; reanudable) =="
 INICIO=$(date +%s)
 # Si un libro falla no abortamos: se informa y se sigue; relanzar el script retoma lo pendiente.
-"$PY" -m tools.audio.generar_audiolibro --all --engine kokoro --voice "$VOZ" || \
-  echo "Aviso: la generación terminó con errores (revisa arriba). Puedes relanzar el script."
+if [ "${#LIBROS[@]}" -gt 0 ]; then
+  for L in "${LIBROS[@]}"; do
+    echo; echo "=== $L ==="
+    "$PY" -m tools.audio.generar_audiolibro "$L" --engine kokoro --voice "$VOZ" --bitrate "$BITRATE" || \
+      echo "Aviso: falló «$L» (revisa arriba)."
+  done
+else
+  "$PY" -m tools.audio.generar_audiolibro --all --engine kokoro --voice "$VOZ" --bitrate "$BITRATE" || \
+    echo "Aviso: la generación terminó con errores (revisa arriba). Puedes relanzar el script."
+fi
 echo "Generación: $(( ($(date +%s) - INICIO) / 60 )) min"
 
 echo "== 4/5 Dry-run (no sube nada) =="
