@@ -20,10 +20,11 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
+from . import guia as G
 from . import text as T
 from .corpus import Book, Lesson, Question
 
-SCRIPT_VERSION = 2
+SCRIPT_VERSION = 3
 WORDS_PER_SECOND = 2.4  # ritmo de explicación tranquila (~145 palabras/min)
 
 FORMATS = ("clase", "corto")
@@ -43,6 +44,9 @@ PHRASES = {
     "puente": "Venimos de la lección anterior, {titulo}.",
     "idea": "La idea de hoy.",
     "arranque": "El punto de partida.",
+    "guia_previa": "La lección en una imagen: {titulo}.",
+    "guia_recordar": "Antes de seguir, intenta recordar las piezas del esquema: {titulo}.",
+    "guia_corto": "El esquema: {titulo}.",
     "esquema": "Míralo en un esquema: {titulo}.",
     "esquema_extra": "Y en una figura más: {titulo}.",
     "matiz": "Ahora, el matiz.",
@@ -114,6 +118,14 @@ class Scene:
         v = self.view
         if self.kind == "esquema":
             return 0  # una figura no es un texto: se mira
+        if self.kind == "guia":
+            pz = v.get("pieces") or []
+            modo = v.get("mode")
+            if modo == "piece" and 0 <= int(v.get("active", -1)) < len(pz):
+                return sum(T.n_words(x) for x in [pz[v["active"]].get("t"), pz[v["active"]].get("d"), *pz[v["active"]].get("items", [])] if x)
+            if modo == "ask":
+                return 12
+            return sum(T.n_words(str(x.get("t") or "")) for x in pz)
         if self.kind == "pregunta":
             return T.n_words(str(v.get("question") or "")) + sum(T.n_words(o) for o in v.get("options") or []) + T.n_words(str(v.get("explanation") or ""))
         if self.kind == "mapa":
@@ -265,11 +277,28 @@ def _text_scene(
     step: tuple[int, int] | None = None,
     visible: list[str] | None = None,
     trail: list[str] | None = None,
+    guide: dict[str, Any] | None = None,
 ) -> Scene:
-    """Escena de texto: frase ancla fija y términos clave que aparecen cuando se nombran."""
+    """Escena de texto: frase ancla fija y términos clave que aparecen cuando se nombran.
+
+    Con `guide` (el esquema de la lección), el mini-esquema se queda en pantalla y se ilumina la pieza
+    en el momento en que la voz la nombra; no hay términos sueltos ni escalera: lo estructural lo lleva el esquema.
+    """
     parts = ([intro] if intro else []) + [Part(body, origin)]
     desplazamiento = T.n_words(intro.text) if intro else 0
     ancla = anchor_sentence(body)
+    if guide:
+        inicial, cambios = G.timeline(body, guide["pieces"], desplazamiento)
+        view_g: dict[str, Any] = {
+            "kicker": kicker,
+            "tone": tone,
+            "text": ancla,
+            "guide": True,
+            **_guide_view(guide, active=inicial),
+        }
+        if step:
+            view_g["step"] = list(step)
+        return Scene("texto", section, view_g, parts, [Beat({"active": j}, at_word=w) for w, j in cambios])
     terms = T.key_terms(body, hints, exclude=[ancla.rstrip("…"), *(visible or [])])
     view: dict[str, Any] = {
         "kicker": kicker,
@@ -427,6 +456,73 @@ def diagram_walk(spec: dict[str, Any]) -> list[list[str]]:
     return piezas
 
 
+def _guide_info(lesson: Lesson) -> dict[str, Any] | None:
+    """El esquema de la lección convertido en guía, si su plantilla tiene piezas (dos a seis cajas)."""
+    for spec in lesson.main_diagrams()[:1]:
+        ps = G.pieces(spec)
+        if ps:
+            return {"spec": spec, "pieces": ps, "title": T.clean(spec.get("titulo")), "pie": T.clean(spec.get("pie"))}
+    return None
+
+
+def _guide_view(guide: dict[str, Any], active: int = -1, shown: int | None = None, mode: str = "") -> dict[str, Any]:
+    ps: list[G.Piece] = guide["pieces"]
+    v: dict[str, Any] = {
+        "spec": guide["spec"],
+        "pieces": [p.to_view() for p in ps],
+        "order": G.order(ps),
+        "n": len(ps),
+        "active": active,
+        "shown": len(ps) if shown is None else shown,
+    }
+    if mode:
+        v["mode"] = mode
+    return v
+
+
+def _guide_preview(guide: dict[str, Any], section: str, clase: bool) -> Scene:
+    """Organizador previo: el esquema entero y sus piezas nombradas una a una (cada una se ilumina al nombrarla)."""
+    ps: list[G.Piece] = guide["pieces"]
+    intro = _fixed("guia_previa" if clase else "guia_corto", titulo=guide["title"].rstrip("."))
+    intro.origin = "plantilla+esquema.titulo"
+    parts = [intro]
+    beats: list[Beat] = []
+    palabras = T.n_words(intro.text)
+    for j, p in enumerate(ps):
+        beats.append(Beat({"active": j}, at_word=palabras))
+        parts.append(Part(_sentence(p.t), "esquema.datos"))
+        palabras += T.n_words(parts[-1].text)
+    beats.append(Beat({"active": -1}, at_word=max(palabras - 1, 0)))
+    kicker = "LA LECCIÓN EN UNA IMAGEN" if clase else "EL ESQUEMA"
+    return Scene("guia", section, {"kicker": kicker, "title": guide["title"], **_guide_view(guide, mode="legend")}, parts, beats, pause_after_s=1.0)
+
+
+def _guide_recall(guide: dict[str, Any], section: str) -> list[Scene]:
+    """Recuperación del esquema: se oculta, se piensa unos segundos y se revela pieza a pieza (con sus rótulos leídos)."""
+    ps: list[G.Piece] = guide["pieces"]
+    n = len(ps)
+    intro = _fixed("guia_recordar", titulo=guide["title"].rstrip("."))
+    intro.origin = "plantilla+esquema.titulo"
+    base = {"kicker": "RECUERDA EL ESQUEMA", "title": guide["title"], "countdown": None, **_guide_view(guide, shown=0, mode="ask")}
+    hold = 5.0
+    scenes = [
+        Scene("guia", section, dict(base), [intro], pause_after_s=0.2),
+        Scene("guia", section, dict(base, countdown=0), [], [Beat({"countdown": c}, at_s=hold - c) for c in (3, 2, 1)], hold_s=hold, pause_after_s=0.0),
+    ]
+    compacto = G.reading_is_long(ps)
+    for j, p in enumerate(ps):
+        v = {"kicker": "EL ESQUEMA", "title": guide["title"], **_guide_view(guide, active=j, shown=j + 1, mode="piece")}
+        if compacto:
+            v["pieces"] = [dict(x, d="", items=[]) if i == j else x for i, x in enumerate(v["pieces"])]
+        parts = [Part(_sentence(x), "esquema.datos") for x in G.reading_lines(p, compacto)]
+        scenes.append(Scene("guia", section, v, parts, pause_after_s=0.5))
+    pie = [Part(_sentence(guide["pie"]), "esquema.pie")] if guide["pie"] else []
+    scenes.append(
+        Scene("guia", section, {"kicker": "EL ESQUEMA", "title": guide["title"], **_guide_view(guide, mode="done")}, pie, hold_s=0.0 if pie else 0.4, pause_after_s=2.4)
+    )
+    return scenes
+
+
 def _diagram_scenes(lesson: Lesson, section: str, limit: int, walk: bool = True) -> list[Scene]:
     """El esquema verificado de la lección. Si se puede, se recorre pieza a pieza: la voz lee sus
     rótulos (literales) mientras esa pieza se ilumina y las que faltan siguen tapadas."""
@@ -568,6 +664,11 @@ def lesson_episode(book: Book, index: int, fmt: str = "clase", with_quiz: bool =
         )
     )
 
+    # El esquema de la lección es la columna vertebral del episodio (si su plantilla tiene piezas).
+    guide = _guide_info(lesson)
+    if guide and clase:
+        scenes.append(_guide_preview(guide, "Idea", clase))
+
     # 4 · Desarrollo.
     if hilo_origen == "cuerpo" and bloques:
         # La idea ya era la primera frase del cuerpo: no se repite al empezar el desarrollo.
@@ -580,7 +681,7 @@ def lesson_episode(book: Book, index: int, fmt: str = "clase", with_quiz: bool =
         rotulos = [step_label(b) for b in bloques]
         for i, bloque in enumerate(bloques):
             scenes.append(
-                _text_scene("Desarrollo", "DESARROLLO", "a", None, bloque, "leccion.cuerpo", hints, (i + 1, len(bloques)), visible, rotulos[:i])
+                _text_scene("Desarrollo", "DESARROLLO", "a", None, bloque, "leccion.cuerpo", hints, (i + 1, len(bloques)), visible, rotulos[:i], guide)
             )
     else:
         elegidos: list[str] = []
@@ -595,11 +696,18 @@ def lesson_episode(book: Book, index: int, fmt: str = "clase", with_quiz: bool =
         rotulos = [step_label(f) for f in elegidos]
         for i, frase in enumerate(elegidos):
             scenes.append(
-                _text_scene("Desarrollo", "DESARROLLO", "a", None, frase, "leccion.cuerpo", hints, (i + 1, len(elegidos)), visible, rotulos[:i])
+                _text_scene("Desarrollo", "DESARROLLO", "a", None, frase, "leccion.cuerpo", hints, (i + 1, len(elegidos)), visible, rotulos[:i], guide)
             )
 
     # 5 · Esquema: la síntesis visual verificada de la lección.
-    scenes.extend(_diagram_scenes(lesson, "Esquema", limit=2 if clase else 1, walk=clase))
+    if guide and clase:
+        scenes.extend(_guide_recall(guide, "Esquema"))
+    elif guide:
+        scenes.append(_guide_preview(guide, "Esquema", clase))
+        if guide["pie"]:
+            scenes[-1].parts.append(Part(_sentence(guide["pie"]), "esquema.pie"))
+    else:
+        scenes.extend(_diagram_scenes(lesson, "Esquema", limit=2 if clase else 1, walk=clase))
 
     # 6 · Matiz: dónde falla o qué se le discute a la idea.
     matiz = T.take_sentences(lesson.autocorreccion, 90 if clase else 32)

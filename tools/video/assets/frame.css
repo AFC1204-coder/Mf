@@ -255,3 +255,41 @@ body.vf.k-gancho.tone-ok .vf-hook-mark { display: none; }
 .vf-why { font-size: 3.4em; color: var(--vf-text); }
 .vf-next .q { display: block; margin-top: 0.9em; font-size: 2.5em; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--vf-text2); }
 .vf-next .q::before { content: '?'; display: inline-flex; align-items: center; justify-content: center; width: 1.5em; height: 1.5em; margin-right: 0.6em; border-radius: 50%; background: var(--accent); color: var(--vf-bg); font-weight: 700; }
+
+/* ═══ Esquema-guía: mini-esquema sin texto + tarjeta de la pieza activa ═══ */
+.tn-a { --tone: var(--accent); } .tn-ok { --tone: var(--vf-ok); } .tn-mal { --tone: var(--vf-mal); }
+.tn-info { --tone: #5aa6d8; } .tn-psi { --tone: #b08fd6; } .tn-mute { --tone: #8a8478; }
+
+.vf-guide { height: 40em; margin-bottom: 2.6em; display: flex; }
+.vf-guide .dg { margin: 0 !important; padding: 0 !important; border: 0 !important; background: transparent !important; cursor: default; width: 100%; height: 100%;
+  --dg-bg: #111111; --dg-ink: #ede8df; --dg-ink2: #b3ab9e; --dg-rule: #3a3a3a; }
+.vf-guide #vf-dg { height: 100%; width: 100%; }
+.vf-guide svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.vf-sil * { vector-effect: non-scaling-stroke; }
+.vf-sil text:not(.vf-badge-t) { display: none; }          /* la silueta no lleva texto: lo lleva la tarjeta */
+.vf-sil .dg-num, .vf-sil .dg-numt { display: none; }       /* la numeración de los pasos la ponen las insignias */
+.vf-sil .dg-box { fill-opacity: 0.16; stroke-opacity: 0.85; stroke-width: 2; }
+.vf-badge circle { fill: #262626; stroke: #8a8478; stroke-width: 2; }
+.vf-badge.on circle { fill: var(--accent); stroke: none; }
+.vf-badge-t { fill: #ede8df; font-weight: 700; text-anchor: middle; }
+.vf-badge.on .vf-badge-t { fill: #0a0a0a; }
+
+.vf-guide-title { font-family: 'VF Playfair', serif; font-weight: 700; font-size: 4.4em; line-height: 1.2; margin: 0 0 0.8em; color: var(--vf-text); }
+
+.vf-piece { padding: 3.2em 3.6em; border-radius: 3em; border: 0.2em solid color-mix(in srgb, var(--tone) 60%, transparent); background: color-mix(in srgb, var(--tone) 9%, var(--vf-surface)); }
+.vf-piece small { display: block; font-size: 2.3em; font-weight: 700; letter-spacing: 0.18em; color: var(--tone); margin-bottom: 0.7em; }
+.vf-piece b { display: block; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 5.4em; line-height: 1.15; color: var(--vf-text); }
+.vf-piece span { display: block; margin-top: 0.6em; font-size: 3.5em; line-height: 1.3; color: var(--vf-text2); }
+.vf-piece ul { margin: 0.7em 0 0; padding-left: 1.1em; font-size: 3.3em; line-height: 1.32; color: var(--vf-text2); }
+.vf-piece li { margin-bottom: 0.25em; }
+
+.vf-legend { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1.3em; }
+.vf-legend li { display: flex; align-items: center; gap: 1.6em; font-size: 3.8em; line-height: 1.2; color: var(--vf-text2); padding: 0.25em 0.5em; border-radius: 0.8em; }
+.vf-legend li i { flex: none; width: 1.7em; height: 1.7em; border-radius: 50%; font-style: normal; font-size: 0.8em; font-weight: 700; display: flex; align-items: center; justify-content: center;
+  background: #262626; color: var(--vf-text); border: 0.07em solid #8a8478; }
+.vf-legend li.on { color: var(--vf-text); background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.vf-legend li.on i { background: var(--accent); color: #0a0a0a; border-color: var(--accent); }
+
+.vf-ask { padding: 3em 3.4em; border-radius: 3em; border: 0.2em dashed color-mix(in srgb, var(--accent) 60%, transparent); }
+.vf-ask > span { display: block; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 5em; line-height: 1.2; color: var(--vf-text); }
+.vf-ask .vf-think { margin-top: 1.6em; min-height: 0; }

@@ -192,8 +192,12 @@ class GanchoYTextoEnPantalla(unittest.TestCase):
         self.assertEqual(T.anchor_clause("Frase breve.", 16), "Frase breve.")
 
     def test_la_escalera_acumula_los_pasos_ya_dados(self):
-        ep = SW.lesson_episode(self.b, 0)
+        # Sin figura guiable el desarrollo conserva la escalera; con figura la sustituye el mini-esquema.
+        b = libro()
+        b.lessons[0].diagramas = []
+        ep = SW.lesson_episode(b, 0)
         pasos = [s for s in ep.scenes if s.section == "Desarrollo"]
+        self.assertTrue(all("guide" not in s.view for s in pasos))
         if len(pasos) > 1:
             self.assertEqual([len(s.view["trail"]) for s in pasos], list(range(len(pasos))))
             for s in pasos:
@@ -220,18 +224,92 @@ class EsquemaRecorrido(unittest.TestCase):
         largo = {"plantilla": "pasos", "datos": {"pasos": [{"t": "palabra " * 40}, {"t": "palabra " * 60}]}}
         self.assertEqual(SW.diagram_walk(largo), [])
 
-    def test_la_clase_recorre_el_esquema_y_el_corto_lo_ensena_entero(self):
+    def test_sin_piezas_guiables_el_esquema_se_ensena_entero(self):
         b = libro()
-        for i, lec in enumerate(b.lessons):
-            specs = lec.main_diagrams()
-            if not specs or not SW.diagram_walk(specs[0]):
-                continue
-            n = len(SW.diagram_walk(specs[0]))
-            esc = [s for s in SW.lesson_episode(b, i).scenes if s.kind == "esquema" and s.view.get("focus")]
-            self.assertEqual([s.view["focus"]["active"] for s in esc], [*range(n), -1])
-            self.assertFalse(has_errors(lint_episode(SW.lesson_episode(b, i), b)))
-            corto = [s for s in SW.lesson_episode(b, i, "corto").scenes if s.kind == "esquema"]
-            self.assertTrue(all("focus" not in s.view for s in corto))
+        b.lessons[0].diagramas = [{"tipo": "diagrama", "plantilla": "cifras", "titulo": "Cifras", "pie": "Del texto.", "datos": {"items": [{"n": "85 %", "t": "Una cifra"}]}}]
+        ep = SW.lesson_episode(b, 0)
+        esc = [s for s in ep.scenes if s.kind == "esquema"]
+        self.assertEqual(len(esc), 1)
+        self.assertFalse(any(s.kind == "guia" for s in ep.scenes))
+
+
+class EsquemaGuia(unittest.TestCase):
+    MAPA = {"tipo": "diagrama", "plantilla": "mapa", "titulo": "Tres cosas del anclaje", "pie": "Tesis de Kahneman.",
+            "datos": {"centro": "Anclaje", "nodos": [{"t": "Número inicial", "d": "Sesga la estimación posterior"}, {"t": "Cifras absurdas", "d": "La ruleta también ancla"}, {"t": "Fijar tu cifra", "d": "Antes de escuchar la ajena"}]}}
+
+    def setUp(self):
+        self.b = libro()
+        self.b.lessons[1].diagramas = [self.MAPA]
+        self.ep = SW.lesson_episode(self.b, 1)
+
+    def test_la_clase_abre_con_la_vision_de_conjunto_y_nombra_las_piezas(self):
+        previa = next(s for s in self.ep.scenes if s.kind == "guia" and s.view["mode"] == "legend")
+        self.assertEqual(previa.section, "Idea")
+        self.assertIn("La lección en una imagen: Tres cosas del anclaje.", previa.narration)
+        self.assertEqual([b.patch["active"] for b in previa.beats], [0, 1, 2, -1])
+        for t in ("Número inicial.", "Cifras absurdas.", "Fijar tu cifra."):
+            self.assertIn(t, previa.narration)
+        self.assertEqual(self.ep.scenes.index(previa), next(i for i, s in enumerate(self.ep.scenes) if s.kind == "idea") + 1)
+
+    def test_el_desarrollo_lleva_el_mini_esquema_y_no_los_terminos_sueltos(self):
+        dev = [s for s in self.ep.scenes if s.section == "Desarrollo"]
+        self.assertTrue(dev)
+        for s in dev:
+            self.assertTrue(s.view["guide"])
+            self.assertEqual(s.view["n"], 3)
+            self.assertEqual(s.view["order"], [0, 2, 1])  # el mapa dibuja primero la columna izquierda (nodos 0 y 2)
+            self.assertNotIn("chips", s.view)
+            self.assertNotIn("trail", s.view)
+
+    def test_la_pieza_se_ilumina_cuando_la_voz_la_nombra(self):
+        dev = next(s for s in self.ep.scenes if s.section == "Desarrollo" and "ruleta" in s.narration.lower() or "cifras absurdas" in s.narration.lower())
+        self.assertTrue(dev.beats or dev.view["active"] >= 0)
+        palabras = dev.narration.split()
+        for b in dev.beats:
+            self.assertLess(b.at_word, len(palabras))
+
+    def test_la_recuperacion_oculta_piensa_y_revela(self):
+        esc = [s for s in self.ep.scenes if s.section == "Esquema"]
+        self.assertEqual([s.view["mode"] for s in esc], ["ask", "ask", "piece", "piece", "piece", "done"])
+        ask, think, *reveal, done = esc
+        self.assertEqual(ask.view["shown"], 0)
+        self.assertIn("Antes de seguir, intenta recordar las piezas del esquema: Tres cosas del anclaje.", ask.narration)
+        self.assertEqual(think.narration, "")
+        self.assertEqual(think.hold_s, 5.0)
+        self.assertEqual([b.patch["countdown"] for b in think.beats], [3, 2, 1])
+        self.assertEqual([(s.view["active"], s.view["shown"]) for s in reveal], [(0, 1), (1, 2), (2, 3)])
+        self.assertIn("Número inicial. Sesga la estimación posterior.", reveal[0].narration)
+        self.assertEqual(done.narration, "Tesis de Kahneman.")
+        self.assertEqual(done.view["shown"], 3)
+        self.assertFalse(any(s.kind == "esquema" for s in self.ep.scenes))
+
+    def test_lo_que_se_lee_es_literal_de_la_figura_y_pasa_el_control(self):
+        for fmt in SW.FORMATS:
+            ep = SW.lesson_episode(self.b, 1, fmt)
+            self.assertFalse(has_errors(lint_episode(ep, self.b)), [str(x) for x in lint_episode(ep, self.b)])
+
+    def test_el_corto_enseña_la_silueta_con_su_pie_sin_recuperacion(self):
+        corto = SW.lesson_episode(self.b, 1, "corto")
+        self.assertFalse(any(s.view.get("mode") == "ask" for s in corto.scenes))
+        esq = [s for s in corto.scenes if s.section == "Esquema"]
+        self.assertEqual(len(esq), 1)
+        self.assertIn("Tesis de Kahneman.", esq[0].narration)
+
+    def test_si_las_piezas_son_muchas_palabras_solo_se_leen_los_titulos(self):
+        largo = {"tipo": "diagrama", "plantilla": "pasos", "titulo": "Largo", "pie": "Pie.", "datos": {"pasos": [{"t": f"Paso {i}", "d": "palabra " * 30} for i in range(1, 5)]}}
+        self.b.lessons[1].diagramas = [largo]
+        ep = SW.lesson_episode(self.b, 1)
+        reveal = [s for s in ep.scenes if s.view.get("mode") == "piece"]
+        self.assertEqual([s.narration for s in reveal], ["Paso 1.", "Paso 2.", "Paso 3.", "Paso 4."])
+        self.assertTrue(all(not s.view["pieces"][s.view["active"]]["d"] for s in reveal))
+
+    def test_se_mantiene_cada_pieza_con_su_caja_en_el_svg(self):
+        from tools.video import guia as G
+
+        mapa5 = {"plantilla": "mapa", "datos": {"nodos": [{"t": f"N{i}"} for i in range(5)]}}
+        self.assertEqual(G.order(G.pieces(mapa5)), [0, 3, 1, 4, 2])
+        comparar = {"plantilla": "comparar", "datos": {"izq": {"t": "A", "items": ["a"]}, "der": {"t": "B", "items": ["b"]}}}
+        self.assertEqual(G.order(G.pieces(comparar)), [0, 1])
 
 
 class Bloques(unittest.TestCase):

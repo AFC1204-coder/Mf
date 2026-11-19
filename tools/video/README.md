@@ -21,18 +21,21 @@ Cuatro reglas lo gobiernan:
 | Portada | Libro, autor, «Lección 3 de 8», puntos del recorrido | Título y lugar en el libro | Situar |
 | Puente *(desde la 2.ª)* | La lección anterior y su idea | «Venimos de…» + esa idea | Activar lo ya visto |
 | **Idea** | La frase ancla de la idea, grande | La idea entera | Dar el destino antes del camino |
-| **Desarrollo** | Una **escalera**: los pasos ya dados en pequeño, el actual con su frase ancla y los términos que entran cuando se nombran | El cuerpo de la lección, entero | Explicar y ver por dónde va el argumento |
-| **Esquema** | El esquema verificado, **recorrido pieza a pieza**: la que se lee se ilumina, las que faltan siguen tapadas | Su título, los rótulos de cada pieza y su pie; al final, un silencio con la figura completa | Que la figura enseñe, no que adorne |
+| **La lección en una imagen** *(si hay esquema)* | El esquema de la lección: silueta con piezas numeradas y la lista de sus títulos; cada pieza se ilumina al nombrarla | «La lección en una imagen: …» y los títulos de las piezas | **Organizador previo:** ver la estructura antes de los detalles |
+| **Desarrollo** | El **mini-esquema** (la silueta, sin texto) y debajo, o la frase ancla, o —cuando la voz nombra una pieza— su **tarjeta grande** (título y descripción); la pieza activa se ilumina en la silueta | El cuerpo de la lección, entero | Ver **dónde estamos** en la estructura; menos texto, más forma |
+| **Esquema** | **Recuperación:** el esquema se tapa, 5 s para recordar sus piezas con cuenta atrás, y se revela pieza a pieza con su tarjeta; al final, completo con su pie | «Antes de seguir, intenta recordar las piezas…», los rótulos de cada pieza y el pie | Practicar la recuperación sobre la propia estructura |
 | **Matiz** | Dónde se le discute a la idea | La autocorrección | No aprender la idea sin su límite |
 | **Práctica** | Qué hacer con ella | La aplicación práctica | Transferir |
 | **Repaso** | La pregunta del principio, ahora con opciones (cada una se ilumina mientras se lee) → 5 s en silencio con cuenta atrás → respuesta | «Volvemos a la pregunta del principio», las opciones, la respuesta y su explicación | Recuperar (lo que más fija) y cerrar el gancho |
 | Cierre | La idea otra vez + la siguiente lección | «Quédate con esto…», el título siguiente y **su pregunta** | Cerrar el círculo y dejar abierto el siguiente |
 
-El recorrido del esquema se hace en las plantillas `pasos` y `comparar` (siete de cada diez esquemas) cuando leerlo cabe en ~90 palabras; el resto de figuras se enseñan enteras con su título y su pie.
+**El esquema es la columna vertebral.** Es el verificado de la lección (`datos/diagramas.json`), dibujado con el motor de la app (`lib/diagram.js`). Se guía en las plantillas con cajas (`pasos`, `comparar`, `mapa`, `ciclo`, `piramide`, `matriz`: el 97 % de las figuras, con entre 2 y 6 piezas); `espectro`, `cifras`, `tiempo` y las demás se enseñan enteras con su título y su pie, como antes. En el móvil el esquema completo queda con letra ilegible; por eso lo que se ve es la **silueta** (sin texto, con insignias numeradas) y el texto de cada pieza va aparte, en grande.
+
+**Cuándo se ilumina una pieza** (`guia.py`): el bloque narrado se compara con los términos distintivos de cada pieza (los que no comparten con las demás); si una pieza aparece con suficiente peso y al menos dos términos suyos, se ilumina en la palabra donde empieza a hablarse de ella, y un bloque que enumera varias las ilumina una tras otra. **Ante la duda no se ilumina nada**: una pieza mal iluminada engaña y una sin iluminar solo informa menos. Hoy se ilumina alguna pieza en la mitad de los bloques de desarrollo; el resto lleva la silueta sin pieza activa y la frase ancla.
 
 El índice (Idea · Desarrollo · Esquema · Matiz · Práctica · Repaso) está siempre arriba con la sección en curso resaltada. Si una lección no tiene esquema o pregunta ligada, esa entrada no aparece.
 
-`--format corto` (60-100 s, para redes): abre con la pregunta, da la idea, las frases que abren hasta tres bloques, el esquema, la primera frase del matiz y de la práctica, **la respuesta a la pregunta** y la siguiente lección.
+`--format corto` (60-100 s, para redes): abre con la pregunta, da la idea, las frases que abren hasta tres bloques (con el mini-esquema), el esquema con sus títulos y su pie, la primera frase del matiz y de la práctica, **la respuesta a la pregunta** y la siguiente lección.
 
 ### Un libro
 
@@ -150,6 +153,7 @@ libro-completo.mp4    (con --merge) + libro-completo.txt con los capítulos
 |---|---|
 | `corpus.py` | Lee el libro con sus lecciones, preguntas, esquemas (`datos/diagramas.json`) y mapa (`datos/mapas.json`). |
 | `text.py` | Frases (sin cortar en abreviaturas, iniciales, decimales ni comillas), texto para la voz, términos clave. |
+| `guia.py` | Las piezas de la figura de la lección y en qué palabra de la locución se nombra cada una. |
 | `scriptwriter.py` | La secuencia didáctica de cada episodio y la serie del libro. Las fórmulas fijas están en `PHRASES`. |
 | `lint.py` | Control de calidad: fidelidad literal al corpus, preguntas válidas, esquemas dibujables, duración. |
 | `frames.py` + `assets/` | Cada estado de cada escena en HTML, capturado con Chrome sin cabeza. |

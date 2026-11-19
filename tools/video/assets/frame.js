@@ -34,13 +34,67 @@
     }
   }
 
+  /* Esquema-guía: la figura de la lección convertida en silueta (sin texto) con una insignia numerada en cada
+     pieza. La pieza activa se ilumina, las demás se atenúan y, al recordar, las que aún no se han revelado
+     quedan tapadas. `order` dice qué caja del dibujo corresponde a cada pieza.
+     Como no lleva texto, la silueta se estira para aprovechar el ancho (hasta 1,7 veces su proporción) y las
+     insignias se dibujan con la escala compensada para que sigan siendo círculos legibles. */
+  function siluetar(svgEl, e) {
+    if (!svgEl) return;
+    var NS = 'http://www.w3.org/2000/svg';
+    var cont = svgEl.parentNode;
+    var W = cont.clientWidth, H = cont.clientHeight;
+    var vb = svgEl.viewBox.baseVal;
+    if (!W || !H || !vb || !vb.width) return;
+    svgEl.classList.add('vf-sil');
+    svgEl.setAttribute('preserveAspectRatio', 'none');
+    var w = Math.min(W, H * (vb.width / vb.height) * 1.7);
+    svgEl.style.width = w + 'px'; svgEl.style.height = H + 'px'; svgEl.style.margin = '0 auto';
+    var sx = w / vb.width, sy = H / vb.height;
+    var R = 21;  // radio de la insignia en píxeles del fotograma
+    var cajas = svgEl.querySelectorAll('rect.dg-box');
+    var n = e.n || 0, orden = e.order || [];
+    var activa = (typeof e.active === 'number') ? e.active : -1;
+    var visibles = (typeof e.shown === 'number') ? e.shown : n;
+    for (var j = 0; j < n; j++) {
+      var c = cajas[orden[j] != null ? orden[j] : j];
+      if (!c) continue;
+      var x = parseFloat(c.getAttribute('x')), y = parseFloat(c.getAttribute('y'));
+      var velo = document.createElementNS(NS, 'rect');
+      ['x', 'y', 'width', 'height', 'rx'].forEach(function (a) { velo.setAttribute(a, c.getAttribute(a)); });
+      var pinta = true;
+      if (j >= visibles) {
+        velo.setAttribute('fill', '#111111'); velo.setAttribute('opacity', '0.97');
+        velo.setAttribute('stroke', '#4a4a4a'); velo.setAttribute('stroke-dasharray', '6 6'); velo.setAttribute('stroke-width', '2');
+      } else if (activa >= 0 && j !== activa) {
+        velo.setAttribute('fill', '#111111'); velo.setAttribute('opacity', '0.66');
+      } else if (j === activa) {
+        velo.setAttribute('fill', acento); velo.setAttribute('fill-opacity', '0.14');
+        velo.setAttribute('stroke', acento); velo.setAttribute('stroke-width', '5');
+      } else { pinta = false; }
+      if (pinta) svgEl.appendChild(velo);
+      if (j >= visibles) continue;
+      var g = document.createElementNS(NS, 'g');
+      g.setAttribute('class', 'vf-badge' + (j === activa ? ' on' : ''));
+      g.setAttribute('transform', 'translate(' + (x + 6 / sx + R / sx) + ' ' + (y + 6 / sy + R / sy) + ') scale(' + (R / sx) + ' ' + (R / sy) + ')');
+      var ci = document.createElementNS(NS, 'circle');
+      ci.setAttribute('r', 1);
+      var tx = document.createElementNS(NS, 'text');
+      tx.setAttribute('class', 'vf-badge-t'); tx.setAttribute('y', 0.42); tx.setAttribute('font-size', 1.15);
+      tx.textContent = String(j + 1);
+      g.appendChild(ci); g.appendChild(tx);
+      svgEl.appendChild(g);
+    }
+    root.dataset.piezas = String(cajas.length);
+  }
+
   var host = document.getElementById('vf-dg');
   if (host) {
     var svg = (window.Diagrama && st.spec) ? window.Diagrama.svg(st.spec) : '';
     if (svg) {
       host.innerHTML = svg;
       root.dataset.diagrama = 'ok';
-      enfocar(host.querySelector('svg'), st.focus);
+      if (!st.guide) enfocar(host.querySelector('svg'), st.focus);
     } else {
       host.remove();
       root.dataset.diagrama = 'falta';
@@ -75,6 +129,7 @@
     root.dataset.escala = String(Math.round((px / base) * 100));
     root.dataset.desborda = stage.scrollHeight > stage.clientHeight + 1 ? '1' : '0';
   }
+    if (st.guide && host) siluetar(host.querySelector('svg'), st);
     root.dataset.listo = '1';
   }
   if (document.fonts && document.fonts.ready && document.fonts.ready.then) {

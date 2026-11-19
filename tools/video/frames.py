@@ -148,7 +148,59 @@ def _stage_idea(v: dict[str, Any]) -> str:
     return _kicker(v) + sub + f'<div class="vf-big{_size_class(v.get("text", ""), 70, 115)}">{_e(v.get("text"))}</div>'
 
 
+def _guide_box(v: dict[str, Any]) -> str:
+    """Mini-esquema: la forma de la figura de la lección, sin texto; frame.js lo dibuja y marca la pieza activa."""
+    spec = v.get("spec") or {}
+    return f'<div class="vf-guide"><div class="dg" data-plantilla="{_e(spec.get("plantilla"))}"><div id="vf-dg"></div></div></div>'
+
+
+def _piece_card(v: dict[str, Any]) -> str:
+    """Tarjeta grande con la pieza activa (título, descripción o elementos), tal cual está en la figura."""
+    pz = v.get("pieces") or []
+    j = int(v.get("active") if v.get("active") is not None else -1)
+    if not (0 <= j < len(pz)):
+        return ""
+    p = pz[j]
+    desc = f'<span>{_e(p.get("d"))}</span>' if p.get("d") else ""
+    items = "".join(f"<li>{_e(x)}</li>" for x in p.get("items") or [])
+    return (
+        f'<div class="vf-piece tn-{_e(p.get("tone") or "a")}"><small>{j + 1} DE {len(pz)}</small>'
+        f'<b>{_e(p.get("t"))}</b>{desc}{f"<ul>{items}</ul>" if items else ""}</div>'
+    )
+
+
+def _legend(v: dict[str, Any]) -> str:
+    """Lista numerada con los títulos de las piezas (la misma numeración que las insignias del mini-esquema)."""
+    j = int(v.get("active") if v.get("active") is not None else -1)
+    filas = "".join(
+        f'<li class="{"on" if i == j else ""}"><i>{i + 1}</i><span>{_e(p.get("t"))}</span></li>'
+        for i, p in enumerate(v.get("pieces") or [])
+    )
+    return f'<ol class="vf-legend">{filas}</ol>'
+
+
+def _stage_guia(v: dict[str, Any]) -> str:
+    modo = v.get("mode")
+    out = _kicker(v) + f'<h2 class="vf-guide-title">{_e(v.get("title"))}</h2>' + _guide_box(v)
+    if modo == "ask":
+        cd = v.get("countdown")
+        num = f"<b>{int(cd)}</b>" if cd else ""
+        out += (
+            f'<div class="vf-ask"><span>¿Cuáles eran las {int(v.get("n") or 0)} piezas?</span>'
+            f'{f"<div class=vf-think><span>PIENSA TU RESPUESTA</span>{num}</div>" if cd is not None else ""}</div>'
+        )
+    elif modo == "piece":
+        out += _piece_card(v)
+    else:  # legend · done
+        out += _legend(v)
+    return out
+
+
 def _stage_texto(v: dict[str, Any]) -> str:
+    if v.get("guide"):
+        ancla = f'<div class="vf-anchor{_size_class(v.get("text", ""), 90, 140)}">{_e(v.get("text"))}</div>'
+        # Con una pieza iluminada, su tarjeta sustituye a la frase ancla: lo que se ve es lo que se está explicando.
+        return _kicker(v) + _guide_box(v) + (_piece_card(v) or f'<div class="vf-card">{ancla}</div>')
     chips = v.get("chips") or []
     on = int(v.get("chips_on") or 0)
     chips_html = "".join(f'<span class="vf-chip{" on" if i < on else ""}">{_e(c)}</span>' for i, c in enumerate(chips))
@@ -281,6 +333,7 @@ _STAGES = {
     "puente": _stage_puente,
     "idea": _stage_idea,
     "texto": _stage_texto,
+    "guia": _stage_guia,
     "gancho": _stage_gancho,
     "esquema": _stage_esquema,
     "pregunta": _stage_pregunta,
@@ -311,7 +364,17 @@ def frame_html(episode: Episode, scene: Scene, view: dict[str, Any], scene_index
     ultima_con_seccion = max((i for i, s in enumerate(episode.scenes) if s.section), default=-1)
     finished = scene_index > ultima_con_seccion
     libro = episode.book_title + (f" · {episode.book_author}" if episode.book_author else "")
-    estado = {"eje": episode.eje, "spec": view.get("spec"), "focus": view.get("focus")}
+    estado = {
+        "eje": episode.eje,
+        "spec": view.get("spec"),
+        "focus": view.get("focus"),
+        "guide": bool(view.get("guide") or scene.kind == "guia"),
+        "order": view.get("order"),
+        "n": view.get("n"),
+        "active": view.get("active"),
+        "shown": view.get("shown"),
+        "mode": view.get("mode"),
+    }
     foto = ""
     if photo and photo.exists() and scene.kind in ("portada", "cierre", "libro"):
         foto = f'<div class="vf-photo" style="background-image:url(\'{_e(photo.resolve().as_uri())}\')"></div>'
