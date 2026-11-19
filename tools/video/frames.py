@@ -356,6 +356,11 @@ def _capture(chrome: str, html_path: Path, out_png: Path, profile_root: Path) ->
         shutil.rmtree(profile, ignore_errors=True)
     if not out_png.exists():
         raise RuntimeError(f"Chrome no generó el fotograma {out_png.name}: {res.stderr.strip()[-400:]}")
+    _normalize_png(out_png)
+
+
+def _normalize_png(out_png: Path) -> None:
+    """Deja la captura en RGB de 1080×1920 exactos (lo que espera el montaje)."""
     with Image.open(out_png) as im:
         if im.size != (WIDTH, HEIGHT) or im.mode != "RGB":
             arreglada = im.convert("RGB")
@@ -380,6 +385,28 @@ def render_frames(pages: list[str], frames_dir: Path, jobs: int | None = None) -
         return salidas
 
     chrome = find_chrome()
+
+    # Vía rápida: un solo Chrome y todas las capturas por DevTools. Si falla, un proceso por fotograma.
+    if os.getenv("VF_CAPTURA", "cdp").strip().lower() != "clasica":
+        from .cdp import CDPError, capture_pages
+
+        trabajos: list[tuple[Path, Path]] = []
+        for png, doc in pendientes.items():
+            html_path = png.with_suffix(".html")
+            html_path.write_text(doc, encoding="utf-8")
+            trabajos.append((html_path, png.with_name(png.stem + ".tmp.png")))
+        try:
+            capture_pages(chrome, trabajos, WIDTH, HEIGHT, workers=jobs or 4)
+            for (_, tmp), png in zip(trabajos, pendientes):
+                _normalize_png(tmp)
+                tmp.replace(png)
+            return salidas
+        except CDPError as exc:
+            print(f"[fotogramas] {exc} Se usa la captura clásica (un Chrome por fotograma).")
+            for _, tmp in trabajos:
+                tmp.unlink(missing_ok=True)
+            pendientes = {png: doc for png, doc in pendientes.items() if not png.exists()}
+
     perfiles = frames_dir / "_perfiles"
     perfiles.mkdir(exist_ok=True)
 
