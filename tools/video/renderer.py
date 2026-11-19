@@ -17,7 +17,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
-from .frames import WIDTH, episode_pages, render_frames
+from .frames import HEIGHT, WIDTH, State, episode_pages, render_frames
 from .scriptwriter import Episode
 from .tts.base import TTSEngine, WordTiming
 
@@ -31,6 +31,20 @@ FADE_BEAT_S = 0.24  # fundido cuando aparece un elemento dentro de la escena
 FADE_STEP_S = 1 / 15  # resolución de los fundidos
 SUB_Y = 1390  # franja de subtítulos (debajo del escenario)
 SUB_H = 260
+
+
+@dataclass
+class RenderStyle:
+    """Cómo se monta un formato. Los valores por defecto son los del formato «clase»."""
+
+    width: int = WIDTH
+    height: int = HEIGHT
+    burn_subs: bool = True  # barra de subtítulos quemada (las piezas compartibles llevan el texto en el propio fotograma)
+    lead_in_s: float = LEAD_IN_S
+    fade_scene_s: float = FADE_SCENE_S
+    fade_beat_s: float = FADE_BEAT_S
+    progress_color: str = ""  # «#rrggbb»: barra de progreso continua arriba (vacío = sin barra)
+    extra_deps: list[Path] = field(default_factory=list)  # estilos propios, para la huella de los fotogramas
 
 
 @dataclass
@@ -270,7 +284,13 @@ def _blend_frames(a: Path, b: Path, steps: int, blend_dir: Path) -> list[Path]:
     return outs
 
 
-def _video_entries(cuts: list[tuple[float, Path, bool]], total_s: float, blend_dir: Path) -> list[tuple[Path, float]]:
+def _video_entries(
+    cuts: list[tuple[float, Path, bool]],
+    total_s: float,
+    blend_dir: Path,
+    fade_scene_s: float = FADE_SCENE_S,
+    fade_beat_s: float = FADE_BEAT_S,
+) -> list[tuple[Path, float]]:
     """De una lista de cortes (segundo, imagen, ¿cambia de escena?) a imágenes con duración, con fundidos."""
     entries: list[tuple[Path, float]] = []
     for i, (t0, png, new_scene) in enumerate(cuts):
@@ -280,7 +300,7 @@ def _video_entries(cuts: list[tuple[float, Path, bool]], total_s: float, blend_d
             continue
         fade = 0.0
         if i > 0 and cuts[i - 1][1] != png:
-            fade = FADE_SCENE_S if new_scene else FADE_BEAT_S
+            fade = fade_scene_s if new_scene else fade_beat_s
             if slot < fade + 0.2:
                 fade = 0.0
         if fade:
@@ -318,22 +338,32 @@ def render_episode(
     voice: str | None = None,
     photo: Path | None = None,
     log=print,
+    style: RenderStyle | None = None,
+    pages: tuple[list[State], list[str]] | None = None,
+    thumb_page: str | None = None,
 ) -> RenderInfo:
-    """Renderiza un episodio completo. Devuelve duración, capítulos (para la descripción) y voces usadas."""
+    """Renderiza un episodio completo. Devuelve duración, capítulos (para la descripción) y voces usadas.
+
+    `style`, `pages` y `thumb_page` permiten montar otro formato (las piezas compartibles) con la misma
+    línea de tiempo: otro tamaño, otros fotogramas, sin barra de subtítulos y con miniatura propia.
+    """
+    style = style or RenderStyle()
     work_dir.mkdir(parents=True, exist_ok=True)
     out_mp4.parent.mkdir(parents=True, exist_ok=True)
     frames_dir = frames_dir or (work_dir / "frames")
+    size = (style.width, style.height)
 
     # 1 · Fotogramas.
-    states, pages = episode_pages(episode, photo)
-    pngs = render_frames(pages, frames_dir)
+    states, docs = pages if pages is not None else episode_pages(episode, photo)
+    todos = render_frames(docs + ([thumb_page] if thumb_page else []), frames_dir, size=size, extra_deps=style.extra_deps)
+    pngs = todos[: len(docs)]
     log(f"      ✓ {len(set(pngs))} fotogramas")
 
     # 2 · Voz, escena a escena, y línea de tiempo.
-    pcm = bytearray(_silence(LEAD_IN_S))
+    pcm = bytearray(_silence(style.lead_in_s))
     timings: list[SceneTiming] = []
     voices: list[str] = []
-    cursor = LEAD_IN_S
+    cursor = style.lead_in_s
     audio_dir = work_dir / "audio"
     for i, scene in enumerate(episode.scenes):
         if scene.narration:
@@ -375,7 +405,7 @@ def render_episode(
         cuts.append((t, png, es_inicio))
 
     blend_dir = work_dir / "fundidos"
-    video_txt = _write_concat(_video_entries(cuts, total_s, blend_dir), work_dir / "video.txt")
+    video_txt = _write_concat(_video_entries(cuts, total_s, blend_dir, style.fade_scene_s, style.fade_beat_s), work_dir / "video.txt")
 
     # 4 · Capítulos: dónde empieza cada sección del índice.
     chapters: list[tuple[str, float]] = []
@@ -388,7 +418,6 @@ def render_episode(
     # 5 · Subtítulos y audio.
     chunks = build_subtitle_chunks(timings)
     write_srt(timings, out_mp4.with_suffix(".srt"))
-    subs_txt = _subtitle_track(chunks, total_s, work_dir / "subs")
     wav = work_dir / "locucion.wav"
     with wave.open(str(wav), "wb") as w:
         w.setnchannels(1)
@@ -399,15 +428,29 @@ def render_episode(
     meta = _chapters_file(chapters, total_s, episode, work_dir / "capitulos.txt")
 
     # 6 · Mezcla final.
-    audio_filter = "[2:a]loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000[a]" if con_voz else "[2:a]anull[a]"
+    # Entradas: 0 fotogramas · 1 locución · 2 metadatos · (3 subtítulos, si se queman).
+    audio_filter = "[1:a]loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000[a]" if con_voz else "[1:a]anull[a]"
+    entradas = ["-f", "concat", "-safe", "0", "-i", str(video_txt), "-i", str(wav), "-f", "ffmetadata", "-i", str(meta)]
+    video_filter = f"[0:v]fps={FPS},format=yuv420p[v0]"
+    ultimo = "v0"
+    if style.burn_subs:
+        subs_txt = _subtitle_track(chunks, total_s, work_dir / "subs")
+        entradas += ["-f", "concat", "-safe", "0", "-i", str(subs_txt)]
+        video_filter += f";[{ultimo}][3:v]overlay=0:{SUB_Y}:eof_action=pass[v1]"
+        ultimo = "v1"
+    if style.progress_color:
+        # Barra de progreso continua: lo único que se mueve entre corte y corte (el vídeo no parece una diapositiva).
+        color = "0x" + style.progress_color.lstrip("#")
+        video_filter += (
+            f";color=c={color}:s={style.width}x10:r={FPS}[pb];"
+            f"[{ultimo}][pb]overlay=x='-W+W*t/{total_s:.3f}':y=0:shortest=0:eof_action=pass[v2]"
+        )
+        ultimo = "v2"
     cmd = [
         "ffmpeg", "-y", "-v", "error",
-        "-f", "concat", "-safe", "0", "-i", str(video_txt),
-        "-f", "concat", "-safe", "0", "-i", str(subs_txt),
-        "-i", str(wav),
-        "-f", "ffmetadata", "-i", str(meta),
-        "-filter_complex", f"[0:v]fps={FPS},format=yuv420p[bg];[bg][1:v]overlay=0:{SUB_Y}:eof_action=pass[v];{audio_filter}",
-        "-map", "[v]", "-map", "[a]", "-map_metadata", "3", "-map_chapters", "3",
+        *entradas,
+        "-filter_complex", f"{video_filter};{audio_filter}",
+        "-map", f"[{ultimo}]", "-map", "[a]", "-map_metadata", "2", "-map_chapters", "2",
         "-t", f"{total_s:.3f}",
         "-c:v", "libx264", "-preset", "veryfast", "-crf", "21", "-pix_fmt", "yuv420p", "-r", str(FPS),
         "-c:a", "aac", "-b:a", "160k", "-ar", "48000",
@@ -420,7 +463,10 @@ def render_episode(
 
     thumb = out_mp4.with_name("miniatura.png")
     # La miniatura es la portada (título y lugar en la serie), no el gancho que la precede.
-    portada = next((png for st, png in zip(states, pngs) if episode.scenes[st.scene_index].kind in ("portada", "libro")), pngs[0])
+    if thumb_page:
+        portada = todos[-1]
+    else:
+        portada = next((png for st, png in zip(states, pngs) if episode.scenes[st.scene_index].kind in ("portada", "libro")), pngs[0])
     shutil.copyfile(portada, thumb)
     return RenderInfo(out_mp4, round(total_s, 2), chapters, voices, len(set(pngs)), thumb)
 

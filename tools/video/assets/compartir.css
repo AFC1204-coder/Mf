@@ -1,0 +1,191 @@
+/* Fotogramas de las piezas compartibles. Lenguaje de vídeo corto, no de página: una sola cosa en
+   pantalla, letra grande, casi sin cromo. Prefijo cs- (styles.css se carga antes solo para que la
+   silueta del esquema use los mismos colores que la figura de la biblioteca).
+   Nada de lo que hay que leer mide menos de 30 px en el fotograma. */
+@font-face { font-family: 'VF Outfit'; src: url('fonts/Outfit-Regular.ttf'); font-weight: 100 900; }
+@font-face { font-family: 'VF Playfair'; src: url('fonts/PlayfairDisplay-Bold.ttf'); font-weight: 400 900; }
+@font-face { font-family: 'VF Playfair'; src: url('fonts/PlayfairDisplay-Italic.ttf'); font-weight: 400 900; font-style: italic; }
+@font-face { font-family: 'VF Serif'; src: url('fonts/SourceSerif4-Regular.ttf'); font-weight: 200 900; }
+
+:root {
+  --accent: #c9a84c;
+  --cs-bg: #0a0a0b;
+  --cs-ink: #f4f0e7;
+  --cs-ink2: #b8b1a4;
+  --cs-ink3: #7d776c;
+  --cs-ok: #5cbf92;
+  --cs-mal: #e67a6e;
+  --tone: var(--accent);
+  /* Zona segura 9:16: arriba y abajo quedan libres para la interfaz de TikTok, Reels y Shorts. */
+  --pad-l: 80px; --pad-r: 116px; --top: 132px; --stage-top: 236px; --stage-bottom: 474px; --foot-bottom: 372px;
+}
+html, body.cs {
+  margin: 0 !important; padding: 0 !important; overflow: hidden;
+  background: var(--cs-bg) !important; color: var(--cs-ink);
+  font-family: 'VF Outfit', sans-serif; -webkit-font-smoothing: antialiased;
+  animation: none !important; opacity: 1 !important; transform: none !important;
+}
+body.cs * { box-sizing: border-box; }
+body.cs.ar-9x16 { width: 1080px; height: 1920px; }
+body.cs.ar-1x1 { width: 1080px; height: 1080px; --pad-l: 72px; --pad-r: 72px; --top: 54px; --stage-top: 128px; --stage-bottom: 132px; --foot-bottom: 52px; }
+body.cs.ar-16x9 { width: 1920px; height: 1080px; --pad-l: 190px; --pad-r: 190px; --top: 58px; --stage-top: 138px; --stage-bottom: 136px; --foot-bottom: 54px; }
+
+body.cs.st-matiz { --tone: var(--cs-mal); }
+body.cs.st-practica, body.cs.st-respuesta { --tone: var(--cs-ok); }
+
+.cs-frame { position: absolute; inset: 0; overflow: hidden; }
+
+/* ── fondo: el acento del eje + un motivo por libro (las piezas de un mismo libro se reconocen) ── */
+.cs-bg { position: absolute; inset: 0; }
+.cs-bg::before, .cs-bg::after { content: ''; position: absolute; }
+.motivo-0 .cs-bg::before { right: -34%; top: -16%; width: 96%; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--tone) 26%, transparent), transparent 72%); }
+.motivo-0 .cs-bg::after { left: -30%; bottom: -12%; width: 70%; aspect-ratio: 1; border-radius: 50%;
+  border: 2px solid color-mix(in srgb, var(--tone) 22%, transparent); }
+.motivo-1 .cs-bg::before { inset: -20% -40%; transform: rotate(-24deg);
+  background: repeating-linear-gradient(90deg, color-mix(in srgb, var(--tone) 9%, transparent) 0 140px, transparent 140px 430px); }
+.motivo-1 .cs-bg::after { inset: 0; background: radial-gradient(120% 60% at 0% 0%, color-mix(in srgb, var(--tone) 20%, transparent), transparent 60%); }
+.motivo-2 .cs-bg::before { left: -46%; bottom: -22%; width: 130%; aspect-ratio: 1; border-radius: 50%;
+  background: repeating-radial-gradient(circle, transparent 0 118px, color-mix(in srgb, var(--tone) 15%, transparent) 118px 121px); }
+.motivo-2 .cs-bg::after { inset: 0; background: radial-gradient(90% 46% at 100% 0%, color-mix(in srgb, var(--tone) 19%, transparent), transparent 64%); }
+.motivo-3 .cs-bg::before { inset: 0;
+  background-image: radial-gradient(color-mix(in srgb, var(--tone) 34%, transparent) 3px, transparent 3.6px); background-size: 72px 72px;
+  -webkit-mask-image: linear-gradient(160deg, #000 0%, transparent 46%, transparent 62%, #000 100%); mask-image: linear-gradient(160deg, #000 0%, transparent 46%, transparent 62%, #000 100%); }
+.motivo-3 .cs-bg::after { inset: 0; background: radial-gradient(80% 44% at 50% 0%, color-mix(in srgb, var(--tone) 17%, transparent), transparent 66%); }
+.cs-shade { position: absolute; inset: 0; background: linear-gradient(#0a0a0b00 40%, #0a0a0bcc 100%); }
+
+/* ── arriba: marca y tipo de pieza. Nada más. ── */
+.cs-top { position: absolute; left: var(--pad-l); right: var(--pad-r); top: var(--top); display: flex; justify-content: space-between; align-items: center; }
+.cs-brand { display: flex; align-items: center; gap: 16px; font-size: 31px; font-weight: 700; letter-spacing: 0.2em; color: var(--cs-ink); }
+.cs-brand i { font-family: 'VF Playfair', serif; font-style: normal; font-size: 46px; line-height: 1; letter-spacing: 0; color: var(--accent); }
+.cs-tag { font-size: 30px; font-weight: 600; letter-spacing: 0.16em; color: var(--cs-ink2); }
+
+/* ── escenario ── */
+.cs-stage {
+  position: absolute; left: var(--pad-l); right: var(--pad-r); top: var(--stage-top); bottom: var(--stage-bottom);
+  display: flex; flex-direction: column; justify-content: center; font-size: 10px;
+}
+.cs-stage.top { justify-content: flex-start; }
+
+/* ── pie: el crédito, siempre a la vista ── */
+.cs-foot {
+  position: absolute; left: var(--pad-l); right: var(--pad-r); bottom: var(--foot-bottom);
+  font-family: 'VF Serif', serif; font-size: 38px; line-height: 1.25; color: var(--cs-ink2);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.cs-foot b { font-weight: 600; font-style: italic; color: var(--cs-ink); }
+.cs-foot::before { content: ''; display: block; width: 76px; height: 4px; border-radius: 2px; background: var(--accent); margin-bottom: 18px; }
+
+/* ── rótulo de la escena ── */
+.cs-kicker { display: flex; align-items: center; gap: 0.6em; font-size: 3.4em; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--tone); margin-bottom: 1.15em; }
+.cs-kicker::before { content: ''; flex: none; width: 1.5em; height: 0.16em; border-radius: 0.08em; background: var(--tone); }
+.cs-kicker.tema { letter-spacing: 0.1em; line-height: 1.25; }
+.cs-stage.solo .cs-kicker { font-size: 9em; letter-spacing: 0.08em; margin-bottom: 0.3em; }
+.cs-stage.solo .cs-kicker::before { width: 0.9em; }
+
+/* ── texto cinético: lo que se oye, por ráfagas ── */
+.cs-kin { margin: 0; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 12.4em; line-height: 1.13; color: var(--cs-ink); text-wrap: pretty; }
+.cs-kin.m { font-size: 10.8em; }
+.cs-kin.l { font-size: 9.6em; }
+.cs-kin .w.hot { color: var(--tone); }
+.cs-kin .w.off { opacity: 0; }
+.cs-pages { display: flex; gap: 1.2em; margin-top: 3.4em; }
+.cs-pages i { width: 4.4em; height: 0.7em; border-radius: 0.35em; background: #ffffff26; }
+.cs-pages i.on { background: var(--tone); }
+.cs-pages i.done { background: color-mix(in srgb, var(--tone) 45%, transparent); }
+
+.st-matiz .cs-kin, .st-respuesta .cs-kin, .st-practica .cs-kin { font-family: 'VF Serif', serif; font-weight: 600; font-size: 10.6em; line-height: 1.2; }
+.st-matiz .cs-kin.m, .st-respuesta .cs-kin.m, .st-practica .cs-kin.m { font-size: 9.4em; }
+.st-matiz .cs-kin.l, .st-respuesta .cs-kin.l, .st-practica .cs-kin.l { font-size: 8.4em; }
+.st-matiz .cs-kin { padding-left: 0.5em; border-left: 0.12em solid var(--cs-mal); }
+.st-matiz .cs-stage.solo .cs-kin { border-left-color: transparent; }
+
+.cs-qmark { position: absolute; right: -0.06em; top: -0.16em; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 62em; line-height: 0.8; color: color-mix(in srgb, var(--tone) 16%, transparent); }
+.st-pregunta .cs-kicker, .st-pregunta .cs-kin, .cs-think { position: relative; }
+
+/* ── pausa para pensar ── */
+.cs-q-small { margin: 0 0 1.4em; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 6.6em; line-height: 1.2; color: var(--cs-ink2); text-wrap: pretty; }
+.cs-think { display: flex; align-items: center; gap: 3.4em; }
+.cs-think b { flex: none; width: 2.1em; height: 2.1em; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 13em; font-weight: 700; line-height: 1; color: #0a0a0b; background: var(--accent); box-shadow: 0 0 0 0.16em color-mix(in srgb, var(--accent) 25%, transparent); }
+.cs-think span { font-size: 4.6em; font-weight: 700; letter-spacing: 0.18em; color: var(--cs-ink); }
+
+/* ── esquema: silueta sin texto + tarjeta grande de la pieza ── */
+.tn-a { --tn2: var(--accent); } .tn-ok { --tn2: var(--cs-ok); } .tn-mal { --tn2: var(--cs-mal); }
+.tn-info { --tn2: #6cb2e2; } .tn-psi { --tn2: #b99ae0; } .tn-mute { --tn2: #a39c90; }
+.cs-fig-title { margin: 0 0 0.7em; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 4.4em; line-height: 1.2; color: var(--cs-ink2); text-wrap: balance; }
+.m-titulo .cs-fig-title { font-size: 8.6em; line-height: 1.14; color: var(--cs-ink); margin-bottom: 0.6em; }
+.cs-sil { height: 46em; margin-bottom: 3.4em; display: flex; }
+.m-titulo .cs-sil { height: 52em; margin-bottom: 0; }
+.cs-sil .dg { margin: 0 !important; padding: 0 !important; border: 0 !important; background: transparent !important; cursor: default; width: 100%; height: 100%;
+  --dg-bg: #0a0a0b; --dg-ink: #f4f0e7; --dg-ink2: #b8b1a4; --dg-rule: #3a3a3a; }
+.cs-sil #cs-dg { height: 100%; width: 100%; }
+.cs-sil svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.cs-silueta * { vector-effect: non-scaling-stroke; }
+.cs-silueta text:not(.cs-badge-t) { display: none; }
+.cs-silueta .dg-num, .cs-silueta .dg-numt { display: none; }
+.cs-silueta .dg-box { fill-opacity: 0.18; stroke-opacity: 0.9; stroke-width: 2.5; }
+.cs-badge circle { fill: #26262a; stroke: #9a9388; stroke-width: 2; }
+.cs-badge.on circle { fill: var(--accent); stroke: none; }
+.cs-badge-t { fill: #f4f0e7; font-weight: 700; text-anchor: middle; font-family: 'VF Outfit', sans-serif; }
+.cs-badge.on .cs-badge-t { fill: #0a0a0b; }
+
+.cs-card { padding: 3.4em 3.8em 3.6em; border-radius: 3.4em; border: 0.24em solid color-mix(in srgb, var(--tn2) 70%, transparent); background: color-mix(in srgb, var(--tn2) 11%, #121214); }
+.cs-card small { display: block; font-size: 3.1em; font-weight: 700; letter-spacing: 0.18em; color: var(--tn2); margin-bottom: 0.6em; }
+.cs-card b { display: block; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 7.8em; line-height: 1.13; color: var(--cs-ink); text-wrap: balance; }
+.cs-card span { display: block; margin-top: 0.55em; font-size: 5.4em; line-height: 1.26; color: var(--cs-ink); opacity: 0.86; text-wrap: pretty; }
+.cs-card ul { list-style: none; margin: 0.9em 0 0; padding: 0; }
+.cs-card li { position: relative; padding-left: 0.9em; margin-bottom: 0.42em; font-size: 5em; line-height: 1.24; color: var(--cs-ink); opacity: 0.9; text-wrap: pretty; }
+.cs-card li::before { content: ''; position: absolute; left: 0; top: 0.5em; width: 0.34em; height: 0.34em; border-radius: 50%; background: var(--tn2); }
+.cs-pie { margin: 0; font-family: 'VF Serif', serif; font-weight: 500; font-style: italic; font-size: 7.2em; line-height: 1.26; color: var(--cs-ink); text-wrap: pretty; }
+
+/* ── crédito: de qué libro sale ── */
+.cs-book { margin: 0; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 13.6em; line-height: 1.08; color: var(--cs-ink); text-wrap: balance; }
+.cs-book.long { font-size: 10.4em; } .cs-book.xlong { font-size: 8em; }
+.cs-author { margin-top: 0.9em; font-family: 'VF Serif', serif; font-style: italic; font-size: 6.6em; line-height: 1.25; color: var(--cs-ink2); }
+.cs-eje { margin-top: 2.2em; font-size: 3.1em; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); }
+
+/* ── una idea del mapa del libro ── */
+.cs-dots { display: flex; gap: 1.4em; margin-bottom: 4.6em; }
+.cs-dots i { flex: 1; max-width: 12em; height: 0.8em; border-radius: 0.4em; background: #ffffff24; }
+.cs-dots i.done { background: color-mix(in srgb, var(--accent) 50%, transparent); }
+.cs-dots i.on { background: var(--accent); }
+.cs-node-hd { display: flex; align-items: center; gap: 2.6em; margin-bottom: 3.4em; }
+.cs-node-n { font-family: 'VF Playfair', serif; font-weight: 700; font-size: 26em; line-height: 0.9; color: var(--accent); }
+.cs-ic { width: 17em; height: 17em; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: color-mix(in srgb, var(--accent) 14%, transparent); border: 0.26em solid color-mix(in srgb, var(--accent) 60%, transparent); }
+.cs-ic svg { width: 9em; height: 9em; fill: none; stroke: var(--accent); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.cs-node-t { margin: 0; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 12.4em; line-height: 1.1; color: var(--cs-ink); text-wrap: balance; }
+.cs-node-d { margin: 0.6em 0 0; font-size: 6.8em; line-height: 1.26; color: var(--cs-ink2); text-wrap: pretty; }
+
+/* ── cierre: la marca y dónde seguir ── */
+.k-c-cierre .cs-stage { align-items: flex-start; }
+.cs-mark { font-family: 'VF Playfair', serif; font-weight: 700; font-size: 24em; line-height: 1.02; color: var(--accent); }
+.cs-wordmark { margin-top: 0.3em; font-size: 10.6em; font-weight: 800; letter-spacing: 0.14em; line-height: 1.05; color: var(--cs-ink); }
+.cs-lema { margin-top: 0.5em; font-family: 'VF Serif', serif; font-style: italic; font-size: 5.4em; color: var(--cs-ink2); }
+.cs-cta { margin-top: 1.5em; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 6.4em; line-height: 1.2; color: var(--cs-ink); text-wrap: balance; }
+.cs-seguir { margin-top: 1.4em; display: inline-block; padding: 0.7em 1.3em; border-radius: 3em; font-size: 4em; font-weight: 600; line-height: 1.25; color: #0a0a0b; background: var(--accent); }
+.cs-from { margin-top: 2.4em; padding-top: 1.6em; border-top: 0.2em solid #ffffff22; align-self: stretch; }
+.cs-from b { display: block; font-family: 'VF Serif', serif; font-style: italic; font-weight: 600; font-size: 4.2em; line-height: 1.25; color: var(--cs-ink); }
+.cs-from span { display: block; margin-top: 0.3em; font-size: 3.6em; color: var(--cs-ink2); }
+
+/* ── portada (miniatura): el gancho, el libro y la marca ── */
+.k-c-portada .cs-stage { justify-content: center; }
+.cs-chip { align-self: flex-start; padding: 0.5em 1.1em; border-radius: 3em; font-size: 3.6em; font-weight: 700; letter-spacing: 0.14em; color: #0a0a0b; background: var(--accent); margin-bottom: 1.3em; }
+.cs-cover { margin: 0; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 11.4em; line-height: 1.1; color: var(--cs-ink); text-wrap: balance; }
+.cs-cover.long { font-size: 9.4em; } .cs-cover.xlong { font-size: 8em; }
+.cs-cover-tema { margin-top: 1.4em; font-size: 3.6em; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+
+/* ── 16:9: el esquema y su tarjeta, lado a lado ── */
+.ar-16x9 .cs-stage { font-size: 9.2px; }
+.ar-1x1 .cs-stage { font-size: 8.3px; }
+.ar-16x9 .cs-figrow { display: flex; align-items: center; gap: 5em; }
+.ar-16x9 .cs-figrow .cs-sil { flex: 0 0 42%; height: 52em; margin-bottom: 0; }
+.ar-16x9 .cs-figrow > .cs-card, .ar-16x9 .cs-figrow > .cs-pie { flex: 1; min-width: 0; }
+.ar-16x9 .m-titulo .cs-sil { height: 40em; }
+.ar-1x1 .cs-sil { height: 30em; margin-bottom: 2.2em; }
+.ar-1x1 .m-titulo .cs-sil { height: 38em; }
+.ar-1x1 .cs-mark, .ar-16x9 .cs-mark { font-size: 16em; }
+.ar-1x1 .cs-foot, .ar-16x9 .cs-foot { font-size: 32px; -webkit-line-clamp: 1; }
+.ar-1x1 .cs-foot::before, .ar-16x9 .cs-foot::before { display: none; }
+.ar-1x1 .cs-node-hd { margin-bottom: 2em; } .ar-1x1 .cs-dots { margin-bottom: 3em; }

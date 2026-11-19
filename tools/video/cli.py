@@ -28,6 +28,7 @@ from .corpus import Book, find_lesson, list_book_rows, load_book, load_book_by_r
 from .frames import _assets_stamp
 from .lint import has_errors, lint_episode
 from .renderer import merge_videos, render_episode
+from . import compartir as K
 from .scriptwriter import FORMATS, SCRIPT_VERSION, Episode, book_series, export_script_markdown
 from .tts import DEFAULT_ENGINE, get_tts_engine
 from .tts.cache import CachedTTS
@@ -165,6 +166,160 @@ def process_episode(ep: Episode, book: Book, base: Path, args: argparse.Namespac
     return Result(ep.key, ep.title, "ok", info.duration_s, video=str(video), chapters=info.chapters, voices=info.voices)
 
 
+# ───────────────────────── piezas compartibles (--format compartir) ─────────────────────────
+
+def _dir_compartir(slug: str, args: argparse.Namespace) -> Path:
+    return Path(args.out_dir) if args.out_dir else OUTPUT / slug / "compartir" / args.aspecto.replace(":", "x")
+
+
+def _tipos(args: argparse.Namespace) -> tuple[str, ...]:
+    pedidos = [t.strip() for t in (args.piezas or ",".join(K.TIPOS)).split(",") if t.strip()]
+    malos = [t for t in pedidos if t not in K.TIPOS]
+    if malos:
+        raise SystemExit(f"Tipo de pieza desconocido: {', '.join(malos)} (usa {', '.join(K.TIPOS)})")
+    return tuple(pedidos)
+
+
+def process_pieza(p: K.Pieza, book: Book, base: Path, args: argparse.Namespace, tts) -> Result:
+    """Guion → control de calidad → render de una pieza compartible."""
+    from . import compartir_frames as CF
+    from .lint import lint_pieza
+    from .renderer import RenderStyle
+
+    p_dir = base / p.key
+    p_dir.mkdir(parents=True, exist_ok=True)
+    (p_dir / "guion.md").write_text(K.guion_markdown(p), encoding="utf-8")
+    (p_dir / "script.json").write_text(json.dumps(p.to_dict(), ensure_ascii=False, indent=2), encoding="utf-8")
+    (p_dir / "publicacion.txt").write_text(K.texto_publicacion(p), encoding="utf-8")
+
+    issues = lint_pieza(p, book)
+    for issue in issues:
+        print(f"      {issue}")
+    if has_errors(issues):
+        return Result(p.key, p.title, "error", detail="; ".join(str(i) for i in issues if i.level == "error"))
+    if args.script_only:
+        return Result(p.key, p.title, "guion", duration_s=p.estimated_seconds)
+
+    motivo = K.motivo_libro(book)
+    huella = {
+        "guion": p.fingerprint(),
+        "version": [SCRIPT_VERSION, K.COMPARTIR_VERSION],
+        "motor": args.engine,
+        "voz": args.voice or "",
+        "fotogramas": _assets_stamp(CF.dependencias()),
+        "aspecto": args.aspecto,
+        "motivo": motivo,
+    }
+    estado_path = p_dir / "pieza.json"
+    video = p_dir / "video.mp4"
+    if not args.force and video.exists() and estado_path.exists():
+        try:
+            previo = json.loads(estado_path.read_text(encoding="utf-8"))
+            if previo.get("huella") == huella:
+                return Result(p.key, p.title, "sin-cambios", previo.get("duracion_s", 0.0), video=str(video), voices=previo.get("voces", []))
+        except ValueError:
+            pass
+
+    ancho, alto = K.ASPECTOS[args.aspecto]
+    estilo = RenderStyle(
+        width=ancho, height=alto, burn_subs=False, lead_in_s=0.15, fade_scene_s=0.16, fade_beat_s=0.0,
+        progress_color=CF.acento_eje(book.eje), extra_deps=CF.dependencias(),
+    )
+    work = p_dir / "_work"
+    info = render_episode(
+        p, tts, work, video, voice=args.voice, log=print, style=estilo,
+        pages=CF.pieza_pages(p, args.aspecto, motivo), thumb_page=CF.portada_html(p, args.aspecto, motivo),
+    )
+    (p_dir / "publicacion.txt").write_text(K.texto_publicacion(p, info.duration_s), encoding="utf-8")
+    estado_path.write_text(
+        json.dumps({"huella": huella, "titulo": p.title, "tipo": p.tipo, "duracion_s": info.duration_s, "voces": info.voices, "avisos": [str(i) for i in issues]}, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    if not args.keep_work:
+        shutil.rmtree(work, ignore_errors=True)
+    return Result(p.key, p.title, "ok", info.duration_s, video=str(video), voices=info.voices)
+
+
+def process_compartir(book: Book, args: argparse.Namespace, only_lesson: int | None = None) -> list[Result]:
+    """Las piezas compartibles de un libro (o de una de sus lecciones) y su manifiesto de publicación."""
+    base = _dir_compartir(book.slug, args)
+    base.mkdir(parents=True, exist_ok=True)
+    plan = K.plan_libro(book, _tipos(args), solo_leccion=only_lesson)
+    piezas = plan.piezas
+    if args.only and only_lesson is None:
+        quiero = {ep.number for ep in _select([Episode(key="", kind="leccion", format="", title="", number=i, total=0, book_id="", book_title="", book_author="", eje="") for i in range(0, len(book.lessons) + 1)], args.only)}
+        piezas = [p for p in piezas if p.leccion_n in quiero]
+
+    tts = None
+    if not args.script_only:
+        tts = get_tts_engine(engine=args.engine, voice=args.voice, gemini_model=args.gemini_model)
+        if args.engine != "mudo":
+            tts = CachedTTS(tts, OUTPUT / "_cache" / "voz" / args.engine)
+
+    print(f"\n«{book.titulo}»" + (f" — {book.autor}" if book.autor else "") + f" · {len(piezas)} piezas compartibles ({args.aspecto}) · {len(plan.omitidas)} sin material")
+    resultados: list[Result] = []
+    for i, p in enumerate(piezas, start=1):
+        print(f"  [{i}/{len(piezas)}] {p.key} · ~{p.estimated_seconds:.0f} s")
+        t0 = time.time()
+        try:
+            r = process_pieza(p, book, base, args, tts)
+        except Exception as exc:  # una pieza que falla no detiene la tanda
+            if args.debug:
+                traceback.print_exc()
+            r = Result(p.key, p.title, "error", detail=f"{type(exc).__name__}: {exc}")
+        resultados.append(r)
+        marca = {"ok": "✓", "sin-cambios": "↷", "guion": "✎", "error": "✗"}[r.status]
+        extra = f" {r.duration_s:.0f} s en {time.time() - t0:.0f} s" if r.status == "ok" else (f" — {r.detail}" if r.detail else "")
+        print(f"      {marca} {r.status}{extra}")
+    if only_lesson is None and not args.only:
+        _write_manifiesto(book, plan, resultados, base, args)
+    return resultados
+
+
+def _write_manifiesto(book: Book, plan: K.Plan, resultados: list[Result], base: Path, args: argparse.Namespace) -> None:
+    """Manifiesto del libro: todas las piezas en el orden de publicación sugerido, su estado y lo que no ha salido."""
+    por_clave = {r.key: r for r in resultados}
+    piezas = {p.key: p for p in plan.piezas}
+    items: list[dict[str, Any]] = []
+    filas = ["| n.º | pieza | tipo | duración | título de publicación |", "|---|---|---|---|---|"]
+    for n, clave in enumerate(plan.orden, start=1):
+        p = piezas[clave]
+        r = por_clave.get(clave)
+        video = base / clave / "video.mp4"
+        dur = r.duration_s if r and r.duration_s else 0.0
+        if not dur and (base / clave / "pieza.json").exists():
+            try:
+                dur = json.loads((base / clave / "pieza.json").read_text(encoding="utf-8")).get("duracion_s", 0.0)
+            except ValueError:
+                dur = 0.0
+        hecho = video.exists()
+        items.append(
+            {
+                "orden": n, "clave": clave, "tipo": p.tipo, "leccion": p.leccion_n, "leccion_id": p.lesson_id,
+                "titulo": p.titulo_pub, "gancho": p.gancho, "etiquetas": p.etiquetas_pub,
+                "video": f"{clave}/video.mp4" if hecho else None, "subtitulos": f"{clave}/video.srt" if hecho else None,
+                "miniatura": f"{clave}/miniatura.png" if hecho else None, "publicacion": f"{clave}/publicacion.txt",
+                "duracion_s": dur or p.estimated_seconds, "duracion_estimada": not dur,
+                "estado": (r.status if r else ("ok" if hecho else "pendiente")), "detalle": (r.detail if r else ""),
+            }
+        )
+        filas.append(f"| {n} | `{clave}` | {p.tipo} | {items[-1]['duracion_s']:.0f} s | {p.titulo_pub} |")
+    datos = {
+        "libro_id": book.id, "titulo": book.titulo, "autor": book.autor, "eje": book.eje,
+        "formato": "compartir", "aspecto": args.aspecto, "motivo": K.motivo_libro(book),
+        "voces": sorted({v for r in resultados for v in r.voices}),
+        "piezas": items,
+        "omitidas": [{"tipo": o.tipo, "leccion": o.leccion_n, "titulo": o.titulo, "motivo": o.motivo} for o in plan.omitidas],
+        "completa": bool(items) and all(i["video"] for i in items),
+        "duracion_total_s": round(sum(i["duracion_s"] for i in items), 1),
+    }
+    (base / "manifiesto.json").write_text(json.dumps(datos, ensure_ascii=False, indent=2), encoding="utf-8")
+    md = [f"# {book.titulo}" + (f" — {book.autor}" if book.autor else ""), "", f"{len(items)} piezas · {datos['duracion_total_s'] / 60:.1f} min · {args.aspecto} · orden de publicación sugerido", "", *filas]
+    if plan.omitidas:
+        md += ["", "## Sin material", ""] + [f"- {o.tipo} · {o.titulo}: {o.motivo}" for o in plan.omitidas]
+    (base / "manifiesto.md").write_text("\n".join(md) + "\n", encoding="utf-8")
+
+
 def _select(episodes: list[Episode], only: str | None) -> list[Episode]:
     """`--only 0,3-5,99`: 0 = presentación, 1…N = lecciones, 99 = repaso."""
     if not only:
@@ -186,6 +341,8 @@ def _select(episodes: list[Episode], only: str | None) -> list[Episode]:
 
 def process_book(book: Book, args: argparse.Namespace, only_lesson: int | None = None) -> list[Result]:
     """Genera la serie de un libro (o solo una de sus lecciones) y deja `serie.json` y `lista.m3u`."""
+    if args.format == "compartir":
+        return process_compartir(book, args, only_lesson)
     base = Path(args.out_dir) if args.out_dir else OUTPUT / book.slug / args.format
     base.mkdir(parents=True, exist_ok=True)
     cache = OUTPUT / "_cache"
@@ -313,7 +470,7 @@ def _summary(resultados: list[Result]) -> int:
 def _sample_voices(book: Book, index: int, args: argparse.Namespace) -> int:
     from .scriptwriter import lesson_episode
 
-    ep = lesson_episode(book, index, args.format)
+    ep = lesson_episode(book, index, "clase" if args.format == "compartir" else args.format)
     muestra = next(s.speech for s in ep.scenes if s.kind == "idea")
     tts = get_tts_engine(engine=args.engine, voice=args.voice, gemini_model=args.gemini_model)
     out = OUTPUT / book.slug / "muestras" / args.engine
@@ -327,7 +484,9 @@ def _sample_voices(book: Book, index: int, args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     comun = argparse.ArgumentParser(add_help=False)
-    comun.add_argument("--format", choices=FORMATS, default="clase", help="clase: lección completa (3-5 min). corto: 60-90 s para redes.")
+    comun.add_argument("--format", choices=[*FORMATS, "compartir"], default="clase", help="clase: lección completa (3-5 min). corto: 60-90 s para redes. compartir: piezas sueltas de 30-60 s que se entienden fuera de la web.")
+    comun.add_argument("--piezas", default=None, help="(compartir) Tipos de pieza, separados por comas: idea, pregunta, practica, libro. Por defecto, todos.")
+    comun.add_argument("--aspecto", choices=list(K.ASPECTOS), default="9:16", help="(compartir) 9:16 (por defecto), 1:1 o 16:9.")
     comun.add_argument("--engine", choices=["edge", "kokoro", "mudo", "gemini", "auto"], default=None, help="Motor de voz. edge (por defecto): gratis, sin clave. kokoro: local y gratis. mudo: previsualización sin voz. gemini/auto: de pago, con clave.")
     comun.add_argument("--voice", default=None, help="Voz (Aoede, Charon… en Gemini; es-ES-AlvaroNeural… en Edge).")
     comun.add_argument("--gemini-model", default=None, choices=["gemini-2.5-flash-preview-tts", "gemini-2.5-pro-preview-tts"])
@@ -393,7 +552,8 @@ def main(argv: list[str] | None = None) -> int:
     filas = list_book_rows(args.eje)
     pendientes = []
     for fila in filas:
-        serie_json = OUTPUT / T.slugify(T.clean(fila.get("titulo"))) / args.format / "serie.json"
+        slug = T.slugify(T.clean(fila.get("titulo")))
+        serie_json = (_dir_compartir(slug, args) / "manifiesto.json") if args.format == "compartir" else OUTPUT / slug / args.format / "serie.json"
         completa = False
         if serie_json.exists() and not args.force:
             try:

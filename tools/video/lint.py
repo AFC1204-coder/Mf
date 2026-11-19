@@ -172,3 +172,108 @@ def lint_episode(episode: Episode, book: Book) -> list[Issue]:
 
 def has_errors(issues: list[Issue]) -> bool:
     return any(i.level == "error" for i in issues)
+
+
+# ───────────────────────── piezas compartibles ─────────────────────────
+
+def _formulas_permitidas(pieza, book: Book) -> set[str]:
+    """Las únicas frases que una pieza puede decir sin que estén en el corpus: `compartir.FORMULAS` con los datos del libro."""
+    from . import compartir as K
+
+    titulos = {""}
+    for lec in book.lessons:
+        if lec.id == pieza.lesson_id:
+            titulos |= {T.clean(d.get("titulo")).rstrip(".") for d in lec.diagramas if isinstance(d, dict)}
+    nodos = len([n for n in ((book.mapa or {}).get("nodos") or []) if isinstance(n, dict) and T.clean(n.get("etiqueta"))])
+    permitidas: set[str] = set()
+    for plantilla in K.FORMULAS.values():
+        for titulo in titulos:
+            permitidas.add(plantilla.format(libro=K.titulo_corto(book.titulo), autor=book.autor, n=nodos, titulo=titulo))
+    return permitidas
+
+
+def lint_pieza(pieza, book: Book) -> list[Issue]:
+    """Control de una pieza compartible: fidelidad literal, fórmulas declaradas, nada que ancle a la web y texto breve."""
+    from . import compartir as K
+    from . import compartir_frames as CF
+
+    issues: list[Issue] = []
+    if not pieza.scenes:
+        return [Issue("error", pieza.key, "la pieza no tiene escenas")]
+    src = _sources(book, pieza)
+    permitidas = _formulas_permitidas(pieza, book)
+    specs: list[dict] = []
+    donde_spec: list[str] = []
+    for i, scene in enumerate(pieza.scenes, start=1):
+        donde = f"{pieza.key} · escena {i} ({scene.kind})"
+        if scene.kind not in CF.STAGES:
+            issues.append(Issue("error", donde, "plantilla visual desconocida"))
+            continue
+        if not scene.narration and scene.hold_s <= 0:
+            issues.append(Issue("error", donde, "escena sin voz ni duración"))
+        for part in scene.parts:
+            if not part.text.strip():
+                issues.append(Issue("error", donde, "tramo de locución vacío"))
+                continue
+            if part.origin.startswith("plantilla"):
+                if part.text not in permitidas:
+                    issues.append(Issue("error", donde, f"fórmula no declarada en compartir.FORMULAS: {part.text[:70]!r}"))
+                if K.ANCLA_WEB.search(part.text):
+                    issues.append(Issue("error", donde, f"la fórmula ancla la pieza a la web: {part.text[:70]!r}"))
+                continue
+            ref = src.get(part.origin)
+            if ref is None:
+                issues.append(Issue("error", donde, f"origen desconocido: {part.origin}"))
+            elif not _contained(part.text, ref):
+                issues.append(Issue("error", donde, f"la locución no es literal de «{part.origin}»: {part.text[:70]!r}"))
+            if K.ANCLA_WEB.search(part.text):
+                issues.append(Issue("aviso", donde, f"el texto del corpus alude a la lección o a la web: {part.text[:60]!r}"))
+            if K.parece_ingles(part.text):
+                issues.append(Issue("aviso", donde, f"tramo que parece estar en otro idioma: {part.text[:60]!r}"))
+            for frase in T.split_sentences(part.text):
+                if T.n_words(frase) > 60:
+                    issues.append(Issue("aviso", donde, f"frase de {T.n_words(frase)} palabras: difícil de seguir en una pieza corta"))
+        # Todo lo que se oye se ve: en el texto cinético, las palabras en pantalla son las de la locución.
+        if scene.kind == "c-frase":
+            dichas = scene.narration.split()
+            vistas = scene.view.get("words") or []
+            if vistas != dichas[len(dichas) - len(vistas):] or not vistas:
+                issues.append(Issue("error", donde, "el texto en pantalla no coincide con la locución"))
+        for vista in CF.estados(scene):
+            n = CF.palabras_en_pantalla(scene.kind, vista)
+            if n > MAX_PALABRAS_EN_PANTALLA:
+                issues.append(Issue("aviso", donde, f"{n} palabras en pantalla a la vez (máximo orientativo {MAX_PALABRAS_EN_PANTALLA})"))
+                break
+        if scene.kind == "c-figura":
+            specs.append(scene.view.get("spec") or {})
+            donde_spec.append(donde)
+        for beat in scene.beats:
+            if beat.at_word is None and beat.at_s is None:
+                issues.append(Issue("error", donde, "cambio en pantalla sin momento asignado"))
+
+    for rotulo in K.ROTULOS.values():
+        if K.ANCLA_WEB.search(rotulo):
+            issues.append(Issue("error", pieza.key, f"rótulo que ancla a la web: {rotulo!r}"))
+    # Toda pieza de una lección lleva su matiz (si la lección lo tiene) y todas dicen de qué libro salen.
+    if not any(s.kind == "c-credito" for s in pieza.scenes):
+        issues.append(Issue("error", pieza.key, "la pieza no dice de qué libro sale"))
+    if pieza.lesson_id:
+        lec = next((l for l in book.lessons if l.id == pieza.lesson_id), None)
+        if lec and T.clean(lec.autocorreccion) and not any(p.origin == "leccion.autocorreccion" for s in pieza.scenes for p in s.parts):
+            issues.append(Issue("error", pieza.key, "la lección tiene matiz y la pieza no lo lleva"))
+        if pieza.tipo == "idea" and not specs:
+            issues.append(Issue("aviso", pieza.key, "la figura de la lección no se puede recorrer por piezas: la pieza va sin esquema"))
+    if not T.clean(pieza.gancho):
+        issues.append(Issue("error", pieza.key, "pieza sin gancho"))
+
+    dibujables = _check_diagrams(specs[:1])
+    if dibujables is not None and specs and not dibujables[0]:
+        issues.append(Issue("error", donde_spec[0], "el motor de esquemas no sabe dibujar esta figura"))
+
+    minimo, maximo = K.LIMITES.get(pieza.tipo, (0, 10**6))
+    est = pieza.estimated_seconds
+    if est < minimo:
+        issues.append(Issue("aviso", pieza.key, f"dura ~{est:.0f} s: corta para una pieza «{pieza.tipo}» (mínimo orientativo {minimo} s)"))
+    if est > maximo:
+        issues.append(Issue("aviso", pieza.key, f"dura ~{est:.0f} s: larga para una pieza «{pieza.tipo}» (máximo orientativo {maximo} s)"))
+    return issues
