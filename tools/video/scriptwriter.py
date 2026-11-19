@@ -23,13 +23,21 @@ from typing import Any
 from . import text as T
 from .corpus import Book, Lesson, Question
 
-SCRIPT_VERSION = 1
+SCRIPT_VERSION = 2
 WORDS_PER_SECOND = 2.4  # ritmo de explicación tranquila (~145 palabras/min)
 
 FORMATS = ("clase", "corto")
 
+# Presupuesto de texto en pantalla: el texto largo se oye, no se lee. Una frase ancla cabe de un vistazo.
+ANCHOR_MAX_WORDS = 16
+STEP_LABEL_WORDS = 7
+
 # Fórmulas fijas que unen el texto del corpus. Son lo ÚNICO que el guion añade por su cuenta.
 PHRASES = {
+    "gancho": "Antes de empezar, una pregunta.",
+    "gancho_cierre": "Quédate con ella: la contestas al final.",
+    "pregunta_vuelve": "Volvemos a la pregunta del principio.",
+    "respuesta_corta": "La respuesta:",
     "portada": "{libro}, de {autor}. Lección {k} de {n}: {titulo}.",
     "portada_sin_autor": "{libro}. Lección {k} de {n}: {titulo}.",
     "puente": "Venimos de la lección anterior, {titulo}.",
@@ -98,6 +106,26 @@ class Scene:
     @property
     def speech(self) -> str:
         return T.for_speech(self.narration)
+
+    @property
+    def screen_words(self) -> int:
+        """Palabras de contenido que se leen en pantalla (sin cabecera, rótulos ni subtítulos)."""
+        v = self.view
+        if self.kind == "esquema":
+            return 0  # una figura no es un texto: se mira
+        if self.kind == "pregunta":
+            return T.n_words(str(v.get("question") or "")) + sum(T.n_words(o) for o in v.get("options") or []) + T.n_words(str(v.get("explanation") or ""))
+        if self.kind == "mapa":
+            nodos = v.get("nodes") or []
+            activo = v.get("active", -1)
+            total = sum(T.n_words(str(n.get("etiqueta") or "")) for n in nodos[: int(v.get("shown") or 0)])
+            if isinstance(activo, int) and 0 <= activo < len(nodos):
+                total += T.n_words(str(nodos[activo].get("texto") or ""))
+            return total + (T.n_words(str(v.get("cierre") or "")) if v.get("show_cierre") else 0)
+        if self.kind == "ruta":
+            return sum(T.n_words(t) for t in (v.get("items") or [])[: max(int(v.get("shown") or 0), 1)])
+        campos = ("text", "title", "description", "question", "next_title")
+        return sum(T.n_words(str(v.get(c) or "")) for c in campos) + sum(T.n_words(c) for c in v.get("chips") or [])
 
     @property
     def estimated_seconds(self) -> float:
@@ -203,15 +231,26 @@ def chunk_body(cuerpo: str, max_words: int = 95, target: int = 75) -> list[str]:
     return bloques
 
 
-def anchor_sentence(block: str, max_words: int = 34) -> str:
-    """La frase que se queda en pantalla mientras se explica el bloque: su primera frase (literal)."""
+def anchor_sentence(block: str, max_words: int = ANCHOR_MAX_WORDS) -> str:
+    """La frase ancla del bloque: un trozo corto y literal de su primera frase. El resto se oye."""
     frases = T.split_sentences(block)
     if not frases:
         return ""
     ancla = frases[0]
-    if T.n_words(ancla) < 8 and len(frases) > 1 and T.n_words(ancla) + T.n_words(frases[1]) <= max_words:
+    if T.n_words(ancla) < 6 and len(frases) > 1 and T.n_words(ancla) + T.n_words(frases[1]) <= max_words:
         ancla = f"{ancla} {frases[1]}"
-    return T.shorten_clause(ancla, max_words)
+    return T.anchor_clause(ancla, max_words)
+
+
+def thread_anchor(hilo: str) -> str:
+    """El hilo de la lección tal como se ve en pantalla: siempre el mismo trozo, en la idea, el puente, el cierre y el repaso."""
+    return T.anchor_clause(hilo, ANCHOR_MAX_WORDS + 4)
+
+
+def step_label(block: str) -> str:
+    """Rótulo mínimo de un paso ya explicado (para la escalera del desarrollo): arranque literal."""
+    frases = T.split_sentences(block)
+    return T.shorten_clause(frases[0], STEP_LABEL_WORDS) if frases else ""
 
 
 def _text_scene(
@@ -224,6 +263,7 @@ def _text_scene(
     hints: list[str],
     step: tuple[int, int] | None = None,
     visible: list[str] | None = None,
+    trail: list[str] | None = None,
 ) -> Scene:
     """Escena de texto: frase ancla fija y términos clave que aparecen cuando se nombran."""
     parts = ([intro] if intro else []) + [Part(body, origin)]
@@ -239,6 +279,9 @@ def _text_scene(
     }
     if step:
         view["step"] = list(step)
+    if trail is not None and step and step[1] > 1:
+        # Escalera del desarrollo: los pasos ya dados quedan a la vista en pequeño; el actual, grande.
+        view["trail"] = list(trail)
     beats = [Beat({"chips_on": i + 1}, at_word=desplazamiento + pos) for i, (_, pos) in enumerate(terms)]
     return Scene("texto", section, view, parts, beats)
 
@@ -302,11 +345,47 @@ def _quiz_scenes(q: Question, section: str, intro: Part | None) -> list[Scene]:
     answer = Scene(
         "pregunta",
         section,
-        dict(base, reveal=True, explanation=T.shorten_clause(T.take_sentences(q.explicacion, 30), 30)),
+        dict(base, reveal=True, explanation=T.anchor_clause(T.take_sentences(q.explicacion, 1), ANCHOR_MAX_WORDS)),
         respuesta,
         pause_after_s=0.8,
     )
     return [ask, think, answer]
+
+
+def _hook_scene(q: Question, k: int, n: int, titulo: str, clase: bool) -> Scene:
+    """Gancho: la pregunta de la propia lección abre el episodio y queda pendiente hasta el final.
+
+    Intentar contestar antes de aprender (aunque se falle) mejora lo que se retiene después, y da
+    al episodio un arco: pregunta abierta → explicación → la misma pregunta, ya con respuesta.
+    """
+    parts = [Part(q.texto, "pregunta.texto")]
+    if clase:
+        parts = [_fixed("gancho"), *parts, _fixed("gancho_cierre")]
+    return Scene(
+        "gancho",
+        "",
+        {
+            "kicker": "ANTES DE EMPEZAR" if clase else f"LECCIÓN {k} DE {n}",
+            "question": q.texto,
+            "note": "La contestas al final" if clase else titulo,
+        },
+        parts,
+        pause_after_s=0.9,
+    )
+
+
+def _short_answer_scene(q: Question) -> Scene:
+    """Formato corto: se cierra el gancho con la opción correcta, sin opciones ni cuenta atrás."""
+    opcion = q.opciones[q.correcta].rstrip()
+    if not opcion.endswith((".", "!", "?", "…")):
+        opcion += "."
+    return Scene(
+        "gancho",
+        "Respuesta",
+        {"kicker": "LA RESPUESTA", "question": q.texto, "answer": T.anchor_clause(opcion, 22), "tone": "ok"},
+        [_fixed("respuesta_corta"), Part(opcion, "pregunta.opcion")],
+        pause_after_s=0.8,
+    )
 
 
 def _diagram_scenes(lesson: Lesson, section: str, limit: int) -> list[Scene]:
@@ -343,6 +422,8 @@ def _fit_short(scenes: list[Scene]) -> None:
         scenes.remove(desarrollo[-1])
         for i, s in enumerate(desarrollo[:-1]):
             s.view["step"] = [i + 1, len(desarrollo) - 1]
+            if len(desarrollo) - 1 < 2:
+                s.view.pop("trail", None)
 
 
 def _route(book: Book, current: int) -> dict[str, Any]:
@@ -374,6 +455,12 @@ def lesson_episode(book: Book, index: int, fmt: str = "clase", with_quiz: bool =
     bloques = chunk_body(lesson.cuerpo)
     scenes: list[Scene] = []
     clase = fmt == "clase"
+
+    q = lesson.pick_question() if with_quiz else None
+
+    # 0 · Gancho: la pregunta de la lección, antes de nada. Se contesta al final.
+    if q:
+        scenes.append(_hook_scene(q, k, n, lesson.titulo, clase))
 
     # 1 · Portada: sitúa la lección en el libro.
     clave = "portada" if book.autor else "portada_sin_autor"
@@ -408,7 +495,7 @@ def lesson_episode(book: Book, index: int, fmt: str = "clase", with_quiz: bool =
                         "kicker": "VENIMOS DE",
                         "number": k - 1,
                         "title": prev.titulo,
-                        "text": prev_hilo,
+                        "text": thread_anchor(prev_hilo),
                         "route": _route(book, k),
                     },
                     [
@@ -429,9 +516,9 @@ def lesson_episode(book: Book, index: int, fmt: str = "clase", with_quiz: bool =
             "idea",
             "Idea",
             {
-                "kicker": ("EL PUNTO DE PARTIDA" if es_arranque else "LA IDEA") if clase else f"LECCIÓN {k} DE {n}",
-                "text": hilo,
-                "title": "" if clase else lesson.titulo,
+                "kicker": ("EL PUNTO DE PARTIDA" if es_arranque else "LA IDEA") if (clase or q) else f"LECCIÓN {k} DE {n}",
+                "text": thread_anchor(hilo),
+                "title": "" if (clase or q) else lesson.titulo,
             },
             idea_parts,
             pause_after_s=0.6,
@@ -447,9 +534,10 @@ def lesson_episode(book: Book, index: int, fmt: str = "clase", with_quiz: bool =
         else:
             bloques = ([resto] if resto else []) + bloques[1:]
     if clase:
+        rotulos = [step_label(b) for b in bloques]
         for i, bloque in enumerate(bloques):
             scenes.append(
-                _text_scene("Desarrollo", "DESARROLLO", "a", None, bloque, "leccion.cuerpo", hints, (i + 1, len(bloques)), visible)
+                _text_scene("Desarrollo", "DESARROLLO", "a", None, bloque, "leccion.cuerpo", hints, (i + 1, len(bloques)), visible, rotulos[:i])
             )
     else:
         elegidos: list[str] = []
@@ -461,9 +549,10 @@ def lesson_episode(book: Book, index: int, fmt: str = "clase", with_quiz: bool =
                 break
         if not elegidos and bloques:
             elegidos = [T.split_sentences(bloques[0])[0]]
+        rotulos = [step_label(f) for f in elegidos]
         for i, frase in enumerate(elegidos):
             scenes.append(
-                _text_scene("Desarrollo", "DESARROLLO", "a", None, frase, "leccion.cuerpo", hints, (i + 1, len(elegidos)), visible)
+                _text_scene("Desarrollo", "DESARROLLO", "a", None, frase, "leccion.cuerpo", hints, (i + 1, len(elegidos)), visible, rotulos[:i])
             )
 
     # 5 · Esquema: la síntesis visual verificada de la lección.
@@ -482,15 +571,17 @@ def lesson_episode(book: Book, index: int, fmt: str = "clase", with_quiz: bool =
         )
 
     # 8 · Repaso: una pregunta de la propia lección.
-    q = lesson.pick_question() if (clase and with_quiz) else None
-    if q:
-        scenes.extend(_quiz_scenes(q, "Repaso", _fixed("pregunta")))
+    #     Es la misma del gancho: el episodio cierra lo que abrió.
+    if q and clase:
+        scenes.extend(_quiz_scenes(q, "Repaso", _fixed("pregunta_vuelve")))
+    elif q:
+        scenes.append(_short_answer_scene(q))
 
     # 9 · Cierre: la misma idea del principio y hacia dónde sigue el libro.
     es_ultima = index == n - 1
     cierre_view: dict[str, Any] = {
         "kicker": "QUÉDATE CON ESTO",
-        "text": hilo,
+        "text": thread_anchor(hilo),
         "final": es_ultima,
         "book": book.titulo,
         "author": book.autor,
@@ -511,7 +602,7 @@ def lesson_episode(book: Book, index: int, fmt: str = "clase", with_quiz: bool =
     if not clase:
         _fit_short(scenes)
 
-    orden = ["Idea", "Desarrollo", "Esquema", "Matiz", "Práctica", "Repaso"]
+    orden = ["Idea", "Desarrollo", "Esquema", "Matiz", "Práctica", "Repaso", "Respuesta"]
     presentes = {s.section for s in scenes}
     return _base_episode(
         book,
@@ -570,7 +661,7 @@ def presentation_episode(book: Book, cover_path: str | None = None) -> Episode:
                 "sub_eje": book.sub_eje,
                 "title": book.titulo,
                 "author": book.autor,
-                "description": T.shorten_clause(descripcion, 46) if descripcion else "",
+                "description": T.anchor_clause(T.take_sentences(descripcion, 1), 24) if descripcion else "",
                 "cover": cover_path,
                 "n_lessons": n,
             },
@@ -672,7 +763,7 @@ def recap_episode(book: Book) -> Episode:
             Scene(
                 "puente",
                 "Lecciones",
-                {"kicker": f"LECCIÓN {i + 1} DE {n}", "number": i + 1, "title": lec.titulo, "text": hilo, "route": {"n": n, "current": i + 1}},
+                {"kicker": f"LECCIÓN {i + 1} DE {n}", "number": i + 1, "title": lec.titulo, "text": thread_anchor(hilo), "route": {"n": n, "current": i + 1}},
                 [
                     Part(PHRASES["repaso_idea"].format(k=i + 1, titulo=lec.titulo.rstrip(".")), "plantilla+titulos"),
                     Part(hilo, f"leccion[{i + 1}].{origen}"),
@@ -733,6 +824,7 @@ def export_script_markdown(episode: Episode, out_path: Path) -> Path:
         f"- **Episodio:** {episode.counter.capitalize()} · formato «{episode.format}»",
         f"- **Índice de la clase:** {' → '.join(episode.sections) or '—'}",
         f"- **Palabras:** {episode.total_words} · **duración estimada:** ~{episode.estimated_seconds / 60:.1f} min",
+        f"- **Texto en pantalla:** como mucho {max((s.screen_words for s in episode.scenes if s.kind != 'pregunta'), default=0)} palabras a la vez (sin contar las preguntas con opciones)",
         "",
         "---",
         "",
@@ -751,6 +843,10 @@ def export_script_markdown(episode: Episode, out_path: Path) -> Path:
             en_pantalla = "Recorrido del libro"
         if en_pantalla:
             lines.append(f"**En pantalla:** {en_pantalla}")
+        if s.view.get("answer"):
+            lines.append(f"**Respuesta en pantalla:** {s.view['answer']}")
+        if s.view.get("trail"):
+            lines.append(f"**Pasos ya dados (en pequeño):** {' → '.join(s.view['trail'])}")
         if s.view.get("chips"):
             lines.append(f"**Términos que se señalan:** {' · '.join(s.view['chips'])}")
         if s.kind == "pregunta" and not s.narration:

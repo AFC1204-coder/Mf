@@ -198,3 +198,56 @@ body.vf.k-esquema .vf-kicker { margin-bottom: 0.9em; }
 body.vf.k-esquema .vf-fig { padding: 2.6em 2em 2.2em; }
 body.vf.k-esquema .vf-fig-title { font-size: 3.7em; margin-bottom: 0.6em; }
 body.vf.k-esquema .vf-fig-pie { font-size: 2.6em; margin-top: 0.8em; }
+
+/* ── menos texto: la frase ancla es corta y va grande ── */
+.vf-big { font-size: 7.4em; line-height: 1.18; }
+.vf-big.long { font-size: 6.4em; }
+.vf-big.xlong { font-size: 5.4em; }
+.vf-anchor { font-size: 6.2em; line-height: 1.24; }
+.vf-anchor.long { font-size: 5.4em; }
+.vf-anchor.xlong { font-size: 4.8em; }
+
+/* ── escalera del desarrollo: el argumento de la lección, paso a paso ── */
+.vf-ladder { position: relative; display: flex; flex-direction: column; gap: 2.6em; padding-left: 0; }
+.vf-ladder::before { content: ''; position: absolute; left: 3.35em; top: 3em; bottom: 3em; width: 0.3em; background: #ffffff1c; border-radius: 0.2em; }
+.vf-rung { position: relative; display: flex; align-items: center; gap: 2.6em; }
+.vf-rung .n {
+  flex: none; width: 2em; height: 2em; border-radius: 50%; font-size: 3.5em; font-weight: 700; font-family: 'VF Playfair', serif;
+  display: flex; align-items: center; justify-content: center; background: var(--vf-bg); color: var(--vf-text3); border: 0.08em solid #ffffff30;
+}
+.vf-rung .t { font-size: 3.1em; line-height: 1.3; color: var(--vf-text2); }
+.vf-rung.done .n { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 55%, transparent); }
+.vf-rung.on { align-items: flex-start; }
+.vf-rung.on .n { background: var(--accent); color: var(--vf-bg); border-color: var(--accent); box-shadow: 0 0 0 0.22em color-mix(in srgb, var(--accent) 22%, transparent); margin-top: 0.5em; }
+.vf-rung.on .b {
+  flex: 1; min-width: 0; padding: 3em 3.2em; border-radius: 2.8em;
+  background: color-mix(in srgb, var(--tone) 7%, var(--vf-surface)); border: 0.2em solid color-mix(in srgb, var(--tone) 45%, transparent);
+}
+.vf-rung.on .vf-chips { margin-top: 2.4em; min-height: 0; gap: 1em; }
+.vf-rung.on .vf-chip { font-size: 2.6em; }
+.vf-rung.todo { opacity: 0.55; }
+
+/* ── gancho: la pregunta que abre (y cierra) el episodio ── */
+.vf-hook-mark {
+  font-family: 'VF Playfair', serif; font-weight: 700; font-size: 26em; line-height: 0.8; color: color-mix(in srgb, var(--tone) 85%, transparent);
+  margin: 0 0 0.12em -0.04em;
+}
+.vf-hook { font-family: 'VF Playfair', serif; font-weight: 700; font-size: 6.6em; line-height: 1.2; margin: 0; color: var(--vf-text); text-wrap: balance; }
+.vf-hook.long { font-size: 5.6em; }
+.vf-hook.xlong { font-size: 4.8em; }
+.vf-hook.small { font-size: 4.2em; color: var(--vf-text2); font-family: 'VF Serif', serif; font-weight: 500; }
+.vf-hook-note { margin-top: 2.2em; font-size: 2.9em; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--vf-text2); }
+.vf-hook-answer {
+  margin-top: 1.1em; padding: 1em 1.2em; border-radius: 0.8em; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 5.2em; line-height: 1.24;
+  color: var(--vf-text); background: color-mix(in srgb, var(--vf-ok) 14%, var(--vf-surface)); border: 0.05em solid var(--vf-ok);
+}
+body.vf.k-gancho.tone-ok .vf-hook-mark { display: none; }
+
+/* ── mapa: solo el nodo del que se habla enseña su frase; los demás, su rótulo ── */
+.vf-node:not(.on) span { display: none; }
+.vf-node:not(.on) .ic { width: 5em; height: 5em; }
+.vf-node:not(.on) .ic svg { width: 2.8em; height: 2.8em; }
+.vf-node:not(.on) { padding: 1.3em 2.2em; }
+
+/* ── pregunta: la explicación se oye; en pantalla, una línea ── */
+.vf-why { font-size: 3.4em; color: var(--vf-text); }

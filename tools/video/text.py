@@ -159,6 +159,25 @@ def shorten_clause(sentence: str, max_words: int) -> str:
     return base + "…"
 
 
+def anchor_clause(sentence: str, max_words: int = 16) -> str:
+    """La «frase ancla» que se queda en pantalla: corta, y siempre un trozo literal de la frase.
+
+    El texto largo se oye; en pantalla solo queda lo que cabe de un vistazo. Por orden:
+      1. la frase entera, si cabe;
+      2. si la frase es «preámbulo: tesis», la tesis (lo que sigue a los dos puntos), con «…» delante;
+      3. el arranque de la frase hasta un límite de cláusula, con «…» detrás.
+    """
+    s = clean(sentence)
+    if n_words(s) <= max_words:
+        return s
+    m = re.search(r":\s+(?=\S)", s)
+    if m:
+        tesis = s[m.end():].strip()
+        if 5 <= n_words(tesis) <= max_words and not tesis.startswith(("«", '"', "“", "¿", "¡")):
+            return "…" + tesis
+    return shorten_clause(s, max_words)
+
+
 def for_speech(text: str) -> str:
     """Versión para la voz: mismos términos, sin signos que el motor lee mal.
 

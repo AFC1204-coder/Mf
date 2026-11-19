@@ -27,7 +27,7 @@ class Leccion(unittest.TestCase):
     def test_secuencia_didactica_fija(self):
         ep = SW.lesson_episode(self.b, 0)
         self.assertEqual(ep.sections, ["Idea", "Desarrollo", "Esquema", "Matiz", "Práctica", "Repaso"])
-        self.assertEqual(ep.scenes[0].kind, "portada")
+        self.assertEqual([s.kind for s in ep.scenes[:2]], ["gancho", "portada"])
         self.assertEqual(ep.scenes[-1].kind, "cierre")
         self.assertEqual(ep.counter, "LECCIÓN 1/3")
         # Las secciones aparecen en el orden del índice y sin volver atrás.
@@ -120,6 +120,68 @@ class Leccion(unittest.TestCase):
         otro = libro()
         otro.lessons[0].cuerpo += " Una frase nueva."
         self.assertNotEqual(a, SW.lesson_episode(otro, 0).fingerprint())
+
+
+class GanchoYTextoEnPantalla(unittest.TestCase):
+    def setUp(self):
+        self.b = libro()
+
+    def test_el_gancho_abre_con_la_pregunta_que_luego_se_contesta(self):
+        ep = SW.lesson_episode(self.b, 0)
+        gancho = ep.scenes[0]
+        pregunta = next(s for s in ep.scenes if s.kind == "pregunta")
+        self.assertEqual(gancho.view["question"], pregunta.view["question"])
+        self.assertIn(gancho.view["question"], gancho.narration)
+        self.assertIn(SW.PHRASES["pregunta_vuelve"], pregunta.narration)
+
+    def test_sin_pregunta_no_hay_gancho(self):
+        self.assertEqual(SW.lesson_episode(self.b, 0, with_quiz=False).scenes[0].kind, "portada")
+        self.assertFalse(any(s.kind == "gancho" for s in SW.lesson_episode(self.b, 2).scenes))
+
+    def test_el_corto_abre_con_la_pregunta_y_cierra_con_su_respuesta(self):
+        ep = SW.lesson_episode(self.b, 0, "corto")
+        ganchos = [s for s in ep.scenes if s.kind == "gancho"]
+        self.assertEqual(len(ganchos), 2)
+        self.assertIs(ep.scenes[0], ganchos[0])
+        q = self.b.lessons[0].pick_question()
+        self.assertIn(q.opciones[q.correcta].rstrip("."), ganchos[1].narration)
+        self.assertEqual(ep.scenes[-1].kind, "cierre")
+
+    def test_en_pantalla_solo_queda_una_frase_ancla(self):
+        for i in range(3):
+            for fmt in SW.FORMATS:
+                ep = SW.lesson_episode(self.b, i, fmt)
+                for s in ep.scenes:
+                    if s.kind in ("idea", "puente", "texto", "cierre"):
+                        self.assertLessEqual(T.n_words(s.view.get("text") or ""), SW.ANCHOR_MAX_WORDS + 5, s.view.get("text"))
+                avisos = [str(x) for x in lint_episode(ep, self.b) if "en pantalla" in x.message]
+                self.assertEqual(avisos, [])
+
+    def test_el_ancla_es_siempre_un_trozo_literal(self):
+        larga = "Una de las inversiones más contraintuitivas del autor respecto a la negociación convencional de toda la vida: el sí prematuro es una señal de peligro."
+        ancla = T.anchor_clause(larga, 16)
+        self.assertTrue(ancla.startswith("…"))
+        self.assertIn(ancla.lstrip("…"), larga)
+        sin_tesis = "La sabiduría convencional de ventas busca obtener síes pequeños que creen impulso hacia el sí final, la técnica del pie en la puerta de siempre."
+        corta = T.anchor_clause(sin_tesis, 16)
+        self.assertTrue(corta.endswith("…"))
+        self.assertTrue(sin_tesis.startswith(corta.rstrip("…")))
+        self.assertEqual(T.anchor_clause("Frase breve.", 16), "Frase breve.")
+
+    def test_la_escalera_acumula_los_pasos_ya_dados(self):
+        ep = SW.lesson_episode(self.b, 0)
+        pasos = [s for s in ep.scenes if s.section == "Desarrollo"]
+        if len(pasos) > 1:
+            self.assertEqual([len(s.view["trail"]) for s in pasos], list(range(len(pasos))))
+            for s in pasos:
+                for rotulo in s.view["trail"]:
+                    self.assertLessEqual(T.n_words(rotulo), SW.STEP_LABEL_WORDS)
+
+    def test_el_control_avisa_si_hay_demasiado_texto_en_pantalla(self):
+        ep = SW.lesson_episode(self.b, 0)
+        idea = next(s for s in ep.scenes if s.kind == "idea")
+        idea.view["text"] = "palabra " * 60
+        self.assertTrue(any("en pantalla" in x.message for x in lint_episode(ep, self.b)))
 
 
 class Bloques(unittest.TestCase):

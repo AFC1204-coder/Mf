@@ -138,25 +138,45 @@ def _stage_puente(v: dict[str, Any]) -> str:
     return (
         _kicker(v)
         + f'<div class="vf-ref"><span class="n">{_e(v.get("number"))}</span><span class="t">{_e(v.get("title"))}</span></div>'
-        + f'<div class="vf-big{_size_class(v.get("text", ""), 130, 210)}">{_e(v.get("text"))}</div>'
+        + f'<div class="vf-big{_size_class(v.get("text", ""), 70, 115)}">{_e(v.get("text"))}</div>'
         + _route(v.get("route"))
     )
 
 
 def _stage_idea(v: dict[str, Any]) -> str:
     sub = f'<div class="vf-sub">{_e(v["title"])}</div>' if v.get("title") else ""
-    return _kicker(v) + sub + f'<div class="vf-big{_size_class(v.get("text", ""), 130, 210)}">{_e(v.get("text"))}</div>'
+    return _kicker(v) + sub + f'<div class="vf-big{_size_class(v.get("text", ""), 70, 115)}">{_e(v.get("text"))}</div>'
 
 
 def _stage_texto(v: dict[str, Any]) -> str:
     chips = v.get("chips") or []
     on = int(v.get("chips_on") or 0)
     chips_html = "".join(f'<span class="vf-chip{" on" if i < on else ""}">{_e(c)}</span>' for i, c in enumerate(chips))
-    return (
-        _kicker(v)
-        + f'<div class="vf-card"><div class="vf-anchor{_size_class(v.get("text", ""), 150, 230)}">{_e(v.get("text"))}</div></div>'
-        + (f'<div class="vf-chips">{chips_html}</div>' if chips else "")
-    )
+    chips_html = f'<div class="vf-chips">{chips_html}</div>' if chips else ""
+    ancla = f'<div class="vf-anchor{_size_class(v.get("text", ""), 90, 140)}">{_e(v.get("text"))}</div>'
+    step = v.get("step")
+    if "trail" in v and step and int(step[1]) > 1:
+        # Escalera: pasos dados (rótulo corto), paso actual (la frase ancla) y los que faltan (solo el número).
+        k, n = int(step[0]), int(step[1])
+        filas = [
+            f'<div class="vf-rung done"><span class="n">{i + 1}</span><span class="t">{_e(t)}</span></div>'
+            for i, t in enumerate(v.get("trail") or [])
+        ]
+        filas.append(f'<div class="vf-rung on"><span class="n">{k}</span><div class="b">{ancla}{chips_html}</div></div>')
+        filas += [f'<div class="vf-rung todo"><span class="n">{i}</span><span class="t"></span></div>' for i in range(k + 1, n + 1)]
+        return _kicker(v) + f'<div class="vf-ladder">{"".join(filas)}</div>'
+    return _kicker(v) + f'<div class="vf-card">{ancla}</div>' + chips_html
+
+
+def _stage_gancho(v: dict[str, Any]) -> str:
+    """La pregunta que abre el episodio (y, en el formato corto, su respuesta al cerrarlo)."""
+    out = _kicker(v) + '<div class="vf-hook-mark">?</div>'
+    out += f'<h2 class="vf-hook{" small" if v.get("answer") else ""}{_size_class(v.get("question", ""), 110, 180)}">{_e(v.get("question"))}</h2>'
+    if v.get("answer"):
+        out += f'<div class="vf-hook-answer">{_e(v.get("answer"))}</div>'
+    elif v.get("note"):
+        out += f'<div class="vf-hook-note">{_e(v.get("note"))}</div>'
+    return out
 
 
 def _stage_esquema(v: dict[str, Any]) -> str:
@@ -223,7 +243,7 @@ def _stage_ruta(v: dict[str, Any]) -> str:
 def _stage_cierre(v: dict[str, Any]) -> str:
     out = _kicker(v)
     if v.get("text"):
-        out += f'<div class="vf-big{_size_class(v.get("text", ""), 130, 210)}">{_e(v.get("text"))}</div>'
+        out += f'<div class="vf-big{_size_class(v.get("text", ""), 70, 115)}">{_e(v.get("text"))}</div>'
     if v.get("next_title"):
         out += (
             f'<div class="vf-next"><small>SIGUIENTE · LECCIÓN {_e(v.get("next_number"))}</small>'
@@ -258,6 +278,7 @@ _STAGES = {
     "puente": _stage_puente,
     "idea": _stage_idea,
     "texto": _stage_texto,
+    "gancho": _stage_gancho,
     "esquema": _stage_esquema,
     "pregunta": _stage_pregunta,
     "mapa": _stage_mapa,

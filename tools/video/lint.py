@@ -34,6 +34,11 @@ class Issue:
         return f"[{self.level}] {self.where}: {self.message}"
 
 
+# Escenas cuyo contenido es una frase ancla (no una lista ni una pregunta con opciones).
+SOLO_ANCLA = ("idea", "puente", "texto", "cierre", "gancho", "libro")
+MAX_PALABRAS_EN_PANTALLA = 32
+
+
 def _sources(book: Book, episode: Episode) -> dict[str, str]:
     """Texto de referencia de cada origen que puede declarar un tramo de locución."""
     src: dict[str, str] = {"libro.descripcion": book.descripcion}
@@ -123,6 +128,12 @@ def lint_episode(episode: Episode, book: Book) -> list[Issue]:
         if scene.kind == "esquema":
             specs.append(scene.view.get("spec") or {})
             donde_spec.append(donde)
+        if scene.kind == "gancho" and not str(scene.view.get("question") or "").strip():
+            issues.append(Issue("error", donde, "gancho sin pregunta"))
+        if scene.kind in SOLO_ANCLA and scene.screen_words > MAX_PALABRAS_EN_PANTALLA:
+            issues.append(
+                Issue("aviso", donde, f"{scene.screen_words} palabras en pantalla (máximo orientativo {MAX_PALABRAS_EN_PANTALLA}): el texto largo debe oírse, no leerse")
+            )
         if scene.kind in ("idea", "puente", "texto") and not str(scene.view.get("text") or "").strip():
             issues.append(Issue("error", donde, "no hay texto que mostrar"))
         for beat in scene.beats:

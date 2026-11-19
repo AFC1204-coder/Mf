@@ -27,6 +27,8 @@
     el.innerHTML = '<svg viewBox="0 0 24 24">' + trazo + '</svg>';
   });
 
+  // El ajuste se hace con las tipografías ya cargadas: medir con la letra de reserva deja textos desbordados.
+  function ajustar() {
   if (stage) {
     // Con el contenido centrado, lo que sobra por arriba no cuenta en scrollHeight: se mide alineado arriba.
     stage.classList.add('top');
@@ -47,5 +49,11 @@
     root.dataset.escala = String(Math.round((px / base) * 100));
     root.dataset.desborda = stage.scrollHeight > stage.clientHeight + 1 ? '1' : '0';
   }
-  root.dataset.listo = '1';
+    root.dataset.listo = '1';
+  }
+  if (document.fonts && document.fonts.ready && document.fonts.ready.then) {
+    document.fonts.ready.then(ajustar, ajustar);
+  } else {
+    ajustar();
+  }
 })();
