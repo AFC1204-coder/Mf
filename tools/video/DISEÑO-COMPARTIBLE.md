@@ -162,8 +162,8 @@ Lección aprendida en el formato `clase`: una figura completa a 1080 px de ancho
 - **1.600 piezas**, 19 por libro de mediana (de 12 a 42). **0 con error** en el control de calidad; 0 ganchos repetidos.
 - Sin material: 129 lecciones sin pregunta que se entienda sola (23 %); 24 sin pieza `practica` (aplicación que no cabe o lección sin idea que poner detrás); 3 libros sin mapa; 1 lección sin pieza `idea`.
 - De dónde sale el gancho de la idea: `idea_clave` 64 % · arranque del cuerpo 21 % · idea redactada 11 % · título del esquema 4 %. En 3 lecciones abre la pregunta que la propia lección se hace. Longitud del gancho: 21 palabras de mediana.
-- Texto a la vez en pantalla: 14 palabras de mediana (el tope de una página de texto cinético); p95 de 27. Unas 100 piezas (6 %) tienen algún momento del esquema con más de 32 palabras a la vista (un lado largo de un contraste, con los títulos ya vistos): el control avisa.
-- Avisos más frecuentes: texto del corpus que alude a «la lección» (sobre todo «Esta lección no sustituye a un profesional»), ~4 % de las piezas.
+- Texto a la vez en pantalla: 14 palabras de mediana (el tope de una página de texto cinético); p95 de 27. 25 piezas (1,6 %) tienen algún momento del esquema con más de 32 palabras a la vista (un lado largo de un contraste): el control avisa.
+- Avisos más frecuentes: texto del corpus que alude a «la lección» (sobre todo «Esta lección no sustituye a un profesional»): 78 avisos, menos del 5 % de las piezas.
 - Cómputo: ~30 s por pieza y unos 22-26 fotogramas, en esta máquina y sin voz.
 - **Maquetación, medida en navegador** sobre 4.900 fotogramas de la muestra (2.500 en 9:16, 1.200 en 1:1 y 1.200 en 16:9): **0 desbordes**; la letra tuvo que reducirse en 142 (2,9 %), y en el peor caso quedó al 75 % (un rótulo de 27-28 px, lo único por debajo de 30).
 - **Sincronía, medida sobre un vídeo real** con el motor de pitidos: las 5 ráfagas de la escena comprobada cambian en el instante en que suena su primera palabra.
