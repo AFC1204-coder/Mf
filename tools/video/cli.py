@@ -29,7 +29,7 @@ from .frames import _assets_stamp
 from .lint import has_errors, lint_episode
 from .renderer import merge_videos, render_episode
 from .scriptwriter import FORMATS, SCRIPT_VERSION, Episode, book_series, export_script_markdown
-from .tts import get_tts_engine
+from .tts import DEFAULT_ENGINE, get_tts_engine
 from .tts.cache import CachedTTS
 
 VIDEO_DIR = Path(__file__).resolve().parent
@@ -124,7 +124,7 @@ def process_episode(ep: Episode, book: Book, base: Path, args: argparse.Namespac
     huella = {
         "guion": ep.fingerprint(),
         "version": SCRIPT_VERSION,
-        "motor": args.engine or "auto",
+        "motor": args.engine,
         "voz": args.voice or "",
         "fotogramas": _assets_stamp(),
         "foto": bool(photo),
@@ -202,7 +202,7 @@ def process_book(book: Book, args: argparse.Namespace, only_lesson: int | None =
     if not args.script_only:
         tts = get_tts_engine(engine=args.engine, voice=args.voice, gemini_model=args.gemini_model)
         if args.engine != "mudo":  # el silencio no merece caché
-            tts = CachedTTS(tts, cache / "voz" / (args.engine or "auto"))
+            tts = CachedTTS(tts, cache / "voz" / args.engine)
 
     print(f"\n«{book.titulo}»" + (f" — {book.autor}" if book.autor else "") + f" · {len(book.lessons)} lecciones · formato {args.format}")
     resultados: list[Result] = []
@@ -316,7 +316,7 @@ def _sample_voices(book: Book, index: int, args: argparse.Namespace) -> int:
     ep = lesson_episode(book, index, args.format)
     muestra = next(s.speech for s in ep.scenes if s.kind == "idea")
     tts = get_tts_engine(engine=args.engine, voice=args.voice, gemini_model=args.gemini_model)
-    out = OUTPUT / book.slug / "muestras"
+    out = OUTPUT / book.slug / "muestras" / args.engine
     print(f"Muestra: «{muestra[:90]}…»")
     for v in tts.sample_voices():
         res = tts.synthesize(muestra, out / f"muestra_{v}.mp3", voice=v)
@@ -328,7 +328,7 @@ def _sample_voices(book: Book, index: int, args: argparse.Namespace) -> int:
 def build_parser() -> argparse.ArgumentParser:
     comun = argparse.ArgumentParser(add_help=False)
     comun.add_argument("--format", choices=FORMATS, default="clase", help="clase: lección completa (3-5 min). corto: 60-90 s para redes.")
-    comun.add_argument("--engine", choices=["auto", "gemini", "edge", "mudo"], default=None, help="Motor de voz (auto: Gemini y, si falla, Edge). mudo: previsualización sin voz.")
+    comun.add_argument("--engine", choices=["edge", "kokoro", "mudo", "gemini", "auto"], default=None, help="Motor de voz. edge (por defecto): gratis, sin clave. kokoro: local y gratis. mudo: previsualización sin voz. gemini/auto: de pago, con clave.")
     comun.add_argument("--voice", default=None, help="Voz (Aoede, Charon… en Gemini; es-ES-AlvaroNeural… en Edge).")
     comun.add_argument("--gemini-model", default=None, choices=["gemini-2.5-flash-preview-tts", "gemini-2.5-pro-preview-tts"])
     comun.add_argument("--script-only", action="store_true", help="Solo guion (guion.md, script.json) y control de calidad; sin voz ni vídeo.")
@@ -371,6 +371,10 @@ def main(argv: list[str] | None = None) -> int:
         else:
             argv.insert(0, "leccion")
     args = build_parser().parse_args(argv)
+    if not args.engine:  # sin --engine: TTS_ENGINE o el motor gratuito por defecto
+        import os
+
+        args.engine = (os.getenv("TTS_ENGINE") or DEFAULT_ENGINE).strip().lower()
     if not hasattr(args, "merge"):
         args.merge = False
     if not hasattr(args, "only"):

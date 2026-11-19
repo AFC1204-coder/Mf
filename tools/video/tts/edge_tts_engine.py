@@ -14,6 +14,13 @@ EDGE_VOICES = [
     "es-ES-AlvaroNeural",
     "es-ES-ElviraNeural",
     "es-ES-XimenaNeural",
+    # Voces multilingües de última generación: hablan español y pronuncian bien los títulos y
+    # términos en inglés («Never Split the Difference»). Su acento en español no es peninsular.
+    "en-US-AndrewMultilingualNeural",
+    "en-US-BrianMultilingualNeural",
+    "en-US-AvaMultilingualNeural",
+    "en-US-EmmaMultilingualNeural",
+    "fr-FR-VivienneMultilingualNeural",
 ]
 
 

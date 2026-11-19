@@ -1,0 +1,4 @@
+# Opcional: voz local y gratuita Kokoro-82M (Apache 2.0) con --engine kokoro.
+# Variante ONNX: sin PyTorch, vale para Python 3.10-3.13. El modelo se descarga solo la primera vez.
+kokoro-onnx>=0.4.9
+numpy
