@@ -134,6 +134,17 @@ class GanchoYTextoEnPantalla(unittest.TestCase):
         self.assertIn(gancho.view["question"], gancho.narration)
         self.assertIn(SW.PHRASES["pregunta_vuelve"], pregunta.narration)
 
+    def test_el_cierre_deja_abierta_la_pregunta_del_siguiente_episodio(self):
+        for i in range(len(self.b.lessons) - 1):
+            sig_q = self.b.lessons[i + 1].pick_question()
+            cierre = SW.lesson_episode(self.b, i).scenes[-1]
+            if sig_q:
+                self.assertTrue(cierre.narration.endswith(sig_q.texto))
+            else:
+                self.assertNotIn("next_question", cierre.view)
+        q1 = self.b.lessons[0].pick_question()
+        self.assertTrue(SW.presentation_episode(self.b).scenes[-1].narration.endswith(q1.texto))
+
     def test_sin_pregunta_no_hay_gancho(self):
         self.assertEqual(SW.lesson_episode(self.b, 0, with_quiz=False).scenes[0].kind, "portada")
         self.assertFalse(any(s.kind == "gancho" for s in SW.lesson_episode(self.b, 2).scenes))

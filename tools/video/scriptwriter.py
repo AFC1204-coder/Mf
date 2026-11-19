@@ -597,6 +597,11 @@ def lesson_episode(book: Book, index: int, fmt: str = "clase", with_quiz: bool =
         sig = book.lessons[index + 1]
         cierre_view.update({"next_number": k + 1, "next_title": sig.titulo})
         cierre_parts.append(Part(PHRASES["siguiente"].format(titulo=sig.titulo.rstrip(".")), "plantilla+titulos"))
+        # El episodio termina con la pregunta que abrirá el siguiente: el hilo entre episodios.
+        sig_q = sig.pick_question() if (clase and with_quiz) else None
+        if sig_q:
+            cierre_parts.append(Part(sig_q.texto, "pregunta.texto"))
+            cierre_view["next_question"] = True
     scenes.append(Scene("cierre", "", cierre_view, cierre_parts, pause_after_s=1.2))
 
     if not clase:
@@ -688,11 +693,13 @@ def presentation_episode(book: Book, cover_path: str | None = None) -> Episode:
         beats = [Beat({"shown": i + 1}, at_word=min(palabras - 1, int(i * palabras / n))) for i in range(n)]
         scenes.append(Scene("ruta", "Recorrido", dict(base), parts, beats, pause_after_s=2.5))
 
+    q1 = book.lessons[0].pick_question() if book.lessons else None  # la pregunta que abrirá la lección 1
     scenes.append(
         Scene(
             "cierre",
             "",
             {
+                "next_question": bool(q1),
                 "kicker": "EMPEZAMOS",
                 "text": "",
                 "final": False,
@@ -703,7 +710,8 @@ def presentation_episode(book: Book, cover_path: str | None = None) -> Episode:
                 "next_number": 1,
                 "next_title": titulos[0],
             },
-            [Part(PHRASES["empezamos"].format(titulo=titulos[0].rstrip(".")), "plantilla+titulos")],
+            [Part(PHRASES["empezamos"].format(titulo=titulos[0].rstrip(".")), "plantilla+titulos")]
+            + ([Part(q1.texto, "pregunta.texto")] if q1 else []),
             pause_after_s=1.2,
         )
     )

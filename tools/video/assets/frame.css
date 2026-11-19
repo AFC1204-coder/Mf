@@ -251,3 +251,5 @@ body.vf.k-gancho.tone-ok .vf-hook-mark { display: none; }
 
 /* ── pregunta: la explicación se oye; en pantalla, una línea ── */
 .vf-why { font-size: 3.4em; color: var(--vf-text); }
+.vf-next .q { display: block; margin-top: 0.9em; font-size: 2.5em; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--vf-text2); }
+.vf-next .q::before { content: '?'; display: inline-flex; align-items: center; justify-content: center; width: 1.5em; height: 1.5em; margin-right: 0.6em; border-radius: 50%; background: var(--accent); color: var(--vf-bg); font-weight: 700; }

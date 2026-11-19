@@ -247,7 +247,9 @@ def _stage_cierre(v: dict[str, Any]) -> str:
     if v.get("next_title"):
         out += (
             f'<div class="vf-next"><small>SIGUIENTE · LECCIÓN {_e(v.get("next_number"))}</small>'
-            f'<b>{_e(v.get("next_title"))}</b></div>'
+            f'<b>{_e(v.get("next_title"))}</b>'
+            + ('<span class="q">Empieza con una pregunta</span>' if v.get("next_question") else "")
+            + "</div>"
         )
     related = v.get("related") or []
     if related:

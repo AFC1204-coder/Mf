@@ -419,7 +419,9 @@ def render_episode(
         raise RuntimeError(f"ffmpeg falló al montar {out_mp4.name}: {res.stderr.strip()[-600:]}")
 
     thumb = out_mp4.with_name("miniatura.png")
-    shutil.copyfile(pngs[0], thumb)
+    # La miniatura es la portada (título y lugar en la serie), no el gancho que la precede.
+    portada = next((png for st, png in zip(states, pngs) if episode.scenes[st.scene_index].kind in ("portada", "libro")), pngs[0])
+    shutil.copyfile(portada, thumb)
     return RenderInfo(out_mp4, round(total_s, 2), chapters, voices, len(set(pngs)), thumb)
 
 
