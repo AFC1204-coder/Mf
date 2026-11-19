@@ -247,7 +247,7 @@ def process_compartir(book: Book, args: argparse.Namespace, only_lesson: int | N
     plan = K.plan_libro(book, _tipos(args), solo_leccion=only_lesson)
     piezas = plan.piezas
     if args.only and only_lesson is None:
-        quiero = {ep.number for ep in _select([Episode(key="", kind="leccion", format="", title="", number=i, total=0, book_id="", book_title="", book_author="", eje="") for i in range(0, len(book.lessons) + 1)], args.only)}
+        quiero = _numeros(args.only)  # 0 = la pieza del libro, 1…N = las de esa lección
         piezas = [p for p in piezas if p.leccion_n in quiero]
 
     tts = None
@@ -295,7 +295,7 @@ def _write_manifiesto(book: Book, plan: K.Plan, resultados: list[Result], base: 
         hecho = video.exists()
         items.append(
             {
-                "orden": n, "clave": clave, "tipo": p.tipo, "leccion": p.leccion_n, "leccion_id": p.lesson_id,
+                "orden": n, "clave": clave, "tipo": p.tipo, "arco": p.arco, "leccion": p.leccion_n, "leccion_id": p.lesson_id,
                 "titulo": p.titulo_pub, "gancho": p.gancho, "etiquetas": p.etiquetas_pub,
                 "video": f"{clave}/video.mp4" if hecho else None, "subtitulos": f"{clave}/video.srt" if hecho else None,
                 "miniatura": f"{clave}/miniatura.png" if hecho else None, "publicacion": f"{clave}/publicacion.txt",
@@ -320,10 +320,8 @@ def _write_manifiesto(book: Book, plan: K.Plan, resultados: list[Result], base: 
     (base / "manifiesto.md").write_text("\n".join(md) + "\n", encoding="utf-8")
 
 
-def _select(episodes: list[Episode], only: str | None) -> list[Episode]:
-    """`--only 0,3-5,99`: 0 = presentación, 1…N = lecciones, 99 = repaso."""
-    if not only:
-        return episodes
+def _numeros(only: str) -> set[int]:
+    """«0,3-5,99» → {0, 3, 4, 5, 99}."""
     quiero: set[int] = set()
     for trozo in only.split(","):
         trozo = trozo.strip()
@@ -332,6 +330,14 @@ def _select(episodes: list[Episode], only: str | None) -> list[Episode]:
             quiero.update(range(int(a), int(b) + 1))
         elif trozo:
             quiero.add(int(trozo))
+    return quiero
+
+
+def _select(episodes: list[Episode], only: str | None) -> list[Episode]:
+    """`--only 0,3-5,99`: 0 = presentación, 1…N = lecciones, 99 = repaso."""
+    if not only:
+        return episodes
+    quiero = _numeros(only)
 
     def numero(ep: Episode) -> int:
         return ep.number if ep.kind == "leccion" else (0 if ep.kind == "presentacion" else 99)
@@ -507,7 +513,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("libro", parents=[comun], help="Serie completa: presentación + lecciones + repaso.")
     p.add_argument("query", help="Título (exacto o parcial) o id del libro.")
-    p.add_argument("--only", default=None, help="Solo estos episodios: 0 = presentación, 1…N = lecciones, 99 = repaso (ej. 0,3-5,99).")
+    p.add_argument("--only", default=None, help="Solo estos episodios: 0 = presentación, 1…N = lecciones, 99 = repaso (ej. 0,3-5,99). Con --format compartir: 0 = la pieza del libro, 1…N = las piezas de esa lección.")
     p.add_argument("--merge", action="store_true", help="Une además todos los episodios en libro-completo.mp4, con capítulos.")
 
     p = sub.add_parser("biblioteca", parents=[comun], help="Recorre la biblioteca y genera las series que faltan.")

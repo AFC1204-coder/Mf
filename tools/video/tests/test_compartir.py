@@ -170,6 +170,55 @@ class PiezasTest(unittest.TestCase):
         self.assertEqual(p.scenes[-2].narration, "El matiz. No toda intuición falla.")
         self.assertEqual(p.scenes[-1].narration, K.FORMULAS["cta"])
 
+    def test_el_cierre_retoma_el_gancho(self):
+        for p in self.plan.piezas:
+            cierre = p.scenes[-1]
+            self.assertEqual(cierre.kind, "c-cierre")
+            self.assertTrue(cierre.view["recuerda"], p.key)
+        idea = self.plan.piezas[1]
+        self.assertEqual(idea.scenes[-1].view["recuerda"], idea.gancho)  # un solo mensaje: el que abrió la pieza
+        pregunta = next(x for x in self.plan.piezas if x.tipo == "pregunta")
+        self.assertEqual(pregunta.scenes[-1].view["recuerda"], "Que puede ser equivocada.")  # la pregunta se cierra con su respuesta
+
+    def test_el_patron_visual_sale_de_la_plantilla_de_la_figura(self):
+        self.assertEqual(K.patron_visual({"plantilla": "comparar"}), "contraste")
+        self.assertEqual(K.patron_visual({"plantilla": "pasos"}), "cadena")
+        self.assertEqual(K.patron_visual({"plantilla": "ciclo"}), "silueta")
+        figura = [s for s in self.plan.piezas[1].scenes if s.kind == "c-figura"]
+        self.assertTrue(all(s.view["patron"] == "contraste" for s in figura))
+        self.assertEqual([s.view["mode"] for s in figura], ["titulo", "pieza", "pieza", "pie"])  # estructura entera → piezas → pie
+
+    def test_arco_completo_sencillo_o_ninguno(self):
+        self.assertEqual(self.plan.piezas[1].arco, "completo")
+        sin_figura = next(x for x in self.plan.piezas if x.key.startswith("idea-03"))
+        self.assertEqual(sin_figura.arco, "sin_esquema")
+        self.assertEqual([s.kind for s in sin_figura.scenes], ["c-frase", "c-credito", "c-cierre"])  # la lección 3 no tiene matiz
+        # Sin idea redactada y con un arranque que solo habla del libro: abre el esquema, no una frase hueca.
+        meta = {"l-1": {"idea_clave": "", "cita_memorable": "", "cuerpo": "Ana Autora dedica una sección entera a este asunto. Luego lo desarrolla."}}
+        p = K.pieza_idea(_libro(**meta), 0)
+        self.assertEqual(p.arco, "esquema_primero")
+        self.assertEqual(p.scenes[0].kind, "c-figura")
+        self.assertEqual(p.gancho, "Rápido y despacio")
+        self.assertEqual(p.scenes[-1].view["recuerda"], "Dos modos de responder.")
+        self.assertEqual([i for i in L.lint_pieza(p, _libro(**meta)) if i.level == "error"], [])
+        # …y si tampoco hay figura que recorrer, no hay pieza (ni práctica: no habría idea que poner detrás).
+        plan = K.plan_libro(_libro(diagramas={}, **meta))
+        self.assertEqual({(o.tipo, o.leccion_n) for o in plan.omitidas if o.leccion_n == 1}, {("idea", 1), ("practica", 1)})
+
+    def test_si_la_leccion_se_hace_una_pregunta_la_idea_la_resuelve(self):
+        libro = _libro(**{"l-1": {"cuerpo": "¿Por qué fallamos al responder deprisa? La respuesta rápida suele ser la equivocada."}})
+        p = K.pieza_idea(libro, 0)
+        self.assertEqual(p.gancho, "¿Por qué fallamos al responder deprisa?")
+        self.assertEqual(p.scenes[0].view["style"], "pregunta")
+        self.assertEqual(p.scenes[1].narration, "Lo primero que se nos ocurre no siempre es lo cierto.")
+        self.assertEqual(p.scenes[-1].view["recuerda"], p.scenes[1].narration)  # se lleva la respuesta, no la pregunta
+
+    def test_el_arranque_literal_no_cierra_comillas_ni_reescribe(self):
+        texto = "La hipótesis nació de una asociación («menos infecciones, más alergias, según se dijo entonces») y de poco más que eso, la verdad sea dicha."
+        corto = K.arranque_literal(texto, 12)
+        self.assertTrue(texto.startswith(corto.rstrip("…")))
+        self.assertEqual(K.arranque_literal("Corto y claro.", 12), "Corto y claro.")
+
     def test_la_idea_redactada_por_la_app_no_se_entrecomilla(self):
         p = next(x for x in self.plan.piezas if x.key.startswith("idea-03"))
         self.assertEqual(p.gancho_origen, "leccion.cita_memorable")
@@ -267,6 +316,12 @@ class ControlTest(unittest.TestCase):
         self.assertIn("no es literal", mensajes)
         self.assertIn("no coincide con la locución", mensajes)
 
+    def test_rechaza_un_cierre_que_no_es_literal(self):
+        p = self.plan.piezas[1]
+        p.scenes[-1].view["recuerda"] = "Piensa siempre despacio."
+        mensajes = " ".join(str(i) for i in L.lint_pieza(p, self.libro) if i.level == "error")
+        self.assertIn("mensaje de cierre no es literal", mensajes)
+
     def test_rechaza_una_pieza_sin_matiz_o_sin_credito(self):
         p = self.plan.piezas[1]
         p.scenes = [s for s in p.scenes if s.view.get("style") != "matiz" and s.kind != "c-credito"]
@@ -309,6 +364,18 @@ class FotogramasTest(unittest.TestCase):
         cuerpo, _ = CF._stage_frase(s.view, "UNA IDEA")
         self.assertEqual(cuerpo.count('class="w off"'), len(s.view["words"]) - s.view["shown"])
         self.assertEqual(cuerpo.count('class="w hot"'), s.view["shown"])
+
+    def test_contraste_y_cadena_ensenan_la_estructura_y_abren_solo_la_pieza_activa(self):
+        figura = [s for s in self.plan.piezas[1].scenes if s.kind == "c-figura"]
+        inicio, _ = CF._stage_figura(figura[0].view, "")
+        self.assertIn("p-contraste", inicio)
+        self.assertEqual(inicio.count('class="cs-pan visto'), 2)  # antes de explicar: los dos lados, solo con su título
+        self.assertNotIn("<li>", inicio)
+        segunda, _ = CF._stage_figura(figura[2].view, "")
+        self.assertEqual(segunda.count('class="cs-pan on'), 1)
+        self.assertIn("<li>Cuesta</li>", segunda)  # el lado activo, entero y literal
+        self.assertNotIn("<li>Inmediata</li>", segunda)  # el ya visto queda en su título
+        self.assertNotIn("cs-dg", segunda)  # este patrón no necesita la silueta
 
     def test_aspectos(self):
         p = self.plan.piezas[1]

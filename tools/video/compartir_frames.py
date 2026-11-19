@@ -65,16 +65,14 @@ def _stage_frase(v: dict[str, Any], tag: str) -> tuple[str, str]:
     puntos = ""
     if len(paginas) > 1:
         puntos = '<div class="cs-pages">' + "".join(f'<i class="{"on" if i == pi else "done" if i < pi else ""}"></i>' for i in range(len(paginas))) + "</div>"
-    marca = '<div class="cs-qmark">?</div>' if v.get("style") == "pregunta" else ""
-    cuerpo = marca + _kicker(rotulo, tema=bool(v.get("tema"))) + f'<p class="cs-kin{talla}">{" ".join(trozos)}</p>' + puntos
+    cuerpo = _kicker(rotulo, tema=bool(v.get("tema"))) + f'<p class="cs-kin{talla}">{" ".join(trozos)}</p>' + puntos
     return cuerpo, ("solo" if visto == 0 else "")
 
 
 def _stage_pausa(v: dict[str, Any], tag: str) -> tuple[str, str]:
     cd = int(v.get("countdown") or 0)
     return (
-        '<div class="cs-qmark">?</div>'
-        + f'<p class="cs-q-small">{_e(v.get("question"))}</p>'
+        f'<p class="cs-q-small">{_e(v.get("question"))}</p>'
         + f'<div class="cs-think"><b>{cd}</b><span>{_e(v.get("kicker"))}</span></div>',
         "",
     )
@@ -94,11 +92,52 @@ def _tarjeta(v: dict[str, Any]) -> str:
     )
 
 
+def _panel(p: dict[str, Any], j: int, estado: str) -> str:
+    """Un lado de un contraste o un eslabón de una cadena. `estado`: on (entero) · visto (solo el título) · falta."""
+    cuerpo = ""
+    if estado == "on":
+        desc = f'<span>{_e(p.get("d"))}</span>' if p.get("d") else ""
+        items = "".join(f"<li>{_e(x)}</li>" for x in p.get("items") or [])
+        cuerpo = desc + (f"<ul>{items}</ul>" if items else "")
+    return f'<div class="cs-pan {estado} tn-{_e(p.get("tone") or "a")}"><i>{j + 1}</i><div><b>{_e(p.get("t"))}</b>{cuerpo}</div></div>'
+
+
+def _recapitula(v: dict[str, Any]) -> bool:
+    """¿Caben a la vez el título, los títulos de las piezas y el pie sin pasar del presupuesto de lectura?"""
+    total = T.n_words(str(v.get("title") or "")) + T.n_words(str(v.get("pie") or "")) + sum(T.n_words(str(x.get("t") or "")) for x in v.get("pieces") or [])
+    return total <= 30
+
+
+def _patron(v: dict[str, Any]) -> str:
+    """Contraste (dos paneles enfrentados) o cadena (eslabones que se encadenan), con los rótulos literales de la figura.
+
+    Antes de explicar nada se ven todos los títulos (la estructura entera); después, la pieza de la que se
+    habla se abre y las demás quedan en su título: se ve dónde estamos y qué se ha dicho ya.
+    """
+    pz = v.get("pieces") or []
+    modo = v.get("mode") or "titulo"
+    activa = int(v.get("active") if v.get("active") is not None else -1)
+    filas = []
+    for j, p in enumerate(pz):
+        if modo == "pieza":
+            estado = "on" if j == activa else "visto" if j < activa else "falta"
+        else:
+            estado = "visto"
+        filas.append(_panel(p, j, estado))
+    pie = f'<p class="cs-pie">{_e(v.get("pie"))}</p>' if modo == "pie" else ""
+    if modo == "pie" and not _recapitula(v):
+        return pie  # con el pie, la recapitulación de títulos ya sería demasiado texto a la vez
+    return f'<div class="cs-pat p-{_e(v.get("patron"))} n-{len(pz)}">{"".join(filas)}</div>{pie}'
+
+
 def _stage_figura(v: dict[str, Any], tag: str) -> tuple[str, str]:
     spec = v.get("spec") or {}
     modo = v.get("mode") or "titulo"
-    silueta = f'<div class="cs-sil"><div class="dg" data-plantilla="{_e(spec.get("plantilla"))}"><div id="cs-dg"></div></div></div>'
     titulo = f'<h2 class="cs-fig-title">{_e(v.get("title"))}</h2>' if v.get("title") else ""
+    if v.get("patron") in ("contraste", "cadena"):
+        # Mientras se recorre, el título de la figura ya se ha visto: el sitio es para la pieza.
+        return _kicker(v.get("kicker")) + ("" if modo == "pieza" else titulo) + _patron(v), f"m-{modo} con-patron"
+    silueta = f'<div class="cs-sil"><div class="dg" data-plantilla="{_e(spec.get("plantilla"))}"><div id="cs-dg"></div></div></div>'
     if modo == "pieza":
         resto = _tarjeta(v)
     elif modo == "pie":
@@ -136,10 +175,14 @@ def _stage_nodo(v: dict[str, Any], tag: str) -> tuple[str, str]:
 def _stage_cierre(v: dict[str, Any], tag: str) -> tuple[str, str]:
     autor = f'<span>{_e(v.get("author"))}</span>' if v.get("author") else ""
     seguir = f'<div class="cs-seguir">{_e(v.get("cta"))}</div>' if v.get("cta") else ""
+    recuerda = ""
+    if v.get("recuerda"):
+        recuerda = f'<div class="cs-recuerda"><small>{_e(v.get("recuerda_rotulo"))}</small><p>{_e(v.get("recuerda"))}</p></div>'
     return (
-        '<div class="cs-mark">§</div>'
+        recuerda
+        + '<div class="cs-lockup"><div class="cs-mark">§</div><div>'
         + f'<div class="cs-wordmark">{_e(v.get("brand"))}</div>'
-        + f'<div class="cs-lema">{_e(v.get("lema"))}</div>'
+        + f'<div class="cs-lema">{_e(v.get("lema"))}</div></div></div>'
         + f'<div class="cs-cta">{_e(v.get("said"))}</div>'
         + seguir
         + f'<div class="cs-from"><b>{_e(v.get("title"))}</b>{autor}</div>',
@@ -182,18 +225,24 @@ def palabras_en_pantalla(kind: str, view: dict[str, Any]) -> int:
         return T.n_words(str(v.get("question") or ""))
     if kind == "c-figura":
         titulo = T.n_words(str(v.get("title") or ""))
+        if v.get("patron") in ("contraste", "cadena") and v.get("mode") == "pieza":
+            titulo = 0
+        pz = v.get("pieces") or []
+        j = int(v.get("active") if v.get("active") is not None else -1)
+        # Con patrón (contraste, cadena) los títulos de las piezas ya vistas siguen a la vista.
+        con_patron = v.get("patron") in ("contraste", "cadena")
         if v.get("mode") == "pieza":
-            pz = v.get("pieces") or []
-            j = int(v.get("active") if v.get("active") is not None else -1)
             p = pz[j] if 0 <= j < len(pz) else {}
-            return titulo + sum(T.n_words(str(x)) for x in [p.get("t"), p.get("d"), *(p.get("items") or [])] if x)
-        return titulo + (T.n_words(str(v.get("pie") or "")) if v.get("mode") == "pie" else 0)
+            vistos = sum(T.n_words(str(x.get("t") or "")) for x in pz[:j]) if con_patron else 0
+            return titulo + vistos + sum(T.n_words(str(x)) for x in [p.get("t"), p.get("d"), *(p.get("items") or [])] if x)
+        rotulos = sum(T.n_words(str(x.get("t") or "")) for x in pz) if con_patron and (v.get("mode") != "pie" or _recapitula(v)) else 0
+        return titulo + rotulos + (T.n_words(str(v.get("pie") or "")) if v.get("mode") == "pie" else 0)
     if kind == "c-nodo":
         return T.n_words(str(v.get("label") or "")) + T.n_words(str(v.get("text") or ""))
     if kind == "c-credito":
         return T.n_words(str(v.get("title") or "")) + T.n_words(str(v.get("author") or ""))
     if kind == "c-cierre":
-        return T.n_words(str(v.get("said") or "")) + T.n_words(str(v.get("cta") or ""))
+        return T.n_words(str(v.get("said") or "")) + T.n_words(str(v.get("cta") or "")) + T.n_words(str(v.get("recuerda") or ""))
     if kind == "c-portada":
         return T.n_words(str(v.get("text") or ""))
     return 0

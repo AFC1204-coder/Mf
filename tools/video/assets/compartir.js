@@ -87,7 +87,8 @@
       while (sil && stage.scrollHeight > stage.clientHeight + 1 && alto > minAlto) {
         alto -= 12; sil.style.height = alto + 'px';
       }
-      while (stage.scrollHeight > stage.clientHeight + 1 && px > base * MIN_ESCALA) {
+      // También a lo ancho: una palabra muy larga en letra grande puede no caber en la línea.
+      while ((stage.scrollHeight > stage.clientHeight + 1 || stage.scrollWidth > stage.clientWidth + 1) && px > base * MIN_ESCALA) {
         px -= 0.1;
         stage.style.fontSize = px + 'px';
       }

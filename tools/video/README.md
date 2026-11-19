@@ -37,6 +37,27 @@ El índice (Idea · Desarrollo · Esquema · Matiz · Práctica · Repaso) está
 
 `--format corto` (60-100 s, para redes): abre con la pregunta, da la idea, las frases que abren hasta tres bloques (con el mini-esquema), el esquema con sus títulos y su pie, la primera frase del matiz y de la práctica, **la respuesta a la pregunta** y la siguiente lección.
 
+### Piezas compartibles (`--format compartir`, 30-60 s cada una)
+
+Los dos formatos de arriba son una serie: tienen sentido si ya estás en la biblioteca. Este es lo contrario: **piezas sueltas que se entienden sin haber visto nada más**, pensadas para Shorts, TikTok, Reels, LinkedIn, X o WhatsApp. Sin «lección 3 de 8», sin índice y sin «venimos de…». El porqué de cada decisión está en [`DISEÑO-COMPARTIBLE.md`](DISEÑO-COMPARTIBLE.md).
+
+| Pieza | Qué cuenta | De qué campos sale | Cuántas |
+|---|---|---|---|
+| **`idea`** *(la principal)* | La idea, en frío → de qué libro sale → su esquema, pieza a pieza → el matiz → marca | `idea_clave` (o la idea redactada, o el arranque del cuerpo), `datos/diagramas.json`, `autocorreccion` | Una por lección |
+| `pregunta` | Una pregunta → 3 s para pensar → la respuesta y su porqué → libro → el matiz → marca | `preguntas` (la opción correcta y el arranque de la explicación; **las opciones falsas no salen**) | Una por lección que tenga una pregunta que se entienda sola (~3 de cada 4) |
+| `practica` | Qué probar → la idea que hay detrás → libro → el matiz → marca | `aplicacion_practica`, la idea, `autocorreccion` | Una por lección |
+| `libro` | El libro en una frase → sus ideas centrales → la frase que las une → marca | `datos/mapas.json` (cierre y nodos) | Una por libro con mapa |
+
+Lo que tienen en común, y lo que las distingue del resto del generador:
+
+- **Todo lo que se oye se ve**, en grande y a la vez que se dice: el texto entra por ráfagas de 2-4 palabras, en páginas de 14 palabras como mucho. No hay barra de subtítulos: la pantalla es el subtítulo y la pieza se sigue sin sonido. El `.srt` se entrega igualmente.
+- **Toda pieza de una lección lleva su matiz y su crédito.** El libro y el autor están en el pie desde el primer fotograma y se dicen una vez; el matiz se dice siempre (y si la lección trae una salvedad de seguridad —«no sustituye a un profesional»— no se recorta nunca). Una pieza a la que le falte cualquiera de los dos no se renderiza.
+- **La pieza tiene arco:** tensión (la idea en frío, o la pregunta que la lección se hace) → de dónde sale → desarrollo que se ve → giro (el matiz) → «Quédate con esto», que repite el gancho. Si la lección no da para tanto, la pieza se simplifica (sin esquema, o abriendo con el esquema) o no sale; `manifiesto.json` dice qué `arco` tiene cada una.
+- **El esquema se ve con el patrón que le va**, siempre con sus rótulos literales: un **contraste** de dos paneles (`comparar`), una **cadena** de eslabones (`pasos`, `piramide`) o la **silueta** de la figura con insignias y tarjeta grande (`mapa`, `ciclo`, `matriz`). Primero la estructura entera, después pieza a pieza y, al final, su pie.
+- **Las únicas frases que no son del corpus** son las once de `FORMULAS` en `compartir.py` («Del libro X, de Y.», «El matiz.», «La respuesta:», «En una imagen: …», «Más ideas como esta, en Mente Fría.»…). El control de calidad rechaza cualquier otra.
+- **Cada libro se reconoce:** el acento es el de su eje y el motivo del fondo sale del libro; todas sus piezas repiten la misma estructura.
+- **Dos piezas del mismo libro no abren igual**, y `manifiesto.json` propone un orden de publicación que alterna tipos y no junta dos piezas de la misma lección.
+
 ### Un libro
 
 - `00-presentacion`: qué libro es (descripción), sus ideas centrales (el mapa, nodo a nodo) y el recorrido por lecciones.
@@ -104,13 +125,31 @@ tools/video/.venv/bin/python -m tools.video.cli libro "Fluir" --script-only
 tools/video/.venv/bin/python -m tools.video.cli leccion "El No como Herramienta" --engine mudo
 ```
 
+```bash
+# Piezas compartibles de un libro (todas), sin voz, para revisar el aspecto
+tools/video/.venv/bin/python -m tools.video.cli libro "Decisive" --format compartir --engine mudo
+```
+
+```bash
+# Solo las piezas «idea» y «libro», cuadradas, con voz
+tools/video/.venv/bin/python -m tools.video.cli libro "Decisive" --format compartir --piezas idea,libro --aspecto 1:1
+```
+
+```bash
+# Las piezas de una lección · las de los 5 libros siguientes sin terminar
+tools/video/.venv/bin/python -m tools.video.cli leccion "Ampliar las opciones" --format compartir
+tools/video/.venv/bin/python -m tools.video.cli biblioteca --format compartir --limit 5
+```
+
 | Opción | Qué hace |
 |---|---|
-| `--format clase\|corto` | Lección completa (por defecto) o pieza de 60-90 s. |
+| `--format clase\|corto\|compartir` | Lección completa (por defecto), resumen de 60-90 s dentro de la serie, o piezas sueltas para compartir. |
+| `--piezas idea,pregunta,practica,libro` *(compartir)* | Qué tipos de pieza generar. Por defecto, todos. |
+| `--aspecto 9:16\|1:1\|16:9` *(compartir)* | Vertical (por defecto), cuadrado u horizontal. Cada aspecto va a su carpeta. |
 | `--engine edge\|kokoro\|mudo\|gemini\|auto` | Motor de voz (ver la tabla de arriba). Sin la opción: `edge`, o lo que diga `TTS_ENGINE`. |
 | `--voice <nombre>` | Una voz del motor elegido: `es-ES-AlvaroNeural`, `en-US-AndrewMultilingualNeural`… (Edge) · `em_alex`, `ef_dora`… (Kokoro) · `Aoede`, `Charon`… (Gemini). |
 | `--script-only` | Solo `guion.md`, `script.json` y control de calidad. |
-| `--only 0,3-5,99` *(libro)* | Solo esos episodios: 0 = presentación, 1…N = lecciones, 99 = repaso. |
+| `--only 0,3-5,99` *(libro)* | Solo esos episodios: 0 = presentación, 1…N = lecciones, 99 = repaso. Con `compartir`: 0 = la pieza del libro, 1…N = las piezas de esa lección (el manifiesto solo se escribe con el libro entero). |
 | `--merge` *(libro, biblioteca)* | Une los episodios en `libro-completo.mp4` con capítulos. |
 | `--eje`, `--limit`, `--list` *(biblioteca)* | Filtra por eje, limita libros por ejecución o solo lista lo pendiente. |
 | `--no-quiz` | Lecciones sin pregunta: ni gancho, ni repaso, ni pregunta del siguiente episodio. |
@@ -145,6 +184,23 @@ libro-completo.mp4    (con --merge) + libro-completo.txt con los capítulos
 99-repaso/
 ```
 
+Con `--format compartir`: `tools/video/output/<libro>/compartir/<aspecto>/`
+
+```
+manifiesto.json       todas las piezas en el orden de publicación sugerido: título, gancho, etiquetas,
+                      duración, estado y rutas; y las que no han salido, con su motivo
+manifiesto.md         lo mismo, para leer
+libro/                la pieza del libro
+idea-03-contrastar-los-supuestos-con-la-realidad/
+    video.mp4         H.264/AAC, 30 fps, texto en el propio fotograma, barra de progreso
+    video.srt         subtítulos por frase, para subirlos aparte
+    miniatura.png     portada pensada para verse pequeña: el gancho, el libro y la marca
+    publicacion.txt   título, descripción (idea, matiz y crédito) y etiquetas
+    guion.md          qué se oye, qué se ve y de qué campo sale cada tramo
+    script.json       el guion estructurado
+pregunta-03-…/  practica-03-…/
+```
+
 ---
 
 ## Cómo está hecho
@@ -156,6 +212,8 @@ libro-completo.mp4    (con --merge) + libro-completo.txt con los capítulos
 | `guia.py` | Las piezas de la figura de la lección y en qué palabra de la locución se nombra cada una. |
 | `scriptwriter.py` | La secuencia didáctica de cada episodio y la serie del libro. Las fórmulas fijas están en `PHRASES`. |
 | `lint.py` | Control de calidad: fidelidad literal al corpus, preguntas válidas, esquemas dibujables, duración. |
+| `compartir.py` | Las piezas compartibles: qué texto se elige (siempre literal), páginas y ráfagas del texto cinético, plan y orden de publicación de un libro. Las fórmulas fijas están en `FORMULAS`. |
+| `compartir_frames.py` + `assets/compartir.*` | Los fotogramas de las piezas: sin cabecera de aplicación, zona segura para la interfaz de las redes, tres aspectos. |
 | `frames.py` + `assets/` | Cada estado de cada escena en HTML, capturado con Chrome sin cabeza. |
 | `cdp.py` | La captura: un solo Chrome y todas las capturas por DevTools. Si falla, se vuelve a un Chrome por fotograma (`VF_CAPTURA=clasica` lo fuerza). |
 | `renderer.py` | Línea de tiempo mandada por la voz, fundidos, subtítulos, capítulos y mezcla con ffmpeg. |
@@ -172,6 +230,11 @@ tools/video/.venv/bin/python -m unittest discover -s tools/video/tests -t .
 
 ## Límites conocidos
 
+- **Piezas compartibles: lo que no se ha podido comprobar.** El formato se ha validado sin voz (motor `mudo`) y con un motor de prueba que da un pitido por palabra (`tests/pitidos.py`): el montaje, la sincronía texto-voz y la maquetación están comprobados; **la voz real no** (ritmo, pronunciación de títulos en inglés, si «Del libro Decisive, de…» suena natural). Tampoco el comportamiento de cada plataforma (recortes, zona tapada por su interfaz, compresión). Las duraciones son estimadas a 2,4 palabras por segundo.
+- **Piezas sin material.** Una de cada cuatro lecciones no tiene una pregunta que se entienda sin la lección delante («Según la lección…», «en el capítulo 7…»): no hay pieza `pregunta`. Los libros sin mapa (~4 %) no tienen pieza `libro`. El 7 % de las figuras (espectros, cifras, líneas de tiempo…) no se pueden recorrer por piezas: su pieza `idea` sale sin esquema. Todo queda anotado en `manifiesto.json`.
+- **La idea, cuando la lección no la tiene redactada** (~23 %), es el arranque del cuerpo (frases enteras, hasta 36 palabras). Si ese arranque solo habla del libro («Newport dedica una sección…»), la pieza abre con el esquema; los demás casos salen tal cual y no todos son igual de rotundos.
+- **Sin sonido de apoyo ni música**, y sin base medida con espectadores: los principios de aprendizaje y atención que guían el formato están en `DISEÑO-COMPARTIBLE.md` con sus límites.
+- **Textos del corpus que hablan de «la lección»** («Esta lección no sustituye a un profesional»): se respetan literales y el control avisa. Si hay alternativa (otra pregunta, la idea redactada), se usa la que no lo dice.
 - **Tiempo de cómputo.** Una lección de 5 min tarda del orden de 1-2 min en renderizarse; la biblioteca entera (más de 3.700 lecciones) son decenas de horas. `biblioteca` va por tandas (`--limit`) y retoma donde lo dejó.
 - **Pregunta de repaso.** Solo se usa si la pregunta está ligada a la lección en la base de datos (`preguntas.leccion_id`). En los libros antiguos muchas preguntas van ligadas solo al libro: esas aparecen en el repaso final, no en cada lección.
 - **Lecciones sin idea redactada** (~25 %). El hilo es entonces la primera frase del cuerpo y se rotula «El punto de partida», no «La idea».

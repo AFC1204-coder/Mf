@@ -69,6 +69,7 @@ ROTULOS = {
     "marca": "MENTE FRÍA",
     "lema": "Biblioteca de ideas",
     "seguir": "Sigue para más ideas con su matiz",
+    "recuerda": "QUÉDATE CON ESTO",
 }
 
 # Presupuestos (palabras). El texto en pantalla va por páginas: nunca más de PAGINA a la vez.
@@ -104,6 +105,13 @@ SALVEDAD = re.compile(
     r"atenci[oó]n m[eé]dica|tu m[eé]dico|un m[eé]dico|no es (un )?(consejo|diagn[oó]stico|tratamiento)",
     re.IGNORECASE,
 )
+# Arranques que hablan del libro en vez de decir algo («Newport dedica una sección…»): no sirven de gancho.
+ARRANQUE_META = re.compile(
+    r"^(?:(?:el|la|este|esta) (?:libro|autor|autora|cap[ií]tulo|secci[oó]n|obra|ensayo)|[A-ZÁÉÍÓÚÑ][\wáéíóúüñ'’-]+(?: [A-ZÁÉÍÓÚÑ][\wáéíóúüñ'’-]+)?)"
+    r" (?:dedica|articula|presenta|desarrolla|aborda|introduce|cierra|abre|comienza|empieza|documenta|termina|concluye|ofrece|propone una|analiza|examina|explora|describe)\b"
+    r"|^una de las (?:contribuciones|ideas|secciones|aportaciones|partes|claves)\b|^para entender\b|^en est[ea] (?:cap[ií]tulo|secci[oó]n|parte)\b",
+    re.IGNORECASE,
+)
 _INGLES = re.compile(r"\b(the|of|and|is|to|that|in|with|for|not|you|it|are|was|this|have)\b", re.IGNORECASE)
 
 # Etiquetas de publicación por eje (fijas y declaradas; el resto sale del libro y del autor).
@@ -124,6 +132,7 @@ class Pieza(Episode):
     leccion_n: int = 0  # posición de la lección en el libro (solo para ordenar y nombrar; no sale en el vídeo)
     gancho: str = ""  # lo primero que se ve y se oye
     gancho_origen: str = ""
+    arco: str = ""  # completo | sin_esquema | esquema_primero (idea) · vacío en los demás tipos
     titulo_pub: str = ""
     descripcion_pub: str = ""
     etiquetas_pub: list[str] = field(default_factory=list)
@@ -183,6 +192,17 @@ def hilo(lesson: Lesson) -> tuple[str, str]:
         return T.clean(lesson.titulo), "titulo"
     # Mejor una que no hable de «la lección»: la pieza se ve sin la lección delante.
     return next((c for c in candidatas if not ANCLA_WEB.search(c[0])), candidatas[0])
+
+
+def arranque_literal(texto: str, max_words: int) -> str:
+    """El texto entero si cabe; si no, su arranque hasta un límite de cláusula, con «…». Siempre un prefijo literal."""
+    t = T.clean(texto)
+    if T.n_words(t) <= max_words:
+        return t
+    corto = T.shorten_clause(t, max_words)
+    if t.startswith(corto.rstrip("…")):
+        return corto
+    return " ".join(t.split()[:max_words]).rstrip(" ,;:—–(") + "…"  # shorten_clause cerró una comilla o quitó un paréntesis
 
 
 def tema(lesson: Lesson) -> str:
@@ -378,14 +398,32 @@ def escena_matiz(lesson: Lesson, max_words: int = MATIZ_PALABRAS) -> Scene | Non
     return escena_frase("Matiz", "matiz", ROTULOS["matiz"], [_fixed("matiz"), *partes], skip_parts=1, pause_after_s=0.5)
 
 
-def escena_cierre(book: Book, clave: str = "cta") -> Scene:
+def escena_cierre(book: Book, clave: str = "cta", recuerda: str = "") -> Scene:
+    """La marca y, encima, el gancho otra vez (literal, sin voz): la pieza cierra con lo que abrió, un solo mensaje para llevarse."""
     return Scene(
         "c-cierre",
         "",
-        {"brand": ROTULOS["marca"], "lema": ROTULOS["lema"], "said": FORMULAS[clave], "cta": ROTULOS["seguir"], "title": book.titulo, "author": book.autor},
+        {
+            "brand": ROTULOS["marca"], "lema": ROTULOS["lema"], "said": FORMULAS[clave], "cta": ROTULOS["seguir"],
+            "title": book.titulo, "author": book.autor,
+            "recuerda": arranque_literal(recuerda, 18) if recuerda else "", "recuerda_rotulo": ROTULOS["recuerda"],
+        },
         [_fixed(clave)],
         pause_after_s=1.1,
     )
+
+
+# Qué forma visual cuenta mejor cada tipo de figura. Todas usan los rótulos literales, en su orden.
+PATRONES = {
+    "comparar": "contraste",  # dos paneles enfrentados: la idea está en la diferencia
+    "pasos": "cadena",  # eslabones que se van encadenando: la idea está en el orden (causa → efecto, antes → después)
+    "piramide": "cadena",
+}
+
+
+def patron_visual(spec: dict[str, Any]) -> str:
+    """«contraste», «cadena» o «silueta» (la forma de la figura con insignias: ciclos, mapas, matrices)."""
+    return PATRONES.get(str(spec.get("plantilla")), "silueta")
 
 
 def _lectura(p: G.Piece, nivel: int) -> list[str]:
@@ -410,7 +448,10 @@ def escenas_figura(lesson: Lesson) -> list[Scene]:
     spec = specs[0]
     titulo = T.clean(spec.get("titulo"))
     pie = T.clean(spec.get("pie"))
-    base = {"spec": spec, "pieces": [p.to_view() for p in ps], "order": G.order(ps), "n": len(ps), "title": titulo, "kicker": ROTULOS["figura"]}
+    base = {
+        "spec": spec, "pieces": [p.to_view() for p in ps], "order": G.order(ps), "n": len(ps), "title": titulo,
+        "kicker": ROTULOS["figura"], "patron": patron_visual(spec),
+    }
     nivel = next((nv for nv in (0, 1, 2) if sum(T.n_words(x) for p in ps for x in _lectura(p, nv)) <= FIGURA_PALABRAS), 2)
 
     intro = _fixed("figura", "plantilla+esquema.titulo", titulo=titulo.rstrip(".")) if titulo else None
@@ -466,22 +507,55 @@ def _matiz_pub(lesson: Lesson) -> str:
     return f"El matiz: {frases[0]}" if frases else ""
 
 
-def pieza_idea(book: Book, index: int) -> Pieza:
-    """La pieza principal: la idea en frío, de dónde sale, su esquema y su matiz."""
+def pregunta_del_cuerpo(lesson: Lesson) -> str:
+    """Si la propia lección arranca con una pregunta breve, esa pregunta (literal): es su tensión, y la idea la resuelve."""
+    frases = T.split_sentences(lesson.cuerpo.split("\n\n")[0] if lesson.cuerpo else "")
+    if frases and frases[0].endswith("?") and 4 <= T.n_words(frases[0]) <= 24 and not ANCLA_WEB.search(frases[0]):
+        return frases[0]
+    return ""
+
+
+def pieza_idea(book: Book, index: int) -> Pieza | None:
+    """La pieza principal, con arco: tensión (la idea en frío, o la pregunta que la lección se hace) →
+    de dónde sale → desarrollo visible (el esquema, con el patrón que le va) → giro (el matiz) → cierre que retoma el gancho.
+
+    Si la lección no da para ese arco, no se fuerza:
+      · sin figura recorrible → idea y matiz («sin_esquema»);
+      · sin idea redactada y con un arranque que solo habla del libro → abre el esquema («esquema_primero»);
+      · sin ninguna de las dos cosas → no hay pieza.
+    """
     lesson = book.lessons[index]
     k = index + 1
     idea, origen = hilo(lesson)
     figura = escenas_figura(lesson)
     largo_figura = sum(s.estimated_seconds for s in figura)
-    scenes: list[Scene] = [
-        escena_frase("Idea", "idea", ROTULOS["idea"], [Part(idea, f"leccion.{origen}")], tema_txt=tema(lesson), pause_after_s=0.4),
-        escena_credito(book),
-        *figura,
-    ]
+    flojo = origen in ("cuerpo", "titulo") and (origen == "titulo" or bool(ARRANQUE_META.search(idea)))
+    if flojo and not figura:
+        return None
+    scenes: list[Scene] = []
+    if flojo:
+        arco = "esquema_primero"
+        gancho, gancho_origen = T.clean(figura[0].view.get("title")), "esquema.titulo"
+        figura[0].view["tema"] = tema(lesson)
+        scenes += [*figura, escena_credito(book)]
+        recuerda = T.clean(figura[-1].view.get("pie")) or gancho
+    else:
+        arco = "completo" if figura else "sin_esquema"
+        gancho, gancho_origen = idea, f"leccion.{origen}"
+        abre = pregunta_del_cuerpo(lesson) if origen != "cuerpo" else ""
+        if abre:
+            scenes.append(escena_frase("Pregunta", "pregunta", ROTULOS["idea"], [Part(abre, "leccion.cuerpo")], tema_txt=tema(lesson), pause_after_s=0.7))
+            gancho, gancho_origen = abre, "leccion.cuerpo"
+        scenes += [
+            escena_frase("Idea", "idea", ROTULOS["idea"], [Part(idea, f"leccion.{origen}")], tema_txt=tema(lesson), pause_after_s=0.4),
+            escena_credito(book),
+            *figura,
+        ]
+        recuerda = idea
     matiz = escena_matiz(lesson, MATIZ_CORTO if largo_figura > 16 else MATIZ_PALABRAS)
     if matiz:
         scenes.append(matiz)
-    scenes.append(escena_cierre(book))
+    scenes.append(escena_cierre(book, recuerda=recuerda))
     return _base(
         book,
         key=_clave("idea", k, lesson),
@@ -492,12 +566,13 @@ def pieza_idea(book: Book, index: int) -> Pieza:
         leccion_n=k,
         scenes=scenes,
         summary=idea,
-        gancho=idea,
-        gancho_origen=f"leccion.{origen}",
+        gancho=gancho,
+        gancho_origen=gancho_origen,
+        arco=arco,
         titulo_pub=T.shorten_clause(lesson.titulo, 16),
-        descripcion_pub=_descripcion(book, [idea, _matiz_pub(lesson)]),
+        descripcion_pub=_descripcion(book, [gancho if flojo else idea, _matiz_pub(lesson)]),
         etiquetas_pub=_etiquetas(book, lesson),
-        portada={"tag": ROTULOS["idea"], "text": T.anchor_clause(idea, 18), "tema": tema(lesson)},
+        portada={"tag": ROTULOS["idea"], "text": arranque_literal(gancho, 18), "tema": tema(lesson)},
     )
 
 
@@ -529,7 +604,7 @@ def pieza_pregunta(book: Book, index: int) -> Pieza | None:
     matiz = escena_matiz(lesson, MATIZ_CORTO)
     if matiz:
         scenes.append(matiz)
-    scenes.append(escena_cierre(book))
+    scenes.append(escena_cierre(book, recuerda=correcta))  # cierra con la respuesta a la pregunta que abrió
     return _base(
         book,
         key=_clave("pregunta", k, lesson),
@@ -545,7 +620,7 @@ def pieza_pregunta(book: Book, index: int) -> Pieza | None:
         titulo_pub=T.shorten_clause(q.texto, 18),
         descripcion_pub=_descripcion(book, [q.texto, f"La respuesta: {correcta}", _matiz_pub(lesson)]),
         etiquetas_pub=_etiquetas(book, lesson),
-        portada={"tag": ROTULOS["pregunta"], "text": T.anchor_clause(q.texto, 20), "tema": tema(lesson)},
+        portada={"tag": ROTULOS["pregunta"], "text": arranque_literal(q.texto, 20), "tema": tema(lesson)},
     )
 
 
@@ -557,6 +632,8 @@ def pieza_practica(book: Book, index: int) -> Pieza | None:
         return None
     k = index + 1
     idea, origen = hilo(lesson)
+    if origen in ("cuerpo", "titulo") and (origen == "titulo" or ARRANQUE_META.search(idea)):
+        return None  # sin una idea que decir, «la idea detrás» no se sostiene
     gancho = T.split_sentences(partes[0].text)[0]
     scenes: list[Scene] = [
         escena_frase("Práctica", "practica", ROTULOS["practica"], partes, tema_txt=tema(lesson), pause_after_s=0.45),
@@ -566,7 +643,7 @@ def pieza_practica(book: Book, index: int) -> Pieza | None:
     matiz = escena_matiz(lesson, MATIZ_CORTO)
     if matiz:
         scenes.append(matiz)
-    scenes.append(escena_cierre(book))
+    scenes.append(escena_cierre(book, recuerda=gancho))
     return _base(
         book,
         key=_clave("practica", k, lesson),
@@ -582,7 +659,7 @@ def pieza_practica(book: Book, index: int) -> Pieza | None:
         titulo_pub=T.shorten_clause(f"Pruébalo: {titulo_corto(lesson.titulo)}", 16),
         descripcion_pub=_descripcion(book, [partes[0].text, f"La idea detrás: {idea}", _matiz_pub(lesson)]),
         etiquetas_pub=_etiquetas(book, lesson),
-        portada={"tag": ROTULOS["practica"], "text": T.anchor_clause(gancho, 18), "tema": tema(lesson)},
+        portada={"tag": ROTULOS["practica"], "text": arranque_literal(gancho, 18), "tema": tema(lesson)},
     )
 
 
@@ -613,7 +690,7 @@ def pieza_libro(book: Book) -> Pieza | None:
             )
         )
     scenes.append(escena_frase("Cierre", "idea", ROTULOS["une"], [_fixed("une"), Part(_punto(cierre), "mapa.cierre")], skip_parts=1, pause_after_s=0.5))
-    scenes.append(escena_cierre(book, "cta_libro"))
+    scenes.append(escena_cierre(book, "cta_libro", recuerda=cierre))
     return _base(
         book,
         key="libro",
@@ -627,7 +704,7 @@ def pieza_libro(book: Book) -> Pieza | None:
         titulo_pub=T.shorten_clause(f"{titulo_corto(book.titulo)} en {n} ideas", 16),
         descripcion_pub=_descripcion(book, [_punto(cierre), " · ".join(etiquetas)]),
         etiquetas_pub=_etiquetas(book),
-        portada={"tag": rotulo, "text": T.anchor_clause(cierre, 20), "tema": ""},
+        portada={"tag": rotulo, "text": arranque_literal(cierre, 20), "tema": ""},
     )
 
 
@@ -641,8 +718,9 @@ class Plan:
 
 
 _MOTIVO = {
+    "idea": "la lección no tiene idea redactada, su arranque solo habla del libro y su figura no se puede recorrer: no hay arco que contar",
     "pregunta": "la lección no tiene una pregunta que se entienda sin la lección delante",
-    "practica": "la aplicación práctica no cabe en una pieza (primera frase demasiado larga) o no está en español",
+    "practica": "la aplicación práctica no cabe en una pieza, o la lección no tiene una idea que poner detrás",
     "libro": "el libro no tiene mapa con frase de cierre en datos/mapas.json",
 }
 

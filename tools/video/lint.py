@@ -62,6 +62,7 @@ def _sources(book: Book, episode: Episode) -> dict[str, str]:
                 campos("leccion_anterior", book.lessons[i - 1])
             src["esquema.datos"] = " ¶ ".join(_strings([d.get("datos") for d in lec.diagramas if isinstance(d, dict)]))
             src["esquema.pie"] = " ¶ ".join(T.clean(d.get("pie")) for d in lec.diagramas if isinstance(d, dict))
+            src["esquema.titulo"] = " ¶ ".join(T.clean(d.get("titulo")) for d in lec.diagramas if isinstance(d, dict))
     return src
 
 
@@ -204,6 +205,7 @@ def lint_pieza(pieza, book: Book) -> list[Issue]:
     permitidas = _formulas_permitidas(pieza, book)
     specs: list[dict] = []
     donde_spec: list[str] = []
+    con_figura = False
     for i, scene in enumerate(pieza.scenes, start=1):
         donde = f"{pieza.key} · escena {i} ({scene.kind})"
         if scene.kind not in CF.STAGES:
@@ -244,9 +246,15 @@ def lint_pieza(pieza, book: Book) -> list[Issue]:
             if n > MAX_PALABRAS_EN_PANTALLA:
                 issues.append(Issue("aviso", donde, f"{n} palabras en pantalla a la vez (máximo orientativo {MAX_PALABRAS_EN_PANTALLA})"))
                 break
-        if scene.kind == "c-figura":
+        if scene.kind == "c-figura" and scene.view.get("patron") == "silueta":
             specs.append(scene.view.get("spec") or {})
             donde_spec.append(donde)
+        if scene.kind == "c-figura":
+            con_figura = True
+        # Lo que el cierre deja escrito para llevarse es un arranque literal de algo que la pieza ya dijo.
+        recuerda = str(scene.view.get("recuerda") or "").rstrip("…").strip() if scene.kind == "c-cierre" else ""
+        if recuerda and not any(_contained(recuerda, ref) for ref in src.values() if ref):
+            issues.append(Issue("error", donde, f"el mensaje de cierre no es literal del corpus: {recuerda[:60]!r}"))
         for beat in scene.beats:
             if beat.at_word is None and beat.at_s is None:
                 issues.append(Issue("error", donde, "cambio en pantalla sin momento asignado"))
@@ -261,7 +269,7 @@ def lint_pieza(pieza, book: Book) -> list[Issue]:
         lec = next((l for l in book.lessons if l.id == pieza.lesson_id), None)
         if lec and T.clean(lec.autocorreccion) and not any(p.origin == "leccion.autocorreccion" for s in pieza.scenes for p in s.parts):
             issues.append(Issue("error", pieza.key, "la lección tiene matiz y la pieza no lo lleva"))
-        if pieza.tipo == "idea" and not specs:
+        if pieza.tipo == "idea" and not con_figura:
             issues.append(Issue("aviso", pieza.key, "la figura de la lección no se puede recorrer por piezas: la pieza va sin esquema"))
     if not T.clean(pieza.gancho):
         issues.append(Issue("error", pieza.key, "pieza sin gancho"))
