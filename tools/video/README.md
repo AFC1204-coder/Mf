@@ -48,6 +48,8 @@ Los dos formatos de arriba son una serie: tienen sentido si ya estás en la bibl
 | `practica` | Qué probar → la idea que hay detrás → libro → el matiz → marca | `aplicacion_practica`, la idea, `autocorreccion` | Una por lección |
 | `libro` | El libro en una frase → sus ideas centrales → la frase que las une → marca | `datos/mapas.json` (cierre y nodos) | Una por libro con mapa |
 
+Hay ejemplos renderizados (sin voz) y sus hojas de fotogramas en [`ejemplos-compartir/`](ejemplos-compartir/LEEME.md).
+
 Lo que tienen en común, y lo que las distingue del resto del generador:
 
 - **Todo lo que se oye se ve**, en grande y a la vez que se dice: el texto entra por ráfagas de 2-4 palabras, en páginas de 14 palabras como mucho. No hay barra de subtítulos: la pantalla es el subtítulo y la pieza se sigue sin sonido. El `.srt` se entrega igualmente.
