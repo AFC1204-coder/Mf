@@ -195,9 +195,10 @@ def _stage_esquema(v: dict[str, Any]) -> str:
 def _stage_pregunta(v: dict[str, Any]) -> str:
     reveal = bool(v.get("reveal"))
     correct = int(v.get("correct") or 0)
+    activa = int(v.get("active") if v.get("active") is not None else -1)
     opts = []
     for i, o in enumerate(v.get("options") or []):
-        cls = (" ok" if i == correct else " dim") if reveal else ""
+        cls = (" ok" if i == correct else " dim") if reveal else (" on" if i == activa else "")
         letra = LETRAS[i] if i < len(LETRAS) else str(i + 1)
         opts.append(f'<div class="vf-opt{cls}"><span class="l">{letra}</span><span class="o">{_e(o)}</span></div>')
     cd = v.get("countdown")

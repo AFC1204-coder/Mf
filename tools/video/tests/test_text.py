@@ -65,6 +65,10 @@ class Terminos(unittest.TestCase):
         self.assertEqual(T.key_terms("Esto ocurre siempre. Nadie lo nota."), [])
         self.assertEqual(T.key_terms("Siempre pasa. El Dr. Pérez lo midió."), [("Dr. Pérez", 3)])
 
+    def test_tras_signo_de_apertura_empieza_frase(self):
+        texto = 'Cambia «¿Seguimos adelante?» por una pregunta abierta. Lo dijo "¡Bienvenido a casa!" entonces.'
+        self.assertEqual(T.key_terms(texto), [])
+
     def test_excluye_lo_que_ya_esta_a_la_vista(self):
         texto = "Lo estudió Daniel Kahneman con cuidado."
         self.assertEqual(T.key_terms(texto, exclude=["Daniel Kahneman, premio Nobel"]), [])

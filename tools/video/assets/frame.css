@@ -143,6 +143,8 @@ body.vf.tone-ok { --tone: var(--vf-ok); }
 .vf-opt.ok { background: color-mix(in srgb, var(--vf-ok) 16%, var(--vf-surface)); border-color: var(--vf-ok); }
 .vf-opt.ok .l { background: var(--vf-ok); border-color: var(--vf-ok); color: #06140d; }
 .vf-opt.dim { opacity: 0.32; }
+.vf-opt.on { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, var(--vf-surface2)); }
+.vf-opt.on .l { border-color: var(--accent); color: var(--accent); }
 .vf-think { display: flex; align-items: center; gap: 1.6em; margin-top: 2.6em; min-height: 7em; font-size: 1em; }
 .vf-think span { font-size: 3em; font-weight: 600; letter-spacing: 0.06em; color: var(--vf-text2); }
 .vf-think b {

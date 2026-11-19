@@ -49,6 +49,7 @@ PHRASES = {
     "practica": "Llévalo a la práctica.",
     "pregunta": "Comprueba si te quedas con la idea.",
     "pensar": "",
+    "opcion": "Opción {letra}.",
     "respuesta": "La respuesta es la {letra}: {opcion}",
     "cierre": "Quédate con esto.",
     "siguiente": "En la siguiente lección: {titulo}.",
@@ -302,25 +303,31 @@ def _is_self_contained(sentence: str) -> bool:
 
 
 def _quiz_scenes(q: Question, section: str, intro: Part | None) -> list[Scene]:
-    """Pregunta → tiempo para pensar (con cuenta atrás) → respuesta razonada. Práctica de recuperación."""
+    """Pregunta → opciones leídas una a una → tiempo para pensar (con cuenta atrás) → respuesta razonada.
+
+    Las opciones se leen en voz alta (literales del corpus) mientras se ilumina cada una: la mediana
+    de la biblioteca suma 70 palabras de opciones, que no se pueden leer en los pocos segundos que
+    dura una cuenta atrás. Así la pregunta también se puede seguir sin mirar la pantalla.
+    """
     base = {
         "kicker": "COMPRUEBA",
         "question": q.texto,
         "options": q.opciones,
         "countdown": None,
+        "active": -1,
         "reveal": False,
         "correct": q.correcta,
         "explanation": "",
     }
-    ask = Scene(
-        "pregunta",
-        section,
-        dict(base),
-        ([intro] if intro else []) + [Part(q.texto, "pregunta.texto")],
-        pause_after_s=0.2,
-    )
-    palabras = sum(T.n_words(o) for o in q.opciones)
-    hold = max(5.0, min(9.0, palabras / 5.0))
+    parts = ([intro] if intro else []) + [Part(q.texto, "pregunta.texto")]
+    beats: list[Beat] = []
+    for i, o in enumerate(q.opciones):
+        letra = LETRAS[i] if i < len(LETRAS) else str(i + 1)
+        beats.append(Beat({"active": i}, at_word=sum(T.n_words(p.text) for p in parts)))
+        texto = o.rstrip()
+        parts += [_fixed("opcion", letra=letra), Part(texto if texto.endswith((".", "!", "?", "…")) else texto + ".", "pregunta.opcion")]
+    ask = Scene("pregunta", section, dict(base), parts, beats, pause_after_s=0.4)
+    hold = 5.0  # las opciones ya se han oído: tiempo para decidir
     think = Scene(
         "pregunta",
         section,
@@ -765,8 +772,8 @@ def presentation_episode(book: Book, cover_path: str | None = None) -> Episode:
     )
 
 
-def _recap_questions(book: Book, limit: int = 3) -> list[Question]:
-    """Hasta tres preguntas del libro repartidas por él (principio, mitad y final)."""
+def _recap_questions(book: Book, limit: int = 2) -> list[Question]:
+    """Hasta dos preguntas del libro, del principio y del final: cada lección ya repasó la suya y las opciones se leen en voz alta."""
     pool: list[Question] = []
     for lec in book.lessons:
         q = lec.pick_question()
@@ -783,7 +790,7 @@ def _recap_questions(book: Book, limit: int = 3) -> list[Question]:
 
 
 def recap_episode(book: Book) -> Episode:
-    """Episodio final: la idea de cada lección (las mismas frases de la serie), el mapa y tres preguntas."""
+    """Episodio final: la idea de cada lección (las mismas frases de la serie), el mapa y dos preguntas."""
     n = len(book.lessons)
     scenes: list[Scene] = []
     scenes.append(

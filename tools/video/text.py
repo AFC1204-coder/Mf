@@ -268,6 +268,8 @@ def key_terms(
     inicio_frase = {0}
     for m in re.finditer(r"[.!?…:][\"'»”)]*\s+[\"'«“(¿¡]*", t):
         inicio_frase.add(m.end())
+    for m in re.finditer(r"[¿¡]", t):  # tras «¿» o «¡» empieza una frase aunque venga en mitad de otra
+        inicio_frase.add(m.end())
     # Un nombre: palabra con mayúscula o abreviatura corta con punto («Dr.», «B.»), encadenadas con partículas.
     nombre = r"(?:[A-ZÁÉÍÓÚÑ][a-záéíóúñ]{0,2}\.(?=\s+[A-ZÁÉÍÓÚÑ])|[A-ZÁÉÍÓÚÑ][\wáéíóúüñ'’-]*)"
     patron = re.compile(nombre + r"(?:\s+(?:(?:de|del|la|las|los|von|van|der|of|the|and|y)\s+)*" + nombre + r")*")

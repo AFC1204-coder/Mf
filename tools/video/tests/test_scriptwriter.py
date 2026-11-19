@@ -75,11 +75,23 @@ class Leccion(unittest.TestCase):
         q = [s for s in ep.scenes if s.kind == "pregunta"]
         self.assertEqual(len(q), 3)
         self.assertEqual(q[1].narration, "")
-        self.assertGreaterEqual(q[1].hold_s, 5)
+        self.assertEqual(q[1].hold_s, 5.0)
         self.assertEqual([b.patch["countdown"] for b in q[1].beats], [3, 2, 1])
         self.assertTrue(q[2].view["reveal"])
         self.assertIn("la B: Que puede ser equivocada.", q[2].narration)
         self.assertFalse(any(s.kind == "pregunta" for s in SW.lesson_episode(self.b, 0, with_quiz=False).scenes))
+
+    def test_las_opciones_se_leen_en_voz_alta_y_se_iluminan_a_la_vez(self):
+        ep = SW.lesson_episode(self.b, 0)
+        ask = next(s for s in ep.scenes if s.kind == "pregunta")
+        opciones = self.b.lessons[0].preguntas[0].opciones
+        for letra, o in zip("ABCD", opciones):
+            self.assertIn(f"Opción {letra}. {o}", ask.narration)
+        self.assertEqual([b.patch["active"] for b in ask.beats], [0, 1, 2, 3])
+        palabras = ask.narration.split()
+        for i, b in enumerate(ask.beats):
+            self.assertEqual(palabras[b.at_word:b.at_word + 2], ["Opción", "ABCD"[i] + "."])
+        self.assertEqual(ask.view["active"], -1)
 
     def test_los_terminos_entran_cuando_se_nombran(self):
         ep = SW.lesson_episode(self.b, 1)

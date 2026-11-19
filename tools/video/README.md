@@ -25,7 +25,7 @@ Cuatro reglas lo gobiernan:
 | **Esquema** | El esquema verificado, **recorrido pieza a pieza**: la que se lee se ilumina, las que faltan siguen tapadas | Su título, los rótulos de cada pieza y su pie; al final, un silencio con la figura completa | Que la figura enseñe, no que adorne |
 | **Matiz** | Dónde se le discute a la idea | La autocorrección | No aprender la idea sin su límite |
 | **Práctica** | Qué hacer con ella | La aplicación práctica | Transferir |
-| **Repaso** | La pregunta del principio, ahora con opciones → cuenta atrás en silencio → respuesta | «Volvemos a la pregunta del principio», respuesta y explicación | Recuperar (lo que más fija) y cerrar el gancho |
+| **Repaso** | La pregunta del principio, ahora con opciones (cada una se ilumina mientras se lee) → 5 s en silencio con cuenta atrás → respuesta | «Volvemos a la pregunta del principio», las opciones, la respuesta y su explicación | Recuperar (lo que más fija) y cerrar el gancho |
 | Cierre | La idea otra vez + la siguiente lección | «Quédate con esto…», el título siguiente y **su pregunta** | Cerrar el círculo y dejar abierto el siguiente |
 
 El recorrido del esquema se hace en las plantillas `pasos` y `comparar` (siete de cada diez esquemas) cuando leerlo cabe en ~90 palabras; el resto de figuras se enseñan enteras con su título y su pie.
@@ -38,7 +38,7 @@ El índice (Idea · Desarrollo · Esquema · Matiz · Práctica · Repaso) está
 
 - `00-presentacion`: qué libro es (descripción), sus ideas centrales (el mapa, nodo a nodo) y el recorrido por lecciones.
 - `01-…` a `NN-…`: una lección por episodio.
-- `99-repaso`: la idea de cada lección (las mismas frases de la serie), el mapa completo y hasta tres preguntas.
+- `99-repaso`: la idea de cada lección (las mismas frases de la serie), el mapa completo y dos preguntas del libro.
 - Con `--merge`, además `libro-completo.mp4` con un capítulo por episodio.
 
 ---
