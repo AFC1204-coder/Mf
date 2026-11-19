@@ -2,11 +2,12 @@
 
 Convierte el corpus de la biblioteca en vídeo vertical (`1080×1920`) de forma automática: una lección, la **serie completa de un libro** (presentación + una lección por episodio + repaso) o la biblioteca entera, libro a libro.
 
-Tres reglas lo gobiernan:
+Cuatro reglas lo gobiernan:
 
 1. **La voz solo dice texto del corpus.** No hay modelo que redacte. El guion recorta la lección por frases enteras (idea, cuerpo, matiz, aplicación, pregunta) y la une con unas pocas fórmulas fijas («Lección 3 de 8», «Venimos de…»). Un control de calidad lo comprueba antes de renderizar: si un tramo no está literal en la biblioteca, el episodio no sale.
 2. **Lo que se ve es contenido, no decoración.** El esquema es el de la lección, dibujado con el mismo motor de la app (`lib/diagram.js`); el mapa del libro sale de `datos/mapas.json`; la pregunta es una de las de la lección.
-3. **El libro es una serie.** Todas las lecciones siguen la misma secuencia, visible en pantalla como índice, y comparten un hilo: la idea de cada lección en una frase abre su episodio, lo cierra, enlaza con el siguiente y vuelve en el repaso final, siempre con las mismas palabras.
+3. **El texto largo se oye, no se lee.** En pantalla solo queda una *frase ancla* (un trozo literal de 16-20 palabras como mucho), el esquema, el mapa o la pregunta. El control de calidad avisa si una escena pasa de 32 palabras a la vista y `guion.md` dice cuántas lleva el episodio.
+4. **El libro es una serie.** Todas las lecciones siguen la misma secuencia, visible en pantalla como índice, y comparten un hilo: la idea de cada lección en una frase abre su episodio, lo cierra, enlaza con el siguiente y vuelve en el repaso final, siempre con las mismas palabras. Además, cada episodio **abre con una pregunta** de la propia lección, la contesta al final y **termina con la pregunta que abrirá el siguiente**.
 
 ---
 
@@ -16,19 +17,22 @@ Tres reglas lo gobiernan:
 
 | Paso | En pantalla | Voz | Para qué |
 |---|---|---|---|
+| **Gancho** *(si la lección tiene pregunta)* | La pregunta, grande, sin opciones | «Antes de empezar, una pregunta» + la pregunta | Abrir un hueco: intentar contestar antes de aprender fija más lo que viene |
 | Portada | Libro, autor, «Lección 3 de 8», puntos del recorrido | Título y lugar en el libro | Situar |
 | Puente *(desde la 2.ª)* | La lección anterior y su idea | «Venimos de…» + esa idea | Activar lo ya visto |
-| **Idea** | La idea en una frase, grande | La misma frase | Dar el destino antes del camino |
-| **Desarrollo** | Frase ancla de cada bloque + términos que entran cuando se nombran | El cuerpo de la lección, entero | Explicar |
-| **Esquema** | El esquema verificado de la lección | Su título y su pie, y un silencio para leerlo | Sintetizar en una figura |
+| **Idea** | La frase ancla de la idea, grande | La idea entera | Dar el destino antes del camino |
+| **Desarrollo** | Una **escalera**: los pasos ya dados en pequeño, el actual con su frase ancla y los términos que entran cuando se nombran | El cuerpo de la lección, entero | Explicar y ver por dónde va el argumento |
+| **Esquema** | El esquema verificado, **recorrido pieza a pieza**: la que se lee se ilumina, las que faltan siguen tapadas | Su título, los rótulos de cada pieza y su pie; al final, un silencio con la figura completa | Que la figura enseñe, no que adorne |
 | **Matiz** | Dónde se le discute a la idea | La autocorrección | No aprender la idea sin su límite |
 | **Práctica** | Qué hacer con ella | La aplicación práctica | Transferir |
-| **Repaso** | Pregunta con opciones → cuenta atrás en silencio → respuesta razonada | Pregunta, respuesta y explicación | Recuperar (lo que más fija) |
-| Cierre | La idea otra vez + la siguiente lección | «Quédate con esto…» | Cerrar el círculo y enlazar |
+| **Repaso** | La pregunta del principio, ahora con opciones → cuenta atrás en silencio → respuesta | «Volvemos a la pregunta del principio», respuesta y explicación | Recuperar (lo que más fija) y cerrar el gancho |
+| Cierre | La idea otra vez + la siguiente lección | «Quédate con esto…», el título siguiente y **su pregunta** | Cerrar el círculo y dejar abierto el siguiente |
+
+El recorrido del esquema se hace en las plantillas `pasos` y `comparar` (siete de cada diez esquemas) cuando leerlo cabe en ~90 palabras; el resto de figuras se enseñan enteras con su título y su pie.
 
 El índice (Idea · Desarrollo · Esquema · Matiz · Práctica · Repaso) está siempre arriba con la sección en curso resaltada. Si una lección no tiene esquema o pregunta ligada, esa entrada no aparece.
 
-`--format corto` (60-90 s, para redes): la idea, las frases que abren hasta tres bloques, el esquema, la primera frase del matiz y de la práctica, y la siguiente lección. Sin pregunta.
+`--format corto` (60-100 s, para redes): abre con la pregunta, da la idea, las frases que abren hasta tres bloques, el esquema, la primera frase del matiz y de la práctica, **la respuesta a la pregunta** y la siguiente lección.
 
 ### Un libro
 
@@ -53,7 +57,18 @@ python3 -m venv tools/video/.venv
 tools/video/.venv/bin/pip install -r tools/video/requirements.txt
 ```
 
-No hace falta configurar nada más: el corpus se lee con la clave pública de la app y la voz por defecto cae a **Edge TTS** (gratis, sin clave). Para usar **Gemini TTS**, copia `tools/video/.env.example` a `tools/video/.env` y pon tu `GEMINI_API_KEY`.
+No hace falta configurar nada más: el corpus se lee con la clave pública de la app y la voz por defecto es **Edge TTS** (gratis, sin clave). Todo lo predeterminado es gratuito.
+
+### Voz: qué hay y cuánto cuesta
+
+| Motor | Coste | Dónde corre | Marcas por palabra | Notas |
+|---|---|---|---|---|
+| `edge` *(por defecto)* | Gratis, sin clave | En línea (servicio de lectura de Microsoft Edge) | Sí: subtítulos exactos | `es-ES-AlvaroNeural`, `ElviraNeural`, `XimenaNeural`; y las multilingües (`en-US-AndrewMultilingualNeural`, `BrianMultilingual`, `AvaMultilingual`, `EmmaMultilingual`, `fr-FR-VivienneMultilingual`), más naturales y que pronuncian bien los títulos en inglés, con acento no peninsular. |
+| `kokoro` | Gratis (Apache 2.0) | **Local**, sin red tras la primera descarga | No: subtítulos proporcionales | `em_alex`, `em_santa`, `ef_dora`. `pip install -r tools/video/requirements-kokoro.txt`; el modelo (~90 MB + 28 MB de voces) se baja solo a `tools/video/.modelos/kokoro/`. `KOKORO_MODELO=completo` usa el modelo sin cuantizar (~310 MB). |
+| `mudo` | Gratis | Local | — | Previsualización sin voz. |
+| `gemini` / `auto` | **De pago** (clave `GEMINI_API_KEY` en `tools/video/.env`) | En línea | No | Solo si se piden con `--engine`. `auto` prueba Gemini y cae a Edge. |
+
+Para elegir de oído: `leccion "<título>" --sample-voices --engine edge` (y `--engine kokoro`) deja una muestra por voz en `output/<libro>/muestras/<motor>/`.
 
 ---
 
@@ -89,13 +104,13 @@ tools/video/.venv/bin/python -m tools.video.cli leccion "El No como Herramienta"
 | Opción | Qué hace |
 |---|---|
 | `--format clase\|corto` | Lección completa (por defecto) o pieza de 60-90 s. |
-| `--engine auto\|gemini\|edge\|mudo` | Motor de voz. `auto`: Gemini y, si falla la cuota, Edge. `mudo`: sin voz, para previsualizar. |
-| `--voice <nombre>` | `Aoede`, `Charon`, `Fenrir` (Gemini) · `es-ES-AlvaroNeural`, `es-ES-ElviraNeural`, `es-ES-XimenaNeural` (Edge). |
+| `--engine edge\|kokoro\|mudo\|gemini\|auto` | Motor de voz (ver la tabla de arriba). Sin la opción: `edge`, o lo que diga `TTS_ENGINE`. |
+| `--voice <nombre>` | Una voz del motor elegido: `es-ES-AlvaroNeural`, `en-US-AndrewMultilingualNeural`… (Edge) · `em_alex`, `ef_dora`… (Kokoro) · `Aoede`, `Charon`… (Gemini). |
 | `--script-only` | Solo `guion.md`, `script.json` y control de calidad. |
 | `--only 0,3-5,99` *(libro)* | Solo esos episodios: 0 = presentación, 1…N = lecciones, 99 = repaso. |
 | `--merge` *(libro, biblioteca)* | Une los episodios en `libro-completo.mp4` con capítulos. |
 | `--eje`, `--limit`, `--list` *(biblioteca)* | Filtra por eje, limita libros por ejecución o solo lista lo pendiente. |
-| `--no-quiz` | Lecciones sin la pregunta de repaso. |
+| `--no-quiz` | Lecciones sin pregunta: ni gancho, ni repaso, ni pregunta del siguiente episodio. |
 | `--photos` | Fondo fotográfico (Wikimedia Commons) en portadas y cierres. Ambiente, nunca contenido. |
 | `--force` | Renderiza aunque nada haya cambiado. |
 | `--sample-voices` *(leccion)* | Muestras de la idea con varias voces, para elegir. |
@@ -138,8 +153,9 @@ libro-completo.mp4    (con --merge) + libro-completo.txt con los capítulos
 | `scriptwriter.py` | La secuencia didáctica de cada episodio y la serie del libro. Las fórmulas fijas están en `PHRASES`. |
 | `lint.py` | Control de calidad: fidelidad literal al corpus, preguntas válidas, esquemas dibujables, duración. |
 | `frames.py` + `assets/` | Cada estado de cada escena en HTML, capturado con Chrome sin cabeza. |
+| `cdp.py` | La captura: un solo Chrome y todas las capturas por DevTools. Si falla, se vuelve a un Chrome por fotograma (`VF_CAPTURA=clasica` lo fuerza). |
 | `renderer.py` | Línea de tiempo mandada por la voz, fundidos, subtítulos, capítulos y mezcla con ffmpeg. |
-| `tts/` | Motores intercambiables (Gemini, Edge, mudo) y caché de locuciones. |
+| `tts/` | Motores intercambiables (Edge, Kokoro, mudo, Gemini) y caché de locuciones. |
 | `visuals.py` | Fondo fotográfico opcional (`--photos`). |
 
 Pruebas (sin red, sin Chrome y sin voz):
@@ -157,6 +173,8 @@ tools/video/.venv/bin/python -m unittest discover -s tools/video/tests -t .
 - **Lecciones sin idea redactada** (~25 %). El hilo es entonces la primera frase del cuerpo y se rotula «El punto de partida», no «La idea».
 - **Lecciones sin esquema** (~17 %). El vídeo sale sin figura y el control de calidad lo avisa.
 - **Términos señalados.** Se detectan por reglas (comillas, nombres propios, rótulos del esquema); son literales del texto, pero alguno puede ser poco relevante.
-- **Gemini no da marcas por palabra.** Con esa voz, los subtítulos y la entrada de los términos se reparten de forma proporcional dentro de cada escena; con Edge son exactos.
+- **Preguntas con opciones largas.** La escena de repaso sigue siendo la que más texto lleva: las opciones del corpus son frases enteras y hay que verlas para elegir.
+- **El corto puede pasar de 90 s** cuando lleva pregunta y respuesta (hasta ~100 s); el control de calidad avisa a partir de 115 s.
+- **Ni Gemini ni Kokoro dan marcas por palabra.** Con esas voces, los subtítulos y la entrada de los términos se reparten de forma proporcional dentro de cada escena; con Edge son exactos.
 - **Voces mezcladas.** Con `--engine auto`, si la cuota de Gemini se agota a mitad de un libro el resto sale con Edge. La orden lo avisa; para una serie con una sola voz, fija `--engine` y `--voice`.
-- **Pronunciación.** Los títulos y términos en inglés los lee una voz española.
+- **Pronunciación.** Las voces `es-ES-*` y las de Kokoro leen los títulos y términos en inglés a la española; las multilingües de Edge los pronuncian bien a cambio de un acento menos peninsular.
