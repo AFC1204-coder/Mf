@@ -1,0 +1,26 @@
+ERROR 069fc573 El anillo interior: concentrarse en un c · figura 1, datos.nodos[0].d: la cifra «19» no está en la lección
+ERROR 25c212d2 Empresarialidad y el Análisis Austriaco  · figura 1, datos.pasos[1].t: la cifra «40» no está en la lección
+ERROR 3cb51fbe La gestión metabólica y la idea de press · figura 1, datos.eventos[0].f: la cifra «2012» no está en la lección
+ERROR 47428f56 La conexión prusiana — el modelo importa · figura 1, datos.pasos[2].t: el nombre «Unidos» no aparece en la lección
+ERROR 507e3963 El lenguaje del cuerpo — los primeros di · figura 1, datos.items[0].n: la cifra «10» no está en la lección
+ERROR 51bf36af Falsos positivos: el resultado de una pr · figura 1, datos.pasos[2].t: la cifra «11» no está en la lección
+ERROR 51bf36af Falsos positivos: el resultado de una pr · figura 1, datos.pasos[3].t: la cifra «11» no está en la lección
+ERROR 53967f64 Años veinte y ochenta: nuevas eras, inno · figura 1, datos.eventos[0].f: la cifra «20» no está en la lección
+ERROR 53967f64 Años veinte y ochenta: nuevas eras, inno · figura 1, datos.eventos[2].f: la cifra «80» no está en la lección
+ERROR 54ec3211 La dieta cetogénica y otros abordajes me · figura 1, datos.izq.t: el nombre «Brown» no aparece en la lección
+ERROR 560abad6 El Desafío de Glaucon: ¿La Moral es Repu · figura 1, titulo: el nombre «Giges» no aparece en la lección
+ERROR 5e45f229 Desarrollo Neural: Cómo se Construye un  · figura 1, datos.items[1].n: la cifra «100» no está en la lección
+ERROR 7e72a633 El Bosque Alemán: Paradigma del Fracaso  · figura 1, datos.pasos[1].d: el nombre «Estado» no aparece en la lección
+ERROR 810ebbb7 La Ley de la Actitud Generacional: El Ti · figura 1, datos.items[0].n: la cifra «10» no está en la lección
+ERROR 82433bbb La Propuesta Radical · figura 1, datos.izq.items[0]: el nombre «Estado» no aparece en la lección
+ERROR 915b013a El Experimento de la Prisión de Stanford · figura 1, datos.pasos[1].t: la cifra «24» no está en la lección
+ERROR 97f842bc Una ventaja conocida deja de ser exclusi · figura 1, pie: la cifra «1962» no está en la lección
+ERROR a5b9a62f Abu Ghraib: El Experimento de Stanford a · figura 1, datos.izq.t: la cifra «1971» no está en la lección
+ERROR a5b9a62f Abu Ghraib: El Experimento de Stanford a · figura 1, datos.der.items[0]: el nombre «Irak» no aparece en la lección
+ERROR b6b1129f La privación de sueño — el experimento i · figura 1, datos.items[1].n: la cifra «10» no está en la lección
+ERROR e4a8af90 La regla del 4 %: una guía de gasto sost · figura 1, datos.items[1].n: la cifra «25» no está en la lección
+ERROR e4a8af90 La regla del 4 %: una guía de gasto sost · figura 1, datos.items[2].n: la cifra «30» no está en la lección
+ERROR eb6f61d1 Los límites de la ciencia y el valor de  · figura 1, datos.niveles[0].d: el nombre «Wheeler» no aparece en la lección
+ERROR f836e67a Síntesis — el estoicismo como tecnología · figura 1, datos.der.items[1]: la cifra «17» no está en la lección
+ERROR f99b11d6 La edición de 1999: epílogo, Y2K y la di · figura 1, titulo: la cifra «1984» no está en la lección
+ERROR faf582b0 Líderes de opinión: influir en quien ori · figura 1, datos.eventos[0].f: la cifra «1928» no está en la lección
