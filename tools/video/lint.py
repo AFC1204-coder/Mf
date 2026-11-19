@@ -60,8 +60,20 @@ def _sources(book: Book, episode: Episode) -> dict[str, str]:
             campos("leccion", lec)
             if i > 0:
                 campos("leccion_anterior", book.lessons[i - 1])
+            src["esquema.datos"] = " ¶ ".join(_strings([d.get("datos") for d in lec.diagramas if isinstance(d, dict)]))
             src["esquema.pie"] = " ¶ ".join(T.clean(d.get("pie")) for d in lec.diagramas if isinstance(d, dict))
     return src
+
+
+def _strings(o) -> list[str]:
+    """Todos los textos de un esquema (rótulos), en orden."""
+    if isinstance(o, str):
+        return [T.clean(o)]
+    if isinstance(o, dict):
+        return [x for v in o.values() for x in _strings(v)]
+    if isinstance(o, list):
+        return [x for v in o for x in _strings(v)]
+    return []
 
 
 def _contained(part: str, source: str) -> bool:

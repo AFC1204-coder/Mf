@@ -195,6 +195,33 @@ class GanchoYTextoEnPantalla(unittest.TestCase):
         self.assertTrue(any("en pantalla" in x.message for x in lint_episode(ep, self.b)))
 
 
+class EsquemaRecorrido(unittest.TestCase):
+    PASOS = {"plantilla": "pasos", "titulo": "T", "datos": {"pasos": [{"t": "Uno", "d": "Primero esto"}, {"t": "Dos", "d": "Luego aquello"}, {"t": "Tres"}]}}
+    COMPARAR = {"plantilla": "comparar", "titulo": "T", "datos": {"izq": {"t": "A", "items": ["a1", "a2"]}, "der": {"t": "B", "items": ["b1"]}}}
+
+    def test_piezas_en_orden_de_lectura(self):
+        self.assertEqual(SW.diagram_walk(self.PASOS), [["Uno", "Primero esto"], ["Dos", "Luego aquello"], ["Tres"]])
+        self.assertEqual(SW.diagram_walk(self.COMPARAR), [["A", "a1", "a2"], ["B", "b1"]])
+
+    def test_no_se_recorre_lo_que_no_es_de_cajas_ni_lo_muy_largo(self):
+        self.assertEqual(SW.diagram_walk({"plantilla": "ciclo", "datos": {"nodos": [{"t": "x"}]}}), [])
+        largo = {"plantilla": "pasos", "datos": {"pasos": [{"t": "palabra " * 40}, {"t": "palabra " * 60}]}}
+        self.assertEqual(SW.diagram_walk(largo), [])
+
+    def test_la_clase_recorre_el_esquema_y_el_corto_lo_ensena_entero(self):
+        b = libro()
+        for i, lec in enumerate(b.lessons):
+            specs = lec.main_diagrams()
+            if not specs or not SW.diagram_walk(specs[0]):
+                continue
+            n = len(SW.diagram_walk(specs[0]))
+            esc = [s for s in SW.lesson_episode(b, i).scenes if s.kind == "esquema" and s.view.get("focus")]
+            self.assertEqual([s.view["focus"]["active"] for s in esc], [*range(n), -1])
+            self.assertFalse(has_errors(lint_episode(SW.lesson_episode(b, i), b)))
+            corto = [s for s in SW.lesson_episode(b, i, "corto").scenes if s.kind == "esquema"]
+            self.assertTrue(all("focus" not in s.view for s in corto))
+
+
 class Bloques(unittest.TestCase):
     def test_los_parrafos_largos_se_parten_por_frases_enteras(self):
         frase = "Esta es una frase de relleno que tiene exactamente doce palabras en total. "

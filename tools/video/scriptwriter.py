@@ -388,24 +388,60 @@ def _short_answer_scene(q: Question) -> Scene:
     )
 
 
-def _diagram_scenes(lesson: Lesson, section: str, limit: int) -> list[Scene]:
-    """El esquema verificado de la lección, con su título y su pie leídos tal cual."""
+def _sentence(label: str) -> str:
+    t = T.clean(label)
+    return t if t.endswith((".", "!", "?", "…", ":")) else t + "."
+
+
+def diagram_walk(spec: dict[str, Any]) -> list[list[str]]:
+    """Las piezas de un esquema en el orden en que se leen, cada una con sus rótulos (literales).
+
+    Solo para las plantillas en las que cada pieza es una caja del dibujo (`pasos`, `comparar`:
+    siete de cada diez esquemas de la biblioteca). Devuelve [] si no se puede recorrer o si
+    leerlo entero sería largo: entonces el esquema se enseña completo, como antes.
+    """
+    datos = spec.get("datos") if isinstance(spec.get("datos"), dict) else {}
+    piezas: list[list[str]] = []
+    if spec.get("plantilla") == "pasos":
+        pasos = [x for x in (datos.get("pasos") or []) if isinstance(x, dict)]
+        if not (2 <= len(pasos) <= 6):
+            return []
+        piezas = [[T.clean(x.get("t")), T.clean(x.get("d"))] for x in pasos]
+    elif spec.get("plantilla") == "comparar":
+        for lado in ("izq", "der"):
+            col = datos.get(lado) if isinstance(datos.get(lado), dict) else {}
+            items = [T.clean(i) for i in (col.get("items") or []) if isinstance(i, str)]
+            if not items or len(items) > 4:
+                return []
+            piezas.append([T.clean(col.get("t")), *items])
+    piezas = [[r for r in pieza if r] for pieza in piezas]
+    if any(not pieza for pieza in piezas) or sum(T.n_words(r) for pieza in piezas for r in pieza) > 90:
+        return []
+    return piezas
+
+
+def _diagram_scenes(lesson: Lesson, section: str, limit: int, walk: bool = True) -> list[Scene]:
+    """El esquema verificado de la lección. Si se puede, se recorre pieza a pieza: la voz lee sus
+    rótulos (literales) mientras esa pieza se ilumina y las que faltan siguen tapadas."""
     scenes: list[Scene] = []
     for i, spec in enumerate(lesson.main_diagrams()[:limit]):
         titulo = T.clean(spec.get("titulo")) or "el esquema de la lección"
-        parts = [_fixed("esquema" if i == 0 else "esquema_extra", titulo=titulo.rstrip("."))]
-        parts[0].origin = "plantilla+esquema.titulo"
+        intro = _fixed("esquema" if i == 0 else "esquema_extra", titulo=titulo.rstrip("."))
+        intro.origin = "plantilla+esquema.titulo"
         pie = T.clean(spec.get("pie"))
-        if pie:
-            parts.append(Part(pie if pie.endswith((".", "!", "?", "…")) else pie + ".", "esquema.pie"))
+        pie_part = [Part(_sentence(pie), "esquema.pie")] if pie else []
+        view = {"kicker": "EL ESQUEMA" if i == 0 else "UNA FIGURA MÁS", "spec": spec}
+        piezas = diagram_walk(spec) if (walk and i == 0) else []
+        if not piezas:
+            # Tiempo para leer la figura en silencio.
+            scenes.append(Scene("esquema", section, view, [intro, *pie_part], pause_after_s=2.6))
+            continue
+        for j, rotulos in enumerate(piezas):
+            parts = ([intro] if j == 0 else []) + [Part(_sentence(r), "esquema.datos") for r in rotulos]
+            scenes.append(Scene("esquema", section, dict(view, focus={"shown": j + 1, "active": j}), parts, pause_after_s=0.45))
+        # Figura completa: su pie (si lo tiene) y un silencio para mirarla entera.
         scenes.append(
-            Scene(
-                "esquema",
-                section,
-                {"kicker": "EL ESQUEMA" if i == 0 else "UNA FIGURA MÁS", "spec": spec},
-                parts,
-                pause_after_s=2.6,  # tiempo para leer la figura en silencio
-            )
+            Scene("esquema", section, dict(view, focus={"shown": len(piezas), "active": -1}), pie_part, hold_s=0.0 if pie_part else 0.4, pause_after_s=2.4)
         )
     return scenes
 
@@ -556,7 +592,7 @@ def lesson_episode(book: Book, index: int, fmt: str = "clase", with_quiz: bool =
             )
 
     # 5 · Esquema: la síntesis visual verificada de la lección.
-    scenes.extend(_diagram_scenes(lesson, "Esquema", limit=2 if clase else 1))
+    scenes.extend(_diagram_scenes(lesson, "Esquema", limit=2 if clase else 1, walk=clase))
 
     # 6 · Matiz: dónde falla o qué se le discute a la idea.
     matiz = T.take_sentences(lesson.autocorreccion, 90 if clase else 32)
@@ -845,6 +881,9 @@ def export_script_markdown(episode: Episode, out_path: Path) -> Path:
         if s.kind == "esquema":
             spec = s.view.get("spec") or {}
             en_pantalla = f"Esquema «{spec.get('titulo', '')}» (plantilla {spec.get('plantilla', '?')})"
+            foco = s.view.get("focus")
+            if foco:
+                en_pantalla += f" · pieza {foco['active'] + 1} iluminada" if foco["active"] >= 0 else " · completo"
         elif s.kind == "mapa":
             en_pantalla = "Mapa del libro: " + " · ".join(T.clean(nd.get("etiqueta")) for nd in s.view.get("nodes", [])[: s.view.get("shown", 0)])
         elif s.kind == "ruta":

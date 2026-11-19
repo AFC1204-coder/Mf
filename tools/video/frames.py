@@ -310,7 +310,7 @@ def frame_html(episode: Episode, scene: Scene, view: dict[str, Any], scene_index
     ultima_con_seccion = max((i for i, s in enumerate(episode.scenes) if s.section), default=-1)
     finished = scene_index > ultima_con_seccion
     libro = episode.book_title + (f" · {episode.book_author}" if episode.book_author else "")
-    estado = {"eje": episode.eje, "spec": view.get("spec")}
+    estado = {"eje": episode.eje, "spec": view.get("spec"), "focus": view.get("focus")}
     foto = ""
     if photo and photo.exists() and scene.kind in ("portada", "cierre", "libro"):
         foto = f'<div class="vf-photo" style="background-image:url(\'{_e(photo.resolve().as_uri())}\')"></div>'
