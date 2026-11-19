@@ -500,7 +500,6 @@ def _guide_preview(guide: dict[str, Any], section: str, clase: bool) -> Scene:
 def _guide_recall(guide: dict[str, Any], section: str) -> list[Scene]:
     """Recuperación del esquema: se oculta, se piensa unos segundos y se revela pieza a pieza (con sus rótulos leídos)."""
     ps: list[G.Piece] = guide["pieces"]
-    n = len(ps)
     intro = _fixed("guia_recordar", titulo=guide["title"].rstrip("."))
     intro.origin = "plantilla+esquema.titulo"
     base = {"kicker": "RECUERDA EL ESQUEMA", "title": guide["title"], "countdown": None, **_guide_view(guide, shown=0, mode="ask")}
