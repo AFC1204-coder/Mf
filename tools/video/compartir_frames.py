@@ -54,12 +54,18 @@ def _stage_frase(v: dict[str, Any], tag: str) -> tuple[str, str]:
     a, b = paginas[pi]
     visto = int(v.get("shown") or 0)
     h0, h1 = (v.get("hot") or [0, 0])[:2]
+    neg, afi = (v.get("neg") or [-1, -1]), (v.get("afi") or [-1, -1])
     trozos = []
     for i in range(a, b):
         cls = "w off" if i >= visto else ("w hot" if h0 <= i < h1 else "w")
+        # «no X, sino Y»: cuando llega el «sino», lo negado se apaga y lo afirmado se queda en color.
+        if i < visto and visto > neg[1] and neg[0] < i < neg[1] and not (h0 <= i < h1):
+            cls += " neg"
+        elif i < visto and afi[0] <= i < afi[1]:
+            cls += " afi"
         trozos.append(f'<span class="{cls}">{_e(palabras[i])}</span>')
     n = b - a
-    talla = " l" if n > 11 else " m" if n > 7 else ""
+    talla = " xl" if n > 16 else " l" if n > 11 else " m" if n > 7 else ""
     # El rótulo de la escena: el tema (título de la lección) si lo hay; si no, el suyo cuando no repite el de arriba.
     rotulo = v.get("tema") or (v.get("kicker") if v.get("kicker") != tag else "")
     puntos = ""
@@ -108,8 +114,22 @@ def _recapitula(v: dict[str, Any]) -> bool:
     return total <= 30
 
 
+LISTAS = ("contraste", "cadena", "ciclo", "radial")  # patrones que son una lista de paneles
+PATRONES_PROPIOS = (*LISTAS, "matriz", "espectro", "cifra")
+
+
+def _centro(v: dict[str, Any]) -> str:
+    """El centro de un mapa o de un ciclo (y su apostilla): parte de la figura, siempre a la vista."""
+    marco = v.get("marco") or {}
+    if not marco.get("centro"):
+        return ""
+    sub = f'<span>{_e(marco.get("centro_sub"))}</span>' if marco.get("centro_sub") else ""
+    return f'<div class="cs-hub"><b>{_e(marco.get("centro"))}</b>{sub}</div>'
+
+
 def _patron(v: dict[str, Any]) -> str:
-    """Contraste (dos paneles enfrentados) o cadena (eslabones que se encadenan), con los rótulos literales de la figura.
+    """Una lista de paneles con los rótulos literales de la figura: contraste (dos lados enfrentados), cadena
+    (eslabones), ciclo (cadena que vuelve al principio) o radial (un centro y lo que sale de él).
 
     Antes de explicar nada se ven todos los títulos (la estructura entera); después, la pieza de la que se
     habla se abre y las demás quedan en su título: se ve dónde estamos y qué se ha dicho ya.
@@ -126,24 +146,87 @@ def _patron(v: dict[str, Any]) -> str:
         filas.append(_panel(p, j, estado))
     pie = f'<p class="cs-pie">{_e(v.get("pie"))}</p>' if modo == "pie" else ""
     if modo == "pie" and not _recapitula(v):
-        return pie  # con el pie, la recapitulación de títulos ya sería demasiado texto a la vez
-    return f'<div class="cs-pat p-{_e(v.get("patron"))} n-{len(pz)}">{"".join(filas)}</div>{pie}'
+        return _centro(v) + pie  # con el pie, la recapitulación de títulos ya sería demasiado texto a la vez
+    return _centro(v) + f'<div class="cs-pat p-{_e(v.get("patron"))} n-{len(pz)}">{"".join(filas)}</div>{pie}'
+
+
+def _matriz(v: dict[str, Any]) -> str:
+    """Dos ejes y cuatro cuadrantes, con el nombre de cada extremo en su sitio; el cuadrante del que se habla, encendido."""
+    pz = v.get("pieces") or []
+    ejes = (v.get("marco") or {}).get("ejes") or {}
+    modo = v.get("mode") or "titulo"
+    activa = int(v.get("active") if v.get("active") is not None else -1)
+    celdas = ""
+    for j, p in enumerate(pz[:4]):
+        estado = ("on" if j == activa else "visto" if j < activa else "falta") if modo == "pieza" else "visto"
+        # Los títulos de los cuadrantes se ven todos juntos al principio; después la cuadrícula solo sitúa (el texto va en la tarjeta).
+        rotulo = f'<b>{_e(p.get("t"))}</b>' if modo == "titulo" else ""
+        celdas += f'<div class="cs-cel {estado} tn-{_e(p.get("tone") or "a")}"><i>{j + 1}</i>{rotulo}</div>'
+    x, y = (ejes.get("x") or ["", ""]), (ejes.get("y") or ["", ""])
+    if modo == "pie":
+        return ""  # el pie se lee solo: la cuadrícula ya se ha visto y recorrido
+    if modo == "pieza" and 0 <= activa < 4:
+        # Recorriéndola, cada cuadrante se sitúa con sus dos coordenadas (los rótulos de los ejes) y un mini-mapa.
+        mini = "".join(f'<i class="{"on" if j == activa else ""}"></i>' for j in range(4))
+        return (
+            f'<div class="cs-coord"><div class="cs-mini">{mini}</div>'
+            f'<div><span>{_e(x[activa % 2])}</span><span>{_e(y[activa // 2])}</span></div></div>'
+        )
+    return (
+        '<div class="cs-mat">'
+        + f'<div class="cs-mat-n"><em>{_e(ejes.get("y_nombre"))}</em></div>'
+        + f'<div class="cs-mat-x"><span>{_e(x[0])}</span><em>{_e(ejes.get("x_nombre"))}</em><span>{_e(x[1])}</span></div>'
+        + f'<div class="cs-mat-y"><span>{_e(y[0])}</span><span>{_e(y[1])}</span></div>'
+        + f'<div class="cs-mat-g">{celdas}</div></div>'
+    )
+
+
+def _espectro(v: dict[str, Any]) -> str:
+    """Una recta entre dos polos con cada posición marcada donde la figura la pone; la posición de la que se habla, encendida."""
+    marco = v.get("marco") or {}
+    polos = marco.get("polos") or ["", ""]
+    pos = marco.get("pos") or []
+    modo = v.get("mode") or "titulo"
+    activa = int(v.get("active") if v.get("active") is not None else -1)
+    puntos = ""
+    for j, p in enumerate(v.get("pieces") or []):
+        estado = ("on" if j == activa else "visto" if j < activa else "falta") if modo == "pieza" else "visto"
+        x = 4 + 92 * float(pos[j] if j < len(pos) else 0.5)
+        puntos += f'<i class="{estado} tn-{_e(p.get("tone") or "a")}" style="left:{x:.1f}%">{j + 1}</i>'
+    return (
+        '<div class="cs-esp">'
+        + f'<div class="cs-esp-polos"><span>{_e(polos[0])}</span><span>{_e(polos[1])}</span></div>'
+        + f'<div class="cs-esp-linea">{puntos}</div></div>'
+    )
+
+
+def _cifras(v: dict[str, Any]) -> str:
+    """El número, enorme, y debajo qué mide. Antes de recorrerlas, todas las cifras juntas."""
+    pz = v.get("pieces") or []
+    modo = v.get("mode") or "titulo"
+    activa = int(v.get("active") if v.get("active") is not None else -1)
+    if modo == "pieza" and 0 <= activa < len(pz):
+        p = pz[activa]
+        return f'<div class="cs-cifra tn-{_e(p.get("tone") or "a")}"><b>{_e(p.get("t"))}</b><span>{_e(p.get("d"))}</span></div>'
+    return '<div class="cs-cifras">' + "".join(f'<b class="tn-{_e(p.get("tone") or "a")}">{_e(p.get("t"))}</b>' for p in pz) + "</div>"
 
 
 def _stage_figura(v: dict[str, Any], tag: str) -> tuple[str, str]:
     spec = v.get("spec") or {}
     modo = v.get("mode") or "titulo"
+    patron = v.get("patron")
     titulo = f'<h2 class="cs-fig-title">{_e(v.get("title"))}</h2>' if v.get("title") else ""
-    if v.get("patron") in ("contraste", "cadena"):
+    pie = f'<p class="cs-pie">{_e(v.get("pie"))}</p>' if modo == "pie" else ""
+    if patron in LISTAS:
         # Mientras se recorre, el título de la figura ya se ha visto: el sitio es para la pieza.
         return _kicker(v.get("kicker")) + ("" if modo == "pieza" else titulo) + _patron(v), f"m-{modo} con-patron"
+    if patron in ("matriz", "espectro"):
+        forma = _matriz(v) if patron == "matriz" else _espectro(v)
+        return _kicker(v.get("kicker")) + titulo + forma + (_tarjeta(v) if modo == "pieza" else pie), f"m-{modo} con-forma"
+    if patron == "cifra":
+        return _kicker(v.get("kicker")) + titulo + _cifras(v) + pie, f"m-{modo} con-forma"
     silueta = f'<div class="cs-sil"><div class="dg" data-plantilla="{_e(spec.get("plantilla"))}"><div id="cs-dg"></div></div></div>'
-    if modo == "pieza":
-        resto = _tarjeta(v)
-    elif modo == "pie":
-        resto = f'<p class="cs-pie">{_e(v.get("pie"))}</p>'
-    else:
-        resto = ""
+    resto = _tarjeta(v) if modo == "pieza" else pie
     return _kicker(v.get("kicker")) + titulo + f'<div class="cs-figrow">{silueta}{resto}</div>', f"m-{modo}"
 
 
@@ -224,19 +307,35 @@ def palabras_en_pantalla(kind: str, view: dict[str, Any]) -> int:
     if kind == "c-pausa":
         return T.n_words(str(v.get("question") or ""))
     if kind == "c-figura":
-        titulo = T.n_words(str(v.get("title") or ""))
-        if v.get("patron") in ("contraste", "cadena") and v.get("mode") == "pieza":
-            titulo = 0
+        patron, modo = v.get("patron"), v.get("mode")
+        en_lista = patron in LISTAS
+        titulo = 0 if (en_lista and modo == "pieza") else T.n_words(str(v.get("title") or ""))
         pz = v.get("pieces") or []
         j = int(v.get("active") if v.get("active") is not None else -1)
-        # Con patrón (contraste, cadena) los títulos de las piezas ya vistas siguen a la vista.
-        con_patron = v.get("patron") in ("contraste", "cadena")
-        if v.get("mode") == "pieza":
+        marco = v.get("marco") or {}
+        ejes = marco.get("ejes") or {}
+        # El marco de la figura (centro, polos, extremos de los ejes) está siempre a la vista.
+        fijo = sum(T.n_words(str(x)) for x in [marco.get("centro"), marco.get("centro_sub"), *(marco.get("polos") or []), *(ejes.get("x") or []), *(ejes.get("y") or []), ejes.get("x_nombre"), ejes.get("y_nombre")] if x)
+        rotulos_todos = sum(T.n_words(str(x.get("t") or "")) for x in pz)
+        if modo == "pieza":
             p = pz[j] if 0 <= j < len(pz) else {}
-            vistos = sum(T.n_words(str(x.get("t") or "")) for x in pz[:j]) if con_patron else 0
-            return titulo + vistos + sum(T.n_words(str(x)) for x in [p.get("t"), p.get("d"), *(p.get("items") or [])] if x)
-        rotulos = sum(T.n_words(str(x.get("t") or "")) for x in pz) if con_patron and (v.get("mode") != "pie" or _recapitula(v)) else 0
-        return titulo + rotulos + (T.n_words(str(v.get("pie") or "")) if v.get("mode") == "pie" else 0)
+            propia = sum(T.n_words(str(x)) for x in [p.get("t"), p.get("d"), *(p.get("items") or [])] if x)
+            if patron == "cifra":
+                return titulo + propia
+            if patron == "matriz":
+                x, y = (ejes.get("x") or ["", ""]), (ejes.get("y") or ["", ""])
+                return titulo + T.n_words(str(x[j % 2])) + T.n_words(str(y[(j // 2) % 2])) + propia
+            vistos = sum(T.n_words(str(x.get("t") or "")) for x in pz[:j]) if en_lista else 0
+            return titulo + fijo + vistos + propia
+        if patron == "cifra" or (patron == "matriz" and modo == "titulo"):
+            rotulos = rotulos_todos
+        elif en_lista and (modo != "pie" or _recapitula(v)):
+            rotulos = rotulos_todos
+        else:
+            rotulos = 0
+        if patron == "matriz" and modo == "pie":
+            fijo = 0
+        return titulo + fijo + rotulos + (T.n_words(str(v.get("pie") or "")) if modo == "pie" else 0)
     if kind == "c-nodo":
         return T.n_words(str(v.get("label") or "")) + T.n_words(str(v.get("text") or ""))
     if kind == "c-credito":

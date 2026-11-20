@@ -87,6 +87,7 @@ body.cs.st-practica, body.cs.st-respuesta { --tone: var(--cs-ok); }
 .cs-kin { margin: 0; overflow-wrap: break-word; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 12.4em; line-height: 1.13; color: var(--cs-ink); text-wrap: pretty; }
 .cs-kin.m { font-size: 10.8em; }
 .cs-kin.l { font-size: 9.6em; }
+.cs-kin.xl { font-size: 8.4em; }
 .cs-kin .w.hot { color: var(--tone); }
 .cs-kin .w.off { opacity: 0; }
 .cs-pages { display: flex; gap: 1.2em; margin-top: 3.4em; }
@@ -218,6 +219,76 @@ body.cs.st-practica, body.cs.st-respuesta { --tone: var(--cs-ok); }
 .ar-16x9 .p-contraste .cs-pan + .cs-pan::before { display: none; }
 .ar-16x9 .cs-recuerda, .ar-1x1 .cs-recuerda { margin-bottom: 2.6em; }
 .ar-16x9 .cs-recuerda p, .ar-1x1 .cs-recuerda p { font-size: 6em; }
+
+/* ── «no X, sino Y»: lo negado se apaga, lo afirmado se queda en color ── */
+.cs-kin .w.neg { color: var(--cs-ink3); text-decoration: line-through; text-decoration-thickness: 0.06em; text-decoration-color: color-mix(in srgb, var(--cs-mal) 75%, transparent); }
+.cs-kin .w.afi { color: var(--tone); }
+
+/* ── centro de un mapa o de un ciclo ── */
+.cs-hub { align-self: flex-start; max-width: 100%; margin-bottom: 2.4em; padding: 1.5em 2.6em; border-radius: 5em; border: 0.26em solid var(--accent); background: color-mix(in srgb, var(--accent) 14%, #101012); }
+.cs-hub b { display: block; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 5.6em; line-height: 1.14; color: var(--cs-ink); }
+.cs-hub span { display: block; margin-top: 0.25em; font-family: 'VF Serif', serif; font-style: italic; font-size: 3.8em; color: var(--cs-ink2); }
+.m-pieza .cs-hub { padding: 1em 2em; margin-bottom: 1.8em; }
+.m-pieza .cs-hub b { font-size: 4.2em; }
+.m-pieza .cs-hub span { display: none; }
+/* radial: del centro cuelgan las piezas (un corchete a la izquierda las une); sin orden, así que sin hilo numerado */
+.p-radial { gap: 1.5em; margin-left: 3.4em; padding-left: 3em; border-left: 0.4em solid color-mix(in srgb, var(--accent) 55%, transparent); border-radius: 0 0 0 2.4em; }
+.p-radial .cs-pan { padding: 1.8em 2.6em; }
+.p-radial .cs-pan.on { padding: 2.6em; }
+.p-radial .cs-pan > i { display: none; }
+.p-radial .cs-pan.falta b { visibility: visible; height: auto; opacity: 0.7; }
+.p-radial.n-5 .cs-pan b, .p-radial.n-6 .cs-pan b { font-size: 4.8em; }
+.p-radial.n-5 .cs-pan.on b, .p-radial.n-6 .cs-pan.on b { font-size: 6.6em; }
+/* ciclo: la cadena, y una flecha que devuelve del último eslabón al primero */
+.p-ciclo { gap: 1.5em; margin-right: 6em; }
+.p-ciclo .cs-pan { position: relative; z-index: 1; padding: 1.8em 2.6em; }
+.p-ciclo .cs-pan.on { padding: 2.6em; }
+.p-ciclo::before { content: ''; position: absolute; right: -5.4em; top: 4em; bottom: 4em; width: 4.4em; border: 0.5em solid color-mix(in srgb, var(--accent) 70%, transparent); border-left: 0; border-radius: 0 4em 4em 0; }
+.p-ciclo::after { content: ''; position: absolute; right: -2.2em; top: 2.6em; width: 0; height: 0; border-style: solid; border-width: 1.5em 2.4em 1.5em 0; border-color: transparent color-mix(in srgb, var(--accent) 85%, transparent) transparent transparent; }
+.p-ciclo.n-5 .cs-pan b, .p-ciclo.n-6 .cs-pan b { font-size: 4.8em; }
+.p-ciclo.n-5 .cs-pan.on b, .p-ciclo.n-6 .cs-pan.on b { font-size: 6.6em; }
+
+/* ── matriz: dos ejes, cuatro cuadrantes ── */
+.con-forma .cs-fig-title { margin-bottom: 0.9em; }
+.cs-mat { display: grid; grid-template-columns: 4.6em 6.4em 1fr; grid-template-rows: auto 1fr; gap: 1.2em; margin-bottom: 3em; }
+.cs-mat-n { grid-column: 1; grid-row: 2; position: relative; }
+.cs-mat-n em { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); font-style: normal; font-size: 3.7em; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
+.cs-mat-x { grid-column: 3; display: grid; grid-template-columns: 1fr 1fr; gap: 1.6em; position: relative; padding-top: 5.4em; }
+.cs-mat-x em { position: absolute; font-style: normal; font-size: 3.7em; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
+.cs-mat-x em { left: 0; right: 0; top: 0; text-align: center; overflow: hidden; text-overflow: ellipsis; }
+.cs-mat-x span { text-align: center; font-size: 3.8em; font-weight: 600; line-height: 1.2; color: var(--cs-ink2); }
+.cs-mat-y { grid-column: 2; grid-row: 2; display: grid; grid-template-rows: 1fr 1fr; gap: 1.6em; position: relative; }
+.cs-mat-y span { writing-mode: vertical-rl; transform: rotate(180deg); text-align: center; align-self: center; justify-self: end; font-size: 3.8em; font-weight: 600; line-height: 1.2; color: var(--cs-ink2); }
+.cs-mat-g { grid-column: 3; grid-row: 2; display: grid; grid-template-columns: 1fr 1fr; gap: 1.6em; }
+.cs-cel { position: relative; min-height: 15em; padding: 2em 2em 2em 2.2em; border-radius: 2.4em; border: 0.24em solid color-mix(in srgb, var(--tn2) 55%, transparent); background: color-mix(in srgb, var(--tn2) 9%, #121214); display: flex; flex-direction: column; justify-content: center; }
+.cs-cel i { position: absolute; left: 0.5em; top: 0.4em; width: 1.6em; height: 1.6em; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-style: normal; font-size: 3.2em; font-weight: 700; color: #0a0a0b; background: var(--tn2); }
+.cs-cel b { font-family: 'VF Playfair', serif; font-weight: 700; font-size: 4.6em; line-height: 1.16; color: var(--cs-ink); text-wrap: balance; padding-top: 1.5em; }
+.cs-cel.on { border-color: var(--tn2); background: color-mix(in srgb, var(--tn2) 20%, #121214); box-shadow: 0 0 0 0.5em color-mix(in srgb, var(--tn2) 16%, transparent); }
+.m-pieza .cs-cel.visto { opacity: 0.6; }
+.cs-cel.falta { opacity: 0.4; border-style: dashed; background: transparent; }
+.cs-cel.falta b { visibility: hidden; }
+.cs-coord { display: flex; align-items: center; gap: 3em; margin-bottom: 3em; }
+.cs-mini { flex: none; display: grid; grid-template-columns: 1fr 1fr; gap: 0.9em; width: 15em; height: 15em; }
+.cs-mini i { border-radius: 1.2em; border: 0.24em solid var(--cs-ink3); }
+.cs-mini i.on { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 0.5em color-mix(in srgb, var(--accent) 22%, transparent); }
+.cs-coord span { display: block; font-size: 4.6em; font-weight: 600; line-height: 1.22; color: var(--cs-ink); text-wrap: pretty; }
+.cs-coord span + span { margin-top: 0.5em; padding-top: 0.5em; border-top: 0.06em solid #ffffff2e; }
+
+/* ── espectro: dos polos y posiciones entre ellos ── */
+.cs-esp { margin: 1em 0 4.4em; }
+.cs-esp-polos { display: flex; justify-content: space-between; gap: 3em; margin-bottom: 3.6em; }
+.cs-esp-polos span { flex: 1; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 4.8em; line-height: 1.16; color: var(--cs-ink); text-wrap: balance; }
+.cs-esp-polos span + span { text-align: right; }
+.cs-esp-linea { position: relative; height: 1.2em; margin: 0 1em 3em; border-radius: 0.6em; background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 85%, transparent), #ffffff30 50%, color-mix(in srgb, var(--accent) 85%, transparent)); }
+.cs-esp-linea i { position: absolute; top: 50%; transform: translate(-50%, -50%); width: 1.9em; height: 1.9em; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-style: normal; font-size: 3.6em; font-weight: 700; color: var(--cs-ink); background: #26262a; border: 0.08em solid #9a9388; }
+.cs-esp-linea i.on { width: 2.4em; height: 2.4em; color: #0a0a0b; background: var(--tn2); border-color: var(--tn2); box-shadow: 0 0 0 0.3em color-mix(in srgb, var(--tn2) 30%, transparent); }
+.cs-esp-linea i.falta { opacity: 0.45; }
+
+/* ── cifras: el número, enorme, y qué mide ── */
+.cs-cifra b { display: block; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 26em; line-height: 1; color: var(--tn2); letter-spacing: -0.01em; overflow-wrap: anywhere; }
+.cs-cifra span { display: block; margin-top: 0.5em; font-size: 6.4em; line-height: 1.24; color: var(--cs-ink); text-wrap: pretty; }
+.cs-cifras { display: flex; flex-wrap: wrap; gap: 1.2em 4em; margin-bottom: 3em; }
+.cs-cifras b { font-family: 'VF Playfair', serif; font-weight: 700; font-size: 13em; line-height: 1.05; color: var(--tn2); }
 
 /* ── portada (miniatura): el gancho, el libro y la marca ── */
 .k-c-portada .cs-stage { justify-content: center; }

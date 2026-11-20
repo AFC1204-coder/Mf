@@ -75,6 +75,7 @@ ROTULOS = {
 # Presupuestos (palabras). El texto en pantalla va por páginas: nunca más de PAGINA a la vez.
 PAGINA = 14
 RAFAGA = 4
+GIRO_PAGINA = 24
 MATIZ_PALABRAS = 38
 MATIZ_CORTO = 26
 FIGURA_PALABRAS = 36
@@ -336,6 +337,29 @@ def rafagas(tokens: list[str], a: int, b: int, max_words: int = RAFAGA) -> list[
     return out
 
 
+def no_sino(tokens: list[str]) -> tuple[int, int, int] | None:
+    """«no X, sino Y» dentro de una frase: (dónde empieza lo negado, dónde está «sino», dónde acaba lo afirmado).
+
+    Sirve para **señalar** el contraste que la frase ya hace (lo negado se apaga, lo afirmado queda en color).
+    Prudente: «no solo… sino también» no niega nada y no cuenta; ante la duda, None.
+    """
+    n = [T.norm(t).strip(".,;:«»\"()¿?¡!—–") for t in tokens]
+    for i, w in enumerate(n):
+        if w != "no" or any(x in ("solo", "solamente", "unicamente", "tan", "obstante") for x in n[i + 1 : i + 4]):
+            continue
+        for j in range(i + 2, min(i + 16, len(n))):
+            if _cierra(tokens[j - 1], _FIN_FRASE):
+                break
+            if n[j] == "sino":
+                if n[j + 1 : j + 2] in (["tambien"], ["ademas"]) or n[j + 1 : j + 3] in (["que", "tambien"], ["que", "ademas"]):
+                    break
+                k = j + 1
+                while k < len(n) and not _cierra(tokens[k], (*_FIN_FRASE, ";", ":")):
+                    k += 1
+                return i, j, min(k + 1, len(n))
+    return None
+
+
 def escena_frase(
     section: str,
     estilo: str,
@@ -354,7 +378,9 @@ def escena_frase(
     tokens = narracion.split()
     salto = sum(T.n_words(p.text) for p in parts[:skip_parts])
     visibles = tokens[salto:]
-    paginas = paginar(visibles)
+    giro = no_sino(visibles) if estilo == "idea" else None
+    # Un «no X, sino Y» breve va en una sola página: el contraste se ve entero, con lo negado apagado junto a lo afirmado.
+    paginas = [(0, len(visibles))] if (giro and len(visibles) <= GIRO_PAGINA) else paginar(visibles)
     cortes: list[tuple[int, int, int]] = []  # (página, inicio, fin) de cada ráfaga, sobre `visibles`
     for pi, (a, b) in enumerate(paginas):
         cortes += [(pi, i, j) for i, j in rafagas(visibles, a, b)]
@@ -368,6 +394,8 @@ def escena_frase(
         "shown": 0,
         "hot": [0, 0],
     }
+    if giro:
+        view["neg"], view["afi"] = [giro[0], giro[1]], [giro[1], giro[2]]
     beats: list[Beat] = []
     for n, (pi, i, j) in enumerate(cortes):
         patch = {"page": pi, "shown": j, "hot": [i, j]}
@@ -423,12 +451,78 @@ PATRONES = {
     "comparar": "contraste",  # dos paneles enfrentados: la idea está en la diferencia
     "pasos": "cadena",  # eslabones que se van encadenando: la idea está en el orden (causa → efecto, antes → después)
     "piramide": "cadena",
+    "tiempo": "cadena",  # cada eslabón, una fecha
+    "ciclo": "ciclo",  # una cadena que vuelve al principio, alrededor de su centro
+    "mapa": "radial",  # un centro y lo que sale de él
+    "matriz": "matriz",  # dos ejes, cuatro cuadrantes
+    "espectro": "espectro",  # dos polos y posiciones entre ellos
+    "cifras": "cifra",  # el número, enorme, y qué mide
 }
 
 
 def patron_visual(spec: dict[str, Any]) -> str:
-    """«contraste», «cadena» o «silueta» (la forma de la figura con insignias: ciclos, mapas, matrices)."""
-    return PATRONES.get(str(spec.get("plantilla")), "silueta")
+    """El patrón que cuenta la figura, o «silueta» (la forma dibujada por la app, con insignias) si no hay uno propio."""
+    patron = PATRONES.get(str(spec.get("plantilla")), "silueta")
+    datos = spec.get("datos") if isinstance(spec.get("datos"), dict) else {}
+    if patron == "matriz" and len(datos.get("celdas") or []) != 4:
+        return "silueta"
+    return patron
+
+
+def piezas_figura(spec: dict[str, Any] | None) -> list[G.Piece]:
+    """Las piezas de una figura en orden de lectura, siempre con sus rótulos literales.
+
+    Las de cajas las da `guia.pieces`; aquí se añaden las que ese módulo no recorre: las marcas de un
+    espectro, los eventos de una línea de tiempo (fecha y hecho) y las cifras (número y qué mide).
+    """
+    ps = G.pieces(spec)
+    if ps or not spec:
+        return ps
+    d = spec.get("datos") if isinstance(spec.get("datos"), dict) else {}
+
+    def s_(v: Any) -> str:
+        return T.clean(v) if isinstance(v, (str, int, float)) else ""
+
+    out: list[G.Piece] = []
+    plantilla = spec.get("plantilla")
+    if plantilla == "espectro":
+        polos = [s_(x) for x in (d.get("polos") or [])]
+        if len(polos) != 2 or not all(polos):
+            return []
+        for i, x in enumerate(sorted((m for m in d.get("marcas") or [] if isinstance(m, dict)), key=lambda m: float(m.get("pos") or 0))):
+            out.append(G.Piece(s_(x.get("t")), s_(x.get("d")), tone=x.get("tono") or "a", dom=i))
+    elif plantilla == "tiempo":
+        for i, x in enumerate(d.get("eventos") or []):
+            if isinstance(x, dict):
+                out.append(G.Piece(s_(x.get("f")), s_(x.get("t")), tone=x.get("tono") or "a", dom=i))
+    elif plantilla == "cifras":
+        for i, x in enumerate(d.get("items") or []):
+            if isinstance(x, dict):
+                out.append(G.Piece(s_(x.get("n")), s_(x.get("t")), tone=x.get("tono") or "a", dom=i))
+    minimo = 1 if plantilla == "cifras" else 2
+    if not (minimo <= len(out) <= G.MAX_PIECES) or any(not p.t for p in out):
+        return []
+    return out
+
+
+def marco_figura(spec: dict[str, Any]) -> dict[str, Any]:
+    """Lo que enmarca las piezas y también es parte de la figura: el centro de un mapa o un ciclo, los polos, los ejes."""
+    d = spec.get("datos") if isinstance(spec.get("datos"), dict) else {}
+    marco: dict[str, Any] = {}
+    if T.clean(d.get("centro")):
+        marco["centro"] = T.clean(d.get("centro"))
+        marco["centro_sub"] = T.clean(d.get("centroSub"))
+    if spec.get("plantilla") == "espectro":
+        marcas = sorted((m for m in d.get("marcas") or [] if isinstance(m, dict)), key=lambda m: float(m.get("pos") or 0))
+        marco["polos"] = [T.clean(x) for x in (d.get("polos") or [])][:2]
+        marco["pos"] = [min(1.0, max(0.0, float(m.get("pos") or 0))) for m in marcas]
+    if spec.get("plantilla") == "matriz":
+        ex, ey = (d.get("ejeX") or {}), (d.get("ejeY") or {})
+        marco["ejes"] = {
+            "x": [T.clean(ex.get("izq")), T.clean(ex.get("der"))], "x_nombre": T.clean(ex.get("nombre")),
+            "y": [T.clean(ey.get("arriba")), T.clean(ey.get("abajo"))], "y_nombre": T.clean(ey.get("nombre")),
+        }
+    return marco
 
 
 def _lectura(p: G.Piece, nivel: int) -> list[str]:
@@ -447,7 +541,7 @@ def escenas_figura(lesson: Lesson, nivel_min: int = 0) -> list[Scene]:
     si no, solo su título (y su primer rótulo). Cada tarjeta dura lo que se tarda en leerla.
     """
     specs = lesson.main_diagrams()[:1]
-    ps = G.pieces(specs[0]) if specs else []
+    ps = piezas_figura(specs[0]) if specs else []
     if not ps:
         return []
     spec = specs[0]
@@ -455,7 +549,7 @@ def escenas_figura(lesson: Lesson, nivel_min: int = 0) -> list[Scene]:
     pie = T.clean(spec.get("pie"))
     base = {
         "spec": spec, "pieces": [p.to_view() for p in ps], "order": G.order(ps), "n": len(ps), "title": titulo,
-        "kicker": ROTULOS["figura"], "patron": patron_visual(spec),
+        "kicker": ROTULOS["figura"], "patron": patron_visual(spec), "marco": marco_figura(spec),
     }
     nivel = next((nv for nv in (0, 1, 2) if nv >= nivel_min and sum(T.n_words(x) for p in ps for x in _lectura(p, nv)) <= FIGURA_PALABRAS), 2)
 

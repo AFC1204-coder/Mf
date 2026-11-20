@@ -183,7 +183,10 @@ class PiezasTest(unittest.TestCase):
     def test_el_patron_visual_sale_de_la_plantilla_de_la_figura(self):
         self.assertEqual(K.patron_visual({"plantilla": "comparar"}), "contraste")
         self.assertEqual(K.patron_visual({"plantilla": "pasos"}), "cadena")
-        self.assertEqual(K.patron_visual({"plantilla": "ciclo"}), "silueta")
+        self.assertEqual(K.patron_visual({"plantilla": "ciclo"}), "ciclo")
+        self.assertEqual(K.patron_visual({"plantilla": "mapa"}), "radial")
+        self.assertEqual(K.patron_visual({"plantilla": "matriz", "datos": {"celdas": [{}, {}, {}]}}), "silueta")  # sin cuatro cuadrantes no hay matriz
+        self.assertEqual(K.patron_visual({"plantilla": "iceberg"}), "silueta")
         figura = [s for s in self.plan.piezas[1].scenes if s.kind == "c-figura"]
         self.assertTrue(all(s.view["patron"] == "contraste" for s in figura))
         self.assertEqual([s.view["mode"] for s in figura], ["titulo", "pieza", "pieza", "pie"])  # estructura entera → piezas → pie
@@ -285,6 +288,105 @@ class PiezasTest(unittest.TestCase):
         otra = K.plan_libro(_libro(**{"l-1": {"autocorreccion": "No toda intuición falla. A veces acierta."}})).piezas[1]
         self.assertNotEqual(self.plan.piezas[1].fingerprint(), otra.fingerprint())
         self.assertEqual(self.plan.piezas[1].fingerprint(), K.plan_libro(F.libro()).piezas[1].fingerprint())
+
+
+FIGURAS = {
+    "espectro": {"tipo": "diagrama", "plantilla": "espectro", "titulo": "De menos a más margen", "pie": "Un continuo, no dos cajas.",
+                 "datos": {"polos": ["Poco margen", "Mucho margen"], "marcas": [
+                     {"pos": 0.9, "t": "Holgado", "d": "Puede esperar"}, {"pos": 0.1, "t": "Apurado", "d": "Decide con prisa"}, {"pos": 0.5, "t": "Justo", "d": "Depende del día"}]}},
+    "tiempo": {"tipo": "diagrama", "plantilla": "tiempo", "titulo": "Dos fechas", "pie": "",
+               "datos": {"eventos": [{"f": "1998", "t": "Se publica el estudio"}, {"f": "2010", "t": "Se retira"}]}},
+    "cifras": {"tipo": "diagrama", "plantilla": "cifras", "titulo": "Una cifra", "pie": "",
+               "datos": {"items": [{"n": "37 %", "t": "De las respuestas rápidas fallan"}]}},
+    "mapa": {"tipo": "diagrama", "plantilla": "mapa", "titulo": "Tres frenos", "pie": "Los tres cuentan.",
+             "datos": {"centro": "Pensar despacio", "centroSub": "lectura nuestra", "nodos": [{"t": "Parar", "d": "Antes de responder"}, {"t": "Dudar", "d": "De lo inmediato"}, {"t": "Comprobar", "d": "Con un dato"}]}},
+    "matriz": {"tipo": "diagrama", "plantilla": "matriz", "titulo": "Prisa y acierto", "pie": "Cuatro casos.",
+               "datos": {"ejeX": {"nombre": "Ritmo", "izq": "Despacio", "der": "Deprisa"}, "ejeY": {"nombre": "Resultado", "arriba": "Acierta", "abajo": "Falla"},
+                         "celdas": [{"t": "Lo esperable", "d": "Pensó y acertó"}, {"t": "Suerte", "d": "No pensó y acertó"}, {"t": "Mala suerte", "d": "Pensó y falló"}, {"t": "Lo habitual", "d": "No pensó y falló"}]}},
+}
+
+
+def _con_figura(nombre: str):
+    return _libro(diagramas={"l-1": [FIGURAS[nombre]]})
+
+
+class PatronesTest(unittest.TestCase):
+    def setUp(self):
+        self._node = L._check_diagrams
+        L._check_diagrams = lambda specs: None
+
+    def tearDown(self):
+        L._check_diagrams = self._node
+
+    def _figura(self, nombre):
+        libro = _con_figura(nombre)
+        p = K.pieza_idea(libro, 0)
+        self.assertEqual([i for i in L.lint_pieza(p, libro) if i.level == "error"], [], nombre)
+        return p, [s for s in p.scenes if s.kind == "c-figura"]
+
+    def test_las_figuras_que_antes_iban_sin_esquema_ahora_se_recorren(self):
+        for nombre, patron in (("espectro", "espectro"), ("tiempo", "cadena"), ("cifras", "cifra")):
+            p, figura = self._figura(nombre)
+            self.assertEqual(p.arco, "completo", nombre)
+            self.assertTrue(figura and all(s.view["patron"] == patron for s in figura), nombre)
+
+    def test_el_espectro_va_de_un_polo_al_otro_en_su_orden(self):
+        _, figura = self._figura("espectro")
+        self.assertEqual([p["t"] for p in figura[0].view["pieces"]], ["Apurado", "Justo", "Holgado"])  # por posición, no por orden de escritura
+        self.assertEqual(figura[0].view["marco"]["polos"], ["Poco margen", "Mucho margen"])
+        self.assertEqual(figura[0].view["marco"]["pos"], [0.1, 0.5, 0.9])
+        cuerpo, _ = CF._stage_figura(figura[1].view, "")
+        self.assertIn("Poco margen", cuerpo)
+        self.assertIn("left:13.2%", cuerpo)
+        self.assertEqual(figura[1].narration, "Apurado. Decide con prisa.")
+
+    def test_la_fecha_y_la_cifra_son_literales(self):
+        _, tiempo = self._figura("tiempo")
+        self.assertEqual(tiempo[1].narration, "1998. Se publica el estudio.")
+        _, cifras = self._figura("cifras")
+        self.assertEqual(cifras[1].narration, "37 %. De las respuestas rápidas fallan.")
+        cuerpo, _ = CF._stage_figura(cifras[1].view, "")
+        self.assertIn('<div class="cs-cifra tn-a"><b>37 %</b><span>De las respuestas rápidas fallan</span></div>', cuerpo)
+
+    def test_el_centro_del_mapa_y_su_apostilla_se_ven(self):
+        _, figura = self._figura("mapa")
+        self.assertEqual(figura[0].view["patron"], "radial")
+        for escena in figura:
+            cuerpo, _ = CF._stage_figura(escena.view, "")
+            self.assertIn("<b>Pensar despacio</b><span>lectura nuestra</span>", cuerpo)  # antes la silueta no lo enseñaba
+
+    def test_la_matriz_ensena_los_cuatro_cuadrantes_y_luego_situa_cada_uno(self):
+        _, figura = self._figura("matriz")
+        inicio, _ = CF._stage_figura(figura[0].view, "")
+        for rotulo in ("Ritmo", "Resultado", "Despacio", "Deprisa", "Acierta", "Falla", "Lo esperable", "Lo habitual"):
+            self.assertIn(rotulo, inicio)
+        segunda, _ = CF._stage_figura(figura[2].view, "")  # «Suerte»: deprisa y acierta
+        self.assertIn("<span>Deprisa</span><span>Acierta</span>", segunda)
+        self.assertIn("<b>Suerte</b>", segunda)
+        cuarta, _ = CF._stage_figura(figura[4].view, "")  # «Lo habitual»: deprisa y falla
+        self.assertIn("<span>Deprisa</span><span>Falla</span>", cuarta)
+
+    def test_no_x_sino_y(self):
+        self.assertEqual(K.no_sino("Lo que hace buena una inversión no es la calidad del activo, sino la relación entre su precio y su valor.".split()), (6, 12, 21))
+        self.assertIsNone(K.no_sino("No solo falla la memoria, sino también el juicio.".split()))  # no niega nada
+        self.assertIsNone(K.no_sino("No lo sabemos. Sino hubiera sido otro.".split()))  # no cruza el punto
+        self.assertIsNone(K.no_sino("Pensar despacio corrige.".split()))
+
+    def test_el_contraste_de_la_frase_se_senala_sin_cambiar_una_palabra(self):
+        idea = "La ventaja no está en una mano concreta, sino en saber algo de la baraja."
+        s = K.escena_frase("Idea", "idea", "UNA IDEA", [Part(idea, "leccion.idea_clave")])
+        self.assertEqual(s.narration, idea)
+        self.assertEqual(len(s.view["pages"]), 1)  # breve: el contraste se ve entero en una página
+        self.assertEqual((s.view["neg"], s.view["afi"]), ([2, 8], [8, 15]))
+        final = dict(s.view, **s.beats[-1].patch)
+        cuerpo, _ = CF._stage_frase(final, "UNA IDEA")
+        self.assertIn('<span class="w neg">está</span>', cuerpo)
+        self.assertIn('<span class="w">no</span>', cuerpo)  # el «no» no se tacha: es lo que dice la frase
+        self.assertIn('class="w afi">saber</span>', cuerpo)
+        antes = dict(s.view, **s.beats[0].patch)
+        self.assertNotIn("neg", CF._stage_frase(antes, "UNA IDEA")[0])  # hasta que no se ha dicho lo negado, nada se apaga
+        matiz = K.escena_frase("Matiz", "matiz", "EL MATIZ", [Part(idea, "leccion.autocorreccion")])
+        self.assertNotIn("neg", matiz.view)  # solo en la idea
 
 
 class ControlTest(unittest.TestCase):
