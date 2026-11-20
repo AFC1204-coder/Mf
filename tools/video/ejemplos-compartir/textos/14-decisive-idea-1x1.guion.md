@@ -17,7 +17,7 @@
 > Del libro Decisive, de Chip Heath y Dan Heath.  
 > <sub>plantilla+titulos</sub>
 
-## 3. EN UNA IMAGEN · `c-figura` (~3 s · hasta 3 palabras a la vista)
+## 3. EN UNA IMAGEN · `c-figura` (~3 s · hasta 20 palabras a la vista)
 
 **En pantalla:** silueta del esquema «Ampliar las opciones» (mapa), modo titulo
 > En una imagen: Ampliar las opciones.  
@@ -29,25 +29,25 @@
 > El problema: marco estrecho.  
 > <sub>esquema.datos</sub>
 
-## 5. EN UNA IMAGEN · `c-figura` (~3 s · hasta 13 palabras a la vista)
+## 5. EN UNA IMAGEN · `c-figura` (~3 s · hasta 17 palabras a la vista)
 
 **En pantalla:** silueta del esquema «Ampliar las opciones» (mapa), modo pieza
 > Opciones que desaparecen.  
 > <sub>esquema.datos</sub>
 
-## 6. EN UNA IMAGEN · `c-figura` (~4 s · hasta 15 palabras a la vista)
+## 6. EN UNA IMAGEN · `c-figura` (~4 s · hasta 22 palabras a la vista)
 
 **En pantalla:** silueta del esquema «Ampliar las opciones» (mapa), modo pieza
 > Seguimiento en paralelo.  
 > <sub>esquema.datos</sub>
 
-## 7. EN UNA IMAGEN · `c-figura` (~4 s · hasta 16 palabras a la vista)
+## 7. EN UNA IMAGEN · `c-figura` (~4 s · hasta 26 palabras a la vista)
 
 **En pantalla:** silueta del esquema «Ampliar las opciones» (mapa), modo pieza
 > Quien ya lo resolvió.  
 > <sub>esquema.datos</sub>
 
-## 8. EN UNA IMAGEN · `c-figura` (~6 s · hasta 17 palabras a la vista)
+## 8. EN UNA IMAGEN · `c-figura` (~6 s · hasta 20 palabras a la vista)
 
 **En pantalla:** silueta del esquema «Ampliar las opciones» (mapa), modo pie
 > El dato de Nutt muestra una asociación, no una causa; demasiadas alternativas pueden paralizar.  

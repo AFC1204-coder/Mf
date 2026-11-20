@@ -17,43 +17,43 @@
 > Del libro Chi Self-Massage, de Mantak Chia.  
 > <sub>plantilla+titulos</sub>
 
-## 3. EN UNA IMAGEN · `c-figura` (~4 s · hasta 6 palabras a la vista)
+## 3. EN UNA IMAGEN · `c-figura` (~4 s · hasta 16 palabras a la vista)
 
 **En pantalla:** silueta del esquema «Practicar sin forzar ni prometer demasiado» (mapa), modo titulo
 > En una imagen: Practicar sin forzar ni prometer demasiado.  
 > <sub>plantilla+esquema.titulo</sub>
 
-## 4. EN UNA IMAGEN · `c-figura` (~3 s · hasta 15 palabras a la vista)
+## 4. EN UNA IMAGEN · `c-figura` (~3 s · hasta 12 palabras a la vista)
 
 **En pantalla:** silueta del esquema «Practicar sin forzar ni prometer demasiado» (mapa), modo pieza
 > Constancia.  
 > <sub>esquema.datos</sub>
 
-## 5. EN UNA IMAGEN · `c-figura` (~4 s · hasta 17 palabras a la vista)
+## 5. EN UNA IMAGEN · `c-figura` (~4 s · hasta 15 palabras a la vista)
 
 **En pantalla:** silueta del esquema «Practicar sin forzar ni prometer demasiado» (mapa), modo pieza
 > Suavidad.  
 > <sub>esquema.datos</sub>
 
-## 6. EN UNA IMAGEN · `c-figura` (~3 s · hasta 16 palabras a la vista)
+## 6. EN UNA IMAGEN · `c-figura` (~3 s · hasta 15 palabras a la vista)
 
 **En pantalla:** silueta del esquema «Practicar sin forzar ni prometer demasiado» (mapa), modo pieza
 > Escuchar al cuerpo.  
 > <sub>esquema.datos</sub>
 
-## 7. EN UNA IMAGEN · `c-figura` (~5 s · hasta 21 palabras a la vista)
+## 7. EN UNA IMAGEN · `c-figura` (~5 s · hasta 23 palabras a la vista)
 
 **En pantalla:** silueta del esquema «Practicar sin forzar ni prometer demasiado» (mapa), modo pieza
 > Rejuvenecer.  
 > <sub>esquema.datos</sub>
 
-## 8. EN UNA IMAGEN · `c-figura` (~4 s · hasta 18 palabras a la vista)
+## 8. EN UNA IMAGEN · `c-figura` (~4 s · hasta 21 palabras a la vista)
 
 **En pantalla:** silueta del esquema «Practicar sin forzar ni prometer demasiado» (mapa), modo pieza
 > Prudencia.  
 > <sub>esquema.datos</sub>
 
-## 9. EN UNA IMAGEN · `c-figura` (~7 s · hasta 21 palabras a la vista)
+## 9. EN UNA IMAGEN · `c-figura` (~7 s · hasta 31 palabras a la vista)
 
 **En pantalla:** silueta del esquema «Practicar sin forzar ni prometer demasiado» (mapa), modo pie
 > La promesa de rejuvenecimiento es lo menos contrastable; lo comprobable: relajación, menos rigidez, mejor descanso.  
