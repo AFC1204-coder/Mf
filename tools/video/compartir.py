@@ -34,7 +34,7 @@ from .scriptwriter import Beat, Episode, Part, Scene
 
 COMPARTIR_VERSION = 1
 
-TIPOS = ("idea", "pregunta", "practica", "libro")
+TIPOS = ("idea", "pregunta", "practica", "caso", "libro")
 ASPECTOS = {"9:16": (1080, 1920), "1:1": (1080, 1080), "16:9": (1920, 1080)}
 
 # Fórmulas fijas: lo ÚNICO que la voz dice sin venir del corpus. `lint_pieza` rechaza cualquier otra.
@@ -57,6 +57,7 @@ ROTULOS = {
     "idea": "UNA IDEA",
     "pregunta": "¿LO SABRÍAS?",
     "practica": "PRUÉBALO",
+    "caso": "UN CASO",
     "libro": "UN LIBRO EN {n} IDEAS",
     "matiz": "EL MATIZ",
     "pensar": "PIÉNSALO",
@@ -92,7 +93,7 @@ LECTURA_PPS = 3.6  # palabras por segundo leyendo en silencio una tarjeta
 OBJETIVO_S = 60.0
 PRACTICA_BREVE = 40
 
-LIMITES = {"idea": (22, 75), "pregunta": (20, 70), "practica": (22, 75), "libro": (22, 90)}
+LIMITES = {"idea": (22, 75), "pregunta": (20, 70), "practica": (22, 75), "caso": (20, 70), "libro": (22, 90)}
 
 # Texto que solo tiene sentido dentro de la web (o delante de las opciones de un test).
 ANCLA_WEB = re.compile(
@@ -118,6 +119,13 @@ ARRANQUE_META = re.compile(
     r"|^una de las (?:contribuciones|ideas|secciones|aportaciones|partes|claves)\b|^para entender\b|^en est[ea] (?:cap[ií]tulo|secci[oó]n|parte)\b",
     re.IGNORECASE,
 )
+# Cómo introduce el corpus un caso concreto. Solo estos arranques explícitos: no se adivina qué es un ejemplo.
+ARRANQUE_CASO = re.compile(
+    r"^(?:por ejemplo|un ejemplo|imagina|imagine|piensa en|pensemos en|supongamos|supón|considera el caso|el caso de|"
+    r"el ejemplo (?:clásico|más)|en un experimento|en un estudio|en el experimento|un experimento)\b",
+    re.IGNORECASE,
+)
+CASO_PALABRAS = 45
 _INGLES = re.compile(r"\b(the|of|and|is|to|that|in|with|for|not|you|it|are|was|this|have)\b", re.IGNORECASE)
 
 # Etiquetas de publicación por eje (fijas y declaradas; el resto sale del libro y del autor).
@@ -242,6 +250,29 @@ def practica_partes(lesson: Lesson, max_words: int = PRACTICA_PALABRAS) -> list[
         if SALVEDAD.search(f):
             partes.append(Part(f, "leccion.aplicacion_practica"))
     return partes
+
+
+def caso_partes(lesson: Lesson, max_words: int = CASO_PALABRAS) -> list[Part]:
+    """El caso concreto que la propia lección cuenta: la frase que lo introduce («Un ejemplo:», «Imagina que…»)
+    y las que la siguen en su párrafo, enteras, mientras quepan. [] si la lección no trae uno."""
+    for parrafo in T.paragraphs(lesson.cuerpo):
+        frases = T.split_sentences(parrafo)
+        for i, f in enumerate(frases):
+            if not ARRANQUE_CASO.search(f) or not (8 <= T.n_words(f) <= max_words) or ANCLA_WEB.search(f) or parece_ingles(f):
+                continue
+            # «Un ejemplo cotidiano ayuda a verlo.» solo lo anuncia: el caso está en lo que sigue, y sin eso no hay pieza.
+            anuncia = bool(re.match(r"(?:un|por|el) ejemplo", f, re.IGNORECASE)) and not re.search(r":\s+\S+(?:\s+\S+){5,}", f)
+            tope = max_words + 15 if anuncia else max_words
+            elegidas, total = [f], T.n_words(f)
+            for g in frases[i + 1 :]:
+                if total + T.n_words(g) > tope or ANCLA_WEB.search(g):
+                    break
+                elegidas.append(g)
+                total += T.n_words(g)
+            if anuncia and len(elegidas) < 2:
+                continue
+            return [Part(" ".join(elegidas), "leccion.cuerpo")]
+    return []
 
 
 def pregunta_autonoma(lesson: Lesson) -> Question | None:
@@ -457,6 +488,12 @@ PATRONES = {
     "matriz": "matriz",  # dos ejes, cuatro cuadrantes
     "espectro": "espectro",  # dos polos y posiciones entre ellos
     "cifras": "cifra",  # el número, enorme, y qué mide
+    "escalera": "cadena",
+    "capas": "cadena",
+    "embudo": "cadena",
+    "balanza": "contraste",
+    "bucle": "ciclo",
+    "jerarquia": "radial",
 }
 
 
@@ -499,6 +536,26 @@ def piezas_figura(spec: dict[str, Any] | None) -> list[G.Piece]:
         for i, x in enumerate(d.get("items") or []):
             if isinstance(x, dict):
                 out.append(G.Piece(s_(x.get("n")), s_(x.get("t")), tone=x.get("tono") or "a", dom=i))
+    elif plantilla in ("escalera", "capas", "embudo"):  # niveles o etapas en orden: una cadena
+        clave = {"escalera": "escalones", "capas": "capas", "embudo": "etapas"}[plantilla]
+        for i, x in enumerate(d.get(clave) or []):
+            if isinstance(x, dict):
+                out.append(G.Piece(s_(x.get("t")), s_(x.get("d")), tone=x.get("tono") or "a", dom=i))
+    elif plantilla == "balanza":  # dos platos: un contraste
+        for i, k in enumerate(("izq", "der")):
+            col = d.get(k) if isinstance(d.get(k), dict) else {}
+            out.append(G.Piece(s_(col.get("t")), items=[s_(x) for x in col.get("items") or [] if s_(x)], tone=col.get("tono") or "a", dom=i))
+    elif plantilla == "bucle":  # un ciclo con nombre; solo si todos sus pasos refuerzan (un «−» cambia el sentido y aquí no se vería)
+        if all(str(x).strip() == "+" for x in d.get("signos") or []):
+            for i, x in enumerate(d.get("nodos") or []):
+                if isinstance(x, dict):
+                    out.append(G.Piece(s_(x.get("t")), s_(x.get("d")), tone=x.get("tono") or "a", dom=i))
+    elif plantilla == "jerarquia":  # una raíz y sus ramas, cada una con sus hijos (solo dos niveles y sin descripciones que perder)
+        ramas = [r for r in d.get("ramas") or [] if isinstance(r, dict)]
+        plano = all(isinstance(h, dict) and not h.get("d") and not h.get("hijos") for r in ramas for h in r.get("hijos") or [])
+        if plano and all(not r.get("d") for r in ramas):
+            for i, r in enumerate(ramas):
+                out.append(G.Piece(s_(r.get("t")), items=[s_(h.get("t")) for h in r.get("hijos") or [] if s_(h.get("t"))], tone=r.get("tono") or "a", dom=i))
     minimo = 1 if plantilla == "cifras" else 2
     if not (minimo <= len(out) <= G.MAX_PIECES) or any(not p.t for p in out):
         return []
@@ -509,8 +566,9 @@ def marco_figura(spec: dict[str, Any]) -> dict[str, Any]:
     """Lo que enmarca las piezas y también es parte de la figura: el centro de un mapa o un ciclo, los polos, los ejes."""
     d = spec.get("datos") if isinstance(spec.get("datos"), dict) else {}
     marco: dict[str, Any] = {}
-    if T.clean(d.get("centro")):
-        marco["centro"] = T.clean(d.get("centro"))
+    centro = d.get("centro") or (d.get("nombre") if spec.get("plantilla") == "bucle" else "") or (d.get("raiz") if spec.get("plantilla") == "jerarquia" else "")
+    if T.clean(centro):
+        marco["centro"] = T.clean(centro)
         marco["centro_sub"] = T.clean(d.get("centroSub"))
     if spec.get("plantilla") == "espectro":
         marcas = sorted((m for m in d.get("marcas") or [] if isinstance(m, dict)), key=lambda m: float(m.get("pos") or 0))
@@ -778,6 +836,45 @@ def _pieza_practica(book: Book, index: int, max_words: int) -> Pieza | None:
     )
 
 
+def pieza_caso(book: Book, index: int) -> Pieza | None:
+    """Lo concreto antes que lo abstracto: el caso que cuenta la lección → la idea que hay detrás → el matiz."""
+    lesson = book.lessons[index]
+    partes = caso_partes(lesson)
+    if not partes:
+        return None
+    k = index + 1
+    idea, origen = hilo(lesson)
+    if origen in ("cuerpo", "titulo"):
+        return None  # sin idea redactada, el caso se quedaría sin la idea que ilustra (y el arranque del cuerpo puede ser el propio caso)
+    gancho = T.split_sentences(partes[0].text)[0]
+    scenes: list[Scene] = [
+        escena_frase("Caso", "caso", ROTULOS["caso"], partes, tema_txt=tema(lesson), pause_after_s=0.6),
+        escena_frase("Idea", "idea", ROTULOS["idea_detras"], [_fixed("idea_detras"), Part(idea, f"leccion.{origen}")], skip_parts=1, pause_after_s=0.4),
+        escena_credito(book),
+    ]
+    matiz = escena_matiz(lesson, MATIZ_CORTO)
+    if matiz:
+        scenes.append(matiz)
+    scenes.append(escena_cierre(book, recuerda=idea))  # el caso abre; lo que se lleva uno es la idea
+    return _base(
+        book,
+        key=_clave("caso", k, lesson),
+        format="caso",
+        tipo="caso",
+        title=lesson.titulo,
+        lesson_id=lesson.id,
+        leccion_n=k,
+        scenes=scenes,
+        summary=partes[0].text,
+        gancho=gancho,
+        gancho_origen="leccion.cuerpo",
+        titulo_pub=T.shorten_clause(f"Un caso: {titulo_corto(lesson.titulo)}", 16),
+        descripcion_pub=_descripcion(book, [partes[0].text, f"La idea detrás: {idea}", _matiz_pub(lesson)]),
+        etiquetas_pub=_etiquetas(book, lesson),
+        portada={"tag": ROTULOS["caso"], "text": arranque_literal(gancho, 18), "tema": tema(lesson)},
+    )
+
+
 def pieza_libro(book: Book) -> Pieza | None:
     """El libro en una frase y en sus ideas centrales: el mapa verificado de `datos/mapas.json`."""
     mapa = book.mapa or {}
@@ -836,6 +933,7 @@ _MOTIVO = {
     "idea": "la lección no tiene idea redactada, su arranque solo habla del libro y su figura no se puede recorrer: no hay arco que contar",
     "pregunta": "la lección no tiene una pregunta que se entienda sin la lección delante",
     "practica": "la aplicación práctica no cabe en una pieza, o la lección no tiene una idea que poner detrás",
+    "caso": "la lección no cuenta un caso concreto («Un ejemplo:», «Imagina que…»), o no tiene idea redactada que ilustrar",
     "libro": "el libro no tiene mapa con frase de cierre en datos/mapas.json",
 }
 
@@ -855,9 +953,9 @@ def plan_libro(book: Book, tipos: tuple[str, ...] | list[str] = TIPOS, solo_lecc
         else:
             omitidas.append(Omitida("libro", 0, book.titulo, _MOTIVO["libro"]))
     indices = range(len(book.lessons)) if solo_leccion is None else [solo_leccion]
-    constructores = {"idea": pieza_idea, "pregunta": pieza_pregunta, "practica": pieza_practica}
+    constructores = {"idea": pieza_idea, "pregunta": pieza_pregunta, "practica": pieza_practica, "caso": pieza_caso}
     for i in indices:
-        for tipo in ("idea", "pregunta", "practica"):
+        for tipo in ("idea", "pregunta", "practica", "caso"):
             if tipo not in tipos:
                 continue
             p = constructores[tipo](book, i)
@@ -886,16 +984,14 @@ def orden_sugerido(piezas: list[Pieza]) -> list[str]:
     """
     libro = [p.key for p in piezas if p.tipo == "libro"]
     ideas = [p for p in piezas if p.tipo == "idea"]
-    otras = sorted((p for p in piezas if p.tipo in ("pregunta", "practica")), key=lambda p: (p.leccion_n, p.tipo))
-    # Se alternan pregunta y práctica en lo posible.
-    preguntas = [p for p in otras if p.tipo == "pregunta"]
-    practicas = [p for p in otras if p.tipo == "practica"]
+    otras = sorted((p for p in piezas if p.tipo in ("pregunta", "practica", "caso")), key=lambda p: (p.leccion_n, p.tipo))
+    # Se alternan pregunta, práctica y caso en lo posible.
+    colas = [[p for p in otras if p.tipo == t] for t in ("pregunta", "practica", "caso")]
     cola: list[Pieza] = []
-    while preguntas or practicas:
-        if preguntas:
-            cola.append(preguntas.pop(0))
-        if practicas:
-            cola.append(practicas.pop(0))
+    while any(colas):
+        for c in colas:
+            if c:
+                cola.append(c.pop(0))
     orden = list(libro)
     ultima_leccion = 0
     desde_otra = 0
@@ -920,11 +1016,52 @@ def motivo_libro(book: Book) -> int:
 
 # ───────────────────────── publicación ─────────────────────────
 
+def _rotulo_tipo(p: Pieza) -> str:
+    return ROTULOS[p.tipo].format(n=sum(1 for s in p.scenes if s.kind == "c-nodo"))
+
+
+def _recorta(texto: str, max_chars: int) -> str:
+    """El texto si cabe; si no, su arranque literal hasta donde quepa, por palabras enteras, con «…»."""
+    t = " ".join(str(texto).split())
+    if len(t) <= max_chars:
+        return t
+    return t[: max_chars - 1].rsplit(" ", 1)[0].rstrip(" ,;:—–(") + "…"
+
+
+def textos_por_red(p: Pieza) -> dict[str, dict[str, str]]:
+    """El texto que acompaña al vídeo, a la medida de cada red. Mismo material (título, descripción, etiquetas:
+    corpus y `ROTULOS`), distinta longitud. No lleva enlaces: no caducan y cada cuenta pone el suyo."""
+    etiquetas = p.etiquetas_pub
+    parrafos = [x for x in p.descripcion_pub.split("\n\n") if x]
+    credito = next((x for x in parrafos if x.startswith("Del libro «")), "")
+    cuerpo = [x for x in parrafos if x != credito and not x.startswith(ROTULOS["marca"])]
+    breve = " ".join(etiquetas[:4])
+    # Donde el espacio es poco, el libro va con su título corto (un prefijo literal del título).
+    credito_corto = f"Del libro «{titulo_corto(p.book_title)}»" + (f", de {p.book_author}." if p.book_author else ".")
+    x_cola = f" {credito_corto} {' '.join(etiquetas[:2])}".rstrip()
+    return {
+        "youtube_shorts": {
+            "titulo": _recorta(p.titulo_pub, 92) + " #Shorts",
+            "descripcion": p.descripcion_pub + "\n\n" + " ".join(etiquetas),
+        },
+        "tiktok": {"texto": _recorta(f"{p.titulo_pub}. {credito_corto}", 150 - len(breve) - 1) + " " + breve},
+        "instagram_reels": {"texto": "\n\n".join([p.titulo_pub, *cuerpo, credito, " ".join(etiquetas)])},
+        "linkedin": {"texto": "\n\n".join([*cuerpo, credito, ROTULOS["marca"] + " · " + ROTULOS["lema"].lower(), " ".join(etiquetas[:5])])},
+        "x": {"texto": _recorta(p.gancho, max(40, 280 - len(x_cola))) + x_cola},
+        "whatsapp": {"texto": f"{_recorta(p.gancho, 220)}\n{credito_corto}"},
+    }
+
+
 def texto_publicacion(p: Pieza, duracion_s: float = 0.0) -> str:
-    """Lo que acompaña al vídeo al subirlo: título, descripción y etiquetas. Todo sale del corpus y de `ROTULOS`."""
+    """Lo que acompaña al vídeo al subirlo: título, descripción y etiquetas, y debajo la versión de cada red."""
     lineas = [p.titulo_pub, "", p.descripcion_pub, "", " ".join(p.etiquetas_pub)]
     if duracion_s:
-        lineas += ["", f"({ROTULOS[p.tipo].format(n=sum(1 for s in p.scenes if s.kind == 'c-nodo'))} · {duracion_s:.0f} s)"]
+        lineas += ["", f"({_rotulo_tipo(p)} · {duracion_s:.0f} s)"]
+    nombres = {"youtube_shorts": "YouTube Shorts", "tiktok": "TikTok", "instagram_reels": "Instagram Reels", "linkedin": "LinkedIn", "x": "X", "whatsapp": "WhatsApp"}
+    for red, campos in textos_por_red(p).items():
+        lineas += ["", "", f"── {nombres[red]} " + "─" * 30]
+        for campo, valor in campos.items():
+            lineas += ["", f"[{campo}]", valor] if len(campos) > 1 else ["", valor]
     return "\n".join(lineas).rstrip() + "\n"
 
 

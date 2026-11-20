@@ -12,13 +12,14 @@ El formato nuevo parte de la pregunta contraria: **¿qué entiende alguien que v
 
 **Una idea de una lección, con su matiz y su crédito, en 30-60 s.** No un libro resumido, no una lección entera: una afirmación, de dónde sale y dónde se le discute. Es la unidad natural del corpus (cada lección ya tiene `idea_clave`, esquema y `autocorreccion`) y es lo que distingue a la biblioteca de un canal de frases: aquí la idea viene con su límite.
 
-De ahí sale un catálogo de cuatro piezas. Todas se montan solas con campos del corpus; cada una usa un campo que las otras no explotan y **abre de una manera distinta**, así que las piezas de una misma lección no se pisan.
+De ahí sale un catálogo de cinco piezas. Todas se montan solas con campos del corpus; cada una usa un campo que las otras no explotan y **abre de una manera distinta**, así que las piezas de una misma lección no se pisan.
 
 | Pieza | Abre con (gancho) | Centro | Campos |
 |---|---|---|---|
 | **`idea`** — la principal | La idea misma, en frío | El esquema, pieza a pieza | `idea_clave` · `datos/diagramas.json` · `autocorreccion` |
 | `pregunta` | Una pregunta de la lección | 3 s de pausa, respuesta y porqué | `preguntas` · `autocorreccion` |
 | `practica` | Qué probar | La idea que hay detrás | `aplicacion_practica` · la idea · `autocorreccion` |
+| `caso` | El caso concreto que la lección cuenta | La idea que hay detrás | cuerpo («Un ejemplo:», «Imagina que…») · la idea · `autocorreccion` |
 | `libro` | El libro en una frase | Sus ideas centrales | `datos/mapas.json` |
 
 Lo que se repite en todas (y da la identidad): **gancho → contenido → «Del libro X, de Y» → «El matiz» → cierre que retoma el gancho**. El estribillo es deliberado: quien ve dos piezas reconoce la tercera.
@@ -35,7 +36,9 @@ Una pieza no es texto sobre fondo. La `idea` tiene cinco tiempos y cada uno hace
 | **Giro** | «El matiz»: cambia el color, la letra y el tono | `autocorreccion` | Lo que la idea no dice: el límite |
 | **Cierre** | «Quédate con esto»: el gancho otra vez, escrito, junto a la marca | el mismo tramo literal del principio | Un solo mensaje para llevarse; el arco se cierra donde se abrió |
 
-En `pregunta` el arco es pregunta → espera → respuesta, y el cierre deja escrita **la respuesta**. En `practica`, qué hacer → por qué → límite.
+En `pregunta` el arco es pregunta → espera → respuesta, y el cierre deja escrita **la respuesta**. En `practica`, qué hacer → por qué → límite. En `caso`, lo concreto antes que lo abstracto: el ejemplo → la idea que ilustra → límite, y lo que se lleva uno es la idea.
+
+**El caso no se adivina.** Solo vale el que el corpus introduce de forma explícita («Un ejemplo:», «Por ejemplo», «Imagina que…», «En un experimento…»): la frase que lo abre y las que la siguen en su párrafo, enteras, hasta 45 palabras. Si la frase solo lo anuncia («Un ejemplo cotidiano ayuda a verlo.») y no cabe lo que sigue, no hay pieza; tampoco si la lección no tiene idea redactada que ilustrar. Los avisos del propio corpus («un ejemplo nuestro», «propio y no del libro») se dicen tal cual.
 
 ### El patrón visual sale de la forma de la idea
 
@@ -50,7 +53,8 @@ La figura verificada de cada lección ya dice qué tipo de idea es. La regla de 
 | `espectro` | **Espectro** | Una recta entre dos polos con cada posición marcada donde la figura la pone; la que toca se enciende y su tarjeta va debajo | La idea es un continuo, no dos cajas | 107 (3 %) |
 | `cifras` | **Cifra** | El número, enorme, y debajo qué mide | El dato es el mensaje | 39 (1 %) |
 | `matriz` | **Matriz** | Los cuatro cuadrantes con sus dos ejes; al recorrerla, cada cuadrante se sitúa con sus dos coordenadas y un mini-mapa | Dos criterios que se cruzan | 27 (0,7 %) |
-| Las demás (`bucle`, `iceberg`, `escalera`, `formula`, `red`…) | — | Sin esquema: idea y matiz | Aún sin patrón propio; enteras serían ilegibles | 89 (2,4 %) |
+| `escalera`, `capas`, `embudo` → cadena · `balanza` → contraste · `bucle` → ciclo · `jerarquia` → radial | (los de arriba) | Las mismas formas con otro nombre. Un `bucle` solo si todos sus pasos refuerzan (un «−» cambia el sentido y no se vería); una `jerarquia` solo si cabe sin dejar texto fuera | — | incluidas arriba (≈ 34) |
+| Las demás (`iceberg`, `formula`, `red`, `flujo`, `grafica`, `arbol`, `curva`…) | — | Sin esquema: idea y matiz | Aún sin patrón propio; enteras serían ilegibles | 55 (1,5 %) |
 
 Todos los patrones se dibujan en HTML/CSS con los datos de la figura (no pasan por `lib/diagram.js`): así el texto va grande **dentro** de la forma, junto a aquello de lo que habla. Además enseñan lo que la silueta de la primera versión dejaba fuera: el **centro** de mapas y ciclos (y su apostilla, a veces un «lectura nuestra»), los **polos** del espectro y los **extremos y nombres de los ejes** de la matriz.
 
@@ -62,8 +66,8 @@ No se fuerza. `pieza_idea` clasifica (`arco` en el manifiesto) y degrada con hon
 
 | Caso | Qué hace | En la biblioteca (3.719 lecciones) |
 |---|---|---|
-| Idea que se sostiene sola + figura recorrible + matiz | **Arco completo** | 3.447 (92,7 %) |
-| Sin figura recorrible | Idea → origen → matiz → cierre (`sin_esquema`) | 89 (2,4 %) |
+| Idea que se sostiene sola + figura recorrible + matiz | **Arco completo** | 3.481 (93,6 %) |
+| Sin figura recorrible | Idea → origen → matiz → cierre (`sin_esquema`) | 55 (1,5 %) |
 | Sin idea redactada y con un arranque que solo habla del libro («Newport dedica una sección…», «Una de las contribuciones del libro es…») | Abre el esquema, que sí dice algo, y cierra con su pie (`esquema_primero`). No hay pieza `practica`: no habría idea que poner detrás | 183 (4,9 %) |
 | Ni idea ni figura | **No hay pieza**; queda anotado | 0 |
 
@@ -81,7 +85,7 @@ Principios de la investigación sobre aprendizaje con multimedia y sobre atenci�
 | Codificación dual y **redundancia** | Voz + imagen se suman; voz + el mismo texto + imagen puede estorbar | El patrón visual lleva la estructura y la voz el contenido. **Aquí se decide en contra del principio de redundancia a propósito:** el texto dicho también se escribe, porque en redes se ve mucho sin sonido. Se mitiga con texto breve, sincronizado y sin otra imagen compitiendo en las escenas de frase | Es la decisión más discutible del formato. Con sonido, una versión con menos texto podría entenderse mejor; habría que medirlo |
 | Práctica de recuperación / generación | Intentar responder antes de ver fija más | Pieza `pregunta`: 3 s de espera con cuenta atrás | Efecto robusto con preguntas sobre algo ya estudiado; antes de estudiarlo (como aquí) el efecto es menor y menos seguro |
 | Espaciado | Volver a lo mismo más tarde | El orden del manifiesto: la `pregunta` y la `practica` de una lección salen después de su `idea`, con otras piezas en medio | Depende de que alguien siga la cuenta; para quien ve una sola pieza no existe |
-| Ejemplo concreto | Lo concreto antes que lo abstracto | Solo cuando el corpus lo trae (la `practica` suele traer un caso). **No se inventan ejemplos** | Muchas piezas `idea` son abstractas: límite del material, no del formato |
+| Ejemplo concreto | Lo concreto antes que lo abstracto | La pieza `caso` abre con el ejemplo que la lección cuenta y solo después da la idea. **No se inventan ejemplos** | Solo 482 lecciones (13 %) traen un caso reconocible; las piezas `idea` siguen siendo abstractas |
 | Personalización | El tono conversacional ayuda | Apenas: las fórmulas son llanas («Quédate con esto», «Pruébalo») pero el texto del corpus es expositivo y no se reescribe | Efecto modesto; no compensa tocar el contenido |
 | Hueco de información, novedad | La curiosidad nace de saber que falta algo | Afirmación o pregunta en el primer fotograma; rótulo «EL MATIZ» a solas un instante antes del giro | Bien descrito, difícil de predecir caso a caso; se evita el cebo: lo que se abre, se cierra |
 | Variación frente a habituación | El cambio sostiene la atención | Cuatro registros visuales por pieza (frase, crédito, patrón, matiz), cortes cada ~1,3 s y barra de progreso | Sin datos propios |
@@ -99,7 +103,7 @@ Rúbrica de una pieza `idea` (un punto por criterio):
 4. **Tiene giro**: lleva el matiz.
 5. **Cierra lo que abre**: lo último escrito es el gancho (o la respuesta).
 
-Medido de forma automática en las 3.719 piezas `idea` de la biblioteca: criterio 1, 95 % (el 5 % restante abre con el esquema); criterio 3, 97,6 %; criterios 4 y 5, 100 % por construcción y por control (`lint_pieza`); **los cinco, 92,7 %** (arco completo). El criterio 2 no se puede medir con reglas fiables: se evaluó leyendo.
+Medido de forma automática en las 3.719 piezas `idea` de la biblioteca: criterio 1, 95 % (el 5 % restante abre con el esquema); criterio 3, 98,5 %; criterios 4 y 5, 100 % por construcción y por control (`lint_pieza`); **los cinco, 93,6 %** (arco completo). El criterio 2 no se puede medir con reglas fiables: se evaluó leyendo.
 
 Lectura crítica de 14 guiones `idea` elegidos al azar, antes de introducir la detección de arranques huecos: 8 salían de `idea_clave` y los 8 funcionaban solos (afirmación clara, giro nítido en el matiz); de los 6 que salían del cuerpo, 3 funcionaban («Las emociones no son perturbaciones irracionales…») y **3 no decían nada** («Una de las contribuciones más prácticas del libro es…», «Newport articula su argumento central en dos dimensiones…», «Robbins dedica una sección significativa…»). Esos tres son el motivo de `ARRANQUE_META` y del arco `esquema_primero`; los tres quedan ahora detectados. Qué se recuerda tras leerlos: en 11 de 14, una frase y su «pero»; en los otros, el tema. Es una lectura de una sola persona sobre guiones, no una prueba con espectadores.
 
@@ -154,18 +158,26 @@ Lección aprendida en el formato `clase`: una figura completa a 1080 px de ancho
 - **Orden de publicación** (`manifiesto.json`): el libro primero; después dos ideas y una pieza de otro tipo de una lección ya presentada, alternando pregunta y práctica. Dos piezas de la misma lección no salen seguidas y ninguna sale antes que su idea.
 - **Nada desaparece en silencio.** Cada pieza que no sale figura en el manifiesto con su motivo.
 
+## Publicación
+
+- **Texto por red.** `publicacion.txt` (y `publicacion.json`) lleva, además del título, la descripción y las etiquetas, la versión de cada red con su longitud: YouTube Shorts (título ≤ 100 con `#Shorts`), TikTok (≤ 150), Instagram Reels, LinkedIn, X (≤ 280) y WhatsApp. Es el mismo material recortado por palabras enteras; donde hay poco sitio, el libro va con su título corto. Sin enlaces.
+- **Dónde seguir.** `--seguir "Sigue a @cuenta"` cambia el rótulo del cierre (no se lee en voz alta).
+- **Filtros.** `--max-seg 60` deja fuera las piezas más largas y `--excluir "trading,inversión"` las que nombren esos temas; las dos cosas quedan anotadas en el manifiesto con su motivo.
+- **Calendario entre libros.** `cli calendario` reparte las piezas ya generadas de todos los libros: un libro de cada eje por vuelta, una pieza por turno, nunca dos seguidas del mismo libro, y dentro de cada libro el orden de su manifiesto. Con `--desde` y `--por-dia` pone fechas.
+
 ## Métricas
 
 **Biblioteca entera: 519 libros públicos, 3.719 lecciones.** Guiones planificados y pasados por el control de calidad uno a uno. Duraciones **estimadas** a 2,4 palabras/s. (El diseño se ajustó sobre una muestra de 80 libros; estas cifras son de todos.)
 
 | | Piezas | Duración: mín · p25 · mediana · p75 · p95 · máx | Por encima de 60 s | Avisos por duración |
 |---|---|---|---|---|
-| `idea` | 3.719 (100 % de las lecciones) | 23 · 48 · **55** · 60 · 68 · 88 s | 878 (24 %) | 39 (> 75 s) |
+| `idea` | 3.719 (100 % de las lecciones) | 26 · 48 · **55** · 60 · 68 · 88 s | 882 (24 %) | 39 (> 75 s) |
 | `pregunta` | 2.624 (71 %) | 24 · 39 · **46** · 51 · 60 · 76 s | 145 (6 %) | 14 (> 70 s) |
 | `practica` | 3.476 (93 %) | 27 · 47 · **52** · 56 · 62 · 87 s | 220 (6 %) | 15 (> 75 s) |
+| `caso` | 482 (13 %) | 32 · 47 · **51** · 55 · 64 · 78 s | 50 (10 %) | 1 (> 70 s) |
 | `libro` | 506 de 519 (97 %) | 31 · 39 · **43** · 50 · 54 · 60 s | 0 | 0 |
 
-- **10.325 piezas**, 19 por libro de mediana (de 7 a 49). **0 con error** en el control de calidad, 0 excepciones, 0 ganchos repetidos dentro de un libro.
+- **10.807 piezas**, 20 por libro de mediana (de 7 a 53). **0 con error** en el control de calidad, 0 excepciones, 0 ganchos repetidos dentro de un libro.
 - Sin material: 1.095 lecciones sin pregunta que se entienda sola (29 %); 243 sin pieza `practica`; 13 libros sin mapa. Todas las lecciones tienen pieza `idea`.
 - De dónde sale el gancho de la idea: `idea_clave` 58 % · arranque del cuerpo 25 % · idea redactada 13 % · título del esquema 5 %. 
 - Cuando una pieza pasa de 60 s se aprieta sola, sin cortar frases: el matiz se queda en su primera frase, el esquema se lee menos en voz alta (sigue entero en pantalla) o la práctica se acorta por frases enteras. Con eso las `practica` de más de 60 s bajan de 633 a 220 y las `idea` de 968 a 826 (878 tras dar esquema a las que no lo tenían); lo que queda son ideas, tarjetas o matices largos de por sí.
@@ -185,6 +197,7 @@ Lección aprendida en el formato `clase`: una figura completa a 1080 px de ancho
 - **Gancho-pregunta en la pieza principal** (ver arriba).
 - **Subtítulos quemados palabra a palabra.** Con el texto ya en pantalla, duplicaban.
 - **Figura completa en pantalla, fotos, música.** Ilegible la primera; con derechos dudosos las otras. No hay fondo sonoro.
+- **Meter el caso dentro de la pieza `idea`.** La alargaba (ya una de cada cuatro pasa de 60 s). Como pieza propia abre con lo concreto, que además es mejor gancho.
 - **Etiquetas inventadas.** Las de publicación salen de la marca, del eje (dos fijas por eje, declaradas en `ETIQUETAS_EJE`), del autor y del dominio de la lección.
 
 ## Límites y lo que no se ha comprobado

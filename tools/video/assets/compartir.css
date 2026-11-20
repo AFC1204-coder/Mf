@@ -32,6 +32,7 @@ body.cs.ar-16x9 { width: 1920px; height: 1080px; --pad-l: 190px; --pad-r: 190px;
 
 body.cs.st-matiz { --tone: var(--cs-mal); }
 body.cs.st-practica, body.cs.st-respuesta { --tone: var(--cs-ok); }
+body.cs.st-caso { --tone: #6cb2e2; }
 
 .cs-frame { position: absolute; inset: 0; overflow: hidden; }
 
@@ -95,9 +96,9 @@ body.cs.st-practica, body.cs.st-respuesta { --tone: var(--cs-ok); }
 .cs-pages i.on { background: var(--tone); }
 .cs-pages i.done { background: color-mix(in srgb, var(--tone) 45%, transparent); }
 
-.st-matiz .cs-kin, .st-respuesta .cs-kin, .st-practica .cs-kin { font-family: 'VF Serif', serif; font-weight: 600; font-size: 10.6em; line-height: 1.2; }
-.st-matiz .cs-kin.m, .st-respuesta .cs-kin.m, .st-practica .cs-kin.m { font-size: 9.4em; }
-.st-matiz .cs-kin.l, .st-respuesta .cs-kin.l, .st-practica .cs-kin.l { font-size: 8.4em; }
+.st-matiz .cs-kin, .st-respuesta .cs-kin, .st-practica .cs-kin, .st-caso .cs-kin { font-family: 'VF Serif', serif; font-weight: 600; font-size: 10.6em; line-height: 1.2; }
+.st-matiz .cs-kin.m, .st-respuesta .cs-kin.m, .st-practica .cs-kin.m, .st-caso .cs-kin.m { font-size: 9.4em; }
+.st-matiz .cs-kin.l, .st-respuesta .cs-kin.l, .st-practica .cs-kin.l, .st-caso .cs-kin.l { font-size: 8.4em; }
 .st-matiz .cs-kin { padding-left: 0.5em; border-left: 0.12em solid var(--cs-mal); }
 .st-matiz .cs-stage.solo .cs-kin { border-left-color: transparent; }
 

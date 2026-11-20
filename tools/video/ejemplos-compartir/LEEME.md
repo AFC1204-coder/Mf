@@ -3,7 +3,7 @@
 Renderizados **sin voz** (motor `mudo`) con el código de esta rama, para juzgar el aspecto, el ritmo y el guion. Las duraciones son las del motor mudo (2,4 palabras/s); con voz real variarán.
 
 - `hojas/` — una hoja de fotogramas por pieza (18 instantes repartidos por el vídeo). Lo más rápido de mirar.
-- `videos/` — once de las piezas, en MP4.
+- `videos/` — doce de las piezas, en MP4.
 - `miniaturas/` — la portada de cada pieza.
 - `textos/` — el guion (`*.guion.md`: qué se oye, qué se ve y de qué campo sale) y el texto de publicación de cada una.
 - `manifiesto-decisive.md|json` — el manifiesto de un libro entero (21 piezas, orden de publicación sugerido).
@@ -25,5 +25,6 @@ Renderizados **sin voz** (motor `mudo`) con el código de esta rama, para juzgar
 | 13 | *When Prophecy Fails* · pregunta | Título de 115 caracteres y tres autores *(solo hoja)* |
 | 14 | *Decisive* · idea · 1:1 | Aspecto cuadrado |
 | 15 | *Decisive* · idea · 16:9 | Aspecto horizontal *(solo hoja)* |
+| 16 | *The War of Art* · caso | Lo concreto primero: el ejemplo → la idea detrás → matiz. Su `publicacion.txt` trae ya el texto por red |
 
 Para rehacerlos: `python -m tools.video.cli libro "Decisive" --format compartir --engine mudo`.

@@ -12,6 +12,7 @@ from tools.video import compartir as K
 from tools.video import compartir_frames as CF
 from tools.video import lint as L
 from tools.video.corpus import book_from_rows
+from tools.video.text import split_sentences as T_split
 from tools.video.scriptwriter import Part
 from tools.video.tests import fixtures as F
 from tools.video.tests.pitidos import PitidosTTSEngine
@@ -146,7 +147,8 @@ class PiezasTest(unittest.TestCase):
         self.assertEqual(claves[0], "libro")
         self.assertEqual(sum(p.tipo == "idea" for p in self.plan.piezas), 3)
         self.assertEqual([p.key for p in self.plan.piezas if p.tipo == "pregunta"], ["pregunta-01-la-primera-idea"])
-        self.assertEqual({(o.tipo, o.leccion_n) for o in self.plan.omitidas}, {("pregunta", 2), ("pregunta", 3), ("practica", 3)})
+        self.assertEqual({(o.tipo, o.leccion_n) for o in self.plan.omitidas if o.tipo != "caso"}, {("pregunta", 2), ("pregunta", 3), ("practica", 3)})
+        self.assertEqual(sum(o.tipo == "caso" for o in self.plan.omitidas), 3)  # el libro de prueba no cuenta ningún caso
         self.assertTrue(all(o.motivo for o in self.plan.omitidas))
 
     def test_ninguna_pieza_ancla_a_la_web(self):
@@ -206,7 +208,7 @@ class PiezasTest(unittest.TestCase):
         self.assertEqual([i for i in L.lint_pieza(p, _libro(**meta)) if i.level == "error"], [])
         # …y si tampoco hay figura que recorrer, no hay pieza (ni práctica: no habría idea que poner detrás).
         plan = K.plan_libro(_libro(diagramas={}, **meta))
-        self.assertEqual({(o.tipo, o.leccion_n) for o in plan.omitidas if o.leccion_n == 1}, {("idea", 1), ("practica", 1)})
+        self.assertEqual({(o.tipo, o.leccion_n) for o in plan.omitidas if o.leccion_n == 1}, {("idea", 1), ("practica", 1), ("caso", 1)})
 
     def test_si_la_leccion_se_hace_una_pregunta_la_idea_la_resuelve(self):
         libro = _libro(**{"l-1": {"cuerpo": "¿Por qué fallamos al responder deprisa? La respuesta rápida suele ser la equivocada."}})
@@ -243,6 +245,39 @@ class PiezasTest(unittest.TestCase):
         self.assertEqual(p.scenes[0].narration, "Cuenta hasta tres antes de responder.")
         self.assertEqual(p.scenes[1].narration, "La idea detrás. Lo primero que se nos ocurre no siempre es lo cierto.")
         self.assertEqual(p.scenes[1].view["words"][0], "Lo")
+
+    def test_el_caso_abre_con_lo_concreto_y_deja_la_idea(self):
+        cuerpo = "Todo empieza con una pregunta sencilla.\n\nUn ejemplo: alguien recibe un correo molesto y contesta de inmediato. Diez minutos después se arrepiente.\n\nPensar despacio corrige."
+        libro = _libro(**{"l-1": {"cuerpo": cuerpo}})
+        p = K.pieza_caso(libro, 0)
+        self.assertEqual(p.scenes[0].narration, "Un ejemplo: alguien recibe un correo molesto y contesta de inmediato. Diez minutos después se arrepiente.")
+        self.assertEqual(p.gancho, "Un ejemplo: alguien recibe un correo molesto y contesta de inmediato.")
+        self.assertEqual(p.scenes[1].narration, "La idea detrás. Lo primero que se nos ocurre no siempre es lo cierto.")
+        self.assertEqual(p.scenes[-1].view["recuerda"], "Lo primero que se nos ocurre no siempre es lo cierto.")  # se lleva la idea, no el caso
+        self.assertEqual([i for i in L.lint_pieza(p, libro) if i.level == "error"], [])
+        self.assertIn(p.key, K.plan_libro(libro).orden)
+
+    def test_un_ejemplo_que_solo_se_anuncia_no_es_un_caso(self):
+        solo = _libro(**{"l-1": {"cuerpo": "Una frase cualquiera para empezar.\n\nUn ejemplo cotidiano ayuda a ver la diferencia."}})
+        self.assertIsNone(K.pieza_caso(solo, 0))
+        con_lo_que_sigue = _libro(**{"l-1": {"cuerpo": "Una frase.\n\nUn ejemplo cotidiano ayuda a ver la diferencia. Quien responde a un correo en caliente suele arrepentirse a los diez minutos."}})
+        self.assertEqual(len(T_split(K.pieza_caso(con_lo_que_sigue, 0).scenes[0].narration)), 2)
+        self.assertIsNone(K.pieza_caso(F.libro(), 0))  # sin caso en el cuerpo, no hay pieza
+        self.assertIsNone(K.pieza_caso(_libro(**{"l-2": {"cuerpo": "Primera frase del cuerpo.\n\nImagina que alguien te pide una cifra antes de negociar y tú no la tienes pensada."}}), 1))  # sin idea redactada que ilustrar
+
+    def test_textos_por_red_caben_en_cada_red_y_no_inventan(self):
+        for p in self.plan.piezas:
+            textos = K.textos_por_red(p)
+            self.assertLessEqual(len(textos["x"]["texto"]), 280, p.key)
+            self.assertLessEqual(len(textos["tiktok"]["texto"]), 150, p.key)
+            self.assertLessEqual(len(textos["youtube_shorts"]["titulo"]), 100, p.key)
+            self.assertTrue(textos["youtube_shorts"]["titulo"].endswith("#Shorts"))
+            for campos in textos.values():
+                for valor in campos.values():
+                    self.assertIsNone(WEB.search(valor), (p.key, valor))
+                    self.assertNotIn("http", valor)
+        x = K.textos_por_red(self.plan.piezas[1])["x"]["texto"]
+        self.assertEqual(x, "Lo primero que se nos ocurre no siempre es lo cierto. Del libro «El libro de prueba», de Ana Autora. #MenteFría #libros")
 
     def test_el_libro_sale_del_mapa(self):
         p = self.plan.piezas[0]
@@ -365,6 +400,20 @@ class PatronesTest(unittest.TestCase):
         self.assertIn("<b>Suerte</b>", segunda)
         cuarta, _ = CF._stage_figura(figura[4].view, "")  # «Lo habitual»: deprisa y falla
         self.assertIn("<span>Deprisa</span><span>Falla</span>", cuarta)
+
+    def test_mas_figuras_caben_en_los_patrones_que_ya_hay(self):
+        escalera = {"plantilla": "escalera", "datos": {"escalones": [{"t": "Física", "d": "Sus leyes limitan"}, {"t": "Química"}, {"t": "Biología"}]}}
+        self.assertEqual((K.patron_visual(escalera), [p.t for p in K.piezas_figura(escalera)]), ("cadena", ["Física", "Química", "Biología"]))
+        balanza = {"plantilla": "balanza", "datos": {"izq": {"t": "Conquistar", "items": ["Una meta"]}, "der": {"t": "Adentrarse", "items": ["Estar dentro"]}}}
+        self.assertEqual((K.patron_visual(balanza), K.piezas_figura(balanza)[1].items), ("contraste", ["Estar dentro"]))
+        bucle = {"plantilla": "bucle", "datos": {"nombre": "Aprender por ensayo", "nodos": [{"t": "Probar"}, {"t": "Ver"}, {"t": "Corregir"}], "signos": ["+", "+", "+"]}}
+        self.assertEqual((K.patron_visual(bucle), len(K.piezas_figura(bucle)), K.marco_figura(bucle)["centro"]), ("ciclo", 3, "Aprender por ensayo"))
+        bucle["datos"]["signos"] = ["+", "−", "+"]  # un paso que frena cambia el sentido del ciclo y aquí no se vería: sin esquema
+        self.assertEqual(K.piezas_figura(bucle), [])
+        jerarquia = {"plantilla": "jerarquia", "datos": {"raiz": "Dos formas", "ramas": [{"t": "Diseñada", "hijos": [{"t": "Planes"}]}, {"t": "Ecológica", "hijos": [{"t": "Mercados"}]}]}}
+        self.assertEqual((K.patron_visual(jerarquia), K.piezas_figura(jerarquia)[0].items, K.marco_figura(jerarquia)["centro"]), ("radial", ["Planes"], "Dos formas"))
+        jerarquia["datos"]["ramas"][0]["hijos"][0]["d"] = "Con detalle"  # habría que dejar texto fuera: mejor sin esquema
+        self.assertEqual(K.piezas_figura(jerarquia), [])
 
     def test_no_x_sino_y(self):
         self.assertEqual(K.no_sino("Lo que hace buena una inversión no es la calidad del activo, sino la relación entre su precio y su valor.".split()), (6, 12, 21))

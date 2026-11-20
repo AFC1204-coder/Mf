@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import shutil
 import sys
 import time
@@ -36,7 +37,7 @@ from .tts.cache import CachedTTS
 VIDEO_DIR = Path(__file__).resolve().parent
 REPO_ROOT = VIDEO_DIR.parent.parent
 OUTPUT = VIDEO_DIR / "output"
-COMMANDS = ("leccion", "libro", "biblioteca")
+COMMANDS = ("leccion", "libro", "biblioteca", "calendario")
 
 
 def _load_env() -> None:
@@ -180,6 +181,71 @@ def _tipos(args: argparse.Namespace) -> tuple[str, ...]:
     return tuple(pedidos)
 
 
+def _filtra_plan(plan: K.Plan, args: argparse.Namespace) -> K.Plan:
+    """`--max-seg` y `--excluir`: las piezas que no pasan el filtro quedan anotadas como omitidas, con su motivo."""
+    tope = getattr(args, "max_seg", None)
+    temas = [T.norm(t.strip()) for t in (getattr(args, "excluir", None) or "").split(",") if t.strip()]
+    if not tope and not temas:
+        return plan
+    quedan: list[K.Pieza] = []
+    omitidas = list(plan.omitidas)
+    for p in plan.piezas:
+        texto = T.norm(" ".join(s.narration for s in p.scenes))
+        tema = next((t for t in temas if re.search(rf"(?<![a-z0-9ñ]){re.escape(t)}", texto)), None)
+        if tope and p.estimated_seconds > tope:
+            omitidas.append(K.Omitida(p.tipo, p.leccion_n, p.title, f"dura ~{p.estimated_seconds:.0f} s, más de los {tope:.0f} s pedidos con --max-seg"))
+        elif tema:
+            omitidas.append(K.Omitida(p.tipo, p.leccion_n, p.title, f"habla de «{tema}», excluido con --excluir"))
+        else:
+            quedan.append(p)
+    return K.Plan(quedan, omitidas, K.orden_sugerido(quedan))
+
+
+def calendario(args: argparse.Namespace) -> int:
+    """Calendario de publicación entre libros: reparte las piezas ya renderizadas de todos los libros, una por turno,
+    alternando ejes y sin poner seguidas dos del mismo libro. Dentro de cada libro respeta el orden de su manifiesto."""
+    import datetime
+
+    carpeta = args.aspecto.replace(":", "x")
+    colas: list[dict[str, Any]] = []
+    for mf in sorted(OUTPUT.glob(f"*/compartir/{carpeta}/manifiesto.json")):
+        try:
+            datos = json.loads(mf.read_text(encoding="utf-8"))
+        except ValueError:
+            continue
+        piezas = [dict(x, libro=datos.get("titulo"), autor=datos.get("autor"), eje=datos.get("eje"), carpeta=str(mf.parent.relative_to(OUTPUT))) for x in datos.get("piezas", []) if x.get("video") or args.todas]
+        if piezas:
+            colas.append({"titulo": datos.get("titulo"), "eje": datos.get("eje") or "", "piezas": piezas})
+    if not colas:
+        print(f"No hay manifiestos en {OUTPUT}/*/compartir/{carpeta}/. Genera antes las piezas de algún libro con --format compartir.")
+        return 1
+    # Los libros se ordenan alternando ejes (un libro de cada eje por vuelta) y se va tomando una pieza de cada uno.
+    por_eje: dict[str, list[dict[str, Any]]] = {}
+    for c in colas:
+        por_eje.setdefault(c["eje"], []).append(c)
+    ronda: list[dict[str, Any]] = []
+    while any(por_eje.values()):
+        for eje in sorted(por_eje):
+            if por_eje[eje]:
+                ronda.append(por_eje[eje].pop(0))
+    dia = datetime.date.fromisoformat(args.desde) if args.desde else None
+    salida: list[dict[str, Any]] = []
+    while any(c["piezas"] for c in ronda):
+        for c in ronda:
+            if c["piezas"]:
+                salida.append(c["piezas"].pop(0))
+    filas = ["| n.º | día | libro | pieza | tipo | duración | título de publicación |", "|---|---|---|---|---|---|---|"]
+    for n, x in enumerate(salida):
+        fecha = (dia + datetime.timedelta(days=n // max(1, args.por_dia))).isoformat() if dia else f"día {n // max(1, args.por_dia) + 1}"
+        x.update({"n": n + 1, "dia": fecha})
+        filas.append(f"| {n + 1} | {fecha} | {x['libro']} | `{x['carpeta']}/{x['clave']}` | {x['tipo']} | {x['duracion_s']:.0f} s | {x['titulo']} |")
+    base = OUTPUT / f"calendario-compartir-{carpeta}"
+    base.with_suffix(".json").write_text(json.dumps(salida, ensure_ascii=False, indent=2), encoding="utf-8")
+    base.with_suffix(".md").write_text("\n".join([f"# Calendario de publicación · {args.aspecto}", "", f"{len(salida)} piezas de {len(ronda)} libros · {args.por_dia} al día", "", *filas]) + "\n", encoding="utf-8")
+    print(f"Calendario: {len(salida)} piezas de {len(ronda)} libros → {base.with_suffix('.md')}")
+    return 0
+
+
 def process_pieza(p: K.Pieza, book: Book, base: Path, args: argparse.Namespace, tts) -> Result:
     """Guion → control de calidad → render de una pieza compartible."""
     from . import compartir_frames as CF
@@ -191,6 +257,7 @@ def process_pieza(p: K.Pieza, book: Book, base: Path, args: argparse.Namespace, 
     (p_dir / "guion.md").write_text(K.guion_markdown(p), encoding="utf-8")
     (p_dir / "script.json").write_text(json.dumps(p.to_dict(), ensure_ascii=False, indent=2), encoding="utf-8")
     (p_dir / "publicacion.txt").write_text(K.texto_publicacion(p), encoding="utf-8")
+    (p_dir / "publicacion.json").write_text(json.dumps(K.textos_por_red(p), ensure_ascii=False, indent=2), encoding="utf-8")
 
     issues = lint_pieza(p, book)
     for issue in issues:
@@ -244,7 +311,9 @@ def process_compartir(book: Book, args: argparse.Namespace, only_lesson: int | N
     """Las piezas compartibles de un libro (o de una de sus lecciones) y su manifiesto de publicación."""
     base = _dir_compartir(book.slug, args)
     base.mkdir(parents=True, exist_ok=True)
-    plan = K.plan_libro(book, _tipos(args), solo_leccion=only_lesson)
+    if getattr(args, "seguir", None):
+        K.ROTULOS["seguir"] = args.seguir.strip()  # el rótulo del cierre (no se lee): la cuenta o dónde seguir
+    plan = _filtra_plan(K.plan_libro(book, _tipos(args), solo_leccion=only_lesson), args)
     piezas = plan.piezas
     if args.only and only_lesson is None:
         quiero = _numeros(args.only)  # 0 = la pieza del libro, 1…N = las de esa lección
@@ -493,6 +562,9 @@ def build_parser() -> argparse.ArgumentParser:
     comun.add_argument("--format", choices=[*FORMATS, "compartir"], default="clase", help="clase: lección completa (3-5 min). corto: 60-90 s para redes. compartir: piezas sueltas de 30-60 s que se entienden fuera de la web.")
     comun.add_argument("--piezas", default=None, help="(compartir) Tipos de pieza, separados por comas: idea, pregunta, practica, libro. Por defecto, todos.")
     comun.add_argument("--aspecto", choices=list(K.ASPECTOS), default="9:16", help="(compartir) 9:16 (por defecto), 1:1 o 16:9.")
+    comun.add_argument("--max-seg", type=float, default=None, help="(compartir) No genera las piezas que duren (estimado) más de estos segundos; quedan anotadas en el manifiesto.")
+    comun.add_argument("--excluir", default=None, help="(compartir) Temas que no deben salir, separados por comas (p. ej. «trading,inversión»): se omite la pieza cuya locución los nombre.")
+    comun.add_argument("--seguir", default=None, help="(compartir) Texto del rótulo del cierre: la cuenta o dónde seguir (p. ej. «Sigue a @mentefria»). No se lee en voz alta.")
     comun.add_argument("--engine", choices=["edge", "kokoro", "mudo", "gemini", "auto"], default=None, help="Motor de voz. edge (por defecto): gratis, sin clave. kokoro: local y gratis. mudo: previsualización sin voz. gemini/auto: de pago, con clave.")
     comun.add_argument("--voice", default=None, help="Voz (Aoede, Charon… en Gemini; es-ES-AlvaroNeural… en Edge).")
     comun.add_argument("--gemini-model", default=None, choices=["gemini-2.5-flash-preview-tts", "gemini-2.5-pro-preview-tts"])
@@ -516,6 +588,12 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--only", default=None, help="Solo estos episodios: 0 = presentación, 1…N = lecciones, 99 = repaso (ej. 0,3-5,99). Con --format compartir: 0 = la pieza del libro, 1…N = las piezas de esa lección.")
     p.add_argument("--merge", action="store_true", help="Une además todos los episodios en libro-completo.mp4, con capítulos.")
 
+    p = sub.add_parser("calendario", help="(compartir) Calendario de publicación con las piezas ya generadas de todos los libros.")
+    p.add_argument("--aspecto", choices=list(K.ASPECTOS), default="9:16")
+    p.add_argument("--por-dia", type=int, default=1, help="Piezas por día (por defecto 1).")
+    p.add_argument("--desde", default=None, help="Fecha de la primera pieza (AAAA-MM-DD). Sin ella, «día 1», «día 2»…")
+    p.add_argument("--todas", action="store_true", help="Incluye también las piezas planificadas que aún no tienen vídeo.")
+
     p = sub.add_parser("biblioteca", parents=[comun], help="Recorre la biblioteca y genera las series que faltan.")
     p.add_argument("--eje", default=None, help="Solo libros de este eje (texto parcial: «Psicología», «Economía»…).")
     p.add_argument("--limit", type=int, default=3, help="Cuántos libros como máximo en esta ejecución (por defecto 3).")
@@ -536,6 +614,8 @@ def main(argv: list[str] | None = None) -> int:
         else:
             argv.insert(0, "leccion")
     args = build_parser().parse_args(argv)
+    if args.command == "calendario":
+        return calendario(args)
     if not args.engine:  # sin --engine: TTS_ENGINE o el motor gratuito por defecto
         import os
 
