@@ -52,7 +52,7 @@
 > La dicotomía sistema/meta de Clear es conceptualmente débil: los sistemas sin metas son actividad sin dirección; las metas sin sistemas son deseos sin mecanismo.  
 > <sub>leccion.autocorreccion</sub>
 
-## 8. c-cierre · `c-cierre` (~4 s · hasta 27 palabras a la vista)
+## 8. c-cierre · `c-cierre` (~4 s · hasta 48 palabras a la vista)
 
 > Más ideas como esta, en Mente Fría.  
 > <sub>plantilla</sub>

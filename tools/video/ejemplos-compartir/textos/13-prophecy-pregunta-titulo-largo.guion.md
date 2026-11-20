@@ -37,7 +37,7 @@
 > Nota de la biblioteca: el mecanismo ha sido objeto de debate.  
 > <sub>leccion.autocorreccion</sub>
 
-## 6. c-cierre · `c-cierre` (~4 s · hasta 32 palabras a la vista)
+## 6. c-cierre · `c-cierre` (~4 s · hasta 45 palabras a la vista)
 
 > Más ideas como esta, en Mente Fría.  
 > <sub>plantilla</sub>

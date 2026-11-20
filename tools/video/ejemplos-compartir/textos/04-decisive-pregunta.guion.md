@@ -37,7 +37,7 @@
 > La clasificación en cuatro villanos es pedagógica: los sesgos se solapan y hay otros importantes, como la aversión a la pérdida.  
 > <sub>leccion.autocorreccion</sub>
 
-## 6. c-cierre · `c-cierre` (~4 s · hasta 26 palabras a la vista)
+## 6. c-cierre · `c-cierre` (~4 s · hasta 34 palabras a la vista)
 
 > Más ideas como esta, en Mente Fría.  
 > <sub>plantilla</sub>

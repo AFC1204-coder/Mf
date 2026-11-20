@@ -68,7 +68,7 @@
 > Prudencia: no sustituye la atención médica, hay que evitar zonas con dolor o lesión y consultar antes si hay enfermedad, embarazo o cirugía reciente.  
 > <sub>leccion.autocorreccion</sub>
 
-## 11. c-cierre · `c-cierre` (~4 s · hasta 31 palabras a la vista)
+## 11. c-cierre · `c-cierre` (~4 s · hasta 47 palabras a la vista)
 
 > Más ideas como esta, en Mente Fría.  
 > <sub>plantilla</sub>

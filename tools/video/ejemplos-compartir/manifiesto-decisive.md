@@ -28,4 +28,11 @@
 
 ## Sin material
 
+- caso · Los cuatro villanos de la decisión: la lección no cuenta un caso concreto («Un ejemplo:», «Imagina que…»), o no tiene idea redactada que ilustrar
 - pregunta · Ampliar las opciones: la lección no tiene una pregunta que se entienda sin la lección delante
+- caso · Ampliar las opciones: la lección no cuenta un caso concreto («Un ejemplo:», «Imagina que…»), o no tiene idea redactada que ilustrar
+- caso · Contrastar los supuestos con la realidad: la lección no cuenta un caso concreto («Un ejemplo:», «Imagina que…»), o no tiene idea redactada que ilustrar
+- caso · Tomar distancia: la regla 10/10/10: la lección no cuenta un caso concreto («Un ejemplo:», «Imagina que…»), o no tiene idea redactada que ilustrar
+- caso · Prepararse para equivocarse: la lección no cuenta un caso concreto («Un ejemplo:», «Imagina que…»), o no tiene idea redactada que ilustrar
+- caso · El proceso WRAP completo: la lección no cuenta un caso concreto («Un ejemplo:», «Imagina que…»), o no tiene idea redactada que ilustrar
+- caso · Cuándo usar el proceso y sus límites: la lección no cuenta un caso concreto («Un ejemplo:», «Imagina que…»), o no tiene idea redactada que ilustrar

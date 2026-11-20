@@ -52,7 +52,7 @@
 > La logoterapia no es una escuela dominante y su base empírica es más ligera que la de otras terapias.  
 > <sub>leccion.autocorreccion</sub>
 
-## 8. c-cierre · `c-cierre` (~4 s · hasta 28 palabras a la vista)
+## 8. c-cierre · `c-cierre` (~4 s · hasta 33 palabras a la vista)
 
 > Más ideas como esta, en Mente Fría.  
 > <sub>plantilla</sub>

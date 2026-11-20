@@ -60,7 +60,7 @@
 > El énfasis en la introspección como vía al yo ha sido cuestionado: la psicología cognitiva muestra que nuestros relatos sobre los propios motivos suelen ser reconstrucciones poco fiables, y que la autoobservación excesiva puede derivar en rumiación y empeorar el ánimo.  
 > <sub>leccion.autocorreccion</sub>
 
-## 10. c-cierre · `c-cierre` (~4 s · hasta 31 palabras a la vista)
+## 10. c-cierre · `c-cierre` (~4 s · hasta 47 palabras a la vista)
 
 > Más ideas como esta, en Mente Fría.  
 > <sub>plantilla</sub>

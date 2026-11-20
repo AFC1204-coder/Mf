@@ -31,7 +31,7 @@
 > Las pruebas pequeñas no siempre representan la situación real a escala: algo puede funcionar en pequeño y fallar en grande, o al revés.  
 > <sub>leccion.autocorreccion</sub>
 
-## 5. c-cierre · `c-cierre` (~4 s · hasta 32 palabras a la vista)
+## 5. c-cierre · `c-cierre` (~4 s · hasta 46 palabras a la vista)
 
 > Más ideas como esta, en Mente Fría.  
 > <sub>plantilla</sub>

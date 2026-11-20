@@ -59,7 +59,7 @@
 > Esta lección es en sí misma una crítica y debe usarse con cuidado, pues no sabemos con precisión cuántos casos contrarios existen ni cómo se repartiría el efecto de la restricción entre contextos.  
 > <sub>leccion.autocorreccion</sub>
 
-## 10. c-cierre · `c-cierre` (~4 s · hasta 30 palabras a la vista)
+## 10. c-cierre · `c-cierre` (~4 s · hasta 44 palabras a la vista)
 
 > Más ideas como esta, en Mente Fría.  
 > <sub>plantilla</sub>

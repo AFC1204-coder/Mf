@@ -6,6 +6,17 @@
   "formato": "compartir",
   "aspecto": "9:16",
   "motivo": 3,
+  "tipos": [
+    "idea",
+    "pregunta",
+    "practica",
+    "caso",
+    "libro"
+  ],
+  "filtros": {
+    "max_seg": null,
+    "excluir": null
+  },
   "voces": [
     "mudo · sin-voz"
   ],
@@ -557,10 +568,52 @@
   ],
   "omitidas": [
     {
+      "tipo": "caso",
+      "leccion": 1,
+      "titulo": "Los cuatro villanos de la decisión",
+      "motivo": "la lección no cuenta un caso concreto («Un ejemplo:», «Imagina que…»), o no tiene idea redactada que ilustrar"
+    },
+    {
       "tipo": "pregunta",
       "leccion": 2,
       "titulo": "Ampliar las opciones",
       "motivo": "la lección no tiene una pregunta que se entienda sin la lección delante"
+    },
+    {
+      "tipo": "caso",
+      "leccion": 2,
+      "titulo": "Ampliar las opciones",
+      "motivo": "la lección no cuenta un caso concreto («Un ejemplo:», «Imagina que…»), o no tiene idea redactada que ilustrar"
+    },
+    {
+      "tipo": "caso",
+      "leccion": 3,
+      "titulo": "Contrastar los supuestos con la realidad",
+      "motivo": "la lección no cuenta un caso concreto («Un ejemplo:», «Imagina que…»), o no tiene idea redactada que ilustrar"
+    },
+    {
+      "tipo": "caso",
+      "leccion": 4,
+      "titulo": "Tomar distancia: la regla 10/10/10",
+      "motivo": "la lección no cuenta un caso concreto («Un ejemplo:», «Imagina que…»), o no tiene idea redactada que ilustrar"
+    },
+    {
+      "tipo": "caso",
+      "leccion": 5,
+      "titulo": "Prepararse para equivocarse",
+      "motivo": "la lección no cuenta un caso concreto («Un ejemplo:», «Imagina que…»), o no tiene idea redactada que ilustrar"
+    },
+    {
+      "tipo": "caso",
+      "leccion": 6,
+      "titulo": "El proceso WRAP completo",
+      "motivo": "la lección no cuenta un caso concreto («Un ejemplo:», «Imagina que…»), o no tiene idea redactada que ilustrar"
+    },
+    {
+      "tipo": "caso",
+      "leccion": 7,
+      "titulo": "Cuándo usar el proceso y sus límites",
+      "motivo": "la lección no cuenta un caso concreto («Un ejemplo:», «Imagina que…»), o no tiene idea redactada que ilustrar"
     }
   ],
   "completa": true,

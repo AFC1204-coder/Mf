@@ -31,7 +31,7 @@
 > Convertir el miedo en indicador funciona solo si el miedo está bien calibrado.  
 > <sub>leccion.autocorreccion</sub>
 
-## 5. c-cierre · `c-cierre` (~4 s · hasta 31 palabras a la vista)
+## 5. c-cierre · `c-cierre` (~4 s · hasta 38 palabras a la vista)
 
 > Más ideas como esta, en Mente Fría.  
 > <sub>plantilla</sub>

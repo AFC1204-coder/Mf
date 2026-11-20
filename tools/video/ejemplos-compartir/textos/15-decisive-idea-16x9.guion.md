@@ -68,7 +68,7 @@
 > El proceso puede convertirse en un ritual burocrático si se aplica mecánicamente. Funciona mejor como lista de comprobación flexible que como procedimiento rígido.  
 > <sub>leccion.autocorreccion</sub>
 
-## 10. c-cierre · `c-cierre` (~4 s · hasta 32 palabras a la vista)
+## 10. c-cierre · `c-cierre` (~4 s · hasta 33 palabras a la vista)
 
 > Más ideas como esta, en Mente Fría.  
 > <sub>plantilla</sub>
