@@ -167,7 +167,7 @@ Lección aprendida en el formato `clase`: una figura completa a 1080 px de ancho
 - Cómputo: ~30 s por pieza y unos 22-26 fotogramas, en esta máquina y sin voz. La biblioteca entera serían unas 85 horas de máquina; `biblioteca --format compartir --limit N` va por tandas y retoma.
 - **Maquetación, medida en navegador** sobre 4.900 fotogramas de la muestra (2.500 en 9:16, 1.200 en 1:1 y 1.200 en 16:9): **0 desbordes**; la letra tuvo que reducirse en 142 (2,9 %), y en el peor caso quedó al 75 % (un rótulo de 27-28 px, lo único por debajo de 30).
 - **Sincronía, medida sobre un vídeo real** con el motor de pitidos: las 5 ráfagas de la escena comprobada cambian en el instante en que suena su primera palabra.
-- **Tanda de estrés** con libros que no estaban en la muestra de ajuste: ver «Límites y lo que no se ha comprobado».
+- **Tanda de estrés** con 150 libros que no estaban en la muestra de ajuste: 24 piezas renderizadas (6 de cada tipo, las más largas incluidas), **24 de 24 correctas** y con la duración prevista; 3.000 de sus fotogramas medidos en navegador, **0 desbordes**, letra mínima de 30 px, reducida en 76 (2,5 %, hasta el 87 %).
 
 ## Qué se descartó
 
