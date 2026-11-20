@@ -307,7 +307,26 @@ class ControlTest(unittest.TestCase):
         p.scenes[1].parts[0] = Part("Lección 1 de 3 de El libro de prueba.", "plantilla")
         mensajes = " ".join(str(i) for i in L.lint_pieza(p, self.libro) if i.level == "error")
         self.assertIn("fórmula no declarada", mensajes)
-        self.assertIn("ancla la pieza a la web", mensajes)
+
+    def test_un_titulo_de_esquema_que_dice_leccion_avisa_pero_no_tumba_la_pieza(self):
+        diagramas = {"l-1": [dict(F.DIAGRAMAS["l-1"][0], titulo="Las lecciones de responder despacio")]}
+        libro = _libro(diagramas=diagramas)
+        incidencias = L.lint_pieza(K.pieza_idea(libro, 0), libro)
+        self.assertEqual([i for i in incidencias if i.level == "error"], [])
+        self.assertTrue(any("alude a la lección" in i.message for i in incidencias))
+
+    def test_una_pieza_larga_se_aprieta_sin_cortar_frases(self):
+        largo = " ".join(f"Frase número {i} del matiz con unas cuantas palabras de relleno para alargar." for i in range(1, 9))
+        idea = "Una idea " + "bastante larga " * 30 + "que termina aquí."
+        libro = _libro(**{"l-1": {"idea_clave": idea, "autocorreccion": largo, "aplicacion_practica": largo}})
+        p = K.pieza_idea(libro, 0)
+        matiz = [x.text for s in p.scenes for x in s.parts if x.origin == "leccion.autocorreccion"]
+        self.assertEqual(matiz, ["Frase número 1 del matiz con unas cuantas palabras de relleno para alargar. Frase número 2 del matiz con unas cuantas palabras de relleno para alargar."])
+        self.assertEqual(p.scenes[0].narration, idea)  # la idea no se toca
+        self.assertEqual([i for i in L.lint_pieza(p, libro) if i.level == "error"], [])
+        practica = K.pieza_practica(libro, 0)
+        self.assertLessEqual(len(practica.scenes[0].narration.split()), K.PRACTICA_BREVE)
+        self.assertTrue(practica.scenes[0].narration.endswith("."))
 
     def test_rechaza_texto_que_no_esta_en_el_corpus(self):
         p = self.plan.piezas[1]

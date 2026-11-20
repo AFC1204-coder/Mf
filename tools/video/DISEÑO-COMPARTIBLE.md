@@ -41,12 +41,12 @@ En `pregunta` el arco es pregunta → espera → respuesta, y el cierre deja esc
 
 La figura verificada de cada lección ya dice qué tipo de idea es. La regla de selección (`PATRONES` en `compartir.py`) usa su plantilla; los textos son siempre los rótulos literales, en su orden.
 
-| Plantilla de la figura | Patrón | Qué se ve | Por qué | En la muestra |
+| Plantilla de la figura | Patrón | Qué se ve | Por qué | En la biblioteca |
 |---|---|---|---|---|
-| `comparar` | **Contraste** | Dos paneles enfrentados. Primero los dos títulos (la oposición); después se abre un lado, luego el otro, y el ya visto se recoge en su título | La idea está en la diferencia: hay que ver los dos lados a la vez | 241 piezas (43 %) |
-| `pasos`, `piramide` | **Cadena** | Eslabones numerados unidos por un hilo. Primero todos los títulos (el camino entero); después cada eslabón se abre en su turno, los pasados quedan y los que faltan esperan vacíos | La idea está en el orden: causa → efecto, antes → después | 161 (29 %) |
-| `mapa`, `ciclo`, `matriz` | **Silueta** | La forma de la figura dibujada por el motor de la app, sin texto, con una insignia por pieza, y la tarjeta grande de la pieza activa | La forma (centro y radios, anillo, cuadrantes) es información | 115 (21 %) |
-| `espectro`, `cifras`, `tiempo` y otras | — | Sin esquema: idea y matiz | Enteras serían ilegibles; trocearlas sería modificarlas | 41 (7 %) |
+| `comparar` | **Contraste** | Dos paneles enfrentados. Primero los dos títulos (la oposición); después se abre un lado, luego el otro, y el ya visto se recoge en su título | La idea está en la diferencia: hay que ver los dos lados a la vez | 1.632 piezas `idea` (44 %) |
+| `pasos`, `piramide` | **Cadena** | Eslabones numerados unidos por un hilo. Primero todos los títulos (el camino entero); después cada eslabón se abre en su turno, los pasados quedan y los que faltan esperan vacíos | La idea está en el orden: causa → efecto, antes → después | 994 (27 %) |
+| `mapa`, `ciclo`, `matriz` | **Silueta** | La forma de la figura dibujada por el motor de la app, sin texto, con una insignia por pieza, y la tarjeta grande de la pieza activa | La forma (centro y radios, anillo, cuadrantes) es información | 830 (22 %) |
+| `espectro`, `cifras`, `tiempo` y otras | — | Sin esquema: idea y matiz | Enteras serían ilegibles; trocearlas sería modificarlas | 260 (7 %) |
 
 Contraste y cadena se dibujan en HTML/CSS con los datos de la figura (no pasan por `lib/diagram.js`): así el texto va grande **dentro** de la forma, junto a aquello de lo que habla, en vez de en una tarjeta aparte.
 
@@ -54,12 +54,12 @@ Contraste y cadena se dibujan en HTML/CSS con los datos de la figura (no pasan p
 
 No se fuerza. `pieza_idea` clasifica (`arco` en el manifiesto) y degrada con honestidad:
 
-| Caso | Qué hace | En la muestra (559 lecciones) |
+| Caso | Qué hace | En la biblioteca (3.719 lecciones) |
 |---|---|---|
-| Idea que se sostiene sola + figura recorrible + matiz | **Arco completo** | 494 (88,4 %) |
-| Sin figura recorrible | Idea → origen → matiz → cierre (`sin_esquema`) | 41 (7,3 %) |
-| Sin idea redactada y con un arranque que solo habla del libro («Newport dedica una sección…», «Una de las contribuciones del libro es…») | Abre el esquema, que sí dice algo, y cierra con su pie (`esquema_primero`). No hay pieza `practica`: no habría idea que poner detrás | 23 (4,1 %) |
-| Ni idea ni figura | **No hay pieza**; queda anotado | 1 (0,2 %) |
+| Idea que se sostiene sola + figura recorrible + matiz | **Arco completo** | 3.276 (88,1 %) |
+| Sin figura recorrible | Idea → origen → matiz → cierre (`sin_esquema`) | 260 (7,0 %) |
+| Sin idea redactada y con un arranque que solo habla del libro («Newport dedica una sección…», «Una de las contribuciones del libro es…») | Abre el esquema, que sí dice algo, y cierra con su pie (`esquema_primero`). No hay pieza `practica`: no habría idea que poner detrás | 180 (4,8 %) |
+| Ni idea ni figura | **No hay pieza**; queda anotado | 3 (0,1 %) |
 
 ## En qué se apoya (y hasta dónde llega la evidencia)
 
@@ -93,7 +93,7 @@ Rúbrica de una pieza `idea` (un punto por criterio):
 4. **Tiene giro**: lleva el matiz.
 5. **Cierra lo que abre**: lo último escrito es el gancho (o la respuesta).
 
-Medido de forma automática en las 558 piezas `idea` de la muestra (80 libros): criterio 1, 96 % (el 4 % restante abre con el esquema); criterio 3, 93 %; criterios 4 y 5, 100 % por construcción y por control (`lint_pieza`); **los cinco, 88,4 %** (arco completo). El criterio 2 no se puede medir con reglas fiables: se evaluó leyendo.
+Medido de forma automática en las 3.716 piezas `idea` de la biblioteca: criterio 1, 95 % (el 5 % restante abre con el esquema); criterio 3, 93 %; criterios 4 y 5, 100 % por construcción y por control (`lint_pieza`); **los cinco, 88,1 %** (arco completo). El criterio 2 no se puede medir con reglas fiables: se evaluó leyendo.
 
 Lectura crítica de 14 guiones `idea` elegidos al azar, antes de introducir la detección de arranques huecos: 8 salían de `idea_clave` y los 8 funcionaban solos (afirmación clara, giro nítido en el matiz); de los 6 que salían del cuerpo, 3 funcionaban («Las emociones no son perturbaciones irracionales…») y **3 no decían nada** («Una de las contribuciones más prácticas del libro es…», «Newport articula su argumento central en dos dimensiones…», «Robbins dedica una sección significativa…»). Esos tres son el motivo de `ARRANQUE_META` y del arco `esquema_primero`; los tres quedan ahora detectados. Qué se recuerda tras leerlos: en 11 de 14, una frase y su «pero»; en los otros, el tema. Es una lectura de una sola persona sobre guiones, no una prueba con espectadores.
 
@@ -148,25 +148,26 @@ Lección aprendida en el formato `clase`: una figura completa a 1080 px de ancho
 - **Orden de publicación** (`manifiesto.json`): el libro primero; después dos ideas y una pieza de otro tipo de una lección ya presentada, alternando pregunta y práctica. Dos piezas de la misma lección no salen seguidas y ninguna sale antes que su idea.
 - **Nada desaparece en silencio.** Cada pieza que no sale figura en el manifiesto con su motivo.
 
-## Métricas de la muestra
+## Métricas
 
-80 libros (16 por eje, elegidos al azar), 559 lecciones. Duraciones **estimadas** a 2,4 palabras/s.
+**Biblioteca entera: 519 libros públicos, 3.719 lecciones.** Guiones planificados y pasados por el control de calidad uno a uno. Duraciones **estimadas** a 2,4 palabras/s. (El diseño se ajustó sobre una muestra de 80 libros; estas cifras son de todos.)
 
 | | Piezas | Duración: mín · p25 · mediana · p75 · p95 · máx | Por encima de 60 s | Avisos por duración |
 |---|---|---|---|---|
-| `idea` | 558 (99,8 % de las lecciones) | 23 · 47 · **54** · 60 · 69 · 81 s | 140 | 6 (> 75 s) |
-| `pregunta` | 430 (77 %) | 28 · 39 · **46** · 51 · 59 · 72 s | 18 | 2 (> 70 s) |
-| `practica` | 535 (96 %) | 32 · 47 · **53** · 57 · 65 · 76 s | 78 | 2 (> 75 s) |
-| `libro` | 77 de 80 (96 %) | 33 · 40 · **42** · 50 · 56 · 60 s | 0 | 0 |
+| `idea` | 3.716 (99,9 % de las lecciones) | 22 · 47 · **54** · 60 · 68 · 88 s | 826 (22 %) | 38 (> 75 s) |
+| `pregunta` | 2.624 (71 %) | 24 · 39 · **46** · 51 · 60 · 76 s | 145 (6 %) | 14 (> 70 s) |
+| `practica` | 3.476 (93 %) | 27 · 47 · **52** · 56 · 62 · 87 s | 220 (6 %) | 15 (> 75 s) |
+| `libro` | 506 de 519 (97 %) | 31 · 39 · **43** · 50 · 54 · 60 s | 0 | 0 |
 
-- **1.600 piezas**, 19 por libro de mediana (de 12 a 42). **0 con error** en el control de calidad; 0 ganchos repetidos.
-- Sin material: 129 lecciones sin pregunta que se entienda sola (23 %); 24 sin pieza `practica` (aplicación que no cabe o lección sin idea que poner detrás); 3 libros sin mapa; 1 lección sin pieza `idea`.
-- De dónde sale el gancho de la idea: `idea_clave` 64 % · arranque del cuerpo 21 % · idea redactada 11 % · título del esquema 4 %. En 3 lecciones abre la pregunta que la propia lección se hace. Longitud del gancho: 21 palabras de mediana.
-- Texto a la vez en pantalla: 14 palabras de mediana (el tope de una página de texto cinético); p95 de 27. 25 piezas (1,6 %) tienen algún momento del esquema con más de 32 palabras a la vista (un lado largo de un contraste): el control avisa.
-- Avisos más frecuentes: texto del corpus que alude a «la lección» (sobre todo «Esta lección no sustituye a un profesional»): 78 avisos, menos del 5 % de las piezas.
-- Cómputo: ~30 s por pieza y unos 22-26 fotogramas, en esta máquina y sin voz.
+- **10.322 piezas**, 19 por libro de mediana (de 7 a 49). **0 con error** en el control de calidad, 0 excepciones, 0 ganchos repetidos dentro de un libro.
+- Sin material: 1.095 lecciones sin pregunta que se entienda sola (29 %); 243 sin pieza `practica`; 13 libros sin mapa; 3 lecciones sin pieza `idea`.
+- De dónde sale el gancho de la idea: `idea_clave` 58 % · arranque del cuerpo 25 % · idea redactada 13 % · título del esquema 5 %. 
+- Cuando una pieza pasa de 60 s se aprieta sola, sin cortar frases: el matiz se queda en su primera frase, el esquema se lee menos en voz alta (sigue entero en pantalla) o la práctica se acorta por frases enteras. Con eso las `practica` de más de 60 s bajan de 633 a 220 y las `idea` de 968 a 826; lo que queda son ideas, tarjetas o matices largos de por sí.
+- Avisos más frecuentes (piezas): texto del corpus que alude a «la lección» o a un capítulo, 398 (3,9 %); alguna tarjeta de esquema con más de 32 palabras a la vista, 199 (1,9 %); alguna frase de más de 60 palabras, 164 (1,6 %).
+- Cómputo: ~30 s por pieza y unos 22-26 fotogramas, en esta máquina y sin voz. La biblioteca entera serían unas 85 horas de máquina; `biblioteca --format compartir --limit N` va por tandas y retoma.
 - **Maquetación, medida en navegador** sobre 4.900 fotogramas de la muestra (2.500 en 9:16, 1.200 en 1:1 y 1.200 en 16:9): **0 desbordes**; la letra tuvo que reducirse en 142 (2,9 %), y en el peor caso quedó al 75 % (un rótulo de 27-28 px, lo único por debajo de 30).
 - **Sincronía, medida sobre un vídeo real** con el motor de pitidos: las 5 ráfagas de la escena comprobada cambian en el instante en que suena su primera palabra.
+- **Tanda de estrés** con libros que no estaban en la muestra de ajuste: ver «Límites y lo que no se ha comprobado».
 
 ## Qué se descartó
 
@@ -183,7 +184,7 @@ Lección aprendida en el formato `clase`: una figura completa a 1080 px de ancho
 
 - **La voz real.** Este trabajo se hizo sin acceso a Edge TTS. Comprobado: guiones, control, maquetación (en navegador, sobre miles de fotogramas) y montaje con el motor mudo y con un motor de pitidos con marcas por palabra (`tests/pitidos.py`). **No comprobado:** cómo suena, el ritmo real (las duraciones pueden variar un 10-15 %), la pronunciación de títulos y autores en inglés, y si las fórmulas suenan naturales con cada voz.
 - **Las plataformas.** La zona segura sigue las guías habituales, pero no se ha subido nada: ni recortes, ni compresión, ni cómo trata cada red la miniatura.
-- **El 21 % de ideas que salen del cuerpo** son menos rotundas que una `idea_clave` (las que solo hablan del libro se detectan y abren con el esquema; el resto, no todas brillan). La solución de fondo es redactar la idea en la biblioteca, no en el vídeo.
+- **El 25 % de ideas que salen del cuerpo** son menos rotundas que una `idea_clave` (las que solo hablan del libro se detectan y abren con el esquema; el resto, no todas brillan). La solución de fondo es redactar la idea en la biblioteca, no en el vídeo.
 - **Aplicaciones prácticas de dominio** (un 11 % habla de *trading* o inversión): son literales del corpus y salen tal cual. Si no convienen para difusión general, `--piezas idea,pregunta,libro`.
-- **Piezas de más de 60 s** (una de cada cuatro `idea`): no se cortan frases para bajar de ahí. El manifiesto da la duración para elegir.
+- **Piezas de más de 60 s** (una de cada cinco `idea`): no se cortan frases para bajar de ahí. El manifiesto da la duración para elegir.
 - **Sincronía sin marcas por palabra** (Kokoro, Gemini): las ráfagas se reparten de forma proporcional dentro de cada escena; con Edge son exactas.

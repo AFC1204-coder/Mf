@@ -86,6 +86,11 @@ PAUSA_PENSAR_S = 3.0
 LECTURA_PPS = 3.6  # palabras por segundo leyendo en silencio una tarjeta
 
 # Duración razonable de cada tipo (segundos estimados): fuera de ahí, aviso.
+# Duración que se intenta no pasar. Nunca cortando frases: se lee menos del esquema en voz alta (sigue entero en
+# pantalla), se deja el matiz en su primera frase o se acorta la práctica por frases enteras.
+OBJETIVO_S = 60.0
+PRACTICA_BREVE = 40
+
 LIMITES = {"idea": (22, 75), "pregunta": (20, 70), "practica": (22, 75), "libro": (22, 90)}
 
 # Texto que solo tiene sentido dentro de la web (o delante de las opciones de un test).
@@ -224,12 +229,12 @@ def matiz_partes(lesson: Lesson, max_words: int = MATIZ_PALABRAS) -> list[Part]:
     return partes
 
 
-def practica_partes(lesson: Lesson) -> list[Part]:
+def practica_partes(lesson: Lesson, max_words: int = PRACTICA_PALABRAS) -> list[Part]:
     """La aplicación práctica: entera si cabe; si no, sus primeras frases y sus salvedades. [] si no hay pieza."""
     frases = T.split_sentences(lesson.aplicacion_practica)
     if not frases or T.n_words(frases[0]) > PRACTICA_MAX_FRASE or parece_ingles(frases[0]):
         return []
-    cabeza = T.take_sentences(lesson.aplicacion_practica, PRACTICA_PALABRAS)
+    cabeza = T.take_sentences(lesson.aplicacion_practica, max_words)
     n_cabeza = len(T.split_sentences(cabeza))
     partes = [Part(cabeza, "leccion.aplicacion_practica")]
     for f in frases[n_cabeza:]:
@@ -435,7 +440,7 @@ def _lectura(p: G.Piece, nivel: int) -> list[str]:
     return [p.t]
 
 
-def escenas_figura(lesson: Lesson) -> list[Scene]:
+def escenas_figura(lesson: Lesson, nivel_min: int = 0) -> list[Scene]:
     """El esquema verificado en formato legible: silueta sin texto + tarjeta grande de cada pieza.
 
     La tarjeta enseña la pieza **entera y literal**; la voz la lee entera si el esquema es breve y,
@@ -452,7 +457,7 @@ def escenas_figura(lesson: Lesson) -> list[Scene]:
         "spec": spec, "pieces": [p.to_view() for p in ps], "order": G.order(ps), "n": len(ps), "title": titulo,
         "kicker": ROTULOS["figura"], "patron": patron_visual(spec),
     }
-    nivel = next((nv for nv in (0, 1, 2) if sum(T.n_words(x) for p in ps for x in _lectura(p, nv)) <= FIGURA_PALABRAS), 2)
+    nivel = next((nv for nv in (0, 1, 2) if nv >= nivel_min and sum(T.n_words(x) for p in ps for x in _lectura(p, nv)) <= FIGURA_PALABRAS), 2)
 
     intro = _fixed("figura", "plantilla+esquema.titulo", titulo=titulo.rstrip(".")) if titulo else None
     scenes = [Scene("c-figura", "Esquema", dict(base, mode="titulo", active=-1, shown=len(ps)), [intro] if intro else [], hold_s=0.0 if intro else 1.2, pause_after_s=0.35)]
@@ -524,10 +529,19 @@ def pieza_idea(book: Book, index: int) -> Pieza | None:
       · sin idea redactada y con un arranque que solo habla del libro → abre el esquema («esquema_primero»);
       · sin ninguna de las dos cosas → no hay pieza.
     """
+    pieza = None
+    for apretar in (0, 1, 2, 3):  # 0: como sale · 1: matiz breve · 2 y 3: el esquema se lee menos en voz alta
+        pieza = _pieza_idea(book, index, apretar)
+        if pieza is None or pieza.estimated_seconds <= OBJETIVO_S:
+            break
+    return pieza
+
+
+def _pieza_idea(book: Book, index: int, apretar: int = 0) -> Pieza | None:
     lesson = book.lessons[index]
     k = index + 1
     idea, origen = hilo(lesson)
-    figura = escenas_figura(lesson)
+    figura = escenas_figura(lesson, nivel_min=max(0, apretar - 1))
     largo_figura = sum(s.estimated_seconds for s in figura)
     flojo = origen in ("cuerpo", "titulo") and (origen == "titulo" or bool(ARRANQUE_META.search(idea)))
     if flojo and not figura:
@@ -552,7 +566,7 @@ def pieza_idea(book: Book, index: int) -> Pieza | None:
             *figura,
         ]
         recuerda = idea
-    matiz = escena_matiz(lesson, MATIZ_CORTO if largo_figura > 16 else MATIZ_PALABRAS)
+    matiz = escena_matiz(lesson, MATIZ_CORTO if (largo_figura > 16 or apretar) else MATIZ_PALABRAS)
     if matiz:
         scenes.append(matiz)
     scenes.append(escena_cierre(book, recuerda=recuerda))
@@ -626,8 +640,15 @@ def pieza_pregunta(book: Book, index: int) -> Pieza | None:
 
 def pieza_practica(book: Book, index: int) -> Pieza | None:
     """Qué probar → la idea que hay detrás → el matiz."""
+    pieza = _pieza_practica(book, index, PRACTICA_PALABRAS)
+    if pieza is not None and pieza.estimated_seconds > OBJETIVO_S:
+        pieza = _pieza_practica(book, index, PRACTICA_BREVE)
+    return pieza
+
+
+def _pieza_practica(book: Book, index: int, max_words: int) -> Pieza | None:
     lesson = book.lessons[index]
-    partes = practica_partes(lesson)
+    partes = practica_partes(lesson, max_words)
     if not partes:
         return None
     k = index + 1

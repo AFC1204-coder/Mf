@@ -220,8 +220,9 @@ def lint_pieza(pieza, book: Book) -> list[Issue]:
             if part.origin.startswith("plantilla"):
                 if part.text not in permitidas:
                     issues.append(Issue("error", donde, f"fórmula no declarada en compartir.FORMULAS: {part.text[:70]!r}"))
-                if K.ANCLA_WEB.search(part.text):
-                    issues.append(Issue("error", donde, f"la fórmula ancla la pieza a la web: {part.text[:70]!r}"))
+                elif K.ANCLA_WEB.search(part.text):
+                    # La fórmula es de las declaradas: lo que alude a «la lección» es el título del esquema que lleva dentro.
+                    issues.append(Issue("aviso", donde, f"el texto del corpus alude a la lección o a la web: {part.text[:60]!r}"))
                 continue
             ref = src.get(part.origin)
             if ref is None:
@@ -259,9 +260,9 @@ def lint_pieza(pieza, book: Book) -> list[Issue]:
             if beat.at_word is None and beat.at_s is None:
                 issues.append(Issue("error", donde, "cambio en pantalla sin momento asignado"))
 
-    for rotulo in K.ROTULOS.values():
+    for rotulo in [*K.ROTULOS.values(), *K.FORMULAS.values()]:
         if K.ANCLA_WEB.search(rotulo):
-            issues.append(Issue("error", pieza.key, f"rótulo que ancla a la web: {rotulo!r}"))
+            issues.append(Issue("error", pieza.key, f"rótulo o fórmula que ancla a la web: {rotulo!r}"))
     # Toda pieza de una lección lleva su matiz (si la lección lo tiene) y todas dicen de qué libro salen.
     if not any(s.kind == "c-credito" for s in pieza.scenes):
         issues.append(Issue("error", pieza.key, "la pieza no dice de qué libro sale"))

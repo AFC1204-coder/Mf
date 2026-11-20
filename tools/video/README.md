@@ -44,7 +44,7 @@ Los dos formatos de arriba son una serie: tienen sentido si ya estás en la bibl
 | Pieza | Qué cuenta | De qué campos sale | Cuántas |
 |---|---|---|---|
 | **`idea`** *(la principal)* | La idea, en frío → de qué libro sale → su esquema, pieza a pieza → el matiz → marca | `idea_clave` (o la idea redactada, o el arranque del cuerpo), `datos/diagramas.json`, `autocorreccion` | Una por lección |
-| `pregunta` | Una pregunta → 3 s para pensar → la respuesta y su porqué → libro → el matiz → marca | `preguntas` (la opción correcta y el arranque de la explicación; **las opciones falsas no salen**) | Una por lección que tenga una pregunta que se entienda sola (~3 de cada 4) |
+| `pregunta` | Una pregunta → 3 s para pensar → la respuesta y su porqué → libro → el matiz → marca | `preguntas` (la opción correcta y el arranque de la explicación; **las opciones falsas no salen**) | Una por lección que tenga una pregunta que se entienda sola (el 71 %) |
 | `practica` | Qué probar → la idea que hay detrás → libro → el matiz → marca | `aplicacion_practica`, la idea, `autocorreccion` | Una por lección |
 | `libro` | El libro en una frase → sus ideas centrales → la frase que las une → marca | `datos/mapas.json` (cierre y nodos) | Una por libro con mapa |
 
@@ -233,7 +233,7 @@ tools/video/.venv/bin/python -m unittest discover -s tools/video/tests -t .
 ## Límites conocidos
 
 - **Piezas compartibles: lo que no se ha podido comprobar.** El formato se ha validado sin voz (motor `mudo`) y con un motor de prueba que da un pitido por palabra (`tests/pitidos.py`): el montaje, la sincronía texto-voz y la maquetación están comprobados; **la voz real no** (ritmo, pronunciación de títulos en inglés, si «Del libro Decisive, de…» suena natural). Tampoco el comportamiento de cada plataforma (recortes, zona tapada por su interfaz, compresión). Las duraciones son estimadas a 2,4 palabras por segundo.
-- **Piezas sin material.** Una de cada cuatro lecciones no tiene una pregunta que se entienda sin la lección delante («Según la lección…», «en el capítulo 7…»): no hay pieza `pregunta`. Los libros sin mapa (~4 %) no tienen pieza `libro`. El 7 % de las figuras (espectros, cifras, líneas de tiempo…) no se pueden recorrer por piezas: su pieza `idea` sale sin esquema. Todo queda anotado en `manifiesto.json`.
+- **Piezas sin material.** En toda la biblioteca salen 10.322 piezas (3.716 `idea`, 2.624 `pregunta`, 3.476 `practica`, 506 `libro`). Tres de cada diez lecciones no tienen una pregunta que se entienda sin la lección delante («Según la lección…», «en el capítulo 7…»): no hay pieza `pregunta`. Los libros sin mapa (13 de 519) no tienen pieza `libro`. El 7 % de las figuras (espectros, cifras, líneas de tiempo…) no se pueden recorrer por piezas: su pieza `idea` sale sin esquema. Todo queda anotado en `manifiesto.json`.
 - **La idea, cuando la lección no la tiene redactada** (~23 %), es el arranque del cuerpo (frases enteras, hasta 36 palabras). Si ese arranque solo habla del libro («Newport dedica una sección…»), la pieza abre con el esquema; los demás casos salen tal cual y no todos son igual de rotundos.
 - **Sin sonido de apoyo ni música**, y sin base medida con espectadores: los principios de aprendizaje y atención que guían el formato están en `DISEÑO-COMPARTIBLE.md` con sus límites.
 - **Textos del corpus que hablan de «la lección»** («Esta lección no sustituye a un profesional»): se respetan literales y el control avisa. Si hay alternativa (otra pregunta, la idea redactada), se usa la que no lo dice.
