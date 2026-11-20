@@ -83,6 +83,24 @@ def _contained(part: str, source: str) -> bool:
     return bool(a) and (a in b or a.rstrip(".") in b)
 
 
+def _desde_inicio_de_frase(part: str, source: str) -> bool:
+    """Como `_contained`, pero el trozo tiene que empezar donde empieza una frase (o un rótulo) de la fuente.
+
+    «toda intuición falla» está dentro de «No toda intuición falla», y dice lo contrario: un recorte literal
+    solo vale si no se come el arranque de su frase.
+    """
+    a = " ".join(part.split())
+    b = " ".join(source.split())
+    for cand in {a, a.rstrip(".")}:
+        pos = b.find(cand) if cand else -1
+        while pos >= 0:
+            previo = b[:pos].rstrip()
+            if not previo or previo[-1] in ".!?…¶:;»”\")—–":
+                return True
+            pos = b.find(cand, pos + 1)
+    return False
+
+
 def _check_diagrams(specs: list[dict]) -> list[bool] | None:
     """¿Sabe dibujar el motor de la app cada esquema? Usa Node si está; si no, devuelve None (sin comprobar)."""
     node = shutil.which("node")
@@ -193,6 +211,71 @@ def _formulas_permitidas(pieza, book: Book) -> set[str]:
     return permitidas
 
 
+# Claves de las vistas que no llevan contenido (estructura, estilos, rótulos fijos que se comprueban aparte).
+_CLAVES_SIN_TEXTO = {"spec", "style", "mode", "patron", "icon", "tone", "words", "pos", "order"}
+_CLAVES_ROTULO = {"kicker", "brand", "lema", "cta", "recuerda_rotulo", "tag"}
+
+
+def _textos_de_vista(view: dict) -> list[tuple[str, str]]:
+    """(clave, texto) de todo lo que una vista pone en pantalla como contenido."""
+    out: list[tuple[str, str]] = []
+
+    def walk(clave: str, o) -> None:
+        if isinstance(o, str):
+            if o.strip():
+                out.append((clave, o))
+        elif isinstance(o, dict):
+            for k, v in o.items():
+                if k not in _CLAVES_SIN_TEXTO:
+                    walk(k, v)
+        elif isinstance(o, list):
+            for v in o:
+                walk(clave, v)
+
+    walk("", view)
+    return out
+
+
+def _literal_en_alguna(texto: str, fuentes: list[str]) -> bool:
+    t = " ".join(texto.split()).strip()
+    candidatos = {t, t.rstrip(".:"), t.rstrip("…").rstrip(), t.rstrip("…").rstrip(" .:")}  # el «…» final es el del recorte; los de dentro son del texto
+    return not t or any(_desde_inicio_de_frase(c, f) for c in candidatos if c for f in fuentes)
+
+
+def _lint_lo_que_solo_se_ve(pieza, book: Book, src: dict[str, str]) -> list[Issue]:
+    """Lo que se ve y no se dice (tarjetas, marco de la figura, tema, crédito, miniatura, textos de publicación)
+    también tiene que ser literal del corpus o un rótulo declarado: que hoy lo sea por construcción no basta."""
+    from . import compartir as K
+
+    issues: list[Issue] = []
+    nodos = sum(1 for s in pieza.scenes if s.kind == "c-nodo")
+    rotulos = {r.format(n=nodos) for r in K.ROTULOS.values()} | set(K.FORMULAS.values())
+    fuentes = [f for f in src.values() if f] + [book.titulo, book.autor, book.eje, K.titulo_corto(book.titulo)]
+    vistas = [(f"{pieza.key} · escena {i} ({s.kind})", s.view) for i, s in enumerate(pieza.scenes, start=1)]
+    vistas.append((f"{pieza.key} · miniatura", pieza.portada))
+    for donde, view in vistas:
+        for clave, texto in _textos_de_vista(view):
+            if clave in _CLAVES_ROTULO or clave == "said":
+                if texto not in rotulos:
+                    issues.append(Issue("error", donde, f"rótulo no declarado en compartir.ROTULOS ({clave}): {texto[:60]!r}"))
+            elif not _literal_en_alguna(texto, fuentes):
+                issues.append(Issue("error", donde, f"texto en pantalla que no es literal del corpus ({clave}): {texto[:60]!r}"))
+
+    def sin_prefijo(t: str) -> str:
+        return next((t[len(pre):] for pre in K.PREFIJOS_PUB if t.startswith(pre)), t)
+
+    en_ideas = f"{K.titulo_corto(book.titulo)} en {nodos} ideas"
+    if not en_ideas.startswith(pieza.titulo_pub.rstrip("…")) and not _literal_en_alguna(sin_prefijo(pieza.titulo_pub), fuentes):
+        issues.append(Issue("error", pieza.key, f"título de publicación que no es literal: {pieza.titulo_pub[:60]!r}"))
+    for parrafo in [x for x in pieza.descripcion_pub.split("\n\n") if x.strip()]:
+        if parrafo.startswith("Del libro «") or parrafo.startswith(K.ROTULOS["marca"]):
+            continue
+        trozos = sin_prefijo(parrafo).split(" · ") if pieza.tipo == "libro" else [sin_prefijo(parrafo)]
+        if not all(_literal_en_alguna(t, fuentes) for t in trozos):
+            issues.append(Issue("error", pieza.key, f"descripción de publicación que no es literal: {parrafo[:60]!r}"))
+    return issues
+
+
 def lint_pieza(pieza, book: Book) -> list[Issue]:
     """Control de una pieza compartible: fidelidad literal, fórmulas declaradas, nada que ancle a la web y texto breve."""
     from . import compartir as K
@@ -229,6 +312,8 @@ def lint_pieza(pieza, book: Book) -> list[Issue]:
                 issues.append(Issue("error", donde, f"origen desconocido: {part.origin}"))
             elif not _contained(part.text, ref):
                 issues.append(Issue("error", donde, f"la locución no es literal de «{part.origin}»: {part.text[:70]!r}"))
+            elif not _desde_inicio_de_frase(part.text, ref):
+                issues.append(Issue("error", donde, f"la locución empieza a media frase de «{part.origin}»: {part.text[:70]!r}"))
             if K.ANCLA_WEB.search(part.text):
                 issues.append(Issue("aviso", donde, f"el texto del corpus alude a la lección o a la web: {part.text[:60]!r}"))
             if K.parece_ingles(part.text):
@@ -242,7 +327,7 @@ def lint_pieza(pieza, book: Book) -> list[Issue]:
             vistas = scene.view.get("words") or []
             if vistas != dichas[len(dichas) - len(vistas):] or not vistas:
                 issues.append(Issue("error", donde, "el texto en pantalla no coincide con la locución"))
-        for vista in CF.estados(scene):
+        for vista in CF.estados(scene) if scene.kind != "c-cierre" else []:  # el cierre repite, entero, lo que ya se ha oído
             n = CF.palabras_en_pantalla(scene.kind, vista)
             if n > MAX_PALABRAS_EN_PANTALLA:
                 issues.append(Issue("aviso", donde, f"{n} palabras en pantalla a la vez (máximo orientativo {MAX_PALABRAS_EN_PANTALLA})"))
@@ -254,12 +339,24 @@ def lint_pieza(pieza, book: Book) -> list[Issue]:
             con_figura = True
         # Lo que el cierre deja escrito para llevarse es un arranque literal de algo que la pieza ya dijo.
         recuerda = str(scene.view.get("recuerda") or "").rstrip("…").strip() if scene.kind == "c-cierre" else ""
-        if recuerda and not any(_contained(recuerda, ref) for ref in src.values() if ref):
+        if recuerda and not any(_desde_inicio_de_frase(recuerda, ref) for ref in src.values() if ref):
             issues.append(Issue("error", donde, f"el mensaje de cierre no es literal del corpus: {recuerda[:60]!r}"))
+        if recuerda and str(scene.view.get("recuerda") or "").endswith("…"):
+            issues.append(Issue("aviso", donde, "el mensaje de cierre va recortado («…»): comprueba que no pierde su salvedad"))
         for beat in scene.beats:
             if beat.at_word is None and beat.at_s is None:
                 issues.append(Issue("error", donde, "cambio en pantalla sin momento asignado"))
 
+    issues.extend(_lint_lo_que_solo_se_ve(pieza, book, src))
+    if pieza.tipo == "pregunta":
+        # La respuesta que se da tiene que ser la opción correcta de ESA pregunta, no cualquier opción del libro.
+        lec = next((l for l in book.lessons if l.id == pieza.lesson_id), None)
+        q = next((x for x in (lec.preguntas if lec else []) if x.texto == pieza.gancho and x.valid), None)
+        dichas = [p.text for s in pieza.scenes for p in s.parts if p.origin == "pregunta.opcion"]
+        if not q or len(dichas) != 1 or dichas[0].rstrip(".") != T.clean(q.opciones[q.correcta]).rstrip("."):
+            issues.append(Issue("error", pieza.key, "la respuesta que se da no es la opción correcta de la pregunta que se hace"))
+        elif K.PREGUNTA_INVERSA.search(q.texto):
+            issues.append(Issue("error", pieza.key, "pregunta en negativo o que depende de la lista de opciones: su «respuesta» suelta desinforma"))
     for rotulo in [*K.ROTULOS.values(), *K.FORMULAS.values()]:
         if K.ANCLA_WEB.search(rotulo):
             issues.append(Issue("error", pieza.key, f"rótulo o fórmula que ancla a la web: {rotulo!r}"))

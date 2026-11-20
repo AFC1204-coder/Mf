@@ -94,6 +94,23 @@ class SeleccionTest(unittest.TestCase):
         self.assertEqual(K.pregunta_autonoma(libro.lessons[0]).id, "q-d")  # «selección» no es «lección»
         self.assertIsNone(K.pregunta_autonoma(_libro(preguntas=preguntas[:3]).lessons[0]))
 
+    def test_una_pregunta_en_negativo_no_sirve_su_respuesta_suelta_seria_un_error(self):
+        def con(texto):
+            return _libro(preguntas=[{"id": "q", "leccion_id": "l-1", "texto": texto, "opciones": ["La intuición nunca se equivoca", "Otra"], "correcta": 0, "explicacion": "", "dificultad": 1}])
+
+        for texto in (
+            "¿Cuál de estas afirmaciones sobre la intuición es FALSA?",
+            "¿Cuál de las siguientes es una condición de umbral?",
+            "¿Qué afirmación es incorrecta?",
+            "Todas son ciertas EXCEPTO una, ¿cuál?",
+            "¿Cuál NO es un sesgo?",
+            "¿Cuál de los rasgos descritos no pertenece al modelo?",
+        ):
+            self.assertIsNone(K.pregunta_autonoma(con(texto).lessons[0]), texto)
+            self.assertIsNone(K.pieza_pregunta(con(texto), 0), texto)
+        # Una pregunta con un «no» corriente sí vale: su respuesta es una afirmación cierta.
+        self.assertIsNotNone(K.pregunta_autonoma(con("¿Por qué un coste hundido no debería pesar en la decisión?").lessons[0]))
+
     def test_la_explicacion_se_corta_antes_de_hablar_de_las_opciones(self):
         q = F.libro().lessons[0].preguntas[0]
         self.assertEqual(K.explicacion_autonoma(q), "La respuesta rápida suele ser la equivocada.")
@@ -180,7 +197,16 @@ class PiezasTest(unittest.TestCase):
         idea = self.plan.piezas[1]
         self.assertEqual(idea.scenes[-1].view["recuerda"], idea.gancho)  # un solo mensaje: el que abrió la pieza
         pregunta = next(x for x in self.plan.piezas if x.tipo == "pregunta")
-        self.assertEqual(pregunta.scenes[-1].view["recuerda"], "Que puede ser equivocada.")  # la pregunta se cierra con su respuesta
+        cierre = pregunta.scenes[-1].view  # la pregunta y su respuesta, juntas: la respuesta sola no dice de qué
+        self.assertEqual((cierre["recuerda_antes"], cierre["recuerda"]), ("¿Qué suele pasar con la primera respuesta?", "Que puede ser equivocada."))
+        html = CF._stage_cierre(cierre, "")[0]
+        self.assertLess(html.index("¿Qué suele pasar"), html.index("Que puede ser equivocada."))
+
+    def test_el_cierre_no_corta_la_idea_justo_antes_de_su_salvedad(self):
+        idea = "La fuerza de voluntad es un recurso limitado que se agota con el uso, aunque estudios recientes no han logrado replicar ese efecto."
+        p = K.pieza_idea(_libro(**{"l-1": {"idea_clave": idea}}), 0)
+        self.assertEqual(p.scenes[-1].view["recuerda"], idea)
+        self.assertEqual(p.portada["text"], idea)
 
     def test_el_patron_visual_sale_de_la_plantilla_de_la_figura(self):
         self.assertEqual(K.patron_visual({"plantilla": "comparar"}), "contraste")
@@ -424,24 +450,49 @@ class PatronesTest(unittest.TestCase):
     def test_no_x_sino_y(self):
         self.assertEqual(K.no_sino("Lo que hace buena una inversión no es la calidad del activo, sino la relación entre su precio y su valor.".split()), (6, 12, 21))
         self.assertIsNone(K.no_sino("No solo falla la memoria, sino también el juicio.".split()))  # no niega nada
+        self.assertIsNone(K.no_sino("No es simplemente un archivo, sino una reconstrucción.".split()))
         self.assertIsNone(K.no_sino("No lo sabemos. Sino hubiera sido otro.".split()))  # no cruza el punto
         self.assertIsNone(K.no_sino("Pensar despacio corrige.".split()))
+        # con dos «no», cuenta el más cercano al «sino»
+        self.assertEqual(K.no_sino("Quien no entrena no pierde fuerza por la edad, sino por el desuso.".split())[0], 3)
 
-    def test_el_contraste_de_la_frase_se_senala_sin_cambiar_una_palabra(self):
-        idea = "La ventaja no está en una mano concreta, sino en saber algo de la baraja."
+    def test_de_un_no_sino_solo_se_senala_lo_afirmado(self):
+        idea = "Quien no entrena no pierde fuerza por la edad, sino por el desuso."
         s = K.escena_frase("Idea", "idea", "UNA IDEA", [Part(idea, "leccion.idea_clave")])
         self.assertEqual(s.narration, idea)
-        self.assertEqual(len(s.view["pages"]), 1)  # breve: el contraste se ve entero en una página
-        self.assertEqual((s.view["neg"], s.view["afi"]), ([2, 8], [8, 15]))
+        self.assertEqual(len(s.view["pages"]), 1)  # breve: se ve entera en una página
+        self.assertEqual(s.view["afi"], [9, 13])
+        self.assertNotIn("neg", s.view)  # qué niega el «no» no se puede saber sin analizar la frase: no se apaga nada
         final = dict(s.view, **s.beats[-1].patch)
         cuerpo, _ = CF._stage_frase(final, "UNA IDEA")
-        self.assertIn('<span class="w neg">está</span>', cuerpo)
-        self.assertIn('<span class="w">no</span>', cuerpo)  # el «no» no se tacha: es lo que dice la frase
-        self.assertIn('class="w afi">saber</span>', cuerpo)
-        antes = dict(s.view, **s.beats[0].patch)
-        self.assertNotIn("neg", CF._stage_frase(antes, "UNA IDEA")[0])  # hasta que no se ha dicho lo negado, nada se apaga
+        self.assertRegex(cuerpo, r'class="w[^"]* afi">desuso\.</span>')
+        self.assertIn('<span class="w">pierde</span>', cuerpo)  # «pierde fuerza» no está negado y se ve normal
         matiz = K.escena_frase("Matiz", "matiz", "EL MATIZ", [Part(idea, "leccion.autocorreccion")])
-        self.assertNotIn("neg", matiz.view)  # solo en la idea
+        self.assertNotIn("afi", matiz.view)  # solo en la idea
+
+    def test_una_figura_con_datos_raros_deja_la_pieza_sin_esquema_pero_no_revienta(self):
+        raros = [
+            {"tipo": "diagrama", "plantilla": "matriz", "titulo": "X", "datos": {"ejeX": "no es un objeto", "ejeY": None, "celdas": [{"t": "a"}, {"t": "b"}, {"t": "c"}, {"t": "d"}]}},
+            {"tipo": "diagrama", "plantilla": "mapa", "titulo": "X", "datos": {"centro": {"t": "R"}, "nodos": [{"t": "a"}, {"t": "b"}]}},
+            {"tipo": "diagrama", "plantilla": "cifras", "titulo": "X", "datos": {"items": [{"n": 42, "t": "un número que no es texto"}]}},
+            {"tipo": "diagrama", "plantilla": "espectro", "titulo": "X", "datos": {"polos": ["a", "b"], "marcas": [{"pos": "medio", "t": "m"}, {"pos": None, "t": "n"}]}},
+        ]
+        for figura in raros:
+            libro = _libro(diagramas={"l-1": [figura]})
+            p = K.pieza_idea(libro, 0)
+            self.assertEqual([i for i in L.lint_pieza(p, libro) if i.level == "error"], [], figura["plantilla"])
+            for s in p.scenes:
+                for texto in _textos(p):
+                    self.assertNotIn("{'t'", texto)
+        self.assertEqual(K.marco_figura(raros[3])["pos"], [0.5, 0.5])  # sin posición válida, al centro, como la app
+
+    def test_lo_que_la_figura_dice_no_se_queda_fuera(self):
+        tiempo = {"plantilla": "tiempo", "datos": {"eventos": [{"f": "1998", "t": "Se publica", "d": "Doce casos, sin comparación"}, {"f": "2010", "t": "Se retira"}]}}
+        self.assertEqual(K.piezas_figura(tiempo)[0].lines, ["1998", "Se publica", "Doce casos, sin comparación"])
+        balanza = {"plantilla": "balanza", "datos": {"inclina": "der", "izq": {"t": "A", "items": ["x"]}, "der": {"t": "B", "items": ["y"]}}}
+        self.assertEqual(K.piezas_figura(balanza), [])  # hacia dónde cae es parte del mensaje y aquí no se vería
+        embudo = {"plantilla": "embudo", "datos": {"etapas": [{"t": "Visitas", "v": 1000, "unidad": "al mes"}, {"t": "Compras", "v": 20}]}}
+        self.assertEqual(K.piezas_figura(embudo), [])
 
 
 class ControlTest(unittest.TestCase):
@@ -491,6 +542,42 @@ class ControlTest(unittest.TestCase):
         mensajes = " ".join(str(i) for i in L.lint_pieza(p, self.libro) if i.level == "error")
         self.assertIn("no es literal", mensajes)
         self.assertIn("no coincide con la locución", mensajes)
+
+    def test_rechaza_un_recorte_que_se_come_el_arranque_de_la_frase(self):
+        # «toda intuición falla» está, literal, dentro de «No toda intuición falla»… y dice lo contrario.
+        p = self.plan.piezas[1]
+        matiz = next(s for s in p.scenes if s.view.get("style") == "matiz")
+        matiz.parts[1] = Part("toda intuición falla.", "leccion.autocorreccion")
+        matiz.view["words"] = ["toda", "intuición", "falla."]
+        mensajes = " ".join(str(i) for i in L.lint_pieza(p, self.libro) if i.level == "error")
+        self.assertIn("empieza a media frase", mensajes)
+
+    def test_rechaza_texto_que_solo_se_ve_y_no_esta_en_el_corpus(self):
+        def errores(cambio):
+            plan = K.plan_libro(self.libro)
+            p = plan.piezas[1]
+            cambio(p)
+            return " ".join(str(i) for i in L.lint_pieza(p, self.libro) if i.level == "error")
+
+        figura = lambda p: next(s for s in p.scenes if s.kind == "c-figura" and s.view["mode"] == "pieza")  # noqa: E731
+        self.assertIn("no es literal del corpus (t)", errores(lambda p: figura(p).view["pieces"][0].update(t="Un rótulo inventado")))
+        self.assertIn("no es literal del corpus (items)", errores(lambda p: figura(p).view["pieces"][0].update(items=["Falla siempre"])))
+        self.assertIn("no es literal del corpus (title)", errores(lambda p: figura(p).view.update(title="Otro título")))
+        self.assertIn("no es literal del corpus (tema)", errores(lambda p: p.scenes[0].view.update(tema="Un tema que no existe")))
+        self.assertIn("no es literal del corpus (author)", errores(lambda p: p.scenes[1].view.update(author="Otro Autor")))
+        self.assertIn("miniatura", errores(lambda p: p.portada.update(text="Lo primero que se nos ocurre siempre es falso.")))
+        self.assertIn("rótulo no declarado", errores(lambda p: p.scenes[0].view.update(kicker="LECCIÓN 1 DE 3")))
+        self.assertIn("título de publicación", errores(lambda p: setattr(p, "titulo_pub", "Un título de mi cosecha")))
+        self.assertIn("descripción de publicación", errores(lambda p: setattr(p, "descripcion_pub", "El matiz: toda intuición falla.")))
+        self.assertEqual(errores(lambda p: None), "")
+
+    def test_rechaza_una_respuesta_que_no_es_la_correcta_de_su_pregunta(self):
+        p = next(x for x in self.plan.piezas if x.tipo == "pregunta")
+        respuesta = next(s for s in p.scenes if s.view.get("style") == "respuesta")
+        respuesta.parts[1] = Part("Que es la correcta.", "pregunta.opcion")  # literal del corpus, pero es una opción FALSA
+        respuesta.view["words"] = " ".join(x.text for x in respuesta.parts).split()[2:]
+        mensajes = " ".join(str(i) for i in L.lint_pieza(p, self.libro) if i.level == "error")
+        self.assertIn("no es la opción correcta", mensajes)
 
     def test_rechaza_un_cierre_que_no_es_literal(self):
         p = self.plan.piezas[1]

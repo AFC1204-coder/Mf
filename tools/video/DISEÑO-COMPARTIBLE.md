@@ -34,9 +34,9 @@ Una pieza no es texto sobre fondo. La `idea` tiene cinco tiempos y cada uno hace
 | **Origen** | «Del libro X, de Y» | fórmula + títulos | Saber quién lo sostiene antes de seguir |
 | **Desarrollo visible** | La estructura entera primero; después se recorre pieza a pieza con el patrón visual que le va | `datos/diagramas.json` | Que se vea *cómo* es la idea: qué se opone a qué, qué lleva a qué |
 | **Giro** | «El matiz»: cambia el color, la letra y el tono | `autocorreccion` | Lo que la idea no dice: el límite |
-| **Cierre** | «Quédate con esto»: el gancho otra vez, escrito, junto a la marca | el mismo tramo literal del principio | Un solo mensaje para llevarse; el arco se cierra donde se abrió |
+| **Cierre** | «Quédate con esto»: el gancho otra vez, escrito **entero** (hasta 40 palabras), junto a la marca | el mismo tramo literal del principio | Un solo mensaje para llevarse; el arco se cierra donde se abrió. Entero porque cortarlo a media frase puede dejar fuera justo su salvedad |
 
-En `pregunta` el arco es pregunta → espera → respuesta, y el cierre deja escrita **la respuesta**. En `practica`, qué hacer → por qué → límite. En `caso`, lo concreto antes que lo abstracto: el ejemplo → la idea que ilustra → límite, y lo que se lleva uno es la idea.
+En `pregunta` el arco es pregunta → espera → respuesta, y el cierre deja escritas **la pregunta y su respuesta, juntas** (la respuesta sola no dice de qué). En `practica`, qué hacer → por qué → límite. En `caso`, lo concreto antes que lo abstracto: el ejemplo → la idea que ilustra → límite, y lo que se lleva uno es la idea.
 
 **El caso no se adivina.** Solo vale el que el corpus introduce de forma explícita («Un ejemplo:», «Por ejemplo», «Imagina que…», «En un experimento…»): la frase que lo abre y las que la siguen en su párrafo, enteras, hasta 45 palabras. Si la frase solo lo anuncia («Un ejemplo cotidiano ayuda a verlo.») y no cabe lo que sigue, no hay pieza; tampoco si la lección no tiene idea redactada que ilustrar. Los avisos del propio corpus («un ejemplo nuestro», «propio y no del libro») se dicen tal cual.
 
@@ -54,11 +54,12 @@ La figura verificada de cada lección ya dice qué tipo de idea es. La regla de 
 | `cifras` | **Cifra** | El número, enorme, y debajo qué mide | El dato es el mensaje | 39 (1 %) |
 | `matriz` | **Matriz** | Los cuatro cuadrantes con sus dos ejes; al recorrerla, cada cuadrante se sitúa con sus dos coordenadas y un mini-mapa | Dos criterios que se cruzan | 27 (0,7 %) |
 | `escalera`, `capas`, `embudo` → cadena · `balanza` → contraste · `bucle` → ciclo · `jerarquia` → radial | (los de arriba) | Las mismas formas con otro nombre. Un `bucle` solo si todos sus pasos refuerzan (un «−» cambia el sentido y no se vería); una `jerarquia` solo si cabe sin dejar texto fuera | — | incluidas arriba (≈ 34) |
-| Las demás (`iceberg`, `formula`, `red`, `flujo`, `grafica`, `arbol`, `curva`…) | — | Sin esquema: idea y matiz | Aún sin patrón propio; enteras serían ilegibles | 55 (1,5 %) |
+| `iceberg` | **Iceberg** | Lo que se ve arriba, una línea de flotación y, debajo, lo que lo sostiene; cada parte con su rótulo | Lo visible y lo que hay detrás | 13 (0,3 %) |
+| Las demás (`formula`, `red`, `flujo`, `grafica`, `arbol`, `curva`…) y las que obligarían a dejar datos fuera (un embudo con cantidades, una balanza inclinada, un bucle con un paso que frena) | — | Sin esquema: idea y matiz | Aún sin patrón propio, o el patrón no enseñaría parte de lo que la figura dice | 43 (1,2 %) |
 
 Todos los patrones se dibujan en HTML/CSS con los datos de la figura (no pasan por `lib/diagram.js`): así el texto va grande **dentro** de la forma, junto a aquello de lo que habla. Además enseñan lo que la silueta de la primera versión dejaba fuera: el **centro** de mapas y ciclos (y su apostilla, a veces un «lectura nuestra»), los **polos** del espectro y los **extremos y nombres de los ejes** de la matriz.
 
-**Y dentro de la frase.** Cuando la idea tiene la forma «no X, sino Y» (191 ideas, el 5 %), el texto cinético lo señala sin cambiar una palabra: al llegar el «sino», lo negado se apaga y se tacha, y lo afirmado se queda en color. Si la frase es breve va entera en una página para que el contraste se vea junto (64 piezas); «no solo… sino también» no niega nada y no se toca.
+**Y dentro de la frase.** Cuando la idea tiene la forma «no X, sino Y» (un 5 % de las ideas), el texto cinético lo señala sin cambiar una palabra: lo afirmado, lo que sigue al «sino», se queda en color una vez dicho. **Lo negado no se marca.** La primera versión lo apagaba y lo tachaba, y la revisión independiente encontró que eso podía decir algo falso: en «no pierde fuerza por la edad, sino por el desuso» el «no» no niega que pierda fuerza, y saber qué niega exige analizar la frase. Si la frase es breve va entera en una página; «no solo… sino también» o «no simplemente… sino» no se tocan.
 
 ### Cuando la lección no da para un arco
 
@@ -66,8 +67,8 @@ No se fuerza. `pieza_idea` clasifica (`arco` en el manifiesto) y degrada con hon
 
 | Caso | Qué hace | En la biblioteca (3.719 lecciones) |
 |---|---|---|
-| Idea que se sostiene sola + figura recorrible + matiz | **Arco completo** | 3.481 (93,6 %) |
-| Sin figura recorrible | Idea → origen → matiz → cierre (`sin_esquema`) | 55 (1,5 %) |
+| Idea que se sostiene sola + figura recorrible + matiz | **Arco completo** | 3.493 (93,9 %) |
+| Sin figura recorrible | Idea → origen → matiz → cierre (`sin_esquema`) | 43 (1,2 %) |
 | Sin idea redactada y con un arranque que solo habla del libro («Newport dedica una sección…», «Una de las contribuciones del libro es…») | Abre el esquema, que sí dice algo, y cierra con su pie (`esquema_primero`). No hay pieza `practica`: no habría idea que poner detrás | 183 (4,9 %) |
 | Ni idea ni figura | **No hay pieza**; queda anotado | 0 |
 
@@ -103,7 +104,7 @@ Rúbrica de una pieza `idea` (un punto por criterio):
 4. **Tiene giro**: lleva el matiz.
 5. **Cierra lo que abre**: lo último escrito es el gancho (o la respuesta).
 
-Medido de forma automática en las 3.719 piezas `idea` de la biblioteca: criterio 1, 95 % (el 5 % restante abre con el esquema); criterio 3, 98,5 %; criterios 4 y 5, 100 % por construcción y por control (`lint_pieza`); **los cinco, 93,6 %** (arco completo). El criterio 2 no se puede medir con reglas fiables: se evaluó leyendo.
+Medido de forma automática en las 3.719 piezas `idea` de la biblioteca: criterio 1, 95 % (el 5 % restante abre con el esquema); criterio 3, 98,8 %; criterios 4 y 5, 100 % por construcción y por control (`lint_pieza`); **los cinco, 93,9 %** (arco completo). El criterio 2 no se puede medir con reglas fiables: se evaluó leyendo.
 
 Lectura crítica de 14 guiones `idea` elegidos al azar, antes de introducir la detección de arranques huecos: 8 salían de `idea_clave` y los 8 funcionaban solos (afirmación clara, giro nítido en el matiz); de los 6 que salían del cuerpo, 3 funcionaban («Las emociones no son perturbaciones irracionales…») y **3 no decían nada** («Una de las contribuciones más prácticas del libro es…», «Newport articula su argumento central en dos dimensiones…», «Robbins dedica una sección significativa…»). Esos tres son el motivo de `ARRANQUE_META` y del arco `esquema_primero`; los tres quedan ahora detectados. Qué se recuerda tras leerlos: en 11 de 14, una frase y su «pero»; en los otros, el tema. Es una lectura de una sola persona sobre guiones, no una prueba con espectadores.
 
@@ -125,7 +126,7 @@ Nada se redacta. El guion **selecciona y recorta por frases enteras**; lo demás
 | `cita_memorable` | Es una idea redactada por la app: se dice como idea, **nunca entre comillas ni atribuida**. Hay prueba automática. |
 | El matiz | Primeras frases enteras de `autocorreccion` (hasta 38 palabras; 26 si la pieza ya es larga), **más cualquier frase de salvedad de seguridad** que quedara fuera («no sustituye a un profesional», «consulta con…»). En la muestra, 24 piezas `idea` la recuperan así. |
 | La práctica | `aplicacion_practica` desde el principio (hasta 60 palabras) más sus salvedades. Si la primera frase pasa de 75 palabras, no hay pieza. |
-| La pregunta | La más asequible de las que se entienden solas: se descartan las que dicen «según la lección», «en el capítulo 7», «el texto», y las de respuesta «todas las anteriores». |
+| La pregunta | La más asequible de las que se entienden solas: se descartan las que dicen «según la lección», «en el capítulo 7», «el texto», las de respuesta «todas las anteriores» y, sobre todo, **las que preguntan en negativo o dependen de la lista** («¿cuál es FALSA?», «todas EXCEPTO…», «¿cuál de las siguientes…?»): su respuesta correcta es una afirmación falsa o no significa nada sin las opciones delante. |
 | La explicación | Solo su tramo inicial, hasta la primera frase que hable de «las otras opciones» o de «la lección». |
 | El esquema | El de `datos/diagramas.json`, sin tocar: título, cada pieza entera en su tarjeta y pie. La voz lee la pieza entera si el esquema es breve (hasta 36 palabras); si no, el título y su primer rótulo, o solo el título. La tarjeta se queda el tiempo que se tarda en leerla. |
 | El libro | Se dice con su título corto (hasta los dos puntos o el paréntesis: «Steal Like an Artist»), que es un prefijo literal; el título completo va en el cierre y en el texto de publicación. |
@@ -171,21 +172,39 @@ Lección aprendida en el formato `clase`: una figura completa a 1080 px de ancho
 
 | | Piezas | Duración: mín · p25 · mediana · p75 · p95 · máx | Por encima de 60 s | Avisos por duración |
 |---|---|---|---|---|
-| `idea` | 3.719 (100 % de las lecciones) | 26 · 48 · **55** · 60 · 68 · 88 s | 882 (24 %) | 39 (> 75 s) |
-| `pregunta` | 2.624 (71 %) | 24 · 39 · **46** · 51 · 60 · 76 s | 145 (6 %) | 14 (> 70 s) |
+| `idea` | 3.719 (100 % de las lecciones) | 26 · 49 · **55** · 60 · 68 · 88 s | 885 (24 %) | 39 (> 75 s) |
+| `pregunta` | 2.620 (70 %) | 24 · 39 · **46** · 51 · 60 · 76 s | 146 (6 %) | 14 (> 70 s) |
 | `practica` | 3.476 (93 %) | 27 · 47 · **52** · 56 · 62 · 87 s | 220 (6 %) | 15 (> 75 s) |
 | `caso` | 482 (13 %) | 32 · 47 · **51** · 55 · 64 · 78 s | 50 (10 %) | 1 (> 70 s) |
 | `libro` | 506 de 519 (97 %) | 31 · 39 · **43** · 50 · 54 · 60 s | 0 | 0 |
 
-- **10.807 piezas**, 20 por libro de mediana (de 7 a 53). **0 con error** en el control de calidad, 0 excepciones, 0 ganchos repetidos dentro de un libro.
+- **10.803 piezas**, 20 por libro de mediana (de 7 a 53). **0 con error** en el control de calidad, 0 excepciones, 0 ganchos repetidos dentro de un libro.
 - Sin material: 1.095 lecciones sin pregunta que se entienda sola (29 %); 243 sin pieza `practica`; 13 libros sin mapa. Todas las lecciones tienen pieza `idea`.
 - De dónde sale el gancho de la idea: `idea_clave` 58 % · arranque del cuerpo 25 % · idea redactada 13 % · título del esquema 5 %. 
 - Cuando una pieza pasa de 60 s se aprieta sola, sin cortar frases: el matiz se queda en su primera frase, el esquema se lee menos en voz alta (sigue entero en pantalla) o la práctica se acorta por frases enteras. Con eso las `practica` de más de 60 s bajan de 633 a 220 y las `idea` de 968 a 826 (878 tras dar esquema a las que no lo tenían); lo que queda son ideas, tarjetas o matices largos de por sí.
 - Avisos más frecuentes (piezas): texto del corpus que alude a «la lección» o a un capítulo, 405 (3,9 %); algún momento del esquema con más de 32 palabras a la vista, 310 (3,0 %); alguna frase de más de 60 palabras, 164 (1,6 %).
 - Cómputo: ~30 s por pieza y unos 22-26 fotogramas, en esta máquina y sin voz. La biblioteca entera serían unas 85 horas de máquina; `biblioteca --format compartir --limit N` va por tandas y retoma.
-- **Maquetación, medida en navegador** con todos los patrones: 9.000 fotogramas (4.000 en 9:16, 2.500 en 1:1 y 2.500 en 16:9, con hasta 90 piezas de cada patrón y las 27 matrices): **0 desbordes**; la letra tuvo que reducirse en 405 (4,5 %), como mucho al 76 %, y lo más pequeño que queda mide 27-28 px.
+- **Maquetación, medida en navegador** con todos los patrones y con la comprobación endurecida (detecta lo que se sale por cualquier lado): 10.500 fotogramas de figuras y texto en los tres aspectos, las 27 matrices enteras y 3.600 cierres y miniaturas: **0 desbordes**. La letra se reduce en un 3-5 % de los fotogramas (hasta un 50 % en los cierres en vertical, que ahora llevan la idea entera) y lo más pequeño que queda mide 25-28 px, en 1:1 y 16:9.
 - **Sincronía, medida sobre un vídeo real** con el motor de pitidos: las 5 ráfagas de la escena comprobada cambian en el instante en que suena su primera palabra.
 - **Tanda de estrés** con 150 libros que no estaban en la muestra de ajuste: 24 piezas renderizadas (6 de cada tipo, las más largas incluidas), **24 de 24 correctas** y con la duración prevista; 3.000 de sus fotogramas medidos en navegador, **0 desbordes**, letra mínima de 30 px, reducida en 76 (2,5 %, hasta el 87 %).
+
+## Revisión independiente
+
+Antes de dar el trabajo por terminado se pidió a otro agente, sin contexto previo, que buscara fallos reales en el código. Encontró nueve y los nueve están corregidos, cada uno con su prueba:
+
+| Hallazgo | Qué se hizo |
+|---|---|
+| **Grave.** Una pregunta en negativo («¿cuál es FALSA?») dejaba la afirmación falsa escrita en el cierre como «Quédate con esto» | Esas preguntas ya no se eligen (y el control las rechaza); el cierre de una pregunta lleva siempre la pregunta junto a su respuesta |
+| El cierre, la miniatura y los textos cortos cortaban la idea a media frase y podían perder su salvedad | Van enteros (40 y 30 palabras); si aun así hay que cortar, el control avisa |
+| El control no miraba lo que solo se ve (tarjetas, marco de la figura, tema, crédito, miniatura, textos de publicación) | Ahora todo eso tiene que ser literal o un rótulo declarado; los prefijos de publicación están en `PREFIJOS_PUB` |
+| «toda intuición falla» pasaba por literal de «No toda intuición falla» | Un recorte solo vale si empieza donde empieza una frase de la fuente |
+| El control no comprobaba que la respuesta fuera la correcta de esa pregunta | Lo comprueba |
+| El manifiesto daba por publicable una pieza en error si quedaba un vídeo antiguo | Ya no; y `biblioteca` solo salta un libro si su manifiesto cubre los tipos pedidos |
+| Algunos patrones dejaban datos fuera (el detalle de un evento, las cantidades de un embudo, hacia dónde cae una balanza) | El detalle se enseña; las figuras que no se pueden enseñar enteras van sin esquema |
+| `--excluir` solo miraba la locución | Mira también lo que se ve y los textos de publicación |
+| El «no… sino» apagaba texto que no estaba negado; figuras con datos de forma rara reventaban el libro; `calendario` fallaba con manifiestos raros | Ver arriba (solo se señala lo afirmado); los datos raros dejan la pieza sin esquema; el calendario los salta |
+
+De paso, al endurecer la comprobación de maquetación (ahora detecta también lo que se sale por arriba) apareció un fallo latente: en miniaturas y cierres la medida de «si cabe» quedaba anulada por el centrado. Corregido, y la matriz se rehízo como tabla horizontal. Quedan anotadas dos sospechas sin confirmar que no son de este formato: `text.clean` borra lo que hay entre «<» y «>» (afecta a 1 lección de 3.719) y la huella no cubre cambios de plantilla si no se sube `COMPARTIR_VERSION`.
 
 ## Qué se descartó
 

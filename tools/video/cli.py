@@ -27,7 +27,7 @@ from dotenv import load_dotenv
 from . import text as T
 from .corpus import Book, find_lesson, list_book_rows, load_book, load_book_by_row
 from .frames import _assets_stamp
-from .lint import has_errors, lint_episode
+from .lint import _textos_de_vista, has_errors, lint_episode
 from .renderer import merge_videos, render_episode
 from . import compartir as K
 from .scriptwriter import FORMATS, SCRIPT_VERSION, Episode, book_series, export_script_markdown
@@ -190,7 +190,9 @@ def _filtra_plan(plan: K.Plan, args: argparse.Namespace) -> K.Plan:
     quedan: list[K.Pieza] = []
     omitidas = list(plan.omitidas)
     for p in plan.piezas:
-        texto = T.norm(" ".join(s.narration for s in p.scenes))
+        # Todo lo que se oye y todo lo que se ve (una tarjeta de esquema no se lee en voz alta, pero sale).
+        visto = [t for s in p.scenes for _, t in _textos_de_vista(s.view)] + [" ".join(s.view.get("words") or []) for s in p.scenes]
+        texto = T.norm(" ".join([*(s.narration for s in p.scenes), *visto, p.titulo_pub, p.descripcion_pub]))
         tema = next((t for t in temas if re.search(rf"(?<![a-z0-9ñ]){re.escape(t)}", texto)), None)
         if tope and p.estimated_seconds > tope:
             omitidas.append(K.Omitida(p.tipo, p.leccion_n, p.title, f"dura ~{p.estimated_seconds:.0f} s, más de los {tope:.0f} s pedidos con --max-seg"))
@@ -211,9 +213,15 @@ def calendario(args: argparse.Namespace) -> int:
     for mf in sorted(OUTPUT.glob(f"*/compartir/{carpeta}/manifiesto.json")):
         try:
             datos = json.loads(mf.read_text(encoding="utf-8"))
-        except ValueError:
+        except (ValueError, OSError):
             continue
-        piezas = [dict(x, libro=datos.get("titulo"), autor=datos.get("autor"), eje=datos.get("eje"), carpeta=str(mf.parent.relative_to(OUTPUT))) for x in datos.get("piezas", []) if x.get("video") or args.todas]
+        if not isinstance(datos, dict) or not isinstance(datos.get("piezas"), list):
+            continue  # un manifiesto con otra forma no detiene el calendario
+        piezas = [
+            dict(x, libro=datos.get("titulo"), autor=datos.get("autor"), eje=datos.get("eje"), carpeta=str(mf.parent.relative_to(OUTPUT)), duracion_s=float(x.get("duracion_s") or 0))
+            for x in datos["piezas"]
+            if isinstance(x, dict) and x.get("clave") and (x.get("video") or args.todas)
+        ]
         if piezas:
             colas.append({"titulo": datos.get("titulo"), "eje": datos.get("eje") or "", "piezas": piezas})
     if not colas:
@@ -228,7 +236,11 @@ def calendario(args: argparse.Namespace) -> int:
         for eje in sorted(por_eje):
             if por_eje[eje]:
                 ronda.append(por_eje[eje].pop(0))
-    dia = datetime.date.fromisoformat(args.desde) if args.desde else None
+    try:
+        dia = datetime.date.fromisoformat(args.desde) if args.desde else None
+    except ValueError:
+        print(f"Fecha no válida en --desde: {args.desde!r} (usa AAAA-MM-DD).")
+        return 1
     salida: list[dict[str, Any]] = []
     while any(c["piezas"] for c in ronda):
         for c in ronda:
@@ -238,7 +250,7 @@ def calendario(args: argparse.Namespace) -> int:
     for n, x in enumerate(salida):
         fecha = (dia + datetime.timedelta(days=n // max(1, args.por_dia))).isoformat() if dia else f"día {n // max(1, args.por_dia) + 1}"
         x.update({"n": n + 1, "dia": fecha})
-        filas.append(f"| {n + 1} | {fecha} | {x['libro']} | `{x['carpeta']}/{x['clave']}` | {x['tipo']} | {x['duracion_s']:.0f} s | {x['titulo']} |")
+        filas.append(f"| {n + 1} | {fecha} | {x['libro']} | `{x['carpeta']}/{x['clave']}` | {x.get('tipo', '')} | {x['duracion_s']:.0f} s | {x.get('titulo', '')} |")
     base = OUTPUT / f"calendario-compartir-{carpeta}"
     base.with_suffix(".json").write_text(json.dumps(salida, ensure_ascii=False, indent=2), encoding="utf-8")
     base.with_suffix(".md").write_text("\n".join([f"# Calendario de publicación · {args.aspecto}", "", f"{len(salida)} piezas de {len(ronda)} libros · {args.por_dia} al día", "", *filas]) + "\n", encoding="utf-8")
@@ -361,7 +373,8 @@ def _write_manifiesto(book: Book, plan: K.Plan, resultados: list[Result], base: 
                 dur = json.loads((base / clave / "pieza.json").read_text(encoding="utf-8")).get("duracion_s", 0.0)
             except ValueError:
                 dur = 0.0
-        hecho = video.exists()
+        # Un vídeo antiguo en disco no cuenta si la pieza acaba de dar error: ya no corresponde a su guion.
+        hecho = video.exists() and not (r and r.status in ("error", "guion"))
         items.append(
             {
                 "orden": n, "clave": clave, "tipo": p.tipo, "arco": p.arco, "leccion": p.leccion_n, "leccion_id": p.lesson_id,
@@ -376,6 +389,7 @@ def _write_manifiesto(book: Book, plan: K.Plan, resultados: list[Result], base: 
     datos = {
         "libro_id": book.id, "titulo": book.titulo, "autor": book.autor, "eje": book.eje,
         "formato": "compartir", "aspecto": args.aspecto, "motivo": K.motivo_libro(book),
+        "tipos": list(_tipos(args)), "filtros": {"max_seg": getattr(args, "max_seg", None), "excluir": getattr(args, "excluir", None)},
         "voces": sorted({v for r in resultados for v in r.voices}),
         "piezas": items,
         "omitidas": [{"tipo": o.tipo, "leccion": o.leccion_n, "titulo": o.titulo, "motivo": o.motivo} for o in plan.omitidas],
@@ -643,8 +657,12 @@ def main(argv: list[str] | None = None) -> int:
         completa = False
         if serie_json.exists() and not args.force:
             try:
-                completa = bool(json.loads(serie_json.read_text(encoding="utf-8")).get("completa"))
-            except ValueError:
+                previo = json.loads(serie_json.read_text(encoding="utf-8"))
+                completa = bool(previo.get("completa"))
+                if completa and args.format == "compartir":
+                    # …y si se hizo con los mismos tipos de pieza que ahora se piden (o más).
+                    completa = set(_tipos(args)) <= set(previo.get("tipos") or [])
+            except (ValueError, AttributeError):
                 completa = False
         if not completa:
             pendientes.append(fila)

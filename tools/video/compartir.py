@@ -73,9 +73,14 @@ ROTULOS = {
     "recuerda": "QUÉDATE CON ESTO",
 }
 
+# Prefijos fijos de los textos de publicación (título y descripción). Como las fórmulas: declarados y comprobados.
+PREFIJOS_PUB = ("El matiz: ", "La respuesta: ", "La idea detrás: ", "Pruébalo: ", "Un caso: ")
+
 # Presupuestos (palabras). El texto en pantalla va por páginas: nunca más de PAGINA a la vez.
 PAGINA = 14
 RAFAGA = 4
+RECUERDA_PALABRAS = 40  # el mensaje de cierre: la idea entera en el 99 % de los casos
+PORTADA_PALABRAS = 30  # la miniatura: la frase entera casi siempre
 GIRO_PAGINA = 24
 MATIZ_PALABRAS = 38
 MATIZ_CORTO = 26
@@ -105,6 +110,13 @@ ALUDE_OPCIONES = re.compile(
     r"\bopci[oó]n\b|\bopciones\b|distractor|las dem[aá]s|las otras|los otros|el resto|\balternativas?\b|\blecci[oó]n\b|el texto|anteriores",
     re.IGNORECASE,
 )
+# Preguntas cuya respuesta correcta es una afirmación FALSA («¿cuál es falsa?», «todas EXCEPTO…») o que dependen de
+# la lista («¿cuál de las siguientes…?»): sin las opciones delante, la «respuesta» sería un error bien rotulado.
+PREGUNTA_INVERSA = re.compile(
+    r"\b(?:fals[ao]s?|incorrect[ao]s?|err[oó]ne[ao]s?|excepto|equivocad[ao]s?|siguientes|mito)\b|\bcu[aá]l(?:es)?\s+(?:de\s+[^?]{0,50})?no\b",
+    re.IGNORECASE,
+)
+_NO_MAYUSCULAS = re.compile(r"\bNO\b")
 # Una salvedad de seguridad no se recorta nunca: si la lección la trae, la pieza también.
 SALVEDAD = re.compile(
     r"no sustituye|no reemplaza|profesional(es)? (sanitari|de la salud|m[eé]dic|cualificad)|consulta (con|a) (un|tu|su)|"
@@ -214,14 +226,14 @@ def arranque_literal(texto: str, max_words: int) -> str:
     if T.n_words(t) <= max_words:
         return t
     corto = T.shorten_clause(t, max_words)
-    if t.startswith(corto.rstrip("…")):
-        return corto
-    return " ".join(t.split()[:max_words]).rstrip(" ,;:—–(") + "…"  # shorten_clause cerró una comilla o quitó un paréntesis
+    if not t.startswith(corto.rstrip("…")):  # shorten_clause cerró una comilla o quitó un paréntesis
+        corto = " ".join(t.split()[:max_words]).rstrip(" ,;:—–(") + "…"
+    return corto
 
 
 def tema(lesson: Lesson) -> str:
     """El tema de la pieza: el título de la lección hasta los dos puntos (rótulo, no se lee)."""
-    return T.shorten_clause(titulo_corto(lesson.titulo), 9)
+    return arranque_literal(titulo_corto(lesson.titulo), 9)
 
 
 def matiz_partes(lesson: Lesson, max_words: int = MATIZ_PALABRAS) -> list[Part]:
@@ -283,6 +295,8 @@ def pregunta_autonoma(lesson: Lesson) -> Question | None:
             continue
         correcta = q.opciones[q.correcta]
         if ANCLA_WEB.search(q.texto) or ALUDE_OPCIONES.search(correcta) or ANCLA_WEB.search(correcta):
+            continue
+        if PREGUNTA_INVERSA.search(q.texto) or _NO_MAYUSCULAS.search(q.texto):
             continue
         if re.search(r"\b(todas|ninguna|ambas|a y b|b y c)\b", T.norm(correcta)) and T.n_words(correcta) <= 6:
             continue
@@ -369,25 +383,34 @@ def rafagas(tokens: list[str], a: int, b: int, max_words: int = RAFAGA) -> list[
 
 
 def no_sino(tokens: list[str]) -> tuple[int, int, int] | None:
-    """«no X, sino Y» dentro de una frase: (dónde empieza lo negado, dónde está «sino», dónde acaba lo afirmado).
+    """«no X, sino Y» dentro de una frase: (dónde está el «no», dónde está «sino», dónde acaba lo afirmado).
 
-    Sirve para **señalar** el contraste que la frase ya hace (lo negado se apaga, lo afirmado queda en color).
-    Prudente: «no solo… sino también» no niega nada y no cuenta; ante la duda, None.
+    Sirve para **señalar lo afirmado** (Y queda en color). Lo negado NO se marca: qué parte de la frase
+    niega el «no» no se puede saber sin analizarla («no pierde fuerza por la edad, sino por el desuso» no
+    niega que pierda fuerza), y apagar de más diría algo falso. Prudente: «no solo… sino también»,
+    «no simplemente… sino» no niegan nada y no cuentan; ante la duda, None.
     """
     n = [T.norm(t).strip(".,;:«»\"()¿?¡!—–") for t in tokens]
-    for i, w in enumerate(n):
-        if w != "no" or any(x in ("solo", "solamente", "unicamente", "tan", "obstante") for x in n[i + 1 : i + 4]):
+    flojos = ("solo", "solamente", "unicamente", "tan", "obstante", "simplemente", "meramente", "exclusivamente", "necesariamente", "siempre", "apenas")
+    for j, w in enumerate(n):
+        if w != "sino" or n[j + 1 : j + 2] in (["tambien"], ["ademas"]) or n[j + 1 : j + 3] in (["que", "tambien"], ["que", "ademas"]):
             continue
-        for j in range(i + 2, min(i + 16, len(n))):
-            if _cierra(tokens[j - 1], _FIN_FRASE):
+        # el «no» más cercano hacia atrás, dentro de la misma frase
+        if j == 0 or _cierra(tokens[j - 1], _FIN_FRASE):
+            continue
+        i = j - 2
+        while i >= max(0, j - 15) and not _cierra(tokens[i], _FIN_FRASE):
+            if n[i] == "no":
                 break
-            if n[j] == "sino":
-                if n[j + 1 : j + 2] in (["tambien"], ["ademas"]) or n[j + 1 : j + 3] in (["que", "tambien"], ["que", "ademas"]):
-                    break
-                k = j + 1
-                while k < len(n) and not _cierra(tokens[k], (*_FIN_FRASE, ";", ":")):
-                    k += 1
-                return i, j, min(k + 1, len(n))
+            i -= 1
+        else:
+            continue
+        if i < 0 or n[i] != "no" or any(x in flojos for x in n[i + 1 : i + 4]):
+            continue
+        k = j + 1
+        while k < len(n) and not _cierra(tokens[k], (*_FIN_FRASE, ";", ":")):
+            k += 1
+        return i, j, min(k + 1, len(n))
     return None
 
 
@@ -426,7 +449,7 @@ def escena_frase(
         "hot": [0, 0],
     }
     if giro:
-        view["neg"], view["afi"] = [giro[0], giro[1]], [giro[1], giro[2]]
+        view["afi"] = [giro[1], giro[2]]
     beats: list[Beat] = []
     for n, (pi, i, j) in enumerate(cortes):
         patch = {"page": pi, "shown": j, "hot": [i, j]}
@@ -462,7 +485,7 @@ def escena_matiz(lesson: Lesson, max_words: int = MATIZ_PALABRAS) -> Scene | Non
     return escena_frase("Matiz", "matiz", ROTULOS["matiz"], [_fixed("matiz"), *partes], skip_parts=1, pause_after_s=0.5)
 
 
-def escena_cierre(book: Book, clave: str = "cta", recuerda: str = "") -> Scene:
+def escena_cierre(book: Book, clave: str = "cta", recuerda: str = "", antes: str = "") -> Scene:
     """La marca y, encima, el gancho otra vez (literal, sin voz): la pieza cierra con lo que abrió, un solo mensaje para llevarse."""
     return Scene(
         "c-cierre",
@@ -470,7 +493,9 @@ def escena_cierre(book: Book, clave: str = "cta", recuerda: str = "") -> Scene:
         {
             "brand": ROTULOS["marca"], "lema": ROTULOS["lema"], "said": FORMULAS[clave], "cta": ROTULOS["seguir"],
             "title": book.titulo, "author": book.autor,
-            "recuerda": arranque_literal(recuerda, 18) if recuerda else "", "recuerda_rotulo": ROTULOS["recuerda"],
+            # Entero siempre que quepa: cortar una idea a media frase puede dejar fuera justo su salvedad.
+            "recuerda": arranque_literal(recuerda, RECUERDA_PALABRAS) if recuerda else "", "recuerda_rotulo": ROTULOS["recuerda"],
+            "recuerda_antes": T.clean(antes),
         },
         [_fixed(clave)],
         pause_after_s=1.1,
@@ -518,8 +543,7 @@ def piezas_figura(spec: dict[str, Any] | None) -> list[G.Piece]:
         return ps
     d = spec.get("datos") if isinstance(spec.get("datos"), dict) else {}
 
-    def s_(v: Any) -> str:
-        return T.clean(v) if isinstance(v, (str, int, float)) else ""
+    s_ = _txt
 
     out: list[G.Piece] = []
     plantilla = spec.get("plantilla")
@@ -527,22 +551,26 @@ def piezas_figura(spec: dict[str, Any] | None) -> list[G.Piece]:
         polos = [s_(x) for x in (d.get("polos") or [])]
         if len(polos) != 2 or not all(polos):
             return []
-        for i, x in enumerate(sorted((m for m in d.get("marcas") or [] if isinstance(m, dict)), key=lambda m: float(m.get("pos") or 0))):
+        for i, x in enumerate(sorted((m for m in d.get("marcas") or [] if isinstance(m, dict)), key=_pos)):
             out.append(G.Piece(s_(x.get("t")), s_(x.get("d")), tone=x.get("tono") or "a", dom=i))
     elif plantilla == "tiempo":
         for i, x in enumerate(d.get("eventos") or []):
             if isinstance(x, dict):
-                out.append(G.Piece(s_(x.get("f")), s_(x.get("t")), tone=x.get("tono") or "a", dom=i))
+                out.append(G.Piece(s_(x.get("f")), s_(x.get("t")), items=[s_(x.get("d"))] if s_(x.get("d")) else [], tone=x.get("tono") or "a", dom=i))
     elif plantilla == "cifras":
         for i, x in enumerate(d.get("items") or []):
             if isinstance(x, dict):
                 out.append(G.Piece(s_(x.get("n")), s_(x.get("t")), tone=x.get("tono") or "a", dom=i))
     elif plantilla in ("escalera", "capas", "embudo"):  # niveles o etapas en orden: una cadena
         clave = {"escalera": "escalones", "capas": "capas", "embudo": "etapas"}[plantilla]
+        if any(isinstance(x, dict) and (x.get("v") is not None or x.get("unidad")) for x in d.get(clave) or []):
+            return []  # un embudo con cantidades: aquí no se verían, mejor sin esquema
         for i, x in enumerate(d.get(clave) or []):
             if isinstance(x, dict):
                 out.append(G.Piece(s_(x.get("t")), s_(x.get("d")), tone=x.get("tono") or "a", dom=i))
     elif plantilla == "balanza":  # dos platos: un contraste
+        if d.get("inclina"):
+            return []  # hacia dónde cae la balanza es parte del mensaje y un contraste no lo enseña
         for i, k in enumerate(("izq", "der")):
             col = d.get(k) if isinstance(d.get(k), dict) else {}
             out.append(G.Piece(s_(col.get("t")), items=[s_(x) for x in col.get("items") or [] if s_(x)], tone=col.get("tono") or "a", dom=i))
@@ -569,27 +597,42 @@ def piezas_figura(spec: dict[str, Any] | None) -> list[G.Piece]:
     return out
 
 
+def _pos(m: dict[str, Any]) -> float:
+    """La posición de una marca en el espectro; sin posición válida, al centro (como `lib/diagram.js`)."""
+    try:
+        return min(1.0, max(0.0, float(m.get("pos"))))
+    except (TypeError, ValueError):
+        return 0.5
+
+
+def _txt(v: Any) -> str:
+    """Solo cadenas: un dato con otra forma (un número, un objeto) no se convierte en texto a ojo."""
+    return T.clean(v) if isinstance(v, str) else ""
+
+
 def marco_figura(spec: dict[str, Any]) -> dict[str, Any]:
     """Lo que enmarca las piezas y también es parte de la figura: el centro de un mapa o un ciclo, los polos, los ejes."""
     d = spec.get("datos") if isinstance(spec.get("datos"), dict) else {}
+    plantilla = spec.get("plantilla")
     marco: dict[str, Any] = {}
-    centro = d.get("centro") or (d.get("nombre") if spec.get("plantilla") == "bucle" else "") or (d.get("raiz") if spec.get("plantilla") == "jerarquia" else "")
-    if T.clean(centro):
-        marco["centro"] = T.clean(centro)
-        marco["centro_sub"] = T.clean(d.get("centroSub"))
-    if spec.get("plantilla") == "espectro":
-        marcas = sorted((m for m in d.get("marcas") or [] if isinstance(m, dict)), key=lambda m: float(m.get("pos") or 0))
-        marco["polos"] = [T.clean(x) for x in (d.get("polos") or [])][:2]
-        marco["pos"] = [min(1.0, max(0.0, float(m.get("pos") or 0))) for m in marcas]
-    if spec.get("plantilla") == "iceberg":
-        marco["superficie"] = T.clean(d.get("etiquetaVisible"))
-        marco["fondo"] = T.clean(d.get("etiquetaOculto"))
+    centro = d.get("centro") or (d.get("nombre") if plantilla == "bucle" else "") or (d.get("raiz") if plantilla == "jerarquia" else "")
+    if _txt(centro):
+        marco["centro"] = _txt(centro)
+        marco["centro_sub"] = _txt(d.get("centroSub"))
+    if plantilla == "espectro":
+        marcas = sorted((m for m in d.get("marcas") or [] if isinstance(m, dict)), key=_pos)
+        marco["polos"] = [_txt(x) for x in (d.get("polos") or [])][:2]
+        marco["pos"] = [_pos(m) for m in marcas]
+    if plantilla == "iceberg":
+        marco["superficie"] = _txt(d.get("etiquetaVisible"))
+        marco["fondo"] = _txt(d.get("etiquetaOculto"))
         marco["corte"] = len([x for x in d.get("visibles") or [] if isinstance(x, dict)])
-    if spec.get("plantilla") == "matriz":
-        ex, ey = (d.get("ejeX") or {}), (d.get("ejeY") or {})
+    if plantilla == "matriz":
+        ex = d.get("ejeX") if isinstance(d.get("ejeX"), dict) else {}
+        ey = d.get("ejeY") if isinstance(d.get("ejeY"), dict) else {}
         marco["ejes"] = {
-            "x": [T.clean(ex.get("izq")), T.clean(ex.get("der"))], "x_nombre": T.clean(ex.get("nombre")),
-            "y": [T.clean(ey.get("arriba")), T.clean(ey.get("abajo"))], "y_nombre": T.clean(ey.get("nombre")),
+            "x": [_txt(ex.get("izq")), _txt(ex.get("der"))], "x_nombre": _txt(ex.get("nombre")),
+            "y": [_txt(ey.get("arriba")), _txt(ey.get("abajo"))], "y_nombre": _txt(ey.get("nombre")),
         }
     return marco
 
@@ -610,7 +653,11 @@ def escenas_figura(lesson: Lesson, nivel_min: int = 0) -> list[Scene]:
     si no, solo su título (y su primer rótulo). Cada tarjeta dura lo que se tarda en leerla.
     """
     specs = lesson.main_diagrams()[:1]
-    ps = piezas_figura(specs[0]) if specs else []
+    try:
+        ps = piezas_figura(specs[0]) if specs else []
+        marco = marco_figura(specs[0]) if ps else {}
+    except (AttributeError, TypeError, ValueError, KeyError):
+        ps, marco = [], {}  # una figura con datos de forma inesperada: la pieza sale sin esquema, no revienta el libro
     if not ps:
         return []
     spec = specs[0]
@@ -618,7 +665,7 @@ def escenas_figura(lesson: Lesson, nivel_min: int = 0) -> list[Scene]:
     pie = T.clean(spec.get("pie"))
     base = {
         "spec": spec, "pieces": [p.to_view() for p in ps], "order": G.order(ps), "n": len(ps), "title": titulo,
-        "kicker": ROTULOS["figura"], "patron": patron_visual(spec), "marco": marco_figura(spec),
+        "kicker": ROTULOS["figura"], "patron": patron_visual(spec), "marco": marco,
     }
     nivel = next((nv for nv in (0, 1, 2) if nv >= nivel_min and sum(T.n_words(x) for p in ps for x in _lectura(p, nv)) <= FIGURA_PALABRAS), 2)
 
@@ -746,10 +793,10 @@ def _pieza_idea(book: Book, index: int, apretar: int = 0) -> Pieza | None:
         gancho=gancho,
         gancho_origen=gancho_origen,
         arco=arco,
-        titulo_pub=T.shorten_clause(lesson.titulo, 16),
+        titulo_pub=arranque_literal(lesson.titulo, 16),
         descripcion_pub=_descripcion(book, [gancho if flojo else idea, _matiz_pub(lesson)]),
         etiquetas_pub=_etiquetas(book, lesson),
-        portada={"tag": ROTULOS["idea"], "text": arranque_literal(gancho, 18), "tema": tema(lesson)},
+        portada={"tag": ROTULOS["idea"], "text": arranque_literal(gancho, PORTADA_PALABRAS), "tema": tema(lesson)},
     )
 
 
@@ -781,7 +828,7 @@ def pieza_pregunta(book: Book, index: int) -> Pieza | None:
     matiz = escena_matiz(lesson, MATIZ_CORTO)
     if matiz:
         scenes.append(matiz)
-    scenes.append(escena_cierre(book, recuerda=correcta))  # cierra con la respuesta a la pregunta que abrió
+    scenes.append(escena_cierre(book, recuerda=correcta, antes=q.texto))  # cierra con la pregunta y su respuesta, juntas: la respuesta sola no dice de qué
     return _base(
         book,
         key=_clave("pregunta", k, lesson),
@@ -794,10 +841,10 @@ def pieza_pregunta(book: Book, index: int) -> Pieza | None:
         summary=q.texto,
         gancho=q.texto,
         gancho_origen="pregunta.texto",
-        titulo_pub=T.shorten_clause(q.texto, 18),
+        titulo_pub=arranque_literal(q.texto, 18),
         descripcion_pub=_descripcion(book, [q.texto, f"La respuesta: {correcta}", _matiz_pub(lesson)]),
         etiquetas_pub=_etiquetas(book, lesson),
-        portada={"tag": ROTULOS["pregunta"], "text": arranque_literal(q.texto, 20), "tema": tema(lesson)},
+        portada={"tag": ROTULOS["pregunta"], "text": arranque_literal(q.texto, PORTADA_PALABRAS), "tema": tema(lesson)},
     )
 
 
@@ -840,10 +887,10 @@ def _pieza_practica(book: Book, index: int, max_words: int) -> Pieza | None:
         summary=partes[0].text,
         gancho=gancho,
         gancho_origen="leccion.aplicacion_practica",
-        titulo_pub=T.shorten_clause(f"Pruébalo: {titulo_corto(lesson.titulo)}", 16),
+        titulo_pub=arranque_literal(f"Pruébalo: {titulo_corto(lesson.titulo)}", 16),
         descripcion_pub=_descripcion(book, [partes[0].text, f"La idea detrás: {idea}", _matiz_pub(lesson)]),
         etiquetas_pub=_etiquetas(book, lesson),
-        portada={"tag": ROTULOS["practica"], "text": arranque_literal(gancho, 18), "tema": tema(lesson)},
+        portada={"tag": ROTULOS["practica"], "text": arranque_literal(gancho, PORTADA_PALABRAS), "tema": tema(lesson)},
     )
 
 
@@ -879,10 +926,10 @@ def pieza_caso(book: Book, index: int) -> Pieza | None:
         summary=partes[0].text,
         gancho=gancho,
         gancho_origen="leccion.cuerpo",
-        titulo_pub=T.shorten_clause(f"Un caso: {titulo_corto(lesson.titulo)}", 16),
+        titulo_pub=arranque_literal(f"Un caso: {titulo_corto(lesson.titulo)}", 16),
         descripcion_pub=_descripcion(book, [partes[0].text, f"La idea detrás: {idea}", _matiz_pub(lesson)]),
         etiquetas_pub=_etiquetas(book, lesson),
-        portada={"tag": ROTULOS["caso"], "text": arranque_literal(gancho, 18), "tema": tema(lesson)},
+        portada={"tag": ROTULOS["caso"], "text": arranque_literal(gancho, PORTADA_PALABRAS), "tema": tema(lesson)},
     )
 
 
@@ -924,10 +971,10 @@ def pieza_libro(book: Book) -> Pieza | None:
         summary=cierre,
         gancho=cierre,
         gancho_origen="mapa.cierre",
-        titulo_pub=T.shorten_clause(f"{titulo_corto(book.titulo)} en {n} ideas", 16),
+        titulo_pub=arranque_literal(f"{titulo_corto(book.titulo)} en {n} ideas", 16),
         descripcion_pub=_descripcion(book, [_punto(cierre), " · ".join(etiquetas)]),
         etiquetas_pub=_etiquetas(book),
-        portada={"tag": rotulo, "text": arranque_literal(cierre, 20), "tema": ""},
+        portada={"tag": rotulo, "text": arranque_literal(cierre, PORTADA_PALABRAS), "tema": ""},
     )
 
 

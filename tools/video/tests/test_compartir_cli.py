@@ -29,6 +29,11 @@ class FiltrosTest(unittest.TestCase):
         self.assertTrue(any("--max-seg" in o.motivo for o in filtrado.omitidas))
         self.assertEqual(sorted(filtrado.orden), sorted(p.key for p in filtrado.piezas))
 
+    def test_excluir_mira_tambien_lo_que_solo_se_ve(self):
+        # «Corrige» solo está en una tarjeta del esquema de la lección 1 y en el cuerpo, que la pieza «idea» no lee entero.
+        filtrado = cli._filtra_plan(self.plan, argparse.Namespace(max_seg=None, excluir="a veces falla"))
+        self.assertIn(("idea", 1), {(o.tipo, o.leccion_n) for o in filtrado.omitidas if "--excluir" in o.motivo})
+
     def test_excluir_un_tema_quita_las_piezas_que_lo_nombran(self):
         filtrado = cli._filtra_plan(self.plan, argparse.Namespace(max_seg=None, excluir="Negociar, ruleta"))
         fuera = {o.leccion_n for o in filtrado.omitidas if "--excluir" in o.motivo}
@@ -57,6 +62,14 @@ class CalendarioTest(unittest.TestCase):
                 self.assertEqual(cli.calendario(argparse.Namespace(aspecto="9:16", por_dia=1, desde=None, todas=True)), 0)
                 self.assertEqual(len(json.loads((salida / "calendario-compartir-9x16.json").read_text(encoding="utf-8"))), 6)
                 self.assertEqual(cli.calendario(argparse.Namespace(aspecto="1:1", por_dia=1, desde=None, todas=True)), 1)  # sin manifiestos
+                # Manifiestos válidos como JSON pero con otra forma, y una fecha mal escrita: nada revienta.
+                for nombre, contenido in (("raro1", "[]"), ("raro2", '{"piezas": null}'), ("raro3", '{"titulo": "r", "piezas": [{"clave": "p1", "video": "v", "duracion_s": null}, "x", {}]}')):
+                    carpeta = salida / nombre / "compartir" / "9x16"
+                    carpeta.mkdir(parents=True)
+                    (carpeta / "manifiesto.json").write_text(contenido, encoding="utf-8")
+                self.assertEqual(cli.calendario(argparse.Namespace(aspecto="9:16", por_dia=1, desde=None, todas=False)), 0)
+                self.assertEqual(len(json.loads((salida / "calendario-compartir-9x16.json").read_text(encoding="utf-8"))), 6)
+                self.assertEqual(cli.calendario(argparse.Namespace(aspecto="9:16", por_dia=1, desde="mañana", todas=False)), 1)
             finally:
                 cli.OUTPUT = original
 

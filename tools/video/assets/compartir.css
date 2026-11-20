@@ -66,7 +66,8 @@ body.cs.st-caso { --tone: #6cb2e2; }
   position: absolute; left: var(--pad-l); right: var(--pad-r); top: var(--stage-top); bottom: var(--stage-bottom);
   display: flex; flex-direction: column; justify-content: center; font-size: 10px;
 }
-.cs-stage.top { justify-content: flex-start; }
+/* Mientras se mide si cabe, el contenido va arriba (centrado, lo que sobra por arriba no cuenta): gana a cualquier otra regla. */
+.cs-stage.top { justify-content: flex-start !important; align-content: start !important; }
 
 /* ── pie: el crédito, siempre a la vista ── */
 .cs-foot {
@@ -170,6 +171,9 @@ body.cs.st-caso { --tone: #6cb2e2; }
 .cs-recuerda { align-self: stretch; margin-bottom: 4.4em; padding: 0 0 0 2.6em; border-left: 0.5em solid var(--accent); }
 .cs-recuerda small { display: block; font-size: 3.7em; font-weight: 700; letter-spacing: 0.2em; color: var(--accent); margin-bottom: 0.6em; }
 .cs-recuerda p { margin: 0; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 7.4em; line-height: 1.16; color: var(--cs-ink); text-wrap: pretty; }
+.cs-recuerda em { display: block; margin-bottom: 0.5em; font-style: normal; font-family: 'VF Serif', serif; font-size: 4.6em; line-height: 1.25; color: var(--cs-ink2); }
+.cs-recuerda.largo p { font-size: 5.8em; }
+.cs-recuerda.largo { margin-bottom: 3em; }
 .cs-lockup { display: flex; align-items: center; gap: 2.6em; }
 .cs-mark { font-family: 'VF Playfair', serif; font-weight: 700; font-size: 17em; line-height: 1; color: var(--accent); }
 .cs-wordmark { font-size: 7.6em; font-weight: 800; letter-spacing: 0.14em; line-height: 1.05; color: var(--cs-ink); }
@@ -221,8 +225,7 @@ body.cs.st-caso { --tone: #6cb2e2; }
 .ar-16x9 .cs-recuerda, .ar-1x1 .cs-recuerda { margin-bottom: 2.6em; }
 .ar-16x9 .cs-recuerda p, .ar-1x1 .cs-recuerda p { font-size: 6em; }
 
-/* ── «no X, sino Y»: lo negado se apaga, lo afirmado se queda en color ── */
-.cs-kin .w.neg { color: var(--cs-ink3); text-decoration: line-through; text-decoration-thickness: 0.06em; text-decoration-color: color-mix(in srgb, var(--cs-mal) 75%, transparent); }
+/* ── «no X, sino Y»: lo afirmado se queda en color ── */
 .cs-kin .w.afi { color: var(--tone); }
 
 /* ── centro de un mapa o de un ciclo ── */
@@ -260,19 +263,19 @@ body.cs.st-caso { --tone: #6cb2e2; }
 
 /* ── matriz: dos ejes, cuatro cuadrantes ── */
 .con-forma .cs-fig-title { margin-bottom: 0.9em; }
-.cs-mat { display: grid; grid-template-columns: 4.6em 6.4em 1fr; grid-template-rows: auto 1fr; gap: 1.2em; margin-bottom: 3em; }
-.cs-mat-n { grid-column: 1; grid-row: 2; position: relative; }
-.cs-mat-n em { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) rotate(-90deg); font-style: normal; font-size: 3.7em; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
-.cs-mat-x { grid-column: 3; display: grid; grid-template-columns: 1fr 1fr; gap: 1.6em; position: relative; padding-top: 5.4em; }
-.cs-mat-x em { position: absolute; font-style: normal; font-size: 3.7em; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); white-space: nowrap; }
-.cs-mat-x em { left: 0; right: 0; top: 0; text-align: center; overflow: hidden; text-overflow: ellipsis; }
-.cs-mat-x span { text-align: center; font-size: 3.8em; font-weight: 600; line-height: 1.2; color: var(--cs-ink2); }
-.cs-mat-y { grid-column: 2; grid-row: 2; display: grid; grid-template-rows: 1fr 1fr; gap: 1.6em; position: relative; }
-.cs-mat-y span { writing-mode: vertical-rl; transform: rotate(180deg); text-align: center; align-self: center; justify-self: end; font-size: 3.8em; font-weight: 600; line-height: 1.2; color: var(--cs-ink2); }
-.cs-mat-g { grid-column: 3; grid-row: 2; display: grid; grid-template-columns: 1fr 1fr; gap: 1.6em; }
-.cs-cel { position: relative; min-height: 15em; padding: 2em 2em 2em 2.2em; border-radius: 2.4em; border: 0.24em solid color-mix(in srgb, var(--tn2) 55%, transparent); background: color-mix(in srgb, var(--tn2) 9%, #121214); display: flex; flex-direction: column; justify-content: center; }
+.cs-mat { display: grid; grid-template-columns: minmax(0, 0.36fr) minmax(0, 1fr) minmax(0, 1fr); gap: 1.4em; align-items: stretch; margin-bottom: 3em; }
+.cs-mat-n { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 0.6em 3.4em; margin-bottom: 0.6em; }
+.cs-mat-n em { display: flex; align-items: center; gap: 0.7em; font-style: normal; font-size: 3.7em; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); line-height: 1.2; }
+.cs-mat-n em:empty { display: none; }
+.cs-mat-n em::before { content: ''; flex: none; width: 0; height: 0; border-style: solid; }
+.cs-mat-n em.x::before { border-width: 0.32em 0 0.32em 0.56em; border-color: transparent transparent transparent var(--accent); }
+.cs-mat-n em.y::before { border-width: 0.56em 0.32em 0 0.32em; border-color: var(--accent) transparent transparent transparent; }
+.cs-mat-h, .cs-mat-v { font-size: 3.8em; font-weight: 600; line-height: 1.2; color: var(--cs-ink2); overflow-wrap: anywhere; }
+.cs-mat-h { text-align: center; align-self: end; }
+.cs-mat-v { align-self: center; }
+.cs-cel { position: relative; min-width: 0; min-height: 15em; padding: 1.8em 1.6em 1.8em 1.8em; border-radius: 2.4em; border: 0.24em solid color-mix(in srgb, var(--tn2) 55%, transparent); background: color-mix(in srgb, var(--tn2) 9%, #121214); display: flex; flex-direction: column; justify-content: center; }
 .cs-cel i { position: absolute; left: 0.5em; top: 0.4em; width: 1.6em; height: 1.6em; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-style: normal; font-size: 3.2em; font-weight: 700; color: #0a0a0b; background: var(--tn2); }
-.cs-cel b { font-family: 'VF Playfair', serif; font-weight: 700; font-size: 4.6em; line-height: 1.16; color: var(--cs-ink); text-wrap: balance; padding-top: 1.5em; }
+.cs-cel b { font-family: 'VF Playfair', serif; font-weight: 700; font-size: 4.1em; line-height: 1.16; color: var(--cs-ink); padding-top: 1.5em; min-width: 0; overflow-wrap: anywhere; hyphens: auto; }
 .cs-cel.on { border-color: var(--tn2); background: color-mix(in srgb, var(--tn2) 20%, #121214); box-shadow: 0 0 0 0.5em color-mix(in srgb, var(--tn2) 16%, transparent); }
 .m-pieza .cs-cel.visto { opacity: 0.6; }
 .cs-cel.falta { opacity: 0.4; border-style: dashed; background: transparent; }
@@ -319,3 +322,28 @@ body.cs.st-caso { --tone: #6cb2e2; }
 .ar-1x1 .cs-foot, .ar-16x9 .cs-foot { font-size: 32px; -webkit-line-clamp: 1; }
 .ar-1x1 .cs-foot::before, .ar-16x9 .cs-foot::before { display: none; }
 .ar-1x1 .cs-node-hd { margin-bottom: 2em; } .ar-1x1 .cs-dots { margin-bottom: 3em; }
+
+/* ── cierre en horizontal y en cuadrado: el mensaje a un lado y la marca al otro, para que nada encoja ── */
+.ar-16x9.k-c-cierre .cs-stage { display: grid; grid-template-columns: 1.25fr 1fr; column-gap: 7em; align-content: center; align-items: start; }
+.ar-16x9.k-c-cierre .cs-recuerda { grid-column: 1; grid-row: 1 / span 6; align-self: center; margin-bottom: 0; }
+.ar-16x9.k-c-cierre .cs-lockup, .ar-16x9.k-c-cierre .cs-cta, .ar-16x9.k-c-cierre .cs-seguir, .ar-16x9.k-c-cierre .cs-from { grid-column: 2; }
+.ar-16x9.k-c-cierre .cs-seguir { justify-self: start; }
+.ar-1x1.k-c-cierre .cs-recuerda { margin-bottom: 2em; }
+.ar-1x1.k-c-cierre .cs-recuerda.largo p { font-size: 5em; }
+.ar-1x1.k-c-cierre .cs-recuerda.largo em { font-size: 4em; }
+.ar-1x1.k-c-cierre .cs-lema, .ar-1x1.k-c-cierre .cs-from span { display: none; }
+.ar-1x1.k-c-cierre .cs-mark { font-size: 11em; }
+.ar-1x1.k-c-cierre .cs-wordmark { font-size: 5.6em; }
+.ar-1x1.k-c-cierre .cs-cta { font-size: 4.6em; margin-top: 0.8em; }
+.ar-1x1.k-c-cierre .cs-seguir { margin-top: 0.8em; }
+.ar-1x1.k-c-cierre .cs-from { margin-top: 1.2em; padding-top: 1em; }
+.ar-16x9.k-c-cierre .cs-mark { font-size: 11em; }
+.ar-16x9.k-c-cierre .cs-wordmark { font-size: 5.6em; }
+.ar-16x9.k-c-cierre .cs-lema { font-size: 3.8em; }
+.ar-16x9.k-c-cierre .cs-cta { font-size: 4.4em; margin-top: 0.8em; }
+.ar-16x9.k-c-cierre .cs-seguir { margin-top: 0.8em; font-size: 3.6em; }
+.ar-16x9.k-c-cierre .cs-from { margin-top: 1.2em; padding-top: 1em; }
+.ar-16x9.k-c-cierre .cs-from b { font-size: 3.8em; }
+.ar-16x9.k-c-cierre .cs-from span { font-size: 3.6em; }
+/* El último elemento del escenario no lleva margen inferior: al centrar, ese margen empujaba el contenido unos píxeles por encima. */
+.cs-stage > :last-child { margin-bottom: 0 !important; }

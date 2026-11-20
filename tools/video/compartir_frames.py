@@ -54,14 +54,12 @@ def _stage_frase(v: dict[str, Any], tag: str) -> tuple[str, str]:
     a, b = paginas[pi]
     visto = int(v.get("shown") or 0)
     h0, h1 = (v.get("hot") or [0, 0])[:2]
-    neg, afi = (v.get("neg") or [-1, -1]), (v.get("afi") or [-1, -1])
+    afi = v.get("afi") or [-1, -1]
     trozos = []
     for i in range(a, b):
         cls = "w off" if i >= visto else ("w hot" if h0 <= i < h1 else "w")
-        # «no X, sino Y»: cuando llega el «sino», lo negado se apaga y lo afirmado se queda en color.
-        if i < visto and visto > neg[1] and neg[0] < i < neg[1] and not (h0 <= i < h1):
-            cls += " neg"
-        elif i < visto and afi[0] <= i < afi[1]:
+        # «no X, sino Y»: lo afirmado se queda en color una vez dicho. Lo negado no se toca (ver `compartir.no_sino`).
+        if i < visto and afi[0] <= i < afi[1]:
             cls += " afi"
         trozos.append(f'<span class="{cls}">{_e(palabras[i])}</span>')
     n = b - a
@@ -163,12 +161,12 @@ def _matriz(v: dict[str, Any]) -> str:
     ejes = (v.get("marco") or {}).get("ejes") or {}
     modo = v.get("mode") or "titulo"
     activa = int(v.get("active") if v.get("active") is not None else -1)
-    celdas = ""
+    celdas_html: list[str] = []
     for j, p in enumerate(pz[:4]):
         estado = ("on" if j == activa else "visto" if j < activa else "falta") if modo == "pieza" else "visto"
         # Los títulos de los cuadrantes se ven todos juntos al principio; después la cuadrícula solo sitúa (el texto va en la tarjeta).
         rotulo = f'<b>{_e(p.get("t"))}</b>' if modo == "titulo" else ""
-        celdas += f'<div class="cs-cel {estado} tn-{_e(p.get("tone") or "a")}"><i>{j + 1}</i>{rotulo}</div>'
+        celdas_html.append(f'<div class="cs-cel {estado} tn-{_e(p.get("tone") or "a")}"><i>{j + 1}</i>{rotulo}</div>')
     x, y = (ejes.get("x") or ["", ""]), (ejes.get("y") or ["", ""])
     if modo == "pie":
         return ""  # el pie se lee solo: la cuadrícula ya se ha visto y recorrido
@@ -179,12 +177,15 @@ def _matriz(v: dict[str, Any]) -> str:
             f'<div class="cs-coord"><div class="cs-mini">{mini}</div>'
             f'<div><span>{_e(x[activa % 2])}</span><span>{_e(y[activa // 2])}</span></div></div>'
         )
+    c = [celdas_html[j] if j < len(celdas_html) else "" for j in range(4)]
     return (
         '<div class="cs-mat">'
-        + f'<div class="cs-mat-n"><em>{_e(ejes.get("y_nombre"))}</em></div>'
-        + f'<div class="cs-mat-x"><span>{_e(x[0])}</span><em>{_e(ejes.get("x_nombre"))}</em><span>{_e(x[1])}</span></div>'
-        + f'<div class="cs-mat-y"><span>{_e(y[0])}</span><span>{_e(y[1])}</span></div>'
-        + f'<div class="cs-mat-g">{celdas}</div></div>'
+        # Los nombres de los dos ejes, con su flecha (→ columnas, ↓ filas), y la tabla: todo en horizontal para que quepa.
+        + f'<div class="cs-mat-n"><em class="x">{_e(ejes.get("x_nombre"))}</em><em class="y">{_e(ejes.get("y_nombre"))}</em></div>'
+        + f'<span></span><span class="cs-mat-h">{_e(x[0])}</span><span class="cs-mat-h">{_e(x[1])}</span>'
+        + f'<span class="cs-mat-v">{_e(y[0])}</span>{c[0]}{c[1]}'
+        + f'<span class="cs-mat-v">{_e(y[1])}</span>{c[2]}{c[3]}'
+        + "</div>"
     )
 
 
@@ -267,7 +268,9 @@ def _stage_cierre(v: dict[str, Any], tag: str) -> tuple[str, str]:
     seguir = f'<div class="cs-seguir">{_e(v.get("cta"))}</div>' if v.get("cta") else ""
     recuerda = ""
     if v.get("recuerda"):
-        recuerda = f'<div class="cs-recuerda"><small>{_e(v.get("recuerda_rotulo"))}</small><p>{_e(v.get("recuerda"))}</p></div>'
+        antes = f'<em>{_e(v.get("recuerda_antes"))}</em>' if v.get("recuerda_antes") else ""
+        largo = " largo" if T.n_words(str(v.get("recuerda"))) + T.n_words(str(v.get("recuerda_antes") or "")) > 22 else ""
+        recuerda = f'<div class="cs-recuerda{largo}"><small>{_e(v.get("recuerda_rotulo"))}</small>{antes}<p>{_e(v.get("recuerda"))}</p></div>'
     return (
         recuerda
         + '<div class="cs-lockup"><div class="cs-mark">§</div><div>'
@@ -348,7 +351,7 @@ def palabras_en_pantalla(kind: str, view: dict[str, Any]) -> int:
     if kind == "c-credito":
         return T.n_words(str(v.get("title") or "")) + T.n_words(str(v.get("author") or ""))
     if kind == "c-cierre":
-        return T.n_words(str(v.get("said") or "")) + T.n_words(str(v.get("cta") or "")) + T.n_words(str(v.get("recuerda") or ""))
+        return T.n_words(str(v.get("said") or "")) + T.n_words(str(v.get("cta") or "")) + T.n_words(str(v.get("recuerda") or "")) + T.n_words(str(v.get("recuerda_antes") or ""))
     if kind == "c-portada":
         return T.n_words(str(v.get("text") or ""))
     return 0
