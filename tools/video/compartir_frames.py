@@ -114,7 +114,7 @@ def _recapitula(v: dict[str, Any]) -> bool:
     return total <= 30
 
 
-LISTAS = ("contraste", "cadena", "ciclo", "radial")  # patrones que son una lista de paneles
+LISTAS = ("contraste", "cadena", "ciclo", "radial", "iceberg")  # patrones que son una lista de paneles
 PATRONES_PROPIOS = (*LISTAS, "matriz", "espectro", "cifra")
 
 
@@ -143,6 +143,13 @@ def _patron(v: dict[str, Any]) -> str:
             estado = "on" if j == activa else "visto" if j < activa else "falta"
         else:
             estado = "visto"
+        if v.get("patron") == "iceberg":
+            # La línea de flotación: arriba lo que se ve, debajo lo que lo sostiene, cada parte con su rótulo.
+            marco = v.get("marco") or {}
+            if j == 0 and marco.get("superficie"):
+                filas.append(f'<div class="cs-ice">{_e(marco.get("superficie"))}</div>')
+            if j == int(marco.get("corte") or 0):
+                filas.append(f'<div class="cs-ice fondo">{_e(marco.get("fondo"))}</div>')
         filas.append(_panel(p, j, estado))
     pie = f'<p class="cs-pie">{_e(v.get("pie"))}</p>' if modo == "pie" else ""
     if modo == "pie" and not _recapitula(v):
@@ -315,7 +322,7 @@ def palabras_en_pantalla(kind: str, view: dict[str, Any]) -> int:
         marco = v.get("marco") or {}
         ejes = marco.get("ejes") or {}
         # El marco de la figura (centro, polos, extremos de los ejes) está siempre a la vista.
-        fijo = sum(T.n_words(str(x)) for x in [marco.get("centro"), marco.get("centro_sub"), *(marco.get("polos") or []), *(ejes.get("x") or []), *(ejes.get("y") or []), ejes.get("x_nombre"), ejes.get("y_nombre")] if x)
+        fijo = sum(T.n_words(str(x)) for x in [marco.get("centro"), marco.get("centro_sub"), marco.get("superficie"), marco.get("fondo"), *(marco.get("polos") or []), *(ejes.get("x") or []), *(ejes.get("y") or []), ejes.get("x_nombre"), ejes.get("y_nombre")] if x)
         rotulos_todos = sum(T.n_words(str(x.get("t") or "")) for x in pz)
         if modo == "pieza":
             p = pz[j] if 0 <= j < len(pz) else {}

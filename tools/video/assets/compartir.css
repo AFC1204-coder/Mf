@@ -249,6 +249,15 @@ body.cs.st-caso { --tone: #6cb2e2; }
 .p-ciclo.n-5 .cs-pan b, .p-ciclo.n-6 .cs-pan b { font-size: 4.8em; }
 .p-ciclo.n-5 .cs-pan.on b, .p-ciclo.n-6 .cs-pan.on b { font-size: 6.6em; }
 
+/* iceberg: lo visible arriba; una línea de flotación; debajo, lo que lo sostiene */
+.p-iceberg { gap: 1.5em; }
+.p-iceberg .cs-pan { padding: 1.8em 2.6em; }
+.p-iceberg .cs-pan.on { padding: 2.6em; }
+.p-iceberg .cs-pan > i { display: none; }
+.cs-ice { font-size: 3.7em; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cs-ink2); }
+.cs-ice.fondo { margin-top: 0.5em; padding-top: 0.9em; border-top: 0.14em dashed #6cb2e2; color: #6cb2e2; }
+.cs-ice.fondo:empty { padding-top: 0.3em; }
+
 /* ── matriz: dos ejes, cuatro cuadrantes ── */
 .con-forma .cs-fig-title { margin-bottom: 0.9em; }
 .cs-mat { display: grid; grid-template-columns: 4.6em 6.4em 1fr; grid-template-rows: auto 1fr; gap: 1.2em; margin-bottom: 3em; }

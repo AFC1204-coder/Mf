@@ -494,6 +494,7 @@ PATRONES = {
     "balanza": "contraste",
     "bucle": "ciclo",
     "jerarquia": "radial",
+    "iceberg": "iceberg",  # lo que se ve y, bajo la línea de flotación, lo que lo sostiene
 }
 
 
@@ -550,6 +551,12 @@ def piezas_figura(spec: dict[str, Any] | None) -> list[G.Piece]:
             for i, x in enumerate(d.get("nodos") or []):
                 if isinstance(x, dict):
                     out.append(G.Piece(s_(x.get("t")), s_(x.get("d")), tone=x.get("tono") or "a", dom=i))
+    elif plantilla == "iceberg":
+        for i, x in enumerate([*(d.get("visibles") or []), *(d.get("ocultos") or [])]):
+            if isinstance(x, dict):
+                out.append(G.Piece(s_(x.get("t")), s_(x.get("d")), tone=x.get("tono") or "a", dom=i))
+        if not (d.get("visibles") and d.get("ocultos")):
+            return []
     elif plantilla == "jerarquia":  # una raíz y sus ramas, cada una con sus hijos (solo dos niveles y sin descripciones que perder)
         ramas = [r for r in d.get("ramas") or [] if isinstance(r, dict)]
         plano = all(isinstance(h, dict) and not h.get("d") and not h.get("hijos") for r in ramas for h in r.get("hijos") or [])
@@ -574,6 +581,10 @@ def marco_figura(spec: dict[str, Any]) -> dict[str, Any]:
         marcas = sorted((m for m in d.get("marcas") or [] if isinstance(m, dict)), key=lambda m: float(m.get("pos") or 0))
         marco["polos"] = [T.clean(x) for x in (d.get("polos") or [])][:2]
         marco["pos"] = [min(1.0, max(0.0, float(m.get("pos") or 0))) for m in marcas]
+    if spec.get("plantilla") == "iceberg":
+        marco["superficie"] = T.clean(d.get("etiquetaVisible"))
+        marco["fondo"] = T.clean(d.get("etiquetaOculto"))
+        marco["corte"] = len([x for x in d.get("visibles") or [] if isinstance(x, dict)])
     if spec.get("plantilla") == "matriz":
         ex, ey = (d.get("ejeX") or {}), (d.get("ejeY") or {})
         marco["ejes"] = {

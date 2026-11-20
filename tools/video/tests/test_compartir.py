@@ -188,7 +188,7 @@ class PiezasTest(unittest.TestCase):
         self.assertEqual(K.patron_visual({"plantilla": "ciclo"}), "ciclo")
         self.assertEqual(K.patron_visual({"plantilla": "mapa"}), "radial")
         self.assertEqual(K.patron_visual({"plantilla": "matriz", "datos": {"celdas": [{}, {}, {}]}}), "silueta")  # sin cuatro cuadrantes no hay matriz
-        self.assertEqual(K.patron_visual({"plantilla": "iceberg"}), "silueta")
+        self.assertEqual(K.patron_visual({"plantilla": "grafica"}), "silueta")
         figura = [s for s in self.plan.piezas[1].scenes if s.kind == "c-figura"]
         self.assertTrue(all(s.view["patron"] == "contraste" for s in figura))
         self.assertEqual([s.view["mode"] for s in figura], ["titulo", "pieza", "pieza", "pie"])  # estructura entera → piezas → pie
@@ -410,6 +410,12 @@ class PatronesTest(unittest.TestCase):
         self.assertEqual((K.patron_visual(bucle), len(K.piezas_figura(bucle)), K.marco_figura(bucle)["centro"]), ("ciclo", 3, "Aprender por ensayo"))
         bucle["datos"]["signos"] = ["+", "−", "+"]  # un paso que frena cambia el sentido del ciclo y aquí no se vería: sin esquema
         self.assertEqual(K.piezas_figura(bucle), [])
+        iceberg = {"plantilla": "iceberg", "datos": {"etiquetaVisible": "Lo que vemos", "etiquetaOculto": "Lo que lo sostiene", "visibles": [{"t": "Una ola"}], "ocultos": [{"t": "Procesos", "d": "Con estabilidad relativa"}, {"t": "Eventos"}]}}
+        self.assertEqual((K.patron_visual(iceberg), [p.t for p in K.piezas_figura(iceberg)], K.marco_figura(iceberg)["corte"]), ("iceberg", ["Una ola", "Procesos", "Eventos"], 1))
+        html = CF._patron({"patron": "iceberg", "mode": "titulo", "pieces": [p.to_view() for p in K.piezas_figura(iceberg)], "marco": K.marco_figura(iceberg)})
+        self.assertLess(html.index("Lo que vemos"), html.index("Una ola"))
+        self.assertLess(html.index("Una ola"), html.index("Lo que lo sostiene"))
+        self.assertLess(html.index("Lo que lo sostiene"), html.index("Procesos"))
         jerarquia = {"plantilla": "jerarquia", "datos": {"raiz": "Dos formas", "ramas": [{"t": "Diseñada", "hijos": [{"t": "Planes"}]}, {"t": "Ecológica", "hijos": [{"t": "Mercados"}]}]}}
         self.assertEqual((K.patron_visual(jerarquia), K.piezas_figura(jerarquia)[0].items, K.marco_figura(jerarquia)["centro"]), ("radial", ["Planes"], "Dos formas"))
         jerarquia["datos"]["ramas"][0]["hijos"][0]["d"] = "Con detalle"  # habría que dejar texto fuera: mejor sin esquema
