@@ -255,6 +255,7 @@ tools/video/.venv/bin/python -m unittest discover -s tools/video/tests -t .
 - **Términos señalados.** Se detectan por reglas (comillas, nombres propios, rótulos del esquema); son literales del texto, pero alguno puede ser poco relevante.
 - **Preguntas con opciones largas.** La escena de repaso sigue siendo la que más texto lleva: las opciones del corpus son frases enteras y hay que verlas para elegir.
 - **El corto puede pasar de 90 s** cuando lleva pregunta y respuesta (hasta ~100 s); el control de calidad avisa a partir de 115 s.
+- **Detrás de un proxy.** Edge TTS usa el proxy de `HTTPS_PROXY` (respetando `NO_PROXY`) y confía además en los certificados de `SSL_CERT_FILE` o `REQUESTS_CA_BUNDLE`; sin esas variables, sale directo como siempre. El host que hay que permitir es `speech.platform.bing.com`.
 - **Ni Gemini ni Kokoro dan marcas por palabra.** Con esas voces, los subtítulos y la entrada de los términos se reparten de forma proporcional dentro de cada escena; con Edge son exactos.
 - **Voces mezcladas.** Con `--engine auto`, si la cuota de Gemini se agota a mitad de un libro el resto sale con Edge. La orden lo avisa; para una serie con una sola voz, fija `--engine` y `--voice`.
 - **Pronunciación.** Las voces `es-ES-*` y las de Kokoro leen los títulos y términos en inglés a la española; las multilingües de Edge los pronuncian bien a cambio de un acento menos peninsular.
