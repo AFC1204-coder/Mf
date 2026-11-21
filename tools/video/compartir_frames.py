@@ -43,8 +43,12 @@ def acento_eje(eje: str) -> str:
 
 # ───────────────────────── escenas ─────────────────────────
 
-def _kicker(texto: str, tema: bool = False) -> str:
-    return f'<div class="cs-kicker{" tema" if tema else ""}">{_e(texto)}</div>' if texto else ""
+def _kicker(texto: str, tema: bool = False, icono: str = "") -> str:
+    """El rótulo de la escena, con el icono que dice qué tipo de momento es (ver `compartir.ICONOS`)."""
+    if not texto:
+        return ""
+    marca = f'<span class="cs-kic" data-icon="{_e(K.ICONOS.get(icono, ""))}"></span>' if K.ICONOS.get(icono) else ""
+    return f'<div class="cs-kicker{" tema" if tema else ""}{" con-ic" if marca else ""}">{marca}<span>{_e(texto)}</span></div>'
 
 
 def _stage_frase(v: dict[str, Any], tag: str) -> tuple[str, str]:
@@ -74,7 +78,7 @@ def _stage_frase(v: dict[str, Any], tag: str) -> tuple[str, str]:
         # Con el esquema delante, el texto baja un cuerpo y el rótulo del tema sobra: el esquema ya dice de qué va.
         talla = " xl" if n > 11 else " l"
         return comp + f'<p class="cs-kin{talla}">{" ".join(trozos)}</p>' + puntos, "con-comp"
-    cuerpo = _kicker(rotulo, tema=bool(v.get("tema"))) + f'<p class="cs-kin{talla}">{" ".join(trozos)}</p>' + puntos
+    cuerpo = _kicker(rotulo, tema=bool(v.get("tema")), icono=str(v.get("style") or "")) + f'<p class="cs-kin{talla}">{" ".join(trozos)}</p>' + puntos
     return cuerpo, ("solo" if visto == 0 else "")
 
 
@@ -86,19 +90,27 @@ def _companero(v: dict[str, Any]) -> str:
         return ""
     on = set(v.get("fig_on") or [])
     act = int(v.get("fig_act") if v.get("fig_act") is not None else -1)
-    chips = "".join(
-        f'<li class="{"act" if j == act else "on" if j in on else ""} tn-{_e(p.get("tone") or "a")}"><i>{j + 1}</i><b>{_e(p.get("t"))}</b></li>'
-        for j, p in enumerate(piezas)
-    )
-    titulo = f'<div class="cs-comp-t">{_e(fig.get("title"))}</div>' if fig.get("title") else ""
-    return f'<div class="cs-comp cp-{_e(fig.get("patron"))} cn-{len(piezas)}">{titulo}<ol>{chips}</ol></div>'
+    def chip(j: int, p: dict[str, Any]) -> str:
+        estado = "act" if j == act else "on" if j in on else ""
+        return f'<li class="{estado} tn-{_e(p.get("tone") or "a")}"><i>{j + 1}</i><b>{_e(p.get("t"))}</b></li>'
+
+    patron = str(fig.get("patron") or "")
+    chips = "".join(chip(j, p) for j, p in enumerate(piezas))
+    antes = ""
+    if fig.get("centro"):
+        antes = f'<div class="cs-comp-hub">{_e(fig.get("centro"))}</div>'
+    if fig.get("polos"):
+        antes = f'<div class="cs-comp-polos"><span>{_e(fig["polos"][0])}</span><span>{_e(fig["polos"][1])}</span></div>'
+    marca = f'<span class="cs-kic" data-icon="{_e(K.ICONOS.get(patron, ""))}"></span>' if K.ICONOS.get(patron) else ""
+    titulo = f'<div class="cs-comp-t{" con-ic" if marca else ""}">{marca}<span>{_e(fig.get("title"))}</span></div>' if fig.get("title") else ""
+    return f'<div class="cs-comp cp-{_e(patron)} cn-{len(piezas)}">{titulo}{antes}<ol>{chips}</ol></div>'
 
 
 def _stage_pausa(v: dict[str, Any], tag: str) -> tuple[str, str]:
     cd = int(v.get("countdown") or 0)
     return (
         f'<p class="cs-q-small">{_e(v.get("question"))}</p>'
-        + f'<div class="cs-think"><b>{cd}</b><span>{_e(v.get("kicker"))}</span></div>',
+        + f'<div class="cs-think"><b>{cd}</b><span>{_e(v.get("kicker"))}</span><span class="cs-kic" data-icon="{_e(K.ICONOS["pensar"])}"></span></div>',
         "",
     )
 
@@ -174,7 +186,8 @@ def _patron(v: dict[str, Any]) -> str:
     pie = f'<p class="cs-pie">{_e(v.get("pie"))}</p>' if modo == "pie" else ""
     if modo == "pie" and not _recapitula(v):
         return _centro(v) + pie  # con el pie, la recapitulación de títulos ya sería demasiado texto a la vez
-    return _centro(v) + f'<div class="cs-pat p-{_e(v.get("patron"))} n-{len(pz)}">{"".join(filas)}</div>{pie}'
+    abierto = " abierto" if (v.get("patron") == "ciclo" and v.get("vuelta") == 0) else ""  # la flecha de vuelta aún no se ha dibujado
+    return _centro(v) + f'<div class="cs-pat p-{_e(v.get("patron"))} n-{len(pz)}{abierto}">{"".join(filas)}</div>{pie}'
 
 
 def _matriz(v: dict[str, Any]) -> str:
@@ -186,6 +199,8 @@ def _matriz(v: dict[str, Any]) -> str:
     celdas_html: list[str] = []
     for j, p in enumerate(pz[:4]):
         estado = ("on" if j == activa else "visto" if j < activa else "falta") if modo == "pieza" else "visto"
+        if modo == "titulo" and v.get("shown") is not None and j >= int(v.get("shown")):
+            estado += " aun-no"
         # Los títulos de los cuadrantes se ven todos juntos al principio; después la cuadrícula solo sitúa (el texto va en la tarjeta).
         rotulo = f'<b>{_e(p.get("t"))}</b>' if modo == "titulo" else ""
         celdas_html.append(f'<div class="cs-cel {estado} tn-{_e(p.get("tone") or "a")}"><i>{j + 1}</i>{rotulo}</div>')
@@ -221,6 +236,8 @@ def _espectro(v: dict[str, Any]) -> str:
     puntos = ""
     for j, p in enumerate(v.get("pieces") or []):
         estado = ("on" if j == activa else "visto" if j < activa else "falta") if modo == "pieza" else "visto"
+        if modo == "titulo" and v.get("shown") is not None and j >= int(v.get("shown")):
+            estado += " aun-no"
         x = 4 + 92 * float(pos[j] if j < len(pos) else 0.5)
         puntos += f'<i class="{estado} tn-{_e(p.get("tone") or "a")}" style="left:{x:.1f}%">{j + 1}</i>'
     return (
@@ -238,7 +255,8 @@ def _cifras(v: dict[str, Any]) -> str:
     if modo == "pieza" and 0 <= activa < len(pz):
         p = pz[activa]
         return f'<div class="cs-cifra tn-{_e(p.get("tone") or "a")}"><b>{_e(p.get("t"))}</b><span>{_e(p.get("d"))}</span></div>'
-    return '<div class="cs-cifras">' + "".join(f'<b class="tn-{_e(p.get("tone") or "a")}">{_e(p.get("t"))}</b>' for p in pz) + "</div>"
+    visibles = int(v.get("shown")) if (modo == "titulo" and v.get("shown") is not None) else len(pz)
+    return '<div class="cs-cifras">' + "".join(f'<b class="tn-{_e(p.get("tone") or "a")}{" aun-no" if j >= visibles else ""}">{_e(p.get("t"))}</b>' for j, p in enumerate(pz)) + "</div>"
 
 
 def _stage_figura(v: dict[str, Any], tag: str) -> tuple[str, str]:
@@ -249,22 +267,22 @@ def _stage_figura(v: dict[str, Any], tag: str) -> tuple[str, str]:
     pie = f'<p class="cs-pie">{_e(v.get("pie"))}</p>' if modo == "pie" else ""
     if patron in LISTAS:
         # Mientras se recorre, el título de la figura ya se ha visto: el sitio es para la pieza.
-        return _kicker(v.get("kicker")) + ("" if modo == "pieza" else titulo) + _patron(v), f"m-{modo} con-patron"
+        return _kicker(v.get("kicker"), icono=str(patron or "")) + ("" if modo == "pieza" else titulo) + _patron(v), f"m-{modo} con-patron"
     if patron in ("matriz", "espectro"):
         forma = _matriz(v) if patron == "matriz" else _espectro(v)
-        return _kicker(v.get("kicker")) + titulo + forma + (_tarjeta(v) if modo == "pieza" else pie), f"m-{modo} con-forma"
+        return _kicker(v.get("kicker"), icono=str(patron or "")) + titulo + forma + (_tarjeta(v) if modo == "pieza" else pie), f"m-{modo} con-forma"
     if patron == "cifra":
-        return _kicker(v.get("kicker")) + titulo + _cifras(v) + pie, f"m-{modo} con-forma"
+        return _kicker(v.get("kicker"), icono=str(patron or "")) + titulo + _cifras(v) + pie, f"m-{modo} con-forma"
     silueta = f'<div class="cs-sil"><div class="dg" data-plantilla="{_e(spec.get("plantilla"))}"><div id="cs-dg"></div></div></div>'
     resto = _tarjeta(v) if modo == "pieza" else pie
-    return _kicker(v.get("kicker")) + titulo + f'<div class="cs-figrow">{silueta}{resto}</div>', f"m-{modo}"
+    return _kicker(v.get("kicker"), icono="silueta") + titulo + f'<div class="cs-figrow">{silueta}{resto}</div>', f"m-{modo}"
 
 
 def _stage_credito(v: dict[str, Any], tag: str) -> tuple[str, str]:
     rotulo = v.get("kicker") if v.get("kicker") != tag else K.ROTULOS["credito"]
     autor = f'<div class="cs-author">{_e(v.get("author"))}</div>' if v.get("author") else ""
     return (
-        _kicker(rotulo)
+        _kicker(rotulo, icono="credito")
         + f'<h1 class="cs-book{_largo(v.get("title", ""), 28, 52)}">{_e(v.get("title"))}</h1>'
         + autor
         + f'<div class="cs-eje">{_e(v.get("eje"))}</div>',
@@ -337,6 +355,7 @@ def palabras_en_pantalla(kind: str, view: dict[str, Any]) -> int:
         a, b = paginas[min(int(v.get("page") or 0), len(paginas) - 1)]
         fig = v.get("fig") or {}
         rotulos = T.n_words(str(fig.get("title") or "")) + sum(T.n_words(str(p.get("t") or "")) for p in fig.get("pieces") or [])
+        rotulos += T.n_words(str(fig.get("centro") or "")) + sum(T.n_words(str(x)) for x in fig.get("polos") or [])
         return max(0, min(b, int(v.get("shown") or 0)) - a) + rotulos
     if kind == "c-pausa":
         return T.n_words(str(v.get("question") or ""))

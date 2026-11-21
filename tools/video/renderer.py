@@ -28,6 +28,7 @@ FONTS_DIR = Path(__file__).resolve().parent / "assets" / "fonts"
 LEAD_IN_S = 0.35  # silencio antes de la primera palabra
 FADE_SCENE_S = 0.40  # fundido entre escenas
 FADE_BEAT_S = 0.24  # fundido cuando aparece un elemento dentro de la escena
+FADE_PAGE_S = 0.18  # fundido al pasar de una página de texto a la siguiente (donde el texto entra con barrido)
 FADE_STEP_S = 1 / 15  # resolución de los fundidos
 SUB_Y = 1390  # franja de subtítulos (debajo del escenario)
 SUB_H = 260
@@ -362,7 +363,7 @@ def _video_entries(
             continue
         fade = 0.0
         if i > 0 and cuts[i - 1][1] != png:
-            fade = fade_scene_s if new_scene in (1, 2, 3) else fade_beat_s
+            fade = fade_scene_s if new_scene in (1, 2, 3) else FADE_PAGE_S if new_scene == 5 else fade_beat_s
             if slot < fade + 0.2:
                 fade = 0.0
         distinto = i > 0 and cuts[i - 1][1] != png
@@ -470,6 +471,7 @@ def render_episode(
 
     # 3 · Cuándo entra cada estado.
     cuts: list[tuple[float, Path, bool]] = []
+    states_prev: list[State] = []
     for st, png in zip(states, pngs):
         scene = episode.scenes[st.scene_index]
         tm = timings[st.scene_index]
@@ -486,11 +488,19 @@ def render_episode(
         # 0: cambio dentro de la escena · 1: escena nueva · 2: escena nueva que además cambia de sección
         cambia = st.scene_index > 0 and (scene.section, scene.kind) != (episode.scenes[st.scene_index - 1].section, episode.scenes[st.scene_index - 1].kind)
         # · 3: cambio dentro de un esquema (se dibuja) · 4: ráfaga de texto (entra con un barrido)
-        en_esquema = scene.kind in ("c-figura", "c-nodo") and not cambia and st.scene_index > 0
+        # Cada cambio, con la transición que le corresponde:
+        #  · se AÑADE algo sobre lo que había (una pieza del esquema, una ráfaga de texto en la misma página) → se dibuja;
+        #  · se SUSTITUYE lo que había (otra pieza abierta, otra página de texto) → fundido: un barrido mezclaría dos textos.
         if es_inicio:
-            codigo = 2 if cambia else 3 if (en_esquema and style.reveal_s) else 1
+            codigo = 2 if cambia else 1
+        elif scene.kind == "c-figura" and style.reveal_s:
+            codigo = 3
+        elif scene.kind == "c-frase" and style.reveal_text_s:
+            misma_pagina = bool(states_prev) and states_prev[-1].scene_index == st.scene_index and states_prev[-1].view.get("page") == st.view.get("page")
+            codigo = 4 if misma_pagina else 5
         else:
-            codigo = 4 if (scene.kind == "c-frase" and style.reveal_text_s) else 3 if (en_esquema and style.reveal_s) else 0
+            codigo = 0
+        states_prev.append(st)
         cuts.append((t, png, codigo))
 
     blend_dir = work_dir / "fundidos"

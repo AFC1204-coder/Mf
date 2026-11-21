@@ -276,6 +276,35 @@ class PiezasTest(unittest.TestCase):
         self.assertTrue(any(x.origin == "leccion.autocorreccion" for s in p.scenes for x in s.parts))  # el matiz sigue, entero
         self.assertIn("pie", [s.view.get("mode") for s in self.plan.piezas[1].scenes if s.kind == "c-figura"])  # si no se repite, el pie se queda
 
+    def test_el_esquema_se_construye_pieza_a_pieza(self):
+        figura = [s for s in K.pieza_idea(self.libro, 0, breve=True).scenes if s.kind == "c-figura"]
+        primera = figura[0]
+        self.assertEqual(primera.view["shown"], 0)  # empieza con solo el título…
+        self.assertEqual([b.patch for b in primera.beats], [{"shown": 1}, {"shown": 2}])  # …y entra una pieza cada vez
+        self.assertTrue(all(b.at_s is not None for b in primera.beats))
+        vacio, _ = CF._stage_figura(CF.estados(primera)[0], "")
+        medio, _ = CF._stage_figura(CF.estados(primera)[1], "")
+        self.assertEqual(vacio.count("aun-no"), 2)
+        self.assertEqual(medio.count("aun-no"), 1)  # la que falta guarda su sitio: nada salta cuando entre
+        # Un ciclo se cierra al final: lo último que se dibuja es la flecha que vuelve al principio.
+        ciclo = {"l-1": [{"tipo": "diagrama", "plantilla": "ciclo", "titulo": "Un ciclo", "datos": {"nodos": [{"t": "Uno"}, {"t": "Dos"}, {"t": "Tres"}]}}]}
+        libro = _libro(diagramas=ciclo)
+        fig = [s for s in K.pieza_idea(libro, 0, breve=True).scenes if s.kind == "c-figura"]
+        self.assertEqual(fig[0].view["patron"], "ciclo")
+        self.assertEqual(fig[0].beats[-1].patch, {"vuelta": 1})
+        self.assertIn("abierto", CF._stage_figura(CF.estados(fig[0])[0], "")[0])
+        self.assertNotIn("abierto", CF._stage_figura(CF.estados(fig[0])[-1], "")[0])
+
+    def test_los_iconos_dicen_el_tipo_de_momento_no_el_contenido(self):
+        iconos_biblioteca = {"bombilla", "diana", "ojo", "balanza", "dado", "ciclo", "red", "reloj", "escudo", "brujula", "libro", "grupo", "grafico", "pregunta", "bandera", "lupa", "llave", "camino"}
+        self.assertLessEqual(set(K.ICONOS.values()), iconos_biblioteca)  # solo los de lib/mapa.js
+        # Se asignan por estilo de escena o por forma de figura: ninguna clave depende del texto de la lección.
+        self.assertLessEqual(set(K.ICONOS), {"idea", "pregunta", "explica", "matiz", "practica", "caso", "respuesta", "credito", "pensar", *K.PATRONES.values(), "silueta", "matriz", "espectro", "cifra", "iceberg", "ciclo", "radial", "cadena", "contraste"})
+        p = self.plan.piezas[1]
+        matiz = next(s for s in p.scenes if s.section == "Matiz")
+        self.assertIn('data-icon="escudo"', CF._stage_frase(CF.estados(matiz)[-1], "")[0])
+        self.assertEqual([i for i in L.lint_pieza(p, self.libro) if i.level == "error"], [])
+
     def test_el_cierre_retoma_el_gancho(self):
         for p in self.plan.piezas:
             cierre = p.scenes[-1]

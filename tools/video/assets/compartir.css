@@ -210,7 +210,8 @@ body.cs.st-caso { --tone: #6cb2e2; }
 .p-contraste .cs-pan { position: static; }
 /* cadena: un hilo une los eslabones */
 .p-cadena { gap: 1.5em; }
-.p-cadena::before { content: ''; position: absolute; left: 6.1em; top: 3em; bottom: 3em; width: 0.4em; border-radius: 0.2em; background: linear-gradient(var(--cs-ink3), color-mix(in srgb, var(--cs-ink3) 30%, transparent)); z-index: 0; }
+/* el hilo va por tramos: cada eslabón trae el suyo, así que se dibuja con él */
+.p-cadena .cs-pan + .cs-pan::before { content: ''; position: absolute; left: 3.1em; top: -1.5em; height: 1.5em; width: 0.4em; margin-top: -0.24em; background: var(--cs-ink3); z-index: 0; }
 .p-cadena .cs-pan { position: relative; z-index: 1; padding: 1.8em 2.6em; background: color-mix(in srgb, var(--tn2) 8%, #101012); }
 .p-cadena .cs-pan.on { padding: 2.6em; background: color-mix(in srgb, var(--tn2) 16%, #121214); }
 .p-cadena.n-5 .cs-pan b, .p-cadena.n-6 .cs-pan b { font-size: 4.8em; }
@@ -384,3 +385,36 @@ body.cs.st-caso { --tone: #6cb2e2; }
 
 /* una pieza que todavía no ha entrado: guarda su sitio para que nada salte cuando entre */
 .cs-pan.aun-no { visibility: hidden; }
+
+/* ── iconos de la biblioteca: qué tipo de momento (o de figura) es ── */
+.cs-kic { flex: none; display: inline-flex; width: 1.9em; height: 1.9em; align-items: center; justify-content: center; border-radius: 50%; border: 0.1em solid color-mix(in srgb, var(--tone, var(--accent)) 60%, transparent); background: color-mix(in srgb, var(--tone, var(--accent)) 13%, transparent); }
+.cs-kic svg { width: 1.15em; height: 1.15em; fill: none; stroke: var(--tone, var(--accent)); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.cs-kicker.con-ic::before, .cs-comp-t.con-ic::before { display: none; }
+.cs-kicker.con-ic > span:last-child, .cs-comp-t.con-ic > span:last-child { min-width: 0; }
+.cs-comp-t .cs-kic { border-color: color-mix(in srgb, var(--accent) 60%, transparent); background: color-mix(in srgb, var(--accent) 13%, transparent); }
+.cs-comp-t .cs-kic svg { stroke: var(--accent); }
+.cs-think .cs-kic { font-size: 5em; margin-top: 0.5em; }
+/* una pieza que aún no ha entrado en una matriz, un espectro o una fila de cifras */
+.cs-cel.aun-no, .cs-esp-linea i.aun-no, .cs-cifras b.aun-no { visibility: hidden; }
+.p-ciclo.abierto::before, .p-ciclo.abierto::after { display: none; }
+/* ── el esquema acompañante toma la forma de su figura ── */
+.cs-comp-hub { align-self: flex-start; display: inline-block; margin-bottom: 1.2em; padding: 0.9em 1.8em; border-radius: 4em; border: 0.24em solid var(--accent); background: color-mix(in srgb, var(--accent) 14%, #101012); font-family: 'VF Playfair', serif; font-weight: 700; font-size: 4.4em; line-height: 1.14; color: var(--cs-ink); }
+.cs-comp.cp-radial ol { margin-left: 2.6em; padding-left: 2.2em; border-left: 0.36em solid color-mix(in srgb, var(--accent) 55%, transparent); border-radius: 0 0 0 2em; }
+.cs-comp.cp-radial li > i { display: none; }
+.cs-comp.cp-cadena li + li::before, .cs-comp.cp-ciclo li + li::before { content: ''; position: absolute; left: 3.5em; top: -1.5em; height: 1.3em; width: 0.34em; background: color-mix(in srgb, var(--accent) 50%, transparent); }
+.cs-comp.cp-cadena li, .cs-comp.cp-ciclo li { position: relative; }
+.cs-comp.cp-ciclo ol { margin-right: 5em; }
+.cs-comp.cp-ciclo ol::after { content: ''; position: absolute; right: -4.2em; top: 2.6em; bottom: 2.6em; width: 3.2em; border: 0.4em solid color-mix(in srgb, var(--accent) 60%, transparent); border-left: 0; border-radius: 0 3em 3em 0; }
+.cs-comp.cp-ciclo ol::before { content: ''; position: absolute; right: -1.6em; top: 1.6em; width: 0; height: 0; border-style: solid; border-width: 1.2em 1.9em 1.2em 0; border-color: transparent color-mix(in srgb, var(--accent) 80%, transparent) transparent transparent; }
+.cs-comp.cp-contraste.cn-2 ol { position: relative; }
+.cs-comp.cp-contraste.cn-2 li + li::before { content: ''; position: absolute; left: 50%; top: 50%; margin: -1.2em 0 0 -1.2em; width: 2.4em; height: 2.4em; transform: rotate(45deg); border-radius: 0.4em; background: var(--cs-bg, #0c0c0d); border: 0.24em solid var(--cs-ink3); }
+.cs-comp.cp-matriz.cn-4 ol { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2em; }
+.cs-comp.cp-matriz.cn-4 li { flex-direction: column; align-items: flex-start; gap: 0.8em; padding: 1.6em 1.8em; min-height: 13em; }
+.cs-comp-polos { display: flex; justify-content: space-between; gap: 3em; margin-bottom: 1.2em; padding-bottom: 1.2em; border-bottom: 0.5em solid transparent; border-image: linear-gradient(90deg, color-mix(in srgb, var(--accent) 85%, transparent), #ffffff30 50%, color-mix(in srgb, var(--accent) 85%, transparent)) 1; }
+.cs-comp-polos span { flex: 1; font-size: 3.7em; font-weight: 700; line-height: 1.2; color: var(--cs-ink2); }
+.cs-comp-polos span + span { text-align: right; }
+.ar-1x1 .cs-comp.cp-matriz.cn-4 ol { display: grid; }
+.ar-1x1 .cs-comp.cp-matriz.cn-4 li { min-height: 0; }
+.ar-1x1 .cs-comp.cp-cadena li + li::before, .ar-1x1 .cs-comp.cp-ciclo li + li::before, .ar-1x1 .cs-comp.cp-ciclo ol::before, .ar-1x1 .cs-comp.cp-ciclo ol::after { display: none; }
+.ar-1x1 .cs-comp.cp-ciclo ol { margin-right: 0; }
+.ar-1x1 .cs-comp.cp-radial ol { margin-left: 0; padding-left: 0; border-left: 0; }

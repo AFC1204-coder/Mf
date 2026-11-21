@@ -144,14 +144,22 @@ Segunda escucha del dueño del proyecto: la duración encaja y lo que se dice es
 
 - **El esquema, junto a la explicación** (`acompanar`). Mientras la voz explica, los rótulos del esquema de la lección están a la vista encima del texto (al lado, en horizontal), apagados, y **cada uno se enciende cuando la voz lo nombra**. No se añade ni se cambia texto: los rótulos son los de `datos/diagramas.json` y lo único que se decide es cuándo se ilumina cada uno. «Nombrar» es literal y prudente (`donde_nombra`): las palabras con contenido del rótulo, en su orden y casi seguidas; no se interpreta. Solo acompaña si el esquema tiene de 2 a 7 piezas y sus rótulos suman 26 palabras o menos. En la biblioteca: 3.457 de las 3.719 piezas `idea` llevan el esquema al lado; en 2.012 se enciende al menos una pieza y en 597 todas.
 - **Sin repeticiones.** Si la explicación ya nombró todas las piezas con el esquema delante, después no se recorren una a una: queda la estructura entera como recapitulación (597 piezas). Y si el pie del esquema dice lo mismo que el matiz que viene a continuación (tres de cada cuatro palabras con contenido), el pie no se lee: se queda el matiz, que es obligatorio y va entero. La pieza `fondo` sí recorre siempre el esquema completo.
-- **Movimiento.** Tres cosas se mueven, y ninguna toca el contenido:
-  - *Entre secciones* (idea → libro → explicación → esquema → matiz → cierre), el fotograma nuevo entra empujando al anterior desde la derecha (0,36 s, frenando al llegar).
-  - *El esquema se construye.* La estructura ya no aparece hecha: primero el título y después cada pieza entra en su sitio, una cada 0,55 s, **dibujándose de arriba abajo** (0,42 s). Las piezas que aún no han entrado guardan su hueco, así que nada salta. Al recorrerlo, la pieza que se abre también se dibuja. Vale para los patrones en lista (contraste, cadena, ciclo, radial, iceberg: el 95 % de los esquemas); matriz, espectro y cifra siguen entrando enteros.
-  - *El texto* entra con un barrido breve de izquierda a derecha (0,13 s) en el instante de su primera palabra, en lugar de un corte seco.
+- **Movimiento.** Cada cambio lleva la transición que le corresponde, y ninguna toca el contenido:
 
-  Está hecho en el montaje (`_reveal_frames` en `renderer.py`): se compara el fotograma anterior con el nuevo y solo la zona que cambia se descubre con un borde suave. No hacen falta más capturas de navegador y el resto del fotograma no se mueve.
+  | Qué pasa | Transición | Por qué |
+  |---|---|---|
+  | Cambia la sección (idea → libro → explicación → esquema → matiz → cierre) | Empuje lateral, 0,36 s | Se nota que empieza otra cosa |
+  | Se **añade** una pieza al esquema | Se dibuja de arriba abajo, 0,42 s | Aparece en un hueco vacío: nada se mezcla |
+  | Entra una ráfaga de texto en la misma página | Barrido de izquierda a derecha, 0,13 s | Igual: se añade |
+  | Se **sustituye** lo que había (otra página de texto, otra pieza abierta) | Fundido, 0,18-0,26 s | Un barrido mezclaría dos textos a medias |
 
-Lo que esto **no** arregla: no hay imágenes ni ilustraciones (el corpus no las tiene y no se usan fotos de derechos dudosos); las piezas se dibujan pero no se desplazan ni se conectan con flechas animadas; y cuando el cuerpo no nombra las piezas con sus mismas palabras (1.445 piezas), el esquema acompaña pero no se enciende.
+  El esquema **se construye**: primero el título y después cada pieza entra en su sitio, una cada 0,55 s. Las que aún no han entrado guardan su hueco, así que nada salta. Vale para todos los patrones propios (contraste, cadena, ciclo, radial, iceberg, matriz, espectro y cifra). En la cadena, cada eslabón trae su tramo de hilo; en el ciclo, lo último que se dibuja es la flecha que vuelve al principio.
+
+  Está hecho en el montaje (`_reveal_frames` en `renderer.py`): se compara el fotograma anterior con el nuevo y solo la zona que cambia se descubre con un borde suave. No hacen falta más capturas de navegador.
+- **El esquema acompañante toma la forma de su figura.** Ya no es siempre una lista: un contraste son dos lados enfrentados con su marca en medio; una cadena, eslabones unidos; un ciclo, la cadena con su flecha de vuelta; un mapa, el centro y lo que cuelga de él; una matriz, su cuadrícula de 2 × 2; un espectro, sus dos polos sobre la recta.
+- **Iconos, pero de formato.** Cada sección lleva un icono de los 18 de la biblioteca (`lib/mapa.js`): bombilla para la idea, lupa para la explicación, escudo para el matiz, diana para la práctica, libro para el crédito, reloj para la pausa; y uno por forma de figura (balanza para el contraste, camino para la cadena, ciclo, red, brújula, gráfico). Están declarados en `ICONOS` y **dicen qué tipo de momento es, nunca qué significa el contenido**: la biblioteca solo asigna iconos a los nodos de los mapas de libro, no a las lecciones ni a las piezas de sus esquemas, y ponerle un icono a un concepto sería interpretarlo.
+
+Lo que esto **no** arregla: no hay imágenes ni ilustraciones (el corpus no las tiene y no se usan fotos de derechos dudosos); las piezas se dibujan pero no se desplazan; no hay iconos por concepto (ver arriba); y cuando el cuerpo no nombra las piezas con sus mismas palabras (1.445 piezas), el esquema acompaña pero no se enciende.
 
 ## El guion: qué se elige y qué no se toca
 

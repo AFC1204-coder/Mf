@@ -32,7 +32,7 @@ from . import text as T
 from .corpus import Book, Lesson, Question
 from .scriptwriter import Beat, Episode, Part, Scene
 
-COMPARTIR_VERSION = 4
+COMPARTIR_VERSION = 5
 
 TIPOS = ("idea", "pregunta", "practica", "caso", "libro", "fondo")
 ASPECTOS = {"9:16": (1080, 1920), "1:1": (1080, 1080), "16:9": (1920, 1080)}
@@ -79,6 +79,16 @@ ROTULOS = {
     "lema": "Biblioteca de ideas",
     "seguir": "Sigue para más ideas con su matiz",
     "recuerda": "QUÉDATE CON ESTO",
+}
+
+# Iconos (los 18 de la biblioteca, `lib/mapa.js`). Señalan **qué tipo de momento o de figura** es, igual que los
+# rótulos: nunca qué significa el contenido. Asignar un icono a un concepto sería interpretarlo; aquí no se hace.
+ICONOS = {
+    "idea": "bombilla", "pregunta": "pregunta", "explica": "lupa", "matiz": "escudo", "practica": "diana",
+    "caso": "ojo", "respuesta": "llave", "credito": "libro", "pensar": "reloj",
+    # por la forma de la figura
+    "contraste": "balanza", "cadena": "camino", "ciclo": "ciclo", "radial": "red", "matriz": "brujula",
+    "espectro": "grafico", "cifra": "grafico", "iceberg": "lupa", "silueta": "red",
 }
 
 # Prefijos fijos de los textos de publicación (título y descripción). Como las fórmulas: declarados y comprobados.
@@ -434,7 +444,12 @@ def acompanar(explicacion: list[Scene], figura: list[Scene]) -> bool:
     piezas = [{"t": p.get("t"), "tone": p.get("tone")} for p in base.get("pieces") or []]
     if not (2 <= len(piezas) <= 7) or sum(T.n_words(str(p["t"])) for p in piezas) > 26:
         return False  # demasiados rótulos (o demasiado largos) para tenerlos a la vista junto al texto
+    marco = base.get("marco") or {}
     fig = {"title": base.get("title"), "pieces": piezas, "patron": base.get("patron")}
+    if base.get("patron") in ("radial", "ciclo") and marco.get("centro") and T.n_words(str(marco.get("centro"))) <= 6 and len(piezas) <= 4:
+        fig["centro"] = marco.get("centro")  # de dónde cuelgan las piezas (o alrededor de qué giran)
+    if base.get("patron") == "espectro" and len(marco.get("polos") or []) == 2:
+        fig["polos"] = list(marco.get("polos"))
     encendidas: list[int] = []
     for scene in explicacion:
         tokens = scene.view.get("words") or []
@@ -844,12 +859,18 @@ def escenas_figura(lesson: Lesson, nivel_min: int = 0, max_words: int = FIGURA_P
 
     intro = _fixed("figura", "plantilla+esquema.titulo", titulo=titulo.rstrip(".")) if titulo else None
     scenes = [Scene("c-figura", "Esquema", dict(base, mode="titulo", active=-1, shown=len(ps)), [intro] if intro else [], hold_s=0.0 if intro else 1.2, pause_after_s=0.35)]
-    if base["patron"] in PATRONES_EN_LISTA:
+    if base["patron"] != "silueta":
         # La estructura no aparece hecha: se construye pieza a pieza (cada una se dibuja al entrar) mientras se dice su título.
         primera = scenes[0]
         primera.view["shown"] = 0
         primera.beats = [Beat({"shown": j + 1}, at_s=round(ENTRADA_PRIMERA_S + j * ENTRADA_PIEZA_S, 2)) for j in range(len(ps))]
-        construir = ENTRADA_PRIMERA_S + len(ps) * ENTRADA_PIEZA_S + 0.5
+        pasos = len(ps)
+        if base["patron"] == "ciclo":
+            # Lo último que se dibuja en un ciclo es la flecha que vuelve al principio: es lo que lo hace ciclo.
+            primera.view["vuelta"] = 0
+            primera.beats.append(Beat({"vuelta": 1}, at_s=round(ENTRADA_PRIMERA_S + pasos * ENTRADA_PIEZA_S, 2)))
+            pasos += 1
+        construir = ENTRADA_PRIMERA_S + pasos * ENTRADA_PIEZA_S + 0.5
         if intro:
             primera.pause_after_s = round(max(0.35, construir - segundos_locucion(intro.text)), 2)
         else:
