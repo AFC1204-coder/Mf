@@ -144,9 +144,14 @@ Segunda escucha del dueño del proyecto: la duración encaja y lo que se dice es
 
 - **El esquema, junto a la explicación** (`acompanar`). Mientras la voz explica, los rótulos del esquema de la lección están a la vista encima del texto (al lado, en horizontal), apagados, y **cada uno se enciende cuando la voz lo nombra**. No se añade ni se cambia texto: los rótulos son los de `datos/diagramas.json` y lo único que se decide es cuándo se ilumina cada uno. «Nombrar» es literal y prudente (`donde_nombra`): las palabras con contenido del rótulo, en su orden y casi seguidas; no se interpreta. Solo acompaña si el esquema tiene de 2 a 7 piezas y sus rótulos suman 26 palabras o menos. En la biblioteca: 3.457 de las 3.719 piezas `idea` llevan el esquema al lado; en 2.012 se enciende al menos una pieza y en 597 todas.
 - **Sin repeticiones.** Si la explicación ya nombró todas las piezas con el esquema delante, después no se recorren una a una: queda la estructura entera como recapitulación (597 piezas). Y si el pie del esquema dice lo mismo que el matiz que viene a continuación (tres de cada cuatro palabras con contenido), el pie no se lee: se queda el matiz, que es obligatorio y va entero. La pieza `fondo` sí recorre siempre el esquema completo.
-- **Movimiento.** Al cambiar de sección (idea → libro → explicación → esquema → matiz → cierre) el fotograma nuevo entra empujando al anterior desde la derecha (0,36 s, frenando al llegar); dentro de una sección, los cambios siguen siendo cortes en el instante de la palabra.
+- **Movimiento.** Tres cosas se mueven, y ninguna toca el contenido:
+  - *Entre secciones* (idea → libro → explicación → esquema → matiz → cierre), el fotograma nuevo entra empujando al anterior desde la derecha (0,36 s, frenando al llegar).
+  - *El esquema se construye.* La estructura ya no aparece hecha: primero el título y después cada pieza entra en su sitio, una cada 0,55 s, **dibujándose de arriba abajo** (0,42 s). Las piezas que aún no han entrado guardan su hueco, así que nada salta. Al recorrerlo, la pieza que se abre también se dibuja. Vale para los patrones en lista (contraste, cadena, ciclo, radial, iceberg: el 95 % de los esquemas); matriz, espectro y cifra siguen entrando enteros.
+  - *El texto* entra con un barrido breve de izquierda a derecha (0,13 s) en el instante de su primera palabra, en lugar de un corte seco.
 
-Lo que esto **no** arregla: no hay imágenes ni ilustraciones (el corpus no las tiene y no se usan fotos de derechos dudosos); las piezas del esquema no se animan al entrar; y cuando el cuerpo no nombra las piezas con sus mismas palabras (1.445 piezas), el esquema acompaña pero no se enciende.
+  Está hecho en el montaje (`_reveal_frames` en `renderer.py`): se compara el fotograma anterior con el nuevo y solo la zona que cambia se descubre con un borde suave. No hacen falta más capturas de navegador y el resto del fotograma no se mueve.
+
+Lo que esto **no** arregla: no hay imágenes ni ilustraciones (el corpus no las tiene y no se usan fotos de derechos dudosos); las piezas se dibujan pero no se desplazan ni se conectan con flechas animadas; y cuando el cuerpo no nombra las piezas con sus mismas palabras (1.445 piezas), el esquema acompaña pero no se enciende.
 
 ## El guion: qué se elige y qué no se toca
 
@@ -276,7 +281,7 @@ De paso, al endurecer la comprobación de maquetación (ahora detecta también l
 ## Límites y lo que no se ha comprobado
 
 - **La voz.** Elegida de oído por el dueño (ver «Con voz real»), sobre una muestra de 35 s. Es una voz multilingüe de base francesa: no está comprobado cómo suena en piezas de tres minutos ni con nombres propios difíciles.
-- **Sigue siendo, sobre todo, texto.** El esquema acompaña y hay transiciones, pero no hay imágenes, iconos por concepto ni animación de las piezas. Es el siguiente límite del formato.
+- **Sigue siendo, sobre todo, texto.** El esquema acompaña, se construye y hay transiciones, pero no hay imágenes ni iconos por concepto. La animación es un descubrimiento progresivo, no movimiento real de los elementos. Y nada de esto se ha visto en una plataforma ni con espectadores.
 - **La explicación no elige: empieza por el principio.** Lee los primeros párrafos del cuerpo, que no siempre son los que mejor explican la idea (a veces el argumento fuerte está en el tercero y la pieza `idea` no llega; la pieza `fondo` sí). Es el precio de no seleccionar frases sin entenderlas. Tampoco se ha medido con personas si se sigue bien un párrafo de 100 palabras en texto cinético.
 - **Las plataformas.** La zona segura sigue las guías habituales, pero no se ha subido nada: ni recortes, ni compresión, ni cómo trata cada red la miniatura.
 - **El 25 % de ideas que salen del cuerpo** son menos rotundas que una `idea_clave` (las que solo hablan del libro se detectan y abren con el esquema; el resto, no todas brillan). La solución de fondo es redactar la idea en la biblioteca, no en el vídeo.

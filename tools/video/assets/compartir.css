@@ -381,3 +381,6 @@ body.cs.st-caso { --tone: #6cb2e2; }
 .ar-1x1 .cs-comp { margin-bottom: 3em; }
 .ar-1x1 .cs-comp ol { flex-direction: row; flex-wrap: wrap; gap: 1em; }
 .ar-1x1 .cs-comp li { padding: 1em 1.6em; }
+
+/* una pieza que todavía no ha entrado: guarda su sitio para que nada salte cuando entre */
+.cs-pan.aun-no { visibility: hidden; }

@@ -161,7 +161,8 @@ def _patron(v: dict[str, Any]) -> str:
         if modo == "pieza":
             estado = "on" if j == activa else "visto" if j < activa else "falta"
         else:
-            estado = "visto"
+            # Al presentar la estructura, las piezas entran una a una: las que aún no han entrado guardan su sitio.
+            estado = "visto" if (modo != "titulo" or v.get("shown") is None or j < int(v.get("shown"))) else "visto aun-no"
         if v.get("patron") == "iceberg":
             # La línea de flotación: arriba lo que se ve, debajo lo que lo sostiene, cada parte con su rótulo.
             marco = v.get("marco") or {}

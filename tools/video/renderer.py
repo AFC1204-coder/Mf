@@ -46,6 +46,8 @@ class RenderStyle:
     progress_color: str = ""
     trim_tail_s: float | None = None  # si se da: el silencio que el motor deja tras la última palabra se recorta a esto  # «#rrggbb»: barra de progreso continua arriba (vacío = sin barra)
     push_s: float = 0.0  # si > 0: al cambiar de sección, el fotograma nuevo entra empujando al anterior (en vez de fundirse)
+    reveal_s: float = 0.0  # si > 0: lo que cambia en un esquema no aparece de golpe, se dibuja de arriba abajo en este tiempo
+    reveal_text_s: float = 0.0  # si > 0: cada ráfaga de texto entra con un barrido breve de izquierda a derecha
     extra_deps: list[Path] = field(default_factory=list)  # estilos propios, para la huella de los fotogramas
 
 
@@ -306,6 +308,41 @@ def _push_frames(a: Path, b: Path, steps: int, blend_dir: Path) -> list[Path]:
     return outs
 
 
+def _reveal_frames(a: Path, b: Path, steps: int, blend_dir: Path, hacia: str = "abajo") -> list[Path]:
+    """Fotogramas en los que lo que cambia de `a` a `b` se va descubriendo con un barrido de borde suave
+    (hacia «abajo» o hacia la «derecha»): la pieza nueva de un esquema se dibuja, no aparece de golpe.
+    Solo se toca la zona que cambia; el resto del fotograma no se mueve. [] si no cambia nada."""
+    from PIL import ImageChops
+
+    clave = hashlib.sha256(f"barrido|{hacia}|{a.name}|{b.name}|{steps}".encode()).hexdigest()[:16]
+    outs = [blend_dir / f"r_{clave}_{i}.png" for i in range(steps)]
+    if all(p.exists() for p in outs):
+        return outs
+    blend_dir.mkdir(parents=True, exist_ok=True)
+    with Image.open(a) as ia, Image.open(b) as ib:
+        ia, ib = ia.convert("RGB"), ib.convert("RGB")
+        caja = ImageChops.difference(ia, ib).convert("L").point(lambda v: 255 if v > 10 else 0).getbbox()
+        if not caja:
+            return []
+        x0, y0, x1, y1 = caja
+        ra, rb = ia.crop(caja), ib.crop(caja)
+        w, h = x1 - x0, y1 - y0
+        if hacia == "derecha" and h > ia.height * 0.45:
+            hacia = "abajo"  # un cambio que ocupa media pantalla no es una palabra que entra
+        largo = h if hacia == "abajo" else w
+        suave = max(24, int(largo * 0.22))
+        for i, p in enumerate(outs):
+            t = (i + 1) / (steps + 1)
+            t = 1 - (1 - t) ** 2  # sale deprisa y frena
+            frente = t * (largo + suave)
+            rampa = bytes(max(0, min(255, int(255 * (frente - k) / suave))) for k in range(largo))
+            mascara = Image.frombytes("L", (1, largo) if hacia == "abajo" else (largo, 1), rampa).resize((w, h))
+            lienzo = ia.copy()
+            lienzo.paste(Image.composite(rb, ra, mascara), (x0, y0))
+            lienzo.save(p, compress_level=1)
+    return outs
+
+
 def _video_entries(
     cuts: list[tuple[float, Path, bool]],
     total_s: float,
@@ -313,6 +350,8 @@ def _video_entries(
     fade_scene_s: float = FADE_SCENE_S,
     fade_beat_s: float = FADE_BEAT_S,
     push_s: float = 0.0,
+    reveal_s: float = 0.0,
+    reveal_text_s: float = 0.0,
 ) -> list[tuple[Path, float]]:
     """De una lista de cortes (segundo, imagen, ¿cambia de escena?) a imágenes con duración, con fundidos."""
     entries: list[tuple[Path, float]] = []
@@ -323,9 +362,18 @@ def _video_entries(
             continue
         fade = 0.0
         if i > 0 and cuts[i - 1][1] != png:
-            fade = fade_scene_s if new_scene else fade_beat_s
+            fade = fade_scene_s if new_scene in (1, 2, 3) else fade_beat_s
             if slot < fade + 0.2:
                 fade = 0.0
+        distinto = i > 0 and cuts[i - 1][1] != png
+        barrido = (reveal_s if new_scene == 3 else reveal_text_s if new_scene == 4 else 0.0) if distinto else 0.0
+        if barrido and slot >= barrido + 0.08:
+            steps = max(2, int(round(barrido * FPS)))
+            cuadros = _reveal_frames(cuts[i - 1][1], png, steps, blend_dir, "abajo" if new_scene == 3 else "derecha")
+            for b in cuadros:
+                entries.append((b, barrido / steps))
+            entries.append((png, slot - (barrido if cuadros else 0.0)))
+            continue
         if fade and push_s and new_scene == 2 and slot >= push_s + 0.2:
             fade = push_s
             steps = max(4, int(round(fade * FPS)))
@@ -437,10 +485,16 @@ def render_episode(
         t = min(max(t, cuts[-1][0] if cuts else 0.0), max(0.0, tm.start_s + tm.total_s - 0.12))
         # 0: cambio dentro de la escena · 1: escena nueva · 2: escena nueva que además cambia de sección
         cambia = st.scene_index > 0 and (scene.section, scene.kind) != (episode.scenes[st.scene_index - 1].section, episode.scenes[st.scene_index - 1].kind)
-        cuts.append((t, png, (2 if cambia else 1) if es_inicio else 0))
+        # · 3: cambio dentro de un esquema (se dibuja) · 4: ráfaga de texto (entra con un barrido)
+        en_esquema = scene.kind in ("c-figura", "c-nodo") and not cambia and st.scene_index > 0
+        if es_inicio:
+            codigo = 2 if cambia else 3 if (en_esquema and style.reveal_s) else 1
+        else:
+            codigo = 4 if (scene.kind == "c-frase" and style.reveal_text_s) else 3 if (en_esquema and style.reveal_s) else 0
+        cuts.append((t, png, codigo))
 
     blend_dir = work_dir / "fundidos"
-    video_txt = _write_concat(_video_entries(cuts, total_s, blend_dir, style.fade_scene_s, style.fade_beat_s, style.push_s), work_dir / "video.txt")
+    video_txt = _write_concat(_video_entries(cuts, total_s, blend_dir, style.fade_scene_s, style.fade_beat_s, style.push_s, style.reveal_s, style.reveal_text_s), work_dir / "video.txt")
 
     # 4 · Capítulos: dónde empieza cada sección del índice.
     chapters: list[tuple[str, float]] = []

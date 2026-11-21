@@ -691,6 +691,11 @@ PATRONES = {
 }
 
 
+PATRONES_EN_LISTA = ("contraste", "cadena", "ciclo", "radial", "iceberg")  # los que se pintan como paneles (ver compartir_frames.LISTAS)
+ENTRADA_PRIMERA_S = 0.7  # cuándo entra la primera pieza de un esquema que se construye
+ENTRADA_PIEZA_S = 0.55  # cada cuánto entra la siguiente
+
+
 def patron_visual(spec: dict[str, Any]) -> str:
     """El patrón que cuenta la figura, o «silueta» (la forma dibujada por la app, con insignias) si no hay uno propio."""
     patron = PATRONES.get(str(spec.get("plantilla")), "silueta")
@@ -839,6 +844,16 @@ def escenas_figura(lesson: Lesson, nivel_min: int = 0, max_words: int = FIGURA_P
 
     intro = _fixed("figura", "plantilla+esquema.titulo", titulo=titulo.rstrip(".")) if titulo else None
     scenes = [Scene("c-figura", "Esquema", dict(base, mode="titulo", active=-1, shown=len(ps)), [intro] if intro else [], hold_s=0.0 if intro else 1.2, pause_after_s=0.35)]
+    if base["patron"] in PATRONES_EN_LISTA:
+        # La estructura no aparece hecha: se construye pieza a pieza (cada una se dibuja al entrar) mientras se dice su título.
+        primera = scenes[0]
+        primera.view["shown"] = 0
+        primera.beats = [Beat({"shown": j + 1}, at_s=round(ENTRADA_PRIMERA_S + j * ENTRADA_PIEZA_S, 2)) for j in range(len(ps))]
+        construir = ENTRADA_PRIMERA_S + len(ps) * ENTRADA_PIEZA_S + 0.5
+        if intro:
+            primera.pause_after_s = round(max(0.35, construir - segundos_locucion(intro.text)), 2)
+        else:
+            primera.hold_s = round(max(1.2, construir), 2)
     for j, p in enumerate(ps):
         partes = [Part(_punto(x), "esquema.datos") for x in _lectura(p, nivel)]
         hablado = segundos_locucion(" ".join(x.text for x in partes))

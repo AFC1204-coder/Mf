@@ -76,3 +76,36 @@ class CalendarioTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class BarridoTest(unittest.TestCase):
+    def test_lo_que_cambia_se_descubre_poco_a_poco_y_el_resto_no_se_toca(self):
+        import tempfile
+        from pathlib import Path
+
+        from PIL import Image
+
+        from tools.video.renderer import _reveal_frames, _video_entries
+
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            a, b = d / "a.png", d / "b.png"
+            Image.new("RGB", (200, 300), "#101010").save(a)
+            img = Image.new("RGB", (200, 300), "#101010")
+            img.paste("#ffffff", (40, 100, 160, 220))  # la «pieza» que aparece
+            img.save(b)
+            cuadros = _reveal_frames(a, b, 6, d / "f")
+            self.assertEqual(len(cuadros), 6)
+            blancos = []
+            for c in cuadros:
+                with Image.open(c) as im:
+                    self.assertEqual(im.getpixel((10, 10)), (16, 16, 16))  # fuera de la zona que cambia, nada se mueve
+                    self.assertEqual(im.getpixel((100, 290)), (16, 16, 16))
+                    blancos.append(sum(1 for y in range(100, 220) if im.getpixel((100, y))[0] > 128))
+            self.assertEqual(blancos, sorted(blancos))  # avanza de arriba abajo, sin retroceder
+            self.assertLess(blancos[0], blancos[-1])
+            self.assertEqual(_reveal_frames(a, a, 4, d / "g"), [])  # sin cambio no hay barrido
+            # En el montaje: el barrido ocupa su tiempo y el fotograma final el resto; la duración total no cambia.
+            entradas = _video_entries([(0.0, a, 2), (1.0, b, 3)], 3.0, d / "h", reveal_s=0.4)
+            self.assertAlmostEqual(sum(t for _, t in entradas), 3.0, places=3)
+            self.assertGreater(len(entradas), 3)
