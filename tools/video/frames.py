@@ -404,9 +404,10 @@ def frame_html(episode: Episode, scene: Scene, view: dict[str, Any], scene_index
 
 # ───────────────────────── captura ─────────────────────────
 
-def _assets_stamp() -> str:
+def _assets_stamp(extra: list[Path] | None = None) -> str:
+    """Huella de lo que dibuja los fotogramas. `extra`: estilos propios de otro formato (piezas compartibles)."""
     h = hashlib.sha256()
-    for p in _DEPENDENCIAS:
+    for p in [*_DEPENDENCIAS, *(extra or [])]:
         try:
             h.update(p.read_bytes())
         except OSError:
@@ -414,7 +415,7 @@ def _assets_stamp() -> str:
     return h.hexdigest()[:12]
 
 
-def _capture(chrome: str, html_path: Path, out_png: Path, profile_root: Path) -> None:
+def _capture(chrome: str, html_path: Path, out_png: Path, profile_root: Path, size: tuple[int, int] = (WIDTH, HEIGHT)) -> None:
     profile = Path(tempfile.mkdtemp(prefix="perfil-", dir=profile_root))
     cmd = [
         chrome,
@@ -429,7 +430,7 @@ def _capture(chrome: str, html_path: Path, out_png: Path, profile_root: Path) ->
         "--disable-component-update",
         "--allow-file-access-from-files",
         "--force-device-scale-factor=1",
-        f"--window-size={WIDTH},{HEIGHT}",
+        f"--window-size={size[0]},{size[1]}",
         "--virtual-time-budget=4000",
         f"--user-data-dir={profile}",
         f"--screenshot={out_png}",
@@ -443,23 +444,30 @@ def _capture(chrome: str, html_path: Path, out_png: Path, profile_root: Path) ->
         shutil.rmtree(profile, ignore_errors=True)
     if not out_png.exists():
         raise RuntimeError(f"Chrome no generó el fotograma {out_png.name}: {res.stderr.strip()[-400:]}")
-    _normalize_png(out_png)
+    _normalize_png(out_png, size)
 
 
-def _normalize_png(out_png: Path) -> None:
-    """Deja la captura en RGB de 1080×1920 exactos (lo que espera el montaje)."""
+def _normalize_png(out_png: Path, size: tuple[int, int] = (WIDTH, HEIGHT)) -> None:
+    """Deja la captura en RGB del tamaño exacto del vídeo (lo que espera el montaje)."""
     with Image.open(out_png) as im:
-        if im.size != (WIDTH, HEIGHT) or im.mode != "RGB":
+        if im.size != size or im.mode != "RGB":
             arreglada = im.convert("RGB")
-            if arreglada.size != (WIDTH, HEIGHT):
-                arreglada = arreglada.resize((WIDTH, HEIGHT), Image.Resampling.LANCZOS)
+            if arreglada.size != size:
+                arreglada = arreglada.resize(size, Image.Resampling.LANCZOS)
             arreglada.save(out_png)
 
 
-def render_frames(pages: list[str], frames_dir: Path, jobs: int | None = None) -> list[Path]:
-    """Captura cada HTML como PNG de 1080×1920. Reutiliza los ya capturados (la clave es el contenido)."""
+def render_frames(
+    pages: list[str],
+    frames_dir: Path,
+    jobs: int | None = None,
+    size: tuple[int, int] = (WIDTH, HEIGHT),
+    extra_deps: list[Path] | None = None,
+) -> list[Path]:
+    """Captura cada HTML como PNG (1080×1920 salvo que se pida otro tamaño). Reutiliza los ya capturados (la clave es el contenido)."""
     frames_dir.mkdir(parents=True, exist_ok=True)
-    sello = _assets_stamp()
+    sello = _assets_stamp(extra_deps) + (f"{size[0]}x{size[1]}" if size != (WIDTH, HEIGHT) else "")
+    ancho, alto = size
     salidas: list[Path] = []
     pendientes: dict[Path, str] = {}
     for doc in pages:
@@ -483,9 +491,9 @@ def render_frames(pages: list[str], frames_dir: Path, jobs: int | None = None) -
             html_path.write_text(doc, encoding="utf-8")
             trabajos.append((html_path, png.with_name(png.stem + ".tmp.png")))
         try:
-            capture_pages(chrome, trabajos, WIDTH, HEIGHT, workers=jobs or 4)
+            capture_pages(chrome, trabajos, ancho, alto, workers=jobs or 4)
             for (_, tmp), png in zip(trabajos, pendientes):
-                _normalize_png(tmp)
+                _normalize_png(tmp, size)
                 tmp.replace(png)
             return salidas
         except CDPError as exc:
@@ -502,7 +510,7 @@ def render_frames(pages: list[str], frames_dir: Path, jobs: int | None = None) -
         html_path = png.with_suffix(".html")
         html_path.write_text(doc, encoding="utf-8")
         tmp = png.with_name(png.stem + ".tmp.png")
-        _capture(chrome, html_path, tmp, perfiles)
+        _capture(chrome, html_path, tmp, perfiles, size)
         tmp.replace(png)
 
     n = jobs or max(1, min(6, (os.cpu_count() or 2)))

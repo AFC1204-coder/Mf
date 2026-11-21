@@ -4,7 +4,10 @@ from __future__ import annotations
 
 import asyncio
 import os
+import ssl
 from pathlib import Path
+from urllib.parse import urlparse
+from urllib.request import proxy_bypass_environment
 
 import edge_tts
 
@@ -24,6 +27,45 @@ EDGE_VOICES = [
 ]
 
 
+EDGE_HOST = "speech.platform.bing.com"
+
+
+def proxy_de_entorno(host: str = EDGE_HOST) -> str | None:
+    """El proxy HTTPS del entorno (HTTPS_PROXY…), salvo que NO_PROXY excluya el host.
+
+    edge-tts habla por WebSocket (wss://) y aiohttp no aplica a esas conexiones el proxy del entorno:
+    detrás de un proxy obligatorio (una red corporativa, un contenedor) intentaba salir directo y fallaba.
+    """
+    for clave in ("HTTPS_PROXY", "https_proxy", "ALL_PROXY", "all_proxy"):
+        valor = (os.getenv(clave) or "").strip()
+        if valor and urlparse(valor).scheme in ("http", "https"):
+            return None if proxy_bypass_environment(host) else valor
+    return None
+
+
+def _contexto_tls() -> ssl.SSLContext | None:
+    """Certificados de confianza: los de edge-tts (certifi) más los que el entorno declare (SSL_CERT_FILE,
+    REQUESTS_CA_BUNDLE). Un proxy que inspecciona TLS firma con su propia autoridad, que certifi no conoce."""
+    extra = [f for f in (os.getenv("SSL_CERT_FILE"), os.getenv("REQUESTS_CA_BUNDLE")) if f and os.path.isfile(f)]
+    if not extra:
+        return None
+    import certifi
+
+    ctx = ssl.create_default_context(cafile=certifi.where())
+    for f in dict.fromkeys(extra):
+        ctx.load_verify_locations(cafile=f)
+    return ctx
+
+
+def _preparar_red() -> str | None:
+    """Ajusta edge-tts a la red del entorno y devuelve el proxy que hay que usar (o None)."""
+    ctx = _contexto_tls()
+    comunicacion = getattr(edge_tts, "communicate", None)
+    if ctx is not None and comunicacion is not None and hasattr(comunicacion, "_SSL_CTX"):
+        comunicacion._SSL_CTX = ctx  # edge-tts fija su contexto TLS a nivel de módulo y no admite otro por parámetro
+    return proxy_de_entorno()
+
+
 class EdgeTTSEngine(TTSEngine):
     name = "edge"
 
@@ -36,6 +78,7 @@ class EdgeTTSEngine(TTSEngine):
         self.voice = (voice or os.getenv("EDGE_VOICE", "es-ES-AlvaroNeural")).strip()
         self.rate = rate
         self.pitch = pitch
+        self.proxy = _preparar_red()
 
     def default_voice(self) -> str:
         return self.voice
@@ -50,6 +93,7 @@ class EdgeTTSEngine(TTSEngine):
             rate=self.rate,
             pitch=self.pitch,
             boundary="WordBoundary",
+            proxy=self.proxy,
         )
         timings: list[WordTiming] = []
         out_path.parent.mkdir(parents=True, exist_ok=True)
