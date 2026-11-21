@@ -30,7 +30,8 @@ class CachedTTS(TTSEngine):
         return self.engine.sample_voices()
 
     def _key(self, text: str, voice: str) -> str:
-        raw = json.dumps([text, voice], ensure_ascii=False)
+        ajustes = getattr(self.engine, "ajustes", lambda: "")()  # ritmo y tono, si no son los de siempre
+        raw = json.dumps([text, voice, ajustes] if ajustes else [text, voice], ensure_ascii=False)
         return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:24]
 
     def synthesize(self, text: str, out_path: Path, voice: str | None = None) -> TTSResult:

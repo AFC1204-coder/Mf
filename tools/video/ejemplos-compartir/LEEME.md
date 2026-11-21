@@ -2,7 +2,9 @@
 
 ## Con voz real — empieza por aquí
 
-`con-voz/` tiene cinco piezas con **voz de Edge TTS** (`es-ES-AlvaroNeural`, la gratuita por defecto). Son las que hay que **oír** para juzgar el ritmo, las pausas, si las fórmulas («Del libro X, de Y», «El matiz») suenan naturales y cómo se pronuncian los títulos en inglés.
+`con-voz/` tiene seis piezas con **voz de Edge TTS** (`es-ES-AlvaroNeural`, la gratuita por defecto). Son las que hay que **oír** para juzgar el ritmo, las pausas, si las fórmulas («Del libro X, de Y», «El matiz») suenan naturales y cómo se pronuncian los títulos en inglés.
+
+**Las piezas 01-05 y todo lo que hay fuera de `con-voz/` son de la versión breve** (30-60 s, hoy `--breve`). La `06-decisive-idea-con-explicacion` es la pieza `idea` actual: lleva la explicación del cuerpo antes del esquema y el matiz entero (1 min 45 s), con la voz por defecto a ritmo y tono naturales (`--ritmo +0% --tono +0Hz`).
 
 | Archivo | Pieza | Duración |
 |---|---|---|

@@ -164,7 +164,8 @@ class PiezasTest(unittest.TestCase):
         self.assertEqual(claves[0], "libro")
         self.assertEqual(sum(p.tipo == "idea" for p in self.plan.piezas), 3)
         self.assertEqual([p.key for p in self.plan.piezas if p.tipo == "pregunta"], ["pregunta-01-la-primera-idea"])
-        self.assertEqual({(o.tipo, o.leccion_n) for o in self.plan.omitidas if o.tipo != "caso"}, {("pregunta", 2), ("pregunta", 3), ("practica", 3)})
+        self.assertEqual({(o.tipo, o.leccion_n) for o in self.plan.omitidas if o.tipo not in ("caso", "fondo")}, {("pregunta", 2), ("pregunta", 3), ("practica", 3)})
+        self.assertEqual(sum(o.tipo == "fondo" for o in self.plan.omitidas), 3)  # cuerpos de dos frases: no dan para una pieza larga
         self.assertEqual(sum(o.tipo == "caso" for o in self.plan.omitidas), 3)  # el libro de prueba no cuenta ningún caso
         self.assertTrue(all(o.motivo for o in self.plan.omitidas))
 
@@ -178,7 +179,7 @@ class PiezasTest(unittest.TestCase):
             self.assertIsNone(K.ANCLA_WEB.search(formula), formula)
 
     def test_la_idea_abre_en_frio_y_lleva_credito_esquema_y_matiz(self):
-        p = self.plan.piezas[1]
+        p = K.pieza_idea(self.libro, 0, breve=True)
         self.assertEqual(p.tipo, "idea")
         self.assertEqual(p.scenes[0].narration, "Lo primero que se nos ocurre no siempre es lo cierto.")
         self.assertEqual(p.gancho, p.scenes[0].narration)
@@ -188,6 +189,62 @@ class PiezasTest(unittest.TestCase):
         self.assertEqual(p.scenes[5].narration, "Dos modos de responder.")
         self.assertEqual(p.scenes[-2].narration, "El matiz. No toda intuición falla.")
         self.assertEqual(p.scenes[-1].narration, K.FORMULAS["cta"])
+
+    def test_la_idea_lleva_su_explicacion_el_cuerpo_por_parrafos_enteros(self):
+        p = self.plan.piezas[1]
+        self.assertEqual([s.kind for s in p.scenes], ["c-frase", "c-credito", "c-frase", "c-frase", "c-figura", "c-figura", "c-figura", "c-figura", "c-frase", "c-cierre"])
+        explica = [s for s in p.scenes if s.section == "Explicación"]
+        self.assertEqual([s.narration for s in explica], ["Todo empieza con una pregunta sencilla. La respuesta rápida suele ser la equivocada.", "Pensar despacio cuesta, pero corrige."])
+        self.assertTrue(all(s.view["kicker"] == K.ROTULOS["explica"] and x.origin == "leccion.cuerpo" for s in explica for x in s.parts))
+        self.assertEqual([i for i in L.lint_pieza(p, self.libro) if i.level == "error"], [])
+        # La explicación va antes del esquema: el esquema la resume a la vista.
+        self.assertLess(p.scenes.index(explica[-1]), next(i for i, s in enumerate(p.scenes) if s.kind == "c-figura"))
+
+    def test_la_explicacion_no_elige_frases_ni_salta_parrafos(self):
+        parrafos = ["Uno afirma algo. Y lo matiza enseguida.", "Dos sigue " + "con más palabras " * 30 + "hasta aquí.", "Tres ya no cabe " + "porque es largo " * 30 + "del todo.", "Esto no sustituye a un profesional sanitario. Cuatro añade otra cosa distinta que no entra."]
+        libro = _libro(**{"l-1": {"cuerpo": "\n\n".join(parrafos)}})
+        partes = [x.text for x in K.explicacion_partes(libro.lessons[0])]
+        # el primero entero, el segundo entero mientras quepa, y de lo que queda fuera solo la salvedad de seguridad
+        self.assertEqual(partes, [parrafos[0], parrafos[1], "Esto no sustituye a un profesional sanitario."])
+        self.assertEqual([x.text for x in K.explicacion_partes(libro.lessons[0], None)], parrafos)  # a fondo: todo
+        # lo que la pieza ya dijo al abrir no se repite, y un párrafo que solo se entiende en la serie corta la explicación
+        self.assertEqual(K.explicacion_partes(libro.lessons[0], ya_dicho=("Uno afirma algo.",))[0].text, "Y lo matiza enseguida.")
+        serie = _libro(**{"l-1": {"cuerpo": "Uno afirma algo.\n\nComo vimos en la lección anterior, dos.\n\nTres."}})
+        self.assertEqual([x.text for x in K.explicacion_partes(serie.lessons[0], None)], ["Uno afirma algo."])
+
+    def test_el_control_rechaza_una_explicacion_que_salta_o_recorta(self):
+        libro = _libro(**{"l-1": {"cuerpo": "Uno afirma algo. Y lo matiza enseguida.\n\nDos sigue.\n\nTres cierra."}})
+        for malo in (["Uno afirma algo."], ["Uno afirma algo. Y lo matiza enseguida.", "Tres cierra."], ["Dos sigue."]):
+            p = K.pieza_idea(libro, 0)
+            p.scenes = [s for s in p.scenes if s.section != "Explicación"]
+            p.scenes[2:2] = [K.escena_frase("Explicación", "explica", K.ROTULOS["explica"], [Part(t, "leccion.cuerpo")]) for t in malo]
+            self.assertIn("párrafos enteros", " ".join(str(i) for i in L.lint_pieza(p, libro) if i.level == "error"), malo)
+
+    def test_a_fondo_cuenta_la_leccion_entera(self):
+        parrafos = ["Uno afirma algo " + "con detalle " * 20 + "y acaba.", "Fuera del libro: dos añade contexto " + "y más contexto " * 15 + "al final.", "Lectura nuestra: tres interpreta."]
+        matiz = "No toda intuición falla. " + "Otra frase del matiz que antes no cabía. " * 6
+        libro = _libro(**{"l-1": {"cuerpo": "\n\n".join(parrafos), "autocorreccion": matiz.strip()}})
+        p = K.pieza_fondo(libro, 0)
+        self.assertEqual(p.tipo, "fondo")
+        self.assertEqual([s.narration for s in p.scenes if s.section == "Explicación"], parrafos)  # todo el cuerpo, con sus marcas
+        self.assertEqual(" ".join(x.text for s in p.scenes for x in s.parts if x.origin == "leccion.autocorreccion"), matiz.strip())  # el matiz, entero
+        self.assertEqual([s.section for s in p.scenes if s.kind == "c-frase"][-1], "Práctica")
+        self.assertEqual(p.scenes[0].view["kicker"], K.ROTULOS["fondo"])
+        self.assertEqual([i for i in L.lint_pieza(p, libro) if i.level == "error"], [])
+        plan = K.plan_libro(libro)
+        self.assertIn(p.key, [x.key for x in plan.piezas])  # abre como la pieza «idea» y no se cae por eso
+        self.assertIn(p.key, plan.orden)
+        self.assertIn("youtube", K.textos_por_red(p))
+        self.assertNotIn("#Shorts", K.textos_por_red(p)["youtube"]["titulo"])
+        self.assertTrue(p.titulo_pub.startswith("A fondo: "))
+
+    def test_breve_da_la_pieza_de_un_minuto(self):
+        largo = _libro(**{"l-1": {"cuerpo": "Uno afirma algo " + "con detalle " * 60 + "y acaba."}})
+        self.assertGreater(K.pieza_idea(largo, 0).estimated_seconds, K.OBJETIVO_S)
+        breve = K.plan_libro(largo, breve=True)
+        idea = next(p for p in breve.piezas if p.key.startswith("idea-01"))
+        self.assertFalse([s for s in idea.scenes if s.section == "Explicación"])
+        self.assertLessEqual(idea.estimated_seconds, K.OBJETIVO_S)
 
     def test_el_cierre_retoma_el_gancho(self):
         for p in self.plan.piezas:
@@ -234,7 +291,7 @@ class PiezasTest(unittest.TestCase):
         self.assertEqual([i for i in L.lint_pieza(p, _libro(**meta)) if i.level == "error"], [])
         # …y si tampoco hay figura que recorrer, no hay pieza (ni práctica: no habría idea que poner detrás).
         plan = K.plan_libro(_libro(diagramas={}, **meta))
-        self.assertEqual({(o.tipo, o.leccion_n) for o in plan.omitidas if o.leccion_n == 1}, {("idea", 1), ("practica", 1), ("caso", 1)})
+        self.assertEqual({(o.tipo, o.leccion_n) for o in plan.omitidas if o.leccion_n == 1}, {("idea", 1), ("practica", 1), ("caso", 1), ("fondo", 1)})
 
     def test_si_la_leccion_se_hace_una_pregunta_la_idea_la_resuelve(self):
         libro = _libro(**{"l-1": {"cuerpo": "¿Por qué fallamos al responder deprisa? La respuesta rápida suele ser la equivocada."}})
@@ -527,12 +584,12 @@ class ControlTest(unittest.TestCase):
         largo = " ".join(f"Frase número {i} del matiz con unas cuantas palabras de relleno para alargar." for i in range(1, 9))
         idea = "Una idea " + "bastante larga " * 30 + "que termina aquí."
         libro = _libro(**{"l-1": {"idea_clave": idea, "autocorreccion": largo, "aplicacion_practica": largo}})
-        p = K.pieza_idea(libro, 0)
+        p = K.pieza_idea(libro, 0, breve=True)
         matiz = [x.text for s in p.scenes for x in s.parts if x.origin == "leccion.autocorreccion"]
         self.assertEqual(matiz, ["Frase número 1 del matiz con unas cuantas palabras de relleno para alargar. Frase número 2 del matiz con unas cuantas palabras de relleno para alargar."])
         self.assertEqual(p.scenes[0].narration, idea)  # la idea no se toca
         self.assertEqual([i for i in L.lint_pieza(p, libro) if i.level == "error"], [])
-        practica = K.pieza_practica(libro, 0)
+        practica = K.pieza_practica(libro, 0, breve=True)
         self.assertLessEqual(len(practica.scenes[0].narration.split()), K.PRACTICA_BREVE)
         self.assertTrue(practica.scenes[0].narration.endswith("."))
 

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import os
+import re
 import ssl
 from pathlib import Path
 from urllib.parse import urlparse
@@ -19,11 +20,11 @@ EDGE_VOICES = [
     "es-ES-XimenaNeural",
     # Voces multilingües de última generación: hablan español y pronuncian bien los títulos y
     # términos en inglés («Never Split the Difference»). Su acento en español no es peninsular.
-    "en-US-AndrewMultilingualNeural",
     "en-US-BrianMultilingualNeural",
     "en-US-AvaMultilingualNeural",
     "en-US-EmmaMultilingualNeural",
     "fr-FR-VivienneMultilingualNeural",
+    "fr-FR-RemyMultilingualNeural",
 ]
 
 
@@ -66,22 +67,41 @@ def _preparar_red() -> str | None:
     return proxy_de_entorno()
 
 
+RITMO, TONO = "-8%", "-2Hz"
+
+
+def _ajuste(valor: str | None, unidad: str, por_defecto: str) -> str:
+    """«0», «+0», «-8%» → «+0%», «+0%», «-8%» (edge-tts exige signo y unidad)."""
+    v = (valor or "").strip().replace(" ", "")
+    if not v:
+        return por_defecto
+    m = re.fullmatch(r"([+-]?)(\d{1,3})(?:%|[Hh]z)?", v)
+    if not m:
+        raise ValueError(f"Ajuste de voz no válido: «{valor}». Ejemplos: -8{unidad}, +0{unidad}, +5{unidad}.")
+    return f"{m.group(1) or '+'}{m.group(2)}{unidad}"
+
+
 class EdgeTTSEngine(TTSEngine):
     name = "edge"
 
     def __init__(
         self,
         voice: str | None = None,
-        rate: str = "-8%",
-        pitch: str = "-2Hz",
+        rate: str | None = None,
+        pitch: str | None = None,
     ) -> None:
         self.voice = (voice or os.getenv("EDGE_VOICE", "es-ES-AlvaroNeural")).strip()
-        self.rate = rate
-        self.pitch = pitch
+        # Ritmo y tono: «-8%», «+0%», «+5%» · «-2Hz», «+0Hz». Por parámetro, por entorno (EDGE_RATE, EDGE_PITCH) o los de siempre.
+        self.rate = _ajuste(rate or os.getenv("EDGE_RATE"), "%", RITMO)
+        self.pitch = _ajuste(pitch or os.getenv("EDGE_PITCH"), "Hz", TONO)
         self.proxy = _preparar_red()
 
     def default_voice(self) -> str:
         return self.voice
+
+    def ajustes(self) -> str:
+        """Lo que cambia el audio además de la voz (entra en la caché y en la huella). Vacío con los valores de siempre."""
+        return "" if (self.rate, self.pitch) == (RITMO, TONO) else f"{self.rate},{self.pitch}"
 
     def sample_voices(self) -> list[str]:
         return EDGE_VOICES

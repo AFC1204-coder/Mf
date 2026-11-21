@@ -51,3 +51,24 @@ class RedTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class AjustesDeVozTest(unittest.TestCase):
+    def test_ritmo_y_tono_se_normalizan_y_cambian_la_cache(self):
+        from tools.video.tts.cache import CachedTTS
+        from tools.video.tts.edge_tts_engine import EdgeTTSEngine, _ajuste
+
+        self.assertEqual(_ajuste("0", "%", "-8%"), "+0%")
+        self.assertEqual(_ajuste("-5%", "%", "-8%"), "-5%")
+        self.assertEqual(_ajuste("+2hz", "Hz", "-2Hz"), "+2Hz")
+        self.assertEqual(_ajuste(None, "%", "-8%"), "-8%")
+        with self.assertRaises(ValueError):
+            _ajuste("rápido", "%", "-8%")
+        normal, natural = EdgeTTSEngine(), EdgeTTSEngine(rate="+0%", pitch="+0Hz")
+        self.assertEqual(normal.ajustes(), "")  # los valores de siempre no invalidan la caché que ya existe
+        self.assertEqual(natural.ajustes(), "+0%,+0Hz")
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as d:
+            self.assertNotEqual(CachedTTS(normal, Path(d))._key("hola", "v"), CachedTTS(natural, Path(d))._key("hola", "v"))

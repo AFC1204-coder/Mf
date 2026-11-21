@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import shutil
 import sys
@@ -128,6 +129,7 @@ def process_episode(ep: Episode, book: Book, base: Path, args: argparse.Namespac
         "version": SCRIPT_VERSION,
         "motor": args.engine,
         "voz": args.voice or "",
+        "ajustes_voz": [os.getenv("EDGE_RATE", ""), os.getenv("EDGE_PITCH", "")],
         "fotogramas": _assets_stamp(),
         "foto": bool(photo),
     }
@@ -285,6 +287,7 @@ def process_pieza(p: K.Pieza, book: Book, base: Path, args: argparse.Namespace, 
         "version": [SCRIPT_VERSION, K.COMPARTIR_VERSION],
         "motor": args.engine,
         "voz": args.voice or "",
+        "ajustes_voz": [os.getenv("EDGE_RATE", ""), os.getenv("EDGE_PITCH", "")],
         "fotogramas": _assets_stamp(CF.dependencias()),
         "aspecto": args.aspecto,
         "montaje": 2,  # sube cuando cambia cómo se monta (2: se recorta el silencio final de cada locución)
@@ -326,7 +329,7 @@ def process_compartir(book: Book, args: argparse.Namespace, only_lesson: int | N
     base.mkdir(parents=True, exist_ok=True)
     if getattr(args, "seguir", None):
         K.ROTULOS["seguir"] = args.seguir.strip()  # el rótulo del cierre (no se lee): la cuenta o dónde seguir
-    plan = _filtra_plan(K.plan_libro(book, _tipos(args), solo_leccion=only_lesson), args)
+    plan = _filtra_plan(K.plan_libro(book, _tipos(args), solo_leccion=only_lesson, breve=bool(getattr(args, "breve", False))), args)
     piezas = plan.piezas
     if args.only and only_lesson is None:
         quiero = _numeros(args.only)  # 0 = la pieza del libro, 1…N = las de esa lección
@@ -390,7 +393,7 @@ def _write_manifiesto(book: Book, plan: K.Plan, resultados: list[Result], base: 
     datos = {
         "libro_id": book.id, "titulo": book.titulo, "autor": book.autor, "eje": book.eje,
         "formato": "compartir", "aspecto": args.aspecto, "motivo": K.motivo_libro(book),
-        "tipos": list(_tipos(args)), "filtros": {"max_seg": getattr(args, "max_seg", None), "excluir": getattr(args, "excluir", None)},
+        "tipos": list(_tipos(args)), "breve": bool(getattr(args, "breve", False)), "filtros": {"max_seg": getattr(args, "max_seg", None), "excluir": getattr(args, "excluir", None)},
         "voces": sorted({v for r in resultados for v in r.voices}),
         "piezas": items,
         "omitidas": [{"tipo": o.tipo, "leccion": o.leccion_n, "titulo": o.titulo, "motivo": o.motivo} for o in plan.omitidas],
@@ -574,14 +577,17 @@ def _sample_voices(book: Book, index: int, args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     comun = argparse.ArgumentParser(add_help=False)
-    comun.add_argument("--format", choices=[*FORMATS, "compartir"], default="clase", help="clase: lección completa (3-5 min). corto: 60-90 s para redes. compartir: piezas sueltas de 30-60 s que se entienden fuera de la web.")
-    comun.add_argument("--piezas", default=None, help="(compartir) Tipos de pieza, separados por comas: idea, pregunta, practica, libro. Por defecto, todos.")
+    comun.add_argument("--format", choices=[*FORMATS, "compartir"], default="clase", help="clase: lección completa (3-5 min). corto: 60-90 s para redes. compartir: piezas sueltas que se entienden fuera de la web (1-2 min con su explicación; «a fondo», 2-4 min).")
+    comun.add_argument("--piezas", default=None, help="(compartir) Tipos de pieza, separados por comas: idea, pregunta, practica, caso, libro, fondo. Por defecto, todos.")
+    comun.add_argument("--breve", action="store_true", help="(compartir) Versión de 30-60 s: la idea sin la explicación del cuerpo y el matiz en su primera frase.")
     comun.add_argument("--aspecto", choices=list(K.ASPECTOS), default="9:16", help="(compartir) 9:16 (por defecto), 1:1 o 16:9.")
     comun.add_argument("--max-seg", type=float, default=None, help="(compartir) No genera las piezas que duren (estimado) más de estos segundos; quedan anotadas en el manifiesto.")
     comun.add_argument("--excluir", default=None, help="(compartir) Temas que no deben salir, separados por comas (p. ej. «trading,inversión»): se omite la pieza cuya locución los nombre.")
     comun.add_argument("--seguir", default=None, help="(compartir) Texto del rótulo del cierre: la cuenta o dónde seguir (p. ej. «Sigue a @mentefria»). No se lee en voz alta.")
     comun.add_argument("--engine", choices=["edge", "kokoro", "mudo", "gemini", "auto"], default=None, help="Motor de voz. edge (por defecto): gratis, sin clave. kokoro: local y gratis. mudo: previsualización sin voz. gemini/auto: de pago, con clave.")
     comun.add_argument("--voice", default=None, help="Voz (Aoede, Charon… en Gemini; es-ES-AlvaroNeural… en Edge).")
+    comun.add_argument("--ritmo", default=None, help="(edge) Velocidad de la voz: -8%% (por defecto), +0%%, +5%%…")
+    comun.add_argument("--tono", default=None, help="(edge) Tono de la voz: -2Hz (por defecto), +0Hz…")
     comun.add_argument("--gemini-model", default=None, choices=["gemini-2.5-flash-preview-tts", "gemini-2.5-pro-preview-tts"])
     comun.add_argument("--script-only", action="store_true", help="Solo guion (guion.md, script.json) y control de calidad; sin voz ni vídeo.")
     comun.add_argument("--no-quiz", action="store_true", help="Lecciones sin la pregunta de repaso.")
@@ -631,9 +637,10 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.command == "calendario":
         return calendario(args)
+    for opcion, variable in (("ritmo", "EDGE_RATE"), ("tono", "EDGE_PITCH")):
+        if getattr(args, opcion, None):
+            os.environ[variable] = getattr(args, opcion)
     if not args.engine:  # sin --engine: TTS_ENGINE o el motor gratuito por defecto
-        import os
-
         args.engine = (os.getenv("TTS_ENGINE") or DEFAULT_ENGINE).strip().lower()
     if not hasattr(args, "merge"):
         args.merge = False
@@ -662,7 +669,7 @@ def main(argv: list[str] | None = None) -> int:
                 completa = bool(previo.get("completa"))
                 if completa and args.format == "compartir":
                     # …y si se hizo con los mismos tipos de pieza que ahora se piden (o más).
-                    completa = set(_tipos(args)) <= set(previo.get("tipos") or [])
+                    completa = set(_tipos(args)) <= set(previo.get("tipos") or []) and bool(previo.get("breve")) == bool(getattr(args, "breve", False))
             except (ValueError, AttributeError):
                 completa = False
         if not completa:

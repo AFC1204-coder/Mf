@@ -37,19 +37,22 @@ El índice (Idea · Desarrollo · Esquema · Matiz · Práctica · Repaso) está
 
 `--format corto` (60-100 s, para redes): abre con la pregunta, da la idea, las frases que abren hasta tres bloques (con el mini-esquema), el esquema con sus títulos y su pie, la primera frase del matiz y de la práctica, **la respuesta a la pregunta** y la siguiente lección.
 
-### Piezas compartibles (`--format compartir`, 30-60 s cada una)
+### Piezas compartibles (`--format compartir`, de 1 a 4 min)
 
 Los dos formatos de arriba son una serie: tienen sentido si ya estás en la biblioteca. Este es lo contrario: **piezas sueltas que se entienden sin haber visto nada más**, pensadas para Shorts, TikTok, Reels, LinkedIn, X o WhatsApp. Sin «lección 3 de 8», sin índice y sin «venimos de…». El porqué de cada decisión está en [`DISEÑO-COMPARTIBLE.md`](DISEÑO-COMPARTIBLE.md).
 
 | Pieza | Qué cuenta | De qué campos sale | Cuántas |
 |---|---|---|---|
-| **`idea`** *(la principal)* | La idea, en frío → de qué libro sale → su esquema, pieza a pieza → el matiz → marca | `idea_clave` (o la idea redactada, o el arranque del cuerpo), `datos/diagramas.json`, `autocorreccion` | Una por lección |
+| **`idea`** *(la principal, 1-2 min)* | La idea, en frío → de qué libro sale → **la explicación** (los primeros párrafos del cuerpo, enteros) → su esquema, pieza a pieza → el matiz → marca | `idea_clave` (o la idea redactada, o el arranque del cuerpo), el cuerpo, `datos/diagramas.json`, `autocorreccion` | Una por lección |
+| **`fondo`** *(a fondo, 3-4 min)* | La lección entera, suelta: la idea → libro → **todo el cuerpo**, párrafo a párrafo → el esquema leído entero → el matiz completo → qué probar → marca | los mismos, más `aplicacion_practica` | Una por lección con cuerpo (el 99 %) |
 | `pregunta` | Una pregunta → 3 s para pensar → la respuesta y su porqué → libro → el matiz → marca | `preguntas` (la opción correcta y el arranque de la explicación; **las opciones falsas no salen**) | Una por lección que tenga una pregunta que se entienda sola (el 71 %) |
 | `practica` | Qué probar → la idea que hay detrás → libro → el matiz → marca | `aplicacion_practica`, la idea, `autocorreccion` | Una por lección |
 | `caso` | El caso concreto que cuenta la lección → la idea que hay detrás → libro → el matiz → marca | el cuerpo, solo donde dice «Un ejemplo:», «Imagina que…», «En un experimento…»; la idea; `autocorreccion` | Una por lección que traiga un caso (el 13 %) |
 | `libro` | El libro en una frase → sus ideas centrales → la frase que las une → marca | `datos/mapas.json` (cierre y nodos) | Una por libro con mapa |
 
 Hay ejemplos renderizados (sin voz) y sus hojas de fotogramas en [`ejemplos-compartir/`](ejemplos-compartir/LEEME.md).
+
+**Explicar bien va antes que los 60 segundos.** La pieza `idea` dura lo que su explicación pida (mediana, 1 min 50 s): una idea afirmada sin su porqué se recuerda peor y se malinterpreta mejor. La explicación no se redacta ni se elige frase a frase: es **el cuerpo de la lección desde el principio, por párrafos enteros** (hasta 150 palabras; en `fondo`, todo). Así ninguna frase se queda sin la salvedad que la sigue, y las marcas del propio texto («Fuera del libro:», «Lectura nuestra:») se dicen tal cual. Con `--breve` salen las piezas de antes, de 30-60 s: sin explicación y con el matiz en su primera frase.
 
 Lo que tienen en común, y lo que las distingue del resto del generador:
 
@@ -91,7 +94,7 @@ No hace falta configurar nada más: el corpus se lee con la clave pública de la
 
 | Motor | Coste | Dónde corre | Marcas por palabra | Notas |
 |---|---|---|---|---|
-| `edge` *(por defecto)* | Gratis, sin clave | En línea (servicio de lectura de Microsoft Edge) | Sí: subtítulos exactos | `es-ES-AlvaroNeural`, `ElviraNeural`, `XimenaNeural`; y las multilingües (`en-US-AndrewMultilingualNeural`, `BrianMultilingual`, `AvaMultilingual`, `EmmaMultilingual`, `fr-FR-VivienneMultilingual`), más naturales y que pronuncian bien los títulos en inglés, con acento no peninsular. |
+| `edge` *(por defecto)* | Gratis, sin clave | En línea (servicio de lectura de Microsoft Edge) | Sí: subtítulos exactos | `es-ES-AlvaroNeural`, `ElviraNeural`, `XimenaNeural`; y las multilingües (`en-US-BrianMultilingualNeural`, `AvaMultilingual`, `EmmaMultilingual`, `fr-FR-VivienneMultilingual`, `RemyMultilingual`), más naturales y que pronuncian bien los títulos en inglés, con acento no peninsular. |
 | `kokoro` | Gratis (Apache 2.0) | **Local**, sin red tras la primera descarga | No: subtítulos proporcionales | `em_alex`, `em_santa`, `ef_dora`. `pip install -r tools/video/requirements-kokoro.txt`; el modelo (~90 MB + 28 MB de voces) se baja solo a `tools/video/.modelos/kokoro/`. `KOKORO_MODELO=completo` usa el modelo sin cuantizar (~310 MB). |
 | `mudo` | Gratis | Local | — | Previsualización sin voz. |
 | `gemini` / `auto` | **De pago** (clave `GEMINI_API_KEY` en `tools/video/.env`) | En línea | No | Solo si se piden con `--engine`. `auto` prueba Gemini y cae a Edge. |
@@ -153,13 +156,15 @@ tools/video/.venv/bin/python -m tools.video.cli biblioteca --format compartir --
 | Opción | Qué hace |
 |---|---|
 | `--format clase\|corto\|compartir` | Lección completa (por defecto), resumen de 60-90 s dentro de la serie, o piezas sueltas para compartir. |
-| `--piezas idea,pregunta,practica,caso,libro` *(compartir)* | Qué tipos de pieza generar. Por defecto, todos. |
+| `--piezas idea,pregunta,practica,caso,libro,fondo` *(compartir)* | Qué tipos de pieza generar. Por defecto, todos. |
+| `--breve` *(compartir)* | Las piezas de 30-60 s: la idea sin la explicación del cuerpo y el matiz en su primera frase. |
+| `--ritmo +0%` · `--tono +0Hz` *(edge)* | Velocidad y tono de la voz. Por defecto −8 % y −2 Hz, que suena más pausada pero más plana; `+0%` y `+0Hz` dejan la voz como es. También `EDGE_RATE` y `EDGE_PITCH`. |
 | `--max-seg 60` *(compartir)* | No genera las piezas que duren (estimado) más de esos segundos. |
 | `--excluir "trading,inversión"` *(compartir)* | No genera las piezas cuya locución nombre esos temas. |
 | `--seguir "Sigue a @cuenta"` *(compartir)* | El rótulo del cierre: la cuenta o dónde seguir. No se lee en voz alta. |
 | `--aspecto 9:16\|1:1\|16:9` *(compartir)* | Vertical (por defecto), cuadrado u horizontal. Cada aspecto va a su carpeta. |
 | `--engine edge\|kokoro\|mudo\|gemini\|auto` | Motor de voz (ver la tabla de arriba). Sin la opción: `edge`, o lo que diga `TTS_ENGINE`. |
-| `--voice <nombre>` | Una voz del motor elegido: `es-ES-AlvaroNeural`, `en-US-AndrewMultilingualNeural`… (Edge) · `em_alex`, `ef_dora`… (Kokoro) · `Aoede`, `Charon`… (Gemini). |
+| `--voice <nombre>` | Una voz del motor elegido: `es-ES-AlvaroNeural`, `en-US-BrianMultilingualNeural`… (Edge) · `em_alex`, `ef_dora`… (Kokoro) · `Aoede`, `Charon`… (Gemini). |
 | `--script-only` | Solo `guion.md`, `script.json` y control de calidad. |
 | `--only 0,3-5,99` *(libro)* | Solo esos episodios: 0 = presentación, 1…N = lecciones, 99 = repaso. Con `compartir`: 0 = la pieza del libro, 1…N = las piezas de esa lección (el manifiesto solo se escribe con el libro entero). |
 | `--merge` *(libro, biblioteca)* | Une los episodios en `libro-completo.mp4` con capítulos. |
@@ -243,7 +248,7 @@ tools/video/.venv/bin/python -m unittest discover -s tools/video/tests -t .
 
 ## Límites conocidos
 
-- **Piezas compartibles: lo que no se ha podido comprobar.** Se han renderizado y medido con la voz real de Edge (duración, silencios, sincronía, volumen: ver `DISEÑO-COMPARTIBLE.md`), pero no se han escuchado con criterio: ritmo percibido, naturalidad de las fórmulas, pronunciación de títulos en inglés. Tampoco el comportamiento de cada plataforma (recortes, zona tapada por su interfaz, compresión). Hay cinco piezas con voz en `ejemplos-compartir/con-voz/`.
+- **Piezas compartibles: lo que no se ha podido comprobar.** Se han renderizado y medido con la voz real de Edge (duración, silencios, sincronía, volumen: ver `DISEÑO-COMPARTIBLE.md`), y la primera escucha dice que la voz por defecto suena algo robótica: hay que elegir otra de oído (`--voice`, `--ritmo`, `--tono`). Sigue sin juzgarse la naturalidad de las fórmulas y la pronunciación de títulos en inglés. Tampoco el comportamiento de cada plataforma (recortes, zona tapada por su interfaz, compresión). Hay seis piezas con voz en `ejemplos-compartir/con-voz/`.
 - **Piezas sin material.** En toda la biblioteca salen 10.803 piezas (3.719 `idea`, 2.620 `pregunta`, 3.476 `practica`, 482 `caso`, 506 `libro`). Tres de cada diez lecciones no tienen una pregunta que se entienda sin la lección delante («Según la lección…», «en el capítulo 7…»): no hay pieza `pregunta`. Los libros sin mapa (13 de 519) no tienen pieza `libro`. El 1,2 % de las figuras (fórmulas, redes, gráficas…) aún no tiene patrón: su pieza `idea` sale sin esquema. Todo queda anotado en `manifiesto.json`.
 - **La idea, cuando la lección no la tiene redactada** (~23 %), es el arranque del cuerpo (frases enteras, hasta 36 palabras). Si ese arranque solo habla del libro («Newport dedica una sección…»), la pieza abre con el esquema; los demás casos salen tal cual y no todos son igual de rotundos.
 - **Sin sonido de apoyo ni música**, y sin base medida con espectadores: los principios de aprendizaje y atención que guían el formato están en `DISEÑO-COMPARTIBLE.md` con sus límites.

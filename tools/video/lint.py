@@ -289,6 +289,8 @@ def lint_pieza(pieza, book: Book) -> list[Issue]:
     specs: list[dict] = []
     donde_spec: list[str] = []
     con_figura = False
+    leccion = next((l for l in book.lessons if l.id == pieza.lesson_id), None) if pieza.lesson_id else None
+    parrafos_cuerpo = set(T.paragraphs(leccion.cuerpo)) if leccion else set()
     for i, scene in enumerate(pieza.scenes, start=1):
         donde = f"{pieza.key} · escena {i} ({scene.kind})"
         if scene.kind not in CF.STAGES:
@@ -312,7 +314,7 @@ def lint_pieza(pieza, book: Book) -> list[Issue]:
                 issues.append(Issue("error", donde, f"origen desconocido: {part.origin}"))
             elif not _contained(part.text, ref):
                 issues.append(Issue("error", donde, f"la locución no es literal de «{part.origin}»: {part.text[:70]!r}"))
-            elif not _desde_inicio_de_frase(part.text, ref):
+            elif not _desde_inicio_de_frase(part.text, ref) and T.clean(part.text) not in parrafos_cuerpo:  # un párrafo entero empieza donde debe aunque el anterior acabe sin punto
                 issues.append(Issue("error", donde, f"la locución empieza a media frase de «{part.origin}»: {part.text[:70]!r}"))
             if K.ANCLA_WEB.search(part.text):
                 issues.append(Issue("aviso", donde, f"el texto del corpus alude a la lección o a la web: {part.text[:60]!r}"))
@@ -367,6 +369,28 @@ def lint_pieza(pieza, book: Book) -> list[Issue]:
         lec = next((l for l in book.lessons if l.id == pieza.lesson_id), None)
         if lec and T.clean(lec.autocorreccion) and not any(p.origin == "leccion.autocorreccion" for s in pieza.scenes for p in s.parts):
             issues.append(Issue("error", pieza.key, "la lección tiene matiz y la pieza no lo lleva"))
+        # La explicación es el cuerpo desde su principio, por párrafos enteros y sin saltos: una frase sacada de en
+        # medio puede quedarse sin la salvedad que la sigue. Lo único que entra suelto es una salvedad de seguridad.
+        if lec:
+            parrafos = T.paragraphs(lec.cuerpo)
+            j = 0
+            dicho = " ".join(x.narration for x in pieza.scenes if x.kind == "c-frase" and x.section != "Explicación")
+            if parrafos and all(f in dicho for f in T.split_sentences(parrafos[0])):
+                j = 1  # la pieza abrió con el primer párrafo entero
+            for s in pieza.scenes:
+                if s.section != "Explicación":
+                    continue
+                for part in s.parts:
+                    t = T.clean(part.text)
+                    if j < len(parrafos) and parrafos[j] == t:
+                        j += 1
+                    elif j == 0 and parrafos and parrafos[0].endswith(t) and all(f in dicho for f in T.split_sentences(parrafos[0][: -len(t)])):
+                        j = 1  # el arranque del primer párrafo ya lo dijo la pieza al abrir
+                    elif K.SALVEDAD.search(t) and any(t in q for q in parrafos[j:]):
+                        continue
+                    else:
+                        issues.append(Issue("error", pieza.key, f"la explicación no sigue el cuerpo por párrafos enteros desde el principio: {t[:60]!r}"))
+                        break
         if pieza.tipo == "idea" and not con_figura:
             issues.append(Issue("aviso", pieza.key, "la figura de la lección no se puede recorrer por piezas: la pieza va sin esquema"))
     if not T.clean(pieza.gancho):

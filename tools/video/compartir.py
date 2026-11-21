@@ -32,9 +32,9 @@ from . import text as T
 from .corpus import Book, Lesson, Question
 from .scriptwriter import Beat, Episode, Part, Scene
 
-COMPARTIR_VERSION = 2
+COMPARTIR_VERSION = 3
 
-TIPOS = ("idea", "pregunta", "practica", "caso", "libro")
+TIPOS = ("idea", "pregunta", "practica", "caso", "libro", "fondo")
 ASPECTOS = {"9:16": (1080, 1920), "1:1": (1080, 1080), "16:9": (1920, 1080)}
 
 # Fórmulas fijas: lo ÚNICO que la voz dice sin venir del corpus. `lint_pieza` rechaza cualquier otra.
@@ -64,6 +64,8 @@ ROTULOS = {
     "respuesta": "LA RESPUESTA",
     "idea_detras": "LA IDEA DETRÁS",
     "figura": "EN UNA IMAGEN",
+    "explica": "LA EXPLICACIÓN",
+    "fondo": "A FONDO",
     "credito": "DEL LIBRO",
     "libro_frase": "EL LIBRO EN UNA FRASE",
     "une": "LA IDEA QUE LAS UNE",
@@ -74,7 +76,7 @@ ROTULOS = {
 }
 
 # Prefijos fijos de los textos de publicación (título y descripción). Como las fórmulas: declarados y comprobados.
-PREFIJOS_PUB = ("El matiz: ", "La respuesta: ", "La idea detrás: ", "Pruébalo: ", "Un caso: ")
+PREFIJOS_PUB = ("El matiz: ", "La respuesta: ", "La idea detrás: ", "Pruébalo: ", "Un caso: ", "A fondo: ")
 
 # Presupuestos (palabras). El texto en pantalla va por páginas: nunca más de PAGINA a la vez.
 PAGINA = 14
@@ -84,6 +86,10 @@ PORTADA_PALABRAS = 30  # la miniatura: la frase entera casi siempre
 GIRO_PAGINA = 24
 MATIZ_PALABRAS = 38
 MATIZ_CORTO = 26
+MATIZ_ENTERO = 70  # sin prisa por acabar en 60 s, el matiz va entero casi siempre
+EXPLICA_PALABRAS = 150  # la explicación de la pieza «idea»: los primeros párrafos del cuerpo, enteros, hasta aquí
+EXPLICACION_LARGA = 60  # el porqué de la respuesta, en la pieza «pregunta» sin prisa
+FIGURA_FONDO = 140  # en la pieza «a fondo» la voz lee el esquema entero casi siempre
 FIGURA_PALABRAS = 60  # la voz lee la tarjeta entera hasta aquí: con voz real, una tarjeta muda es aire muerto
 PAUSA_TARJETA_MAX = 1.4  # lo que se deja, como mucho, para terminar de leer una tarjeta que la voz no lee entera
 PRACTICA_PALABRAS = 60
@@ -93,18 +99,26 @@ EXPLICACION_PALABRAS = 35
 PAUSA_PENSAR_S = 3.0
 LECTURA_PPS = 3.6  # palabras por segundo leyendo en silencio una tarjeta
 
-# Duración razonable de cada tipo (segundos estimados): fuera de ahí, aviso.
-# Duración que se intenta no pasar. Nunca cortando frases: se lee menos del esquema en voz alta (sigue entero en
-# pantalla), se deja el matiz en su primera frase o se acorta la práctica por frases enteras.
+# Duración que se intenta no pasar SOLO en la versión breve (`breve=True`, `--breve`). Nunca cortando frases: se lee
+# menos del esquema en voz alta (sigue entero en pantalla), se deja el matiz en su primera frase o se acorta la
+# práctica por frases enteras. Por defecto la pieza dura lo que su explicación pida: explicar bien va antes que los 60 s.
 OBJETIVO_S = 60.0
 PRACTICA_BREVE = 40
 
-LIMITES = {"idea": (22, 75), "pregunta": (20, 70), "practica": (22, 75), "caso": (20, 70), "libro": (22, 90)}
+# Duración razonable de cada tipo (segundos estimados): fuera de ahí, aviso.
+LIMITES = {"idea": (22, 170), "pregunta": (20, 90), "practica": (22, 90), "caso": (20, 90), "libro": (22, 90), "fondo": (75, 360)}
 
 # Texto que solo tiene sentido dentro de la web (o delante de las opciones de un test).
 ANCLA_WEB = re.compile(
     r"\blecci[oó]n(es)?\b|cap[ií]tulo anterior|como vimos|hemos visto|\bapp\b|en la web|esta ficha|este resumen|\bm[oó]dulo\b"
     r"|seg[uú]n el texto|seg[uú]n lo visto|el pasaje|el fragmento|(en|del) (el |este )?cap[ií]tulo|cap[ií]tulo \d",
+    re.IGNORECASE,
+)
+# Lo que solo se entiende dentro de la serie de la web. «La lección es que…» o «en el capítulo 3» se entienden fuera;
+# «como vimos» o «la lección anterior», no: la explicación del cuerpo se detiene antes del párrafo que lo diga.
+ANCLA_SERIE = re.compile(
+    r"como vimos|hemos visto|ya vimos|veremos|cap[ií]tulo anterior|\bapp\b|en la web|esta ficha|este resumen|\bm[oó]dulo\b"
+    r"|lecci[oó]n(es)? (anterior|siguiente|previa|pasada)|(anterior|siguiente|pr[oó]xima|[uú]ltima|primera|segunda|tercera) lecci[oó]n|(otras|dem[aá]s|pr[oó]ximas|siguientes) lecciones",
     re.IGNORECASE,
 )
 ALUDE_OPCIONES = re.compile(
@@ -308,6 +322,62 @@ def caso_partes(lesson: Lesson, max_words: int = CASO_PALABRAS) -> list[Part]:
                 continue
             return [Part(" ".join(elegidas), "leccion.cuerpo")]
     return []
+
+
+def explicacion_partes(lesson: Lesson, max_words: int | None = EXPLICA_PALABRAS, ya_dicho: tuple[str, ...] = ()) -> list[Part]:
+    """La explicación de la lección, tal cual está escrita: su cuerpo **desde el principio y por párrafos enteros**.
+
+    No se eligen frases sueltas ni se salta nada: una frase sacada de en medio puede quedarse sin la salvedad que
+    la sigue («Un estudio mostró… Pero no se ha replicado»). El párrafo es la unidad: el primero va siempre y los
+    siguientes mientras quepan en `max_words` (None = el cuerpo entero). Cada párrafo es un tramo, con sus propias
+    marcas («Fuera del libro:», «Lectura nuestra:»), que dicen de quién es lo que se afirma.
+
+    `ya_dicho` son las frases con que la pieza ya abrió: si son el arranque del cuerpo, no se repiten.
+    Se detiene antes de un párrafo que solo se entiende dentro de la serie de la web o que está en otro idioma.
+    Las salvedades de seguridad de los párrafos que no entran se añaden siempre.
+    """
+    parrafos = T.paragraphs(lesson.cuerpo)
+    dichas = {T.norm(f).rstrip(".") for d in ya_dicho for f in T.split_sentences(d)}
+    partes: list[Part] = []
+    total = 0
+    fuera: list[str] = []
+    for i, parrafo in enumerate(parrafos):
+        if fuera:
+            fuera.append(parrafo)
+            continue
+        if ANCLA_SERIE.search(parrafo) or parece_ingles(parrafo):
+            fuera.append(parrafo)
+            continue
+        texto = parrafo
+        if i == 0 and dichas:
+            frases = T.split_sentences(parrafo)
+            n = 0
+            while n < len(frases) and T.norm(frases[n]).rstrip(".") in dichas:
+                n += 1
+            texto = " ".join(frases[n:])
+            if not texto:
+                continue
+        w = T.n_words(texto)
+        if max_words is not None and partes and total + w > max_words:
+            fuera.append(parrafo)
+            continue
+        partes.append(Part(texto, "leccion.cuerpo"))
+        total += w
+    if not partes:
+        return []
+    for parrafo in fuera:
+        for f in T.split_sentences(parrafo):
+            if SALVEDAD.search(f) and not ANCLA_SERIE.search(f):
+                partes.append(Part(f, "leccion.cuerpo"))
+    return partes
+
+
+def escenas_explicacion(lesson: Lesson, max_words: int | None = EXPLICA_PALABRAS, ya_dicho: tuple[str, ...] = ()) -> list[Scene]:
+    """Una escena de texto cinético por párrafo de la explicación: la pausa entre párrafos es la del texto."""
+    return [
+        escena_frase("Explicación", "explica", ROTULOS["explica"], [parte], tema_txt=tema(lesson), pause_after_s=0.55)
+        for parte in explicacion_partes(lesson, max_words, ya_dicho)
+    ]
 
 
 def pregunta_autonoma(lesson: Lesson) -> Question | None:
@@ -669,7 +739,7 @@ def _lectura(p: G.Piece, nivel: int) -> list[str]:
     return [p.t]
 
 
-def escenas_figura(lesson: Lesson, nivel_min: int = 0) -> list[Scene]:
+def escenas_figura(lesson: Lesson, nivel_min: int = 0, max_words: int = FIGURA_PALABRAS) -> list[Scene]:
     """El esquema verificado en formato legible: silueta sin texto + tarjeta grande de cada pieza.
 
     La tarjeta enseña la pieza **entera y literal**; la voz la lee entera si el esquema es breve y,
@@ -690,7 +760,7 @@ def escenas_figura(lesson: Lesson, nivel_min: int = 0) -> list[Scene]:
         "spec": spec, "pieces": [p.to_view() for p in ps], "order": G.order(ps), "n": len(ps), "title": titulo,
         "kicker": ROTULOS["figura"], "patron": patron_visual(spec), "marco": marco,
     }
-    nivel = next((nv for nv in (0, 1, 2) if nv >= nivel_min and sum(T.n_words(x) for p in ps for x in _lectura(p, nv)) <= FIGURA_PALABRAS), 2)
+    nivel = next((nv for nv in (0, 1, 2) if nv >= nivel_min and sum(T.n_words(x) for p in ps for x in _lectura(p, nv)) <= max_words), 2)
 
     intro = _fixed("figura", "plantilla+esquema.titulo", titulo=titulo.rstrip(".")) if titulo else None
     scenes = [Scene("c-figura", "Esquema", dict(base, mode="titulo", active=-1, shown=len(ps)), [intro] if intro else [], hold_s=0.0 if intro else 1.2, pause_after_s=0.35)]
@@ -753,15 +823,21 @@ def pregunta_del_cuerpo(lesson: Lesson) -> str:
     return ""
 
 
-def pieza_idea(book: Book, index: int) -> Pieza | None:
+def pieza_idea(book: Book, index: int, breve: bool = False) -> Pieza | None:
     """La pieza principal, con arco: tensión (la idea en frío, o la pregunta que la lección se hace) →
-    de dónde sale → desarrollo visible (el esquema, con el patrón que le va) → giro (el matiz) → cierre que retoma el gancho.
+    de dónde sale → **la explicación** (los primeros párrafos del cuerpo, enteros) → el esquema, que la resume a la
+    vista → giro (el matiz) → cierre que retoma el gancho.
+
+    Dura lo que la explicación pida (lo normal, 70-130 s): una idea afirmada sin su porqué se recuerda peor y se
+    malinterpreta mejor. `breve=True` da la versión de antes: sin explicación y apretada para no pasar de 60 s.
 
     Si la lección no da para ese arco, no se fuerza:
       · sin figura recorrible → idea y matiz («sin_esquema»);
       · sin idea redactada y con un arranque que solo habla del libro → abre el esquema («esquema_primero»);
       · sin ninguna de las dos cosas → no hay pieza.
     """
+    if not breve:
+        return _pieza_idea(book, index, explicar=True)
     pieza = None
     for apretar in (0, 1, 2, 3):  # 0: como sale · 1: matiz breve · 2 y 3: el esquema se lee menos en voz alta
         pieza = _pieza_idea(book, index, apretar)
@@ -770,7 +846,7 @@ def pieza_idea(book: Book, index: int) -> Pieza | None:
     return pieza
 
 
-def _pieza_idea(book: Book, index: int, apretar: int = 0) -> Pieza | None:
+def _pieza_idea(book: Book, index: int, apretar: int = 0, explicar: bool = False) -> Pieza | None:
     lesson = book.lessons[index]
     k = index + 1
     idea, origen = hilo(lesson)
@@ -784,7 +860,7 @@ def _pieza_idea(book: Book, index: int, apretar: int = 0) -> Pieza | None:
         arco = "esquema_primero"
         gancho, gancho_origen = T.clean(figura[0].view.get("title")), "esquema.titulo"
         figura[0].view["tema"] = tema(lesson)
-        scenes += [*figura, escena_credito(book)]
+        scenes += [*figura, escena_credito(book), *(escenas_explicacion(lesson) if explicar else [])]
         recuerda = T.clean(figura[-1].view.get("pie")) or gancho
     else:
         arco = "completo" if figura else "sin_esquema"
@@ -796,10 +872,14 @@ def _pieza_idea(book: Book, index: int, apretar: int = 0) -> Pieza | None:
         scenes += [
             escena_frase("Idea", "idea", ROTULOS["idea"], [Part(idea, f"leccion.{origen}")], tema_txt=tema(lesson), pause_after_s=0.4),
             escena_credito(book),
+            *(escenas_explicacion(lesson, ya_dicho=(abre, idea)) if explicar else []),
             *figura,
         ]
         recuerda = idea
-    matiz = escena_matiz(lesson, MATIZ_CORTO if (largo_figura > 16 or apretar) else MATIZ_PALABRAS)
+    if explicar:
+        matiz = escena_matiz(lesson, MATIZ_ENTERO)
+    else:
+        matiz = escena_matiz(lesson, MATIZ_CORTO if (largo_figura > 16 or apretar) else MATIZ_PALABRAS)
     if matiz:
         scenes.append(matiz)
     scenes.append(escena_cierre(book, recuerda=recuerda))
@@ -823,15 +903,15 @@ def _pieza_idea(book: Book, index: int, apretar: int = 0) -> Pieza | None:
     )
 
 
-def pieza_pregunta(book: Book, index: int) -> Pieza | None:
-    """Pregunta → pausa → respuesta. Sin las opciones falsas: sueltas en una captura, desinforman."""
+def pieza_pregunta(book: Book, index: int, breve: bool = False) -> Pieza | None:
+    """Pregunta → pausa → respuesta y su porqué. Sin las opciones falsas: sueltas en una captura, desinforman."""
     lesson = book.lessons[index]
     q = pregunta_autonoma(lesson)
     if not q:
         return None
     k = index + 1
     correcta = _punto(q.opciones[q.correcta])
-    explic = explicacion_autonoma(q)
+    explic = explicacion_autonoma(q, EXPLICACION_PALABRAS if breve else EXPLICACION_LARGA)
     respuesta = [_fixed("respuesta"), Part(correcta, "pregunta.opcion")] + ([Part(explic, "pregunta.explicacion")] if explic else [])
     pensar = Scene(
         "c-pausa",
@@ -848,7 +928,7 @@ def pieza_pregunta(book: Book, index: int) -> Pieza | None:
         escena_frase("Respuesta", "respuesta", ROTULOS["respuesta"], respuesta, skip_parts=1, pause_after_s=0.5),
         escena_credito(book),
     ]
-    matiz = escena_matiz(lesson, MATIZ_CORTO)
+    matiz = escena_matiz(lesson, MATIZ_CORTO if breve else MATIZ_ENTERO)
     if matiz:
         scenes.append(matiz)
     scenes.append(escena_cierre(book, recuerda=correcta, antes=q.texto))  # cierra con la pregunta y su respuesta, juntas: la respuesta sola no dice de qué
@@ -871,15 +951,17 @@ def pieza_pregunta(book: Book, index: int) -> Pieza | None:
     )
 
 
-def pieza_practica(book: Book, index: int) -> Pieza | None:
+def pieza_practica(book: Book, index: int, breve: bool = False) -> Pieza | None:
     """Qué probar → la idea que hay detrás → el matiz."""
+    if not breve:
+        return _pieza_practica(book, index, PRACTICA_PALABRAS, MATIZ_ENTERO)
     pieza = _pieza_practica(book, index, PRACTICA_PALABRAS)
     if pieza is not None and pieza.estimated_seconds > OBJETIVO_S:
         pieza = _pieza_practica(book, index, PRACTICA_BREVE)
     return pieza
 
 
-def _pieza_practica(book: Book, index: int, max_words: int) -> Pieza | None:
+def _pieza_practica(book: Book, index: int, max_words: int, matiz_words: int = MATIZ_CORTO) -> Pieza | None:
     lesson = book.lessons[index]
     partes = practica_partes(lesson, max_words)
     if not partes:
@@ -894,7 +976,7 @@ def _pieza_practica(book: Book, index: int, max_words: int) -> Pieza | None:
         escena_frase("Idea", "idea", ROTULOS["idea_detras"], [_fixed("idea_detras"), Part(idea, f"leccion.{origen}")], skip_parts=1, pause_after_s=0.4),
         escena_credito(book),
     ]
-    matiz = escena_matiz(lesson, MATIZ_CORTO)
+    matiz = escena_matiz(lesson, matiz_words)
     if matiz:
         scenes.append(matiz)
     scenes.append(escena_cierre(book, recuerda=gancho))
@@ -917,7 +999,7 @@ def _pieza_practica(book: Book, index: int, max_words: int) -> Pieza | None:
     )
 
 
-def pieza_caso(book: Book, index: int) -> Pieza | None:
+def pieza_caso(book: Book, index: int, breve: bool = False) -> Pieza | None:
     """Lo concreto antes que lo abstracto: el caso que cuenta la lección → la idea que hay detrás → el matiz."""
     lesson = book.lessons[index]
     partes = caso_partes(lesson)
@@ -933,7 +1015,7 @@ def pieza_caso(book: Book, index: int) -> Pieza | None:
         escena_frase("Idea", "idea", ROTULOS["idea_detras"], [_fixed("idea_detras"), Part(idea, f"leccion.{origen}")], skip_parts=1, pause_after_s=0.4),
         escena_credito(book),
     ]
-    matiz = escena_matiz(lesson, MATIZ_CORTO)
+    matiz = escena_matiz(lesson, MATIZ_CORTO if breve else MATIZ_ENTERO)
     if matiz:
         scenes.append(matiz)
     scenes.append(escena_cierre(book, recuerda=idea))  # el caso abre; lo que se lleva uno es la idea
@@ -953,6 +1035,50 @@ def pieza_caso(book: Book, index: int) -> Pieza | None:
         descripcion_pub=_descripcion(book, [partes[0].text, f"La idea detrás: {idea}", _matiz_pub(lesson)]),
         etiquetas_pub=_etiquetas(book, lesson),
         portada={"tag": ROTULOS["caso"], "text": arranque_literal(gancho, PORTADA_PALABRAS), "tema": tema(lesson)},
+    )
+
+
+def pieza_fondo(book: Book, index: int, breve: bool = False) -> Pieza | None:
+    """La lección entera, suelta: la idea → de dónde sale → **todo el cuerpo**, párrafo a párrafo → el esquema leído
+    entero → el matiz completo → qué probar → cierre. De dos a cuatro minutos; para YouTube, LinkedIn o quien quiera
+    entender la idea y no solo oírla. No resume ni elige: lo que la lección explica, en su orden."""
+    lesson = book.lessons[index]
+    k = index + 1
+    idea, origen = hilo(lesson)
+    if origen == "titulo":
+        return None  # sin cuerpo no hay nada que contar a fondo
+    explicacion = escenas_explicacion(lesson, None, ya_dicho=(idea,))
+    if sum(T.n_words(s.narration) for s in explicacion) < 60:
+        return None  # con tan poco cuerpo, la pieza «idea» ya lo dice todo
+    scenes: list[Scene] = [
+        escena_frase("Idea", "idea", ROTULOS["fondo"], [Part(idea, f"leccion.{origen}")], tema_txt=tema(lesson), pause_after_s=0.4),
+        escena_credito(book),
+        *explicacion,
+        *escenas_figura(lesson, max_words=FIGURA_FONDO),
+    ]
+    matiz = escena_matiz(lesson, 10**6)
+    if matiz:
+        scenes.append(matiz)
+    practica = practica_partes(lesson, 10**6)
+    if practica:
+        scenes.append(escena_frase("Práctica", "practica", ROTULOS["practica"], practica, pause_after_s=0.5))
+    scenes.append(escena_cierre(book, recuerda=idea))
+    return _base(
+        book,
+        key=_clave("fondo", k, lesson),
+        format="fondo",
+        tipo="fondo",
+        title=lesson.titulo,
+        lesson_id=lesson.id,
+        leccion_n=k,
+        scenes=scenes,
+        summary=idea,
+        gancho=idea,
+        gancho_origen=f"leccion.{origen}",
+        titulo_pub=arranque_literal(f"A fondo: {titulo_corto(lesson.titulo)}", 16),
+        descripcion_pub=_descripcion(book, [idea, _matiz_pub(lesson)]),
+        etiquetas_pub=_etiquetas(book, lesson),
+        portada={"tag": ROTULOS["fondo"], "text": arranque_literal(idea, PORTADA_PALABRAS), "tema": tema(lesson)},
     )
 
 
@@ -1016,6 +1142,7 @@ _MOTIVO = {
     "practica": "la aplicación práctica no cabe en una pieza, o la lección no tiene una idea que poner detrás",
     "caso": "la lección no cuenta un caso concreto («Un ejemplo:», «Imagina que…»), o no tiene idea redactada que ilustrar",
     "libro": "el libro no tiene mapa con frase de cierre en datos/mapas.json",
+    "fondo": "la lección no tiene cuerpo suficiente (o solo se entiende dentro de la serie) para una pieza larga",
 }
 
 
@@ -1023,7 +1150,7 @@ def _huella_gancho(texto: str) -> str:
     return " ".join(T.content_tokens(texto))
 
 
-def plan_libro(book: Book, tipos: tuple[str, ...] | list[str] = TIPOS, solo_leccion: int | None = None) -> Plan:
+def plan_libro(book: Book, tipos: tuple[str, ...] | list[str] = TIPOS, solo_leccion: int | None = None, breve: bool = False) -> Plan:
     """Todas las piezas de un libro, sin ganchos repetidos, y el orden en que conviene publicarlas."""
     piezas: list[Pieza] = []
     omitidas: list[Omitida] = []
@@ -1034,23 +1161,24 @@ def plan_libro(book: Book, tipos: tuple[str, ...] | list[str] = TIPOS, solo_lecc
         else:
             omitidas.append(Omitida("libro", 0, book.titulo, _MOTIVO["libro"]))
     indices = range(len(book.lessons)) if solo_leccion is None else [solo_leccion]
-    constructores = {"idea": pieza_idea, "pregunta": pieza_pregunta, "practica": pieza_practica, "caso": pieza_caso}
+    constructores = {"idea": pieza_idea, "pregunta": pieza_pregunta, "practica": pieza_practica, "caso": pieza_caso, "fondo": pieza_fondo}
     for i in indices:
-        for tipo in ("idea", "pregunta", "practica", "caso"):
+        for tipo in constructores:
             if tipo not in tipos:
                 continue
-            p = constructores[tipo](book, i)
+            p = constructores[tipo](book, i, breve)
             if p:
                 piezas.append(p)
             else:
                 omitidas.append(Omitida(tipo, i + 1, book.lessons[i].titulo, _MOTIVO[tipo]))
 
-    # Dos piezas no pueden abrir igual: la segunda se cae (y queda anotada).
+    # Dos piezas no pueden abrir igual: la segunda se cae (y queda anotada). La pieza «a fondo» es otra cosa
+    # (la versión larga de la idea): abre como ella a propósito y solo se compara con las demás «a fondo».
     vistos: dict[str, str] = {}
     unicas: list[Pieza] = []
     for p in piezas:
-        h = _huella_gancho(p.gancho)
-        if h and h in vistos:
+        h = ("fondo·" if p.tipo == "fondo" else "") + _huella_gancho(p.gancho)
+        if h.removeprefix("fondo·") and h in vistos:
             omitidas.append(Omitida(p.tipo, p.leccion_n, p.title, f"abre igual que «{vistos[h]}»"))
             continue
         vistos[h] = p.key
@@ -1065,9 +1193,9 @@ def orden_sugerido(piezas: list[Pieza]) -> list[str]:
     """
     libro = [p.key for p in piezas if p.tipo == "libro"]
     ideas = [p for p in piezas if p.tipo == "idea"]
-    otras = sorted((p for p in piezas if p.tipo in ("pregunta", "practica", "caso")), key=lambda p: (p.leccion_n, p.tipo))
-    # Se alternan pregunta, práctica y caso en lo posible.
-    colas = [[p for p in otras if p.tipo == t] for t in ("pregunta", "practica", "caso")]
+    otras = sorted((p for p in piezas if p.tipo in ("pregunta", "practica", "caso", "fondo")), key=lambda p: (p.leccion_n, p.tipo))
+    # Se alternan pregunta, práctica, caso y la versión a fondo en lo posible.
+    colas = [[p for p in otras if p.tipo == t] for t in ("pregunta", "practica", "caso", "fondo")]
     cola: list[Pieza] = []
     while any(colas):
         for c in colas:
@@ -1120,9 +1248,11 @@ def textos_por_red(p: Pieza) -> dict[str, dict[str, str]]:
     # Donde el espacio es poco, el libro va con su título corto (un prefijo literal del título).
     credito_corto = f"Del libro «{titulo_corto(p.book_title)}»" + (f", de {p.book_author}." if p.book_author else ".")
     x_cola = f" {credito_corto} {' '.join(etiquetas[:2])}".rstrip()
+    # La pieza larga no es un Short: va a YouTube como vídeo normal.
+    youtube = ("youtube", _recorta(p.titulo_pub, 100)) if p.tipo == "fondo" else ("youtube_shorts", _recorta(p.titulo_pub, 92) + " #Shorts")
     return {
-        "youtube_shorts": {
-            "titulo": _recorta(p.titulo_pub, 92) + " #Shorts",
+        youtube[0]: {
+            "titulo": youtube[1],
             "descripcion": p.descripcion_pub + "\n\n" + " ".join(etiquetas),
         },
         "tiktok": {"texto": _recorta(f"{p.titulo_pub}. {credito_corto}", 150 - len(breve) - 1) + " " + breve},
@@ -1138,7 +1268,7 @@ def texto_publicacion(p: Pieza, duracion_s: float = 0.0) -> str:
     lineas = [p.titulo_pub, "", p.descripcion_pub, "", " ".join(p.etiquetas_pub)]
     if duracion_s:
         lineas += ["", f"({_rotulo_tipo(p)} · {duracion_s:.0f} s)"]
-    nombres = {"youtube_shorts": "YouTube Shorts", "tiktok": "TikTok", "instagram_reels": "Instagram Reels", "linkedin": "LinkedIn", "x": "X", "whatsapp": "WhatsApp"}
+    nombres = {"youtube": "YouTube", "youtube_shorts": "YouTube Shorts", "tiktok": "TikTok", "instagram_reels": "Instagram Reels", "linkedin": "LinkedIn", "x": "X", "whatsapp": "WhatsApp"}
     for red, campos in textos_por_red(p).items():
         lineas += ["", "", f"── {nombres[red]} " + "─" * 30]
         for campo, valor in campos.items():

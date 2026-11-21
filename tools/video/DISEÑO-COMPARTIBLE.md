@@ -10,13 +10,14 @@ El formato nuevo parte de la pregunta contraria: **¿qué entiende alguien que v
 
 ## Qué es una unidad compartible
 
-**Una idea de una lección, con su matiz y su crédito, en 30-60 s.** No un libro resumido, no una lección entera: una afirmación, de dónde sale y dónde se le discute. Es la unidad natural del corpus (cada lección ya tiene `idea_clave`, esquema y `autocorreccion`) y es lo que distingue a la biblioteca de un canal de frases: aquí la idea viene con su límite.
+**Una idea de una lección, con su explicación, su matiz y su crédito.** No un libro resumido: una afirmación, por qué se sostiene, de dónde sale y dónde se le discute. Dura lo que la explicación pida —lo normal, entre uno y dos minutos—, no lo que mande un tope (ver «La explicación»). Es la unidad natural del corpus (cada lección ya tiene `idea_clave`, esquema y `autocorreccion`) y es lo que distingue a la biblioteca de un canal de frases: aquí la idea viene con su límite.
 
-De ahí sale un catálogo de cinco piezas. Todas se montan solas con campos del corpus; cada una usa un campo que las otras no explotan y **abre de una manera distinta**, así que las piezas de una misma lección no se pisan.
+De ahí sale un catálogo de seis piezas. Todas se montan solas con campos del corpus; cada una usa un campo que las otras no explotan y **abre de una manera distinta**, así que las piezas de una misma lección no se pisan.
 
 | Pieza | Abre con (gancho) | Centro | Campos |
 |---|---|---|---|
-| **`idea`** — la principal | La idea misma, en frío | El esquema, pieza a pieza | `idea_clave` · `datos/diagramas.json` · `autocorreccion` |
+| **`idea`** — la principal | La idea misma, en frío | La explicación (primeros párrafos del cuerpo) y el esquema | `idea_clave` · cuerpo · `datos/diagramas.json` · `autocorreccion` |
+| `fondo` — la lección entera | La idea misma | Todo el cuerpo, el esquema leído entero, el matiz completo y qué probar | los mismos · `aplicacion_practica` |
 | `pregunta` | Una pregunta de la lección | 3 s de pausa, respuesta y porqué | `preguntas` · `autocorreccion` |
 | `practica` | Qué probar | La idea que hay detrás | `aplicacion_practica` · la idea · `autocorreccion` |
 | `caso` | El caso concreto que la lección cuenta | La idea que hay detrás | cuerpo («Un ejemplo:», «Imagina que…») · la idea · `autocorreccion` |
@@ -26,12 +27,13 @@ Lo que se repite en todas (y da la identidad): **gancho → contenido → «Del 
 
 ## El arco: contar la idea, no enumerar frases
 
-Una pieza no es texto sobre fondo. La `idea` tiene cinco tiempos y cada uno hace un trabajo:
+Una pieza no es texto sobre fondo. La `idea` tiene seis tiempos y cada uno hace un trabajo:
 
 | Tiempo | Qué pasa | De dónde sale | Para qué |
 |---|---|---|---|
 | **Tensión** | La idea, en frío. Si la propia lección arranca con una pregunta breve, primero esa pregunta y la idea la resuelve | `idea_clave` · primera frase del cuerpo | Abrir un hueco en los dos primeros segundos |
 | **Origen** | «Del libro X, de Y» | fórmula + títulos | Saber quién lo sostiene antes de seguir |
+| **Explicación** | Los primeros párrafos del cuerpo, enteros y en su orden | cuerpo de la lección | El porqué: sin él la idea es un eslogan |
 | **Desarrollo visible** | La estructura entera primero; después se recorre pieza a pieza con el patrón visual que le va | `datos/diagramas.json` | Que se vea *cómo* es la idea: qué se opone a qué, qué lleva a qué |
 | **Giro** | «El matiz»: cambia el color, la letra y el tono | `autocorreccion` | Lo que la idea no dice: el límite |
 | **Cierre** | «Quédate con esto»: el gancho otra vez, escrito **entero** (hasta 40 palabras), junto a la marca | el mismo tramo literal del principio | Un solo mensaje para llevarse; el arco se cierra donde se abrió. Entero porque cortarlo a media frase puede dejar fuera justo su salvedad |
@@ -116,6 +118,26 @@ Se probó abrir con la pregunta de la lección (como hace `clase`). Dos problema
 
 Las opciones de la biblioteca suman 65 palabras de mediana: no caben en una pieza corta. Y hay una razón más seria: tres de cada cuatro son **falsas**, y una captura de pantalla con una opción falsa bien rotulada es exactamente un concepto erróneo en circulación. La pieza enseña la pregunta, deja pensar y da solo la respuesta correcta (literal) y el arranque de su explicación.
 
+## La explicación: profundidad antes que brevedad
+
+La primera versión del formato se quedaba en 30-60 s: idea, esquema y matiz. Vista con voz, **afirmaba sin explicar**: no usaba nada del cuerpo de la lección, que es donde está el porqué. La prioridad del proyecto es no transmitir conceptos erróneos, y una idea sin su argumento se malinterpreta con facilidad. Por eso ahora manda la explicación y no el minuto.
+
+**Qué se dice.** El cuerpo de la lección, **desde su principio y por párrafos enteros**: el primero siempre y los siguientes mientras quepan en 150 palabras (`EXPLICA_PALABRAS`). En la pieza `fondo`, el cuerpo entero.
+
+**Por qué párrafos enteros y no «las mejores frases».** Elegir frases sería más ágil y es justo lo que no se puede hacer bien sin entender el texto:
+
+- Una frase sacada de en medio pierde lo que la sostiene («Por eso…», «Ese proceso…») o, peor, la salvedad que la sigue («Un estudio mostró… La interpretación se ha discutido»).
+- El corpus marca de quién es cada cosa al empezar el párrafo («Fuera del libro:», «Lectura nuestra:», «Nota de la biblioteca:», «Un ejemplo nuestro:»). Leyendo el párrafo desde su inicio, la marca va siempre con lo que marca.
+- Un arranque del cuerpo siempre se entiende: es como el autor de la lección decidió empezar.
+
+**Dónde va.** Después del crédito y **antes del esquema**: el esquema deja de ser el desarrollo y pasa a ser el resumen a la vista de lo que se acaba de explicar. En pantalla es texto cinético como el resto, un párrafo por escena.
+
+**Qué se controla** (`lint_pieza`): que la explicación siga el cuerpo párrafo a párrafo, sin saltos ni recortes; lo único que puede entrar suelto es una salvedad de seguridad de un párrafo que no cupo. Se detiene antes de un párrafo que solo se entiende dentro de la serie («como vimos», «la lección anterior») o que está en otro idioma. «La lección es que…» o «en el capítulo 3» no cortan: se entienden fuera (queda como aviso).
+
+**Lo que cuesta.** La pieza `idea` pasa de ~55 s a ~1 min 50 s de mediana. Es más de lo que piden TikTok o Reels para retener, y a cambio dice algo. Para quien quiera la pieza de un minuto, `--breve` da la versión anterior (sin explicación, matiz en su primera frase), y `--max-seg` sigue filtrando por duración. Sin `--breve`, también el matiz va entero (hasta 70 palabras) y la pieza `pregunta` da más porqué de su respuesta (hasta 60 palabras).
+
+**La pieza `fondo`** es la lección contada entera y suelta: idea → libro → todo el cuerpo → el esquema leído entero → el matiz completo → qué probar. De 3 a 4 minutos; va a YouTube como vídeo normal (no como Short) y a LinkedIn. No sale si el cuerpo no llega a 60 palabras. Abre igual que la pieza `idea` a propósito: es su versión larga.
+
 ## El guion: qué se elige y qué no se toca
 
 Nada se redacta. El guion **selecciona y recorta por frases enteras**; lo demás son las once fórmulas de `FORMULAS` (`compartir.py`) y los rótulos de `ROTULOS`. El control (`lint_pieza`) comprueba tramo a tramo que lo que dice venir del corpus está literal en su campo y que lo que no viene del corpus es **exactamente** una de esas fórmulas con los datos del libro. Un cambio futuro no puede colar una frase nueva sin declararla.
@@ -124,7 +146,8 @@ Nada se redacta. El guion **selecciona y recorta por frases enteras**; lo demás
 |---|---|
 | La idea | `idea_clave` → `cita_memorable` → arranque del cuerpo (frases enteras, hasta 36 palabras). Se salta lo que esté en inglés (el 2 % de las ideas redactadas) y, si hay alternativa, lo que hable de «la lección». |
 | `cita_memorable` | Es una idea redactada por la app: se dice como idea, **nunca entre comillas ni atribuida**. Hay prueba automática. |
-| El matiz | Primeras frases enteras de `autocorreccion` (hasta 38 palabras; 26 si la pieza ya es larga), **más cualquier frase de salvedad de seguridad** que quedara fuera («no sustituye a un profesional», «consulta con…»). En la muestra, 24 piezas `idea` la recuperan así. |
+| La explicación del cuerpo | El cuerpo desde su principio, por párrafos enteros (hasta 150 palabras; entero en `fondo`). Ver «La explicación». |
+| El matiz | Primeras frases enteras de `autocorreccion` (hasta 70 palabras, es decir, entero casi siempre; completo en `fondo`; con `--breve`, 38 o 26), **más cualquier frase de salvedad de seguridad** que quedara fuera («no sustituye a un profesional», «consulta con…»). En la muestra, 24 piezas `idea` la recuperan así. |
 | La práctica | `aplicacion_practica` desde el principio (hasta 60 palabras) más sus salvedades. Si la primera frase pasa de 75 palabras, no hay pieza. |
 | La pregunta | La más asequible de las que se entienden solas: se descartan las que dicen «según la lección», «en el capítulo 7», «el texto», las de respuesta «todas las anteriores» y, sobre todo, **las que preguntan en negativo o dependen de la lista** («¿cuál es FALSA?», «todas EXCEPTO…», «¿cuál de las siguientes…?»): su respuesta correcta es una afirmación falsa o no significa nada sin las opciones delante. |
 | La explicación | Solo su tramo inicial, hasta la primera frase que hable de «las otras opciones» o de «la lección». |
@@ -168,21 +191,23 @@ Lección aprendida en el formato `clase`: una figura completa a 1080 px de ancho
 
 ## Métricas
 
-**Biblioteca entera: 519 libros públicos, 3.719 lecciones.** Guiones planificados y pasados por el control de calidad uno a uno. Duraciones **estimadas** a 2,4 palabras/s. (El diseño se ajustó sobre una muestra de 80 libros; estas cifras son de todos.)
+**Biblioteca entera: 519 libros públicos, 3.719 lecciones.** Guiones planificados y pasados por el control de calidad uno a uno. Duraciones **estimadas** con el modelo ajustado a la voz real (`segundos_locucion`, voz por defecto a −8 %; a ritmo natural salen un 5-8 % más cortas).
 
-| | Piezas | Duración: mín · p25 · mediana · p75 · p95 · máx | Por encima de 60 s | Avisos por duración |
-|---|---|---|---|---|
-| `idea` | 3.719 (100 % de las lecciones) | 26 · 49 · **55** · 60 · 68 · 88 s | 885 (24 %) | 39 (> 75 s) |
-| `pregunta` | 2.620 (70 %) | 24 · 39 · **46** · 51 · 60 · 76 s | 146 (6 %) | 14 (> 70 s) |
-| `practica` | 3.476 (93 %) | 27 · 47 · **52** · 56 · 62 · 87 s | 220 (6 %) | 15 (> 75 s) |
-| `caso` | 482 (13 %) | 32 · 47 · **51** · 55 · 64 · 78 s | 50 (10 %) | 1 (> 70 s) |
-| `libro` | 506 de 519 (97 %) | 31 · 39 · **43** · 50 · 54 · 60 s | 0 | 0 |
+| | Piezas | Duración: mín · p25 · mediana · p75 · p95 · máx | Por encima de 2 min |
+|---|---|---|---|
+| `idea` | 3.719 (100 % de las lecciones) | 46 · 102 · **112** · 124 · 143 · 201 s | 1.199 (32 %) |
+| `fondo` | 3.698 (99 %) | 108 · 189 · **204** · 223 · 271 · 407 s | casi todas (3.196 pasan de 3 min) |
+| `pregunta` | 2.620 (70 %) | 32 · 50 · **56** · 63 · 76 · 92 s | 0 |
+| `practica` | 3.476 (93 %) | 34 · 56 · **62** · 67 · 76 · 103 s | 0 |
+| `caso` | 482 (13 %) | 36 · 54 · **58** · 62 · 66 · 86 s | 0 |
+| `libro` | 506 de 519 (97 %) | 36 · 44 · **47** · 54 · 59 · 67 s | 0 |
 
-- **10.803 piezas**, 20 por libro de mediana (de 7 a 53). **0 con error** en el control de calidad, 0 excepciones, 0 ganchos repetidos dentro de un libro.
-- Sin material: 1.095 lecciones sin pregunta que se entienda sola (29 %); 243 sin pieza `practica`; 13 libros sin mapa. Todas las lecciones tienen pieza `idea`.
+- **14.501 piezas**, 26 por libro de mediana (de 10 a 77). **2 con error** en el control de calidad (las piezas `idea` y `fondo` de una misma lección, cuyo arranque acaba en una cita entre comillas simples y el control no reconoce dónde termina la frase: se quedan sin renderizar, que es lo previsto), 0 excepciones, 0 ganchos repetidos dentro de un libro.
+- Sin material: 1.099 lecciones sin pregunta que se entienda sola; 243 sin pieza `practica`; 21 sin pieza `fondo` (cuerpo demasiado breve); 13 libros sin mapa. Todas las lecciones tienen pieza `idea`.
+- Con `--breve` (las piezas de antes): `idea` 26 · 49 · **55** · 60 · 68 · 88 s, y el resto unos 8-10 s más cortas que en la tabla.
 - De dónde sale el gancho de la idea: `idea_clave` 58 % · arranque del cuerpo 25 % · idea redactada 13 % · título del esquema 5 %. 
-- Cuando una pieza pasa de 60 s se aprieta sola, sin cortar frases: el matiz se queda en su primera frase, el esquema se lee menos en voz alta (sigue entero en pantalla) o la práctica se acorta por frases enteras. Con eso las `practica` de más de 60 s bajan de 633 a 220 y las `idea` de 968 a 826 (878 tras dar esquema a las que no lo tenían); lo que queda son ideas, tarjetas o matices largos de por sí.
-- Avisos más frecuentes (piezas): texto del corpus que alude a «la lección» o a un capítulo, 405 (3,9 %); algún momento del esquema con más de 32 palabras a la vista, 310 (3,0 %); alguna frase de más de 60 palabras, 164 (1,6 %).
+- Con `--breve`, cuando una pieza pasa de 60 s se aprieta sola, sin cortar frases: el matiz se queda en su primera frase, el esquema se lee menos en voz alta (sigue entero en pantalla) o la práctica se acorta por frases enteras.
+- Avisos más frecuentes (piezas): texto del corpus que alude a «la lección» o a un capítulo, 1.441 (10 %; son sobre todo párrafos del cuerpo que dicen «la lección es que…» o «esta lección propone…»); alguna frase de más de 60 palabras, 629; algún momento del esquema con más de 32 palabras a la vista, 541.
 - Cómputo: ~30 s por pieza y unos 22-26 fotogramas, en esta máquina y sin voz. La biblioteca entera serían unas 85 horas de máquina; `biblioteca --format compartir --limit N` va por tandas y retoma.
 - **Maquetación, medida en navegador** con todos los patrones, el código final y la comprobación endurecida (detecta lo que se sale por cualquier lado): 7.500 fotogramas de figuras y texto en los tres aspectos, las 27 matrices enteras (2.100 fotogramas) y 3.600 cierres y miniaturas: **0 desbordes**. La letra se reduce en un 2-4 % de los fotogramas (y en la mitad de los cierres en vertical, que ahora llevan la idea entera); lo más pequeño que queda mide 30 px en vertical y 25-28 px en 1:1 y 16:9.
 - **Sincronía, medida sobre un vídeo real** con el motor de pitidos: las 5 ráfagas de la escena comprobada cambian en el instante en que suena su primera palabra.
@@ -199,6 +224,12 @@ Con el entorno abierto a `speech.platform.bing.com` y el motor Edge pasando por 
 - **Volumen.** −16,2 LUFS integrados, rango 5,5 LU: lo que piden las plataformas.
 
 Lo que **no** se puede medir y queda para oír (`ejemplos-compartir/con-voz/`): si el ritmo se siente bien, la naturalidad de las fórmulas y la pronunciación de títulos y autores en inglés con una voz `es-ES`.
+
+**Primera escucha del dueño del proyecto:** vale como prototipo, pero la voz suena algo robótica y el vídeo no profundiza. De lo segundo sale «La explicación». De lo primero:
+
+- El ritmo (−8 %) y el tono (−2 Hz) rebajados que venían del formato `clase` aplanan la voz. Ahora son configurables (`--ritmo`, `--tono`, o `EDGE_RATE` y `EDGE_PITCH`) y entran en la caché y en la huella de cada pieza. El valor por defecto no se ha cambiado todavía: falta elegir de oído.
+- Se generó la misma locución con once voces gratuitas de Edge para comparar: las tres `es-ES` a ritmo natural, cinco multilingües (Brian, Ava, Emma, Remy, Vivienne) y dos `es-MX`. `en-US-AndrewMultilingualNeural` no devolvió audio en dos intentos y se quitó de la lista de muestras.
+- La pieza `06` de `con-voz/` está hecha con la voz por defecto a ritmo y tono naturales.
 
 ## Revisión independiente
 
@@ -233,9 +264,10 @@ De paso, al endurecer la comprobación de maquetación (ahora detecta también l
 
 ## Límites y lo que no se ha comprobado
 
-- **La voz real, de oído.** Ya se ha renderizado y medido con Edge (ver «Con voz real»), pero nadie la ha escuchado con criterio: ritmo percibido, naturalidad de las fórmulas y pronunciación de títulos en inglés.
+- **La voz.** La primera escucha dice que suena robótica (ver «Con voz real»). Hay muestras para elegir otra, pero la voz definitiva no está decidida ni comprobada de oído en piezas largas. Las gratuitas tienen un techo: si ninguna convence, lo siguiente es Kokoro (local) o una de pago.
+- **La explicación no elige: empieza por el principio.** Lee los primeros párrafos del cuerpo, que no siempre son los que mejor explican la idea (a veces el argumento fuerte está en el tercero y la pieza `idea` no llega; la pieza `fondo` sí). Es el precio de no seleccionar frases sin entenderlas. Tampoco se ha medido con personas si se sigue bien un párrafo de 100 palabras en texto cinético.
 - **Las plataformas.** La zona segura sigue las guías habituales, pero no se ha subido nada: ni recortes, ni compresión, ni cómo trata cada red la miniatura.
 - **El 25 % de ideas que salen del cuerpo** son menos rotundas que una `idea_clave` (las que solo hablan del libro se detectan y abren con el esquema; el resto, no todas brillan). La solución de fondo es redactar la idea en la biblioteca, no en el vídeo.
 - **Aplicaciones prácticas de dominio** (un 11 % habla de *trading* o inversión): son literales del corpus y salen tal cual. Si no convienen para difusión general, `--piezas idea,pregunta,libro`.
-- **Piezas de más de 60 s** (una de cada cinco `idea`): no se cortan frases para bajar de ahí. El manifiesto da la duración para elegir.
+- **Duración frente a alcance.** La pieza `idea` dura ahora cerca de dos minutos y la `fondo` más de tres: caben en YouTube (Shorts admite hasta 3 min), LinkedIn y X, y en TikTok y Reels como vídeo largo, pero retendrán menos que una de 40 s. Es una decisión, no un descuido; `--breve` y `--max-seg` dan la versión corta.
 - **Sincronía sin marcas por palabra** (Kokoro, Gemini): las ráfagas se reparten de forma proporcional dentro de cada escena; con Edge son exactas.

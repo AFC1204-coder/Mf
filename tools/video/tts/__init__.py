@@ -20,7 +20,7 @@ _VOZ_EDGE = re.compile(r"^[a-z]{2,3}-[A-Z]{2}-\w+Neural$")
 
 
 def is_edge_voice(voice: str | None) -> bool:
-    """«es-ES-AlvaroNeural», «en-US-AndrewMultilingualNeural»… (las de Gemini son un nombre suelto)."""
+    """«es-ES-AlvaroNeural», «en-US-BrianMultilingualNeural»… (las de Gemini son un nombre suelto)."""
     return bool(voice and _VOZ_EDGE.match(voice))
 
 
