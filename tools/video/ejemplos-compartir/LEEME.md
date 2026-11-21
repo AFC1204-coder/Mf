@@ -1,6 +1,22 @@
 # Ejemplos de piezas compartibles
 
-Renderizados **sin voz** (motor `mudo`) con el código de esta rama, para juzgar el aspecto, el ritmo y el guion. Las duraciones son las del motor mudo (2,4 palabras/s); con voz real variarán.
+## Con voz real — empieza por aquí
+
+`con-voz/` tiene cinco piezas con **voz de Edge TTS** (`es-ES-AlvaroNeural`, la gratuita por defecto). Son las que hay que **oír** para juzgar el ritmo, las pausas, si las fórmulas («Del libro X, de Y», «El matiz») suenan naturales y cómo se pronuncian los títulos en inglés.
+
+| Archivo | Pieza | Duración |
+|---|---|---|
+| `01-decisive-idea.mp4` | *Decisive* · idea (patrón radial) | 50 s |
+| `02-decisive-pregunta.mp4` | *Decisive* · pregunta (con pausa para pensar) | 33 s |
+| `03-war-of-art-caso.mp4` | *The War of Art* · caso | 39 s |
+| `04-frankl-idea-no-sino.mp4` | *El hombre en busca de sentido* · idea con «no X, sino Y» | 46 s |
+| `05-decisive-libro.mp4` | *Decisive* · el libro en 5 ideas | 50 s |
+
+El resto de esta carpeta está renderizado **sin voz** (motor `mudo`), para juzgar el aspecto.
+
+## Sin voz
+
+Renderizados con el motor `mudo`, para juzgar el aspecto y el guion. Sus duraciones son las de ese motor; con voz real cambian algo.
 
 - `hojas/` — una hoja de fotogramas por pieza (18 instantes repartidos por el vídeo). Lo más rápido de mirar.
 - `videos/` — doce de las piezas, en MP4.

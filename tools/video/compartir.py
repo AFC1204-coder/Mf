@@ -32,7 +32,7 @@ from . import text as T
 from .corpus import Book, Lesson, Question
 from .scriptwriter import Beat, Episode, Part, Scene
 
-COMPARTIR_VERSION = 1
+COMPARTIR_VERSION = 2
 
 TIPOS = ("idea", "pregunta", "practica", "caso", "libro")
 ASPECTOS = {"9:16": (1080, 1920), "1:1": (1080, 1080), "16:9": (1920, 1080)}
@@ -84,7 +84,8 @@ PORTADA_PALABRAS = 30  # la miniatura: la frase entera casi siempre
 GIRO_PAGINA = 24
 MATIZ_PALABRAS = 38
 MATIZ_CORTO = 26
-FIGURA_PALABRAS = 36
+FIGURA_PALABRAS = 60  # la voz lee la tarjeta entera hasta aquí: con voz real, una tarjeta muda es aire muerto
+PAUSA_TARJETA_MAX = 1.4  # lo que se deja, como mucho, para terminar de leer una tarjeta que la voz no lee entera
 PRACTICA_PALABRAS = 60
 ARRANQUE_PALABRAS = 36
 PRACTICA_MAX_FRASE = 75
@@ -169,6 +170,14 @@ class Pieza(Episode):
         d["compartir_version"] = COMPARTIR_VERSION
         return d
 
+    @property
+    def estimated_seconds(self) -> float:
+        """Duración estimada con el modelo ajustado a la voz real (ver `segundos_locucion`)."""
+        total = 0.0
+        for s in self.scenes:
+            total += (segundos_locucion(s.narration) if s.narration else s.hold_s) + s.pause_after_s
+        return round(total + 0.15, 1)
+
 
 @dataclass
 class Omitida:
@@ -178,6 +187,20 @@ class Omitida:
     leccion_n: int
     titulo: str
     motivo: str
+
+
+def segundos_locucion(texto: str) -> float:
+    """Lo que tarda la voz en decir un texto, con el silencio final ya recortado.
+
+    Ajustado sobre 43 locuciones reales de Edge (es-ES-AlvaroNeural, -8 %): letras, finales de frase y
+    comas explican la duración con un 6,5 % de error medio. Contar solo palabras se quedaba hasta un 40 %
+    corto en las piezas con muchas frases breves (el mapa de un libro, las piezas de un esquema).
+    """
+    tokens = T.for_speech(texto).split()
+    letras = sum(len(t.strip(".,;:«»\"()¿?¡!—–")) for t in tokens)
+    finales = sum(1 for t in tokens if re.search(r"[.!?…:][\"»”)]*$", t))
+    comas = sum(1 for t in tokens if re.search(r"[,;][\"»”)]*$", t))
+    return max(0.6, 0.0638 * letras + 0.7358 * finales + 0.3309 * comas - 0.0678)
 
 
 # ───────────────────────── selección de texto (siempre literal) ─────────────────────────
@@ -673,10 +696,10 @@ def escenas_figura(lesson: Lesson, nivel_min: int = 0) -> list[Scene]:
     scenes = [Scene("c-figura", "Esquema", dict(base, mode="titulo", active=-1, shown=len(ps)), [intro] if intro else [], hold_s=0.0 if intro else 1.2, pause_after_s=0.35)]
     for j, p in enumerate(ps):
         partes = [Part(_punto(x), "esquema.datos") for x in _lectura(p, nivel)]
-        hablado = sum(T.n_words(x.text) for x in partes) / 2.4
+        hablado = segundos_locucion(" ".join(x.text for x in partes))
         leer = sum(T.n_words(x) for x in p.lines) / LECTURA_PPS + 0.5
         scenes.append(
-            Scene("c-figura", "Esquema", dict(base, mode="pieza", active=j, shown=j + 1), partes, pause_after_s=round(max(0.3, leer - hablado), 2))
+            Scene("c-figura", "Esquema", dict(base, mode="pieza", active=j, shown=j + 1), partes, pause_after_s=round(min(PAUSA_TARJETA_MAX, max(0.35, leer - hablado)), 2))
         )
     if pie:
         scenes.append(Scene("c-figura", "Esquema", dict(base, mode="pie", active=-1, shown=len(ps), pie=pie), [Part(_punto(pie), "esquema.pie")], pause_after_s=0.6))

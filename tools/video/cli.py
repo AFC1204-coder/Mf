@@ -287,6 +287,7 @@ def process_pieza(p: K.Pieza, book: Book, base: Path, args: argparse.Namespace, 
         "voz": args.voice or "",
         "fotogramas": _assets_stamp(CF.dependencias()),
         "aspecto": args.aspecto,
+        "montaje": 2,  # sube cuando cambia cómo se monta (2: se recorta el silencio final de cada locución)
         "motivo": motivo,
     }
     estado_path = p_dir / "pieza.json"
@@ -302,7 +303,7 @@ def process_pieza(p: K.Pieza, book: Book, base: Path, args: argparse.Namespace, 
     ancho, alto = K.ASPECTOS[args.aspecto]
     estilo = RenderStyle(
         width=ancho, height=alto, burn_subs=False, lead_in_s=0.15, fade_scene_s=0.16, fade_beat_s=0.0,
-        progress_color=CF.acento_eje(book.eje), extra_deps=CF.dependencias(),
+        progress_color=CF.acento_eje(book.eje), extra_deps=CF.dependencias(), trim_tail_s=0.12,
     )
     work = p_dir / "_work"
     info = render_episode(

@@ -43,7 +43,8 @@ class RenderStyle:
     lead_in_s: float = LEAD_IN_S
     fade_scene_s: float = FADE_SCENE_S
     fade_beat_s: float = FADE_BEAT_S
-    progress_color: str = ""  # «#rrggbb»: barra de progreso continua arriba (vacío = sin barra)
+    progress_color: str = ""
+    trim_tail_s: float | None = None  # si se da: el silencio que el motor deja tras la última palabra se recorta a esto  # «#rrggbb»: barra de progreso continua arriba (vacío = sin barra)
     extra_deps: list[Path] = field(default_factory=list)  # estilos propios, para la huella de los fotogramas
 
 
@@ -369,6 +370,11 @@ def render_episode(
         if scene.narration:
             res = tts.synthesize(scene.speech, audio_dir / f"escena_{i + 1:02d}.mp3", voice=voice)
             datos = _decode_pcm(res.audio_path)
+            if style.trim_tail_s is not None and res.word_timings:
+                # Edge deja ~1 s de silencio tras la última palabra, que se suma a la pausa del guion: en un vídeo
+                # corto son segundos de aire muerto. La pausa la manda el guion (pause_after_s), no el motor.
+                fin = int((max(w.end_s for w in res.word_timings) + style.trim_tail_s) * SAMPLE_RATE) * 2
+                datos = datos[: max(2, min(len(datos), fin))]
             speech_s = len(datos) / 2 / SAMPLE_RATE
             etiqueta = f"{res.engine_name} · {res.voice}"
             if etiqueta not in voices:

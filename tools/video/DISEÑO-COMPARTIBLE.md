@@ -188,6 +188,18 @@ Lección aprendida en el formato `clase`: una figura completa a 1080 px de ancho
 - **Sincronía, medida sobre un vídeo real** con el motor de pitidos: las 5 ráfagas de la escena comprobada cambian en el instante en que suena su primera palabra.
 - **Tanda de estrés** con 150 libros que no estaban en la muestra de ajuste: 24 piezas renderizadas (6 de cada tipo, las más largas incluidas), **24 de 24 correctas** y con la duración prevista; 3.000 de sus fotogramas medidos en navegador, **0 desbordes**, letra mínima de 30 px, reducida en 76 (2,5 %, hasta el 87 %).
 
+## Con voz real
+
+Con el entorno abierto a `speech.platform.bing.com` y el motor Edge pasando por el proxy (`tts/edge_tts_engine.py`), se renderizaron piezas con la voz gratuita por defecto (`es-ES-AlvaroNeural`, −8 %). Lo que se pudo **medir** y cambió el formato:
+
+- **Aire muerto.** Edge deja ~0,95 s de silencio tras la última palabra de cada locución, que se sumaba a la pausa del guion: en una pieza de 12-15 escenas, 10-15 s de silencio. Ahora el montaje lo recorta a 0,12 s (`RenderStyle.trim_tail_s`, solo en este formato) y la pausa la manda el guion. Las piezas quedan un 10 % más cortas.
+- **Tarjetas mudas.** Con esquemas largos la voz leía solo el título de cada pieza y dejaba la tarjeta 2-5 s en silencio para leerla. Ahora lee la tarjeta entera hasta 60 palabras de esquema y la pausa de lectura tiene un tope de 1,4 s. Ningún silencio pasa de 2 s salvo la pausa de 3 s para pensar en la pieza `pregunta`, que es deliberada.
+- **Duración estimada.** Contar palabras a 2,4 por segundo se quedaba hasta un 40 % corto en piezas de frases breves. `segundos_locucion` se ajustó sobre 43 locuciones reales (letras, finales de frase y comas: 6,5 % de error medio) y ahora la estimación queda a −7…+4 % de la duración real en las piezas renderizadas.
+- **Sincronía.** Las marcas por palabra de Edge cuadran con el texto en 42 de 43 locuciones (la otra une «5 ideas» en una marca y se interpola). En el vídeo, las 5 ráfagas comprobadas cambian en el instante en que suena su primera palabra.
+- **Volumen.** −16,2 LUFS integrados, rango 5,5 LU: lo que piden las plataformas.
+
+Lo que **no** se puede medir y queda para oír (`ejemplos-compartir/con-voz/`): si el ritmo se siente bien, la naturalidad de las fórmulas y la pronunciación de títulos y autores en inglés con una voz `es-ES`.
+
 ## Revisión independiente
 
 Antes de dar el trabajo por terminado se pidió a otro agente, sin contexto previo, que buscara fallos reales en el código. Encontró nueve y los nueve están corregidos, cada uno con su prueba:
@@ -221,7 +233,7 @@ De paso, al endurecer la comprobación de maquetación (ahora detecta también l
 
 ## Límites y lo que no se ha comprobado
 
-- **La voz real.** Este trabajo se hizo sin acceso a Edge TTS. Comprobado: guiones, control, maquetación (en navegador, sobre miles de fotogramas) y montaje con el motor mudo y con un motor de pitidos con marcas por palabra (`tests/pitidos.py`). **No comprobado:** cómo suena, el ritmo real (las duraciones pueden variar un 10-15 %), la pronunciación de títulos y autores en inglés, y si las fórmulas suenan naturales con cada voz.
+- **La voz real, de oído.** Ya se ha renderizado y medido con Edge (ver «Con voz real»), pero nadie la ha escuchado con criterio: ritmo percibido, naturalidad de las fórmulas y pronunciación de títulos en inglés.
 - **Las plataformas.** La zona segura sigue las guías habituales, pero no se ha subido nada: ni recortes, ni compresión, ni cómo trata cada red la miniatura.
 - **El 25 % de ideas que salen del cuerpo** son menos rotundas que una `idea_clave` (las que solo hablan del libro se detectan y abren con el esquema; el resto, no todas brillan). La solución de fondo es redactar la idea en la biblioteca, no en el vídeo.
 - **Aplicaciones prácticas de dominio** (un 11 % habla de *trading* o inversión): son literales del corpus y salen tal cual. Si no convienen para difusión general, `--piezas idea,pregunta,libro`.
