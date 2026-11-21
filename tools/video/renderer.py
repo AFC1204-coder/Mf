@@ -45,6 +45,7 @@ class RenderStyle:
     fade_beat_s: float = FADE_BEAT_S
     progress_color: str = ""
     trim_tail_s: float | None = None  # si se da: el silencio que el motor deja tras la última palabra se recorta a esto  # «#rrggbb»: barra de progreso continua arriba (vacío = sin barra)
+    push_s: float = 0.0  # si > 0: al cambiar de sección, el fotograma nuevo entra empujando al anterior (en vez de fundirse)
     extra_deps: list[Path] = field(default_factory=list)  # estilos propios, para la huella de los fotogramas
 
 
@@ -285,12 +286,33 @@ def _blend_frames(a: Path, b: Path, steps: int, blend_dir: Path) -> list[Path]:
     return outs
 
 
+def _push_frames(a: Path, b: Path, steps: int, blend_dir: Path) -> list[Path]:
+    """Fotogramas de un empuje lateral de `a` a `b`: el nuevo entra por la derecha y frena al llegar."""
+    clave = hashlib.sha256(f"empuje|{a.name}|{b.name}|{steps}".encode()).hexdigest()[:16]
+    outs = [blend_dir / f"e_{clave}_{i}.png" for i in range(steps)]
+    if all(p.exists() for p in outs):
+        return outs
+    blend_dir.mkdir(parents=True, exist_ok=True)
+    with Image.open(a) as ia, Image.open(b) as ib:
+        ia, ib = ia.convert("RGB"), ib.convert("RGB")
+        ancho = ia.width
+        for i, p in enumerate(outs):
+            t = (i + 1) / (steps + 1)
+            dx = int(round(ancho * (1 - (1 - t) ** 3)))  # sale deprisa y frena
+            lienzo = Image.new("RGB", ia.size)
+            lienzo.paste(ia, (-dx, 0))
+            lienzo.paste(ib, (ancho - dx, 0))
+            lienzo.save(p, compress_level=1)
+    return outs
+
+
 def _video_entries(
     cuts: list[tuple[float, Path, bool]],
     total_s: float,
     blend_dir: Path,
     fade_scene_s: float = FADE_SCENE_S,
     fade_beat_s: float = FADE_BEAT_S,
+    push_s: float = 0.0,
 ) -> list[tuple[Path, float]]:
     """De una lista de cortes (segundo, imagen, ¿cambia de escena?) a imágenes con duración, con fundidos."""
     entries: list[tuple[Path, float]] = []
@@ -304,7 +326,12 @@ def _video_entries(
             fade = fade_scene_s if new_scene else fade_beat_s
             if slot < fade + 0.2:
                 fade = 0.0
-        if fade:
+        if fade and push_s and new_scene == 2 and slot >= push_s + 0.2:
+            fade = push_s
+            steps = max(4, int(round(fade * FPS)))
+            for b in _push_frames(cuts[i - 1][1], png, steps, blend_dir):
+                entries.append((b, fade / steps))
+        elif fade:
             steps = max(2, int(round(fade / FADE_STEP_S)))
             for b in _blend_frames(cuts[i - 1][1], png, steps, blend_dir):
                 entries.append((b, fade / steps))
@@ -408,10 +435,12 @@ def render_episode(
             pos = mapa[min(len(mapa) - 1, max(0, st.at_word or 0))] if mapa else 0
             t = tm.start_s + (tm.words[min(pos, len(tm.words) - 1)][1] if tm.words else 0.0)
         t = min(max(t, cuts[-1][0] if cuts else 0.0), max(0.0, tm.start_s + tm.total_s - 0.12))
-        cuts.append((t, png, es_inicio))
+        # 0: cambio dentro de la escena · 1: escena nueva · 2: escena nueva que además cambia de sección
+        cambia = st.scene_index > 0 and (scene.section, scene.kind) != (episode.scenes[st.scene_index - 1].section, episode.scenes[st.scene_index - 1].kind)
+        cuts.append((t, png, (2 if cambia else 1) if es_inicio else 0))
 
     blend_dir = work_dir / "fundidos"
-    video_txt = _write_concat(_video_entries(cuts, total_s, blend_dir, style.fade_scene_s, style.fade_beat_s), work_dir / "video.txt")
+    video_txt = _write_concat(_video_entries(cuts, total_s, blend_dir, style.fade_scene_s, style.fade_beat_s, style.push_s), work_dir / "video.txt")
 
     # 4 · Capítulos: dónde empieza cada sección del índice.
     chapters: list[tuple[str, float]] = []

@@ -52,7 +52,11 @@ Los dos formatos de arriba son una serie: tienen sentido si ya estás en la bibl
 
 Hay ejemplos renderizados (sin voz) y sus hojas de fotogramas en [`ejemplos-compartir/`](ejemplos-compartir/LEEME.md).
 
-**Explicar bien va antes que los 60 segundos.** La pieza `idea` dura lo que su explicación pida (mediana, 1 min 50 s): una idea afirmada sin su porqué se recuerda peor y se malinterpreta mejor. La explicación no se redacta ni se elige frase a frase: es **el cuerpo de la lección desde el principio, por párrafos enteros** (hasta 150 palabras; en `fondo`, todo). Así ninguna frase se queda sin la salvedad que la sigue, y las marcas del propio texto («Fuera del libro:», «Lectura nuestra:») se dicen tal cual. Con `--breve` salen las piezas de antes, de 30-60 s: sin explicación y con el matiz en su primera frase.
+**Explicar bien va antes que los 60 segundos.** La pieza `idea` dura lo que su explicación pida (mediana, 1 min 35 s): una idea afirmada sin su porqué se recuerda peor y se malinterpreta mejor. La explicación no se redacta ni se elige frase a frase: es **el cuerpo de la lección desde el principio, por párrafos enteros** (hasta 150 palabras; en `fondo`, todo). Así ninguna frase se queda sin la salvedad que la sigue, y las marcas del propio texto («Fuera del libro:», «Lectura nuestra:») se dicen tal cual. Con `--breve` salen las piezas de antes, de 30-60 s: sin explicación y con el matiz en su primera frase.
+
+**El esquema acompaña a la explicación.** Mientras la voz explica, los rótulos del esquema están a la vista y cada uno se enciende cuando la voz lo nombra; si los nombra todos, después no se recorren otra vez. Si el pie del esquema dice lo mismo que el matiz, solo se oye el matiz. Al cambiar de sección, el fotograma nuevo entra con un empuje lateral.
+
+**Voz:** `--format compartir` usa por defecto `fr-FR-RemyMultilingualNeural` (Edge, gratuita) a ritmo y tono naturales, elegida de oído entre once. Se cambia con `--voice`, `--ritmo` y `--tono`.
 
 Lo que tienen en común, y lo que las distingue del resto del generador:
 
@@ -158,7 +162,7 @@ tools/video/.venv/bin/python -m tools.video.cli biblioteca --format compartir --
 | `--format clase\|corto\|compartir` | Lección completa (por defecto), resumen de 60-90 s dentro de la serie, o piezas sueltas para compartir. |
 | `--piezas idea,pregunta,practica,caso,libro,fondo` *(compartir)* | Qué tipos de pieza generar. Por defecto, todos. |
 | `--breve` *(compartir)* | Las piezas de 30-60 s: la idea sin la explicación del cuerpo y el matiz en su primera frase. |
-| `--ritmo +0%` · `--tono +0Hz` *(edge)* | Velocidad y tono de la voz. Por defecto −8 % y −2 Hz, que suena más pausada pero más plana; `+0%` y `+0Hz` dejan la voz como es. También `EDGE_RATE` y `EDGE_PITCH`. |
+| `--ritmo +0%` · `--tono +0Hz` *(edge)* | Velocidad y tono de la voz. Por defecto −8 % y −2 Hz en `clase` y `corto`; en `compartir`, `+0%` y `+0Hz` (la voz como es). También `EDGE_RATE` y `EDGE_PITCH`. |
 | `--max-seg 60` *(compartir)* | No genera las piezas que duren (estimado) más de esos segundos. |
 | `--excluir "trading,inversión"` *(compartir)* | No genera las piezas cuya locución nombre esos temas. |
 | `--seguir "Sigue a @cuenta"` *(compartir)* | El rótulo del cierre: la cuenta o dónde seguir. No se lee en voz alta. |
@@ -248,7 +252,7 @@ tools/video/.venv/bin/python -m unittest discover -s tools/video/tests -t .
 
 ## Límites conocidos
 
-- **Piezas compartibles: lo que no se ha podido comprobar.** Se han renderizado y medido con la voz real de Edge (duración, silencios, sincronía, volumen: ver `DISEÑO-COMPARTIBLE.md`), y la primera escucha dice que la voz por defecto suena algo robótica: hay que elegir otra de oído (`--voice`, `--ritmo`, `--tono`). Sigue sin juzgarse la naturalidad de las fórmulas y la pronunciación de títulos en inglés. Tampoco el comportamiento de cada plataforma (recortes, zona tapada por su interfaz, compresión). Hay seis piezas con voz en `ejemplos-compartir/con-voz/`.
+- **Piezas compartibles: lo que no se ha podido comprobar.** Se han renderizado y medido con la voz real de Edge (duración, silencios, sincronía, volumen: ver `DISEÑO-COMPARTIBLE.md`), y la voz se eligió de oído sobre una muestra corta. Sigue sin juzgarse la naturalidad de las fórmulas y la pronunciación de títulos en inglés. Tampoco el comportamiento de cada plataforma (recortes, zona tapada por su interfaz, compresión). Hay seis piezas con voz en `ejemplos-compartir/con-voz/`.
 - **Piezas sin material.** En toda la biblioteca salen 10.803 piezas (3.719 `idea`, 2.620 `pregunta`, 3.476 `practica`, 482 `caso`, 506 `libro`). Tres de cada diez lecciones no tienen una pregunta que se entienda sin la lección delante («Según la lección…», «en el capítulo 7…»): no hay pieza `pregunta`. Los libros sin mapa (13 de 519) no tienen pieza `libro`. El 1,2 % de las figuras (fórmulas, redes, gráficas…) aún no tiene patrón: su pieza `idea` sale sin esquema. Todo queda anotado en `manifiesto.json`.
 - **La idea, cuando la lección no la tiene redactada** (~23 %), es el arranque del cuerpo (frases enteras, hasta 36 palabras). Si ese arranque solo habla del libro («Newport dedica una sección…»), la pieza abre con el esquema; los demás casos salen tal cual y no todos son igual de rotundos.
 - **Sin sonido de apoyo ni música**, y sin base medida con espectadores: los principios de aprendizaje y atención que guían el formato están en `DISEÑO-COMPARTIBLE.md` con sus límites.

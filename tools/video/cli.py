@@ -290,7 +290,7 @@ def process_pieza(p: K.Pieza, book: Book, base: Path, args: argparse.Namespace, 
         "ajustes_voz": [os.getenv("EDGE_RATE", ""), os.getenv("EDGE_PITCH", "")],
         "fotogramas": _assets_stamp(CF.dependencias()),
         "aspecto": args.aspecto,
-        "montaje": 2,  # sube cuando cambia cómo se monta (2: se recorta el silencio final de cada locución)
+        "montaje": 3,  # sube cuando cambia cómo se monta (2: se recorta el silencio final de cada locución · 3: empuje entre secciones)
         "motivo": motivo,
     }
     estado_path = p_dir / "pieza.json"
@@ -306,7 +306,7 @@ def process_pieza(p: K.Pieza, book: Book, base: Path, args: argparse.Namespace, 
     ancho, alto = K.ASPECTOS[args.aspecto]
     estilo = RenderStyle(
         width=ancho, height=alto, burn_subs=False, lead_in_s=0.15, fade_scene_s=0.16, fade_beat_s=0.0,
-        progress_color=CF.acento_eje(book.eje), extra_deps=CF.dependencias(), trim_tail_s=0.12,
+        progress_color=CF.acento_eje(book.eje), extra_deps=CF.dependencias(), trim_tail_s=0.12, push_s=0.36,
     )
     work = p_dir / "_work"
     info = render_episode(
@@ -637,11 +637,16 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.command == "calendario":
         return calendario(args)
+    if not args.engine:  # sin --engine: TTS_ENGINE o el motor gratuito por defecto
+        args.engine = (os.getenv("TTS_ENGINE") or DEFAULT_ENGINE).strip().lower()
+    if getattr(args, "format", "") == "compartir" and args.engine == "edge":
+        # Las piezas compartibles tienen su voz: elegida de oído entre once gratuitas, a su ritmo y tono naturales.
+        args.voice = args.voice or os.getenv("EDGE_VOICE") or K.VOZ_EDGE
+        args.ritmo = args.ritmo or os.getenv("EDGE_RATE") or K.RITMO_EDGE
+        args.tono = args.tono or os.getenv("EDGE_PITCH") or K.TONO_EDGE
     for opcion, variable in (("ritmo", "EDGE_RATE"), ("tono", "EDGE_PITCH")):
         if getattr(args, opcion, None):
             os.environ[variable] = getattr(args, opcion)
-    if not args.engine:  # sin --engine: TTS_ENGINE o el motor gratuito por defecto
-        args.engine = (os.getenv("TTS_ENGINE") or DEFAULT_ENGINE).strip().lower()
     if not hasattr(args, "merge"):
         args.merge = False
     if not hasattr(args, "only"):

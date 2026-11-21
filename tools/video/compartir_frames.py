@@ -69,8 +69,29 @@ def _stage_frase(v: dict[str, Any], tag: str) -> tuple[str, str]:
     puntos = ""
     if len(paginas) > 1:
         puntos = '<div class="cs-pages">' + "".join(f'<i class="{"on" if i == pi else "done" if i < pi else ""}"></i>' for i in range(len(paginas))) + "</div>"
+    comp = _companero(v)
+    if comp:
+        # Con el esquema delante, el texto baja un cuerpo y el rótulo del tema sobra: el esquema ya dice de qué va.
+        talla = " xl" if n > 11 else " l"
+        return comp + f'<p class="cs-kin{talla}">{" ".join(trozos)}</p>' + puntos, "con-comp"
     cuerpo = _kicker(rotulo, tema=bool(v.get("tema"))) + f'<p class="cs-kin{talla}">{" ".join(trozos)}</p>' + puntos
     return cuerpo, ("solo" if visto == 0 else "")
+
+
+def _companero(v: dict[str, Any]) -> str:
+    """El esquema de la lección junto a la explicación: sus rótulos, y encendidos los que la voz ya ha nombrado."""
+    fig = v.get("fig") or {}
+    piezas = fig.get("pieces") or []
+    if not piezas:
+        return ""
+    on = set(v.get("fig_on") or [])
+    act = int(v.get("fig_act") if v.get("fig_act") is not None else -1)
+    chips = "".join(
+        f'<li class="{"act" if j == act else "on" if j in on else ""} tn-{_e(p.get("tone") or "a")}"><i>{j + 1}</i><b>{_e(p.get("t"))}</b></li>'
+        for j, p in enumerate(piezas)
+    )
+    titulo = f'<div class="cs-comp-t">{_e(fig.get("title"))}</div>' if fig.get("title") else ""
+    return f'<div class="cs-comp cp-{_e(fig.get("patron"))} cn-{len(piezas)}">{titulo}<ol>{chips}</ol></div>'
 
 
 def _stage_pausa(v: dict[str, Any], tag: str) -> tuple[str, str]:
@@ -313,7 +334,9 @@ def palabras_en_pantalla(kind: str, view: dict[str, Any]) -> int:
     if kind == "c-frase":
         paginas = v.get("pages") or [[0, 0]]
         a, b = paginas[min(int(v.get("page") or 0), len(paginas) - 1)]
-        return max(0, min(b, int(v.get("shown") or 0)) - a)
+        fig = v.get("fig") or {}
+        rotulos = T.n_words(str(fig.get("title") or "")) + sum(T.n_words(str(p.get("t") or "")) for p in fig.get("pieces") or [])
+        return max(0, min(b, int(v.get("shown") or 0)) - a) + rotulos
     if kind == "c-pausa":
         return T.n_words(str(v.get("question") or ""))
     if kind == "c-figura":

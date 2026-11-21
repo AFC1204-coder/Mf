@@ -347,3 +347,37 @@ body.cs.st-caso { --tone: #6cb2e2; }
 .ar-16x9.k-c-cierre .cs-from span { font-size: 3.6em; }
 /* El último elemento del escenario no lleva margen inferior: al centrar, ese margen empujaba el contenido unos píxeles por encima. */
 .cs-stage > :last-child { margin-bottom: 0 !important; }
+
+/* ── el esquema junto a la explicación: sus rótulos a la vista, y encendidos los que la voz ya ha nombrado ── */
+.cs-stage.con-comp { justify-content: flex-start; padding-top: 2em; }
+.cs-comp { margin-bottom: 5em; }
+.cs-comp-t { display: flex; align-items: center; gap: 0.6em; font-size: 3.6em; font-weight: 700; letter-spacing: 0.1em; line-height: 1.25; text-transform: uppercase; color: var(--accent); margin-bottom: 1em; }
+.cs-comp-t::before { content: ''; flex: none; width: 1.5em; height: 0.16em; border-radius: 0.08em; background: var(--accent); }
+.cs-comp ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1.3em; position: relative; }
+.cs-comp li { display: flex; align-items: center; gap: 1.8em; padding: 1.5em 2.2em; border-radius: 2.4em; border: 0.22em dashed color-mix(in srgb, var(--tn2) 38%, transparent); background: transparent; opacity: 0.5; }
+.cs-comp li > i { flex: none; width: 1.7em; height: 1.7em; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-style: normal; font-size: 3.3em; font-weight: 700; color: var(--tn2); box-shadow: inset 0 0 0 0.09em var(--tn2); }
+.cs-comp li > b { min-width: 0; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 5em; line-height: 1.16; color: var(--cs-ink); text-wrap: balance; }
+.cs-comp li.on { opacity: 0.92; border-style: solid; border-color: color-mix(in srgb, var(--tn2) 60%, transparent); background: color-mix(in srgb, var(--tn2) 9%, #121214); }
+.cs-comp li.on > i, .cs-comp li.act > i { color: #0a0a0b; background: var(--tn2); box-shadow: none; }
+.cs-comp li.act { opacity: 1; border-style: solid; border-color: var(--tn2); background: color-mix(in srgb, var(--tn2) 20%, #121214); box-shadow: 0 0 0 0.5em color-mix(in srgb, var(--tn2) 16%, transparent); }
+.cs-comp li.act > b { font-size: 5.8em; }
+/* un contraste son dos lados enfrentados; una cadena o un ciclo, eslabones unidos */
+.cs-comp.cp-contraste.cn-2 ol { flex-direction: row; gap: 2em; }
+.cs-comp.cp-contraste.cn-2 li { flex: 1; flex-direction: column; align-items: flex-start; gap: 1em; padding: 2em; }
+.cs-comp.cn-6 li, .cs-comp.cn-7 li { padding: 1.1em 2em; }
+.cs-comp.cn-6 li > b, .cs-comp.cn-7 li > b { font-size: 4em; }
+.con-comp .cs-kin, .con-comp .cs-kin.l { font-size: 8.8em; }
+.con-comp .cs-kin.xl { font-size: 7.8em; }
+.con-comp .cs-pages { margin-top: 2.6em; }
+/* en horizontal y en cuadrado, el esquema a la izquierda y el texto a la derecha */
+.ar-16x9 .cs-stage.con-comp { display: grid; grid-template-columns: 0.9fr 1.25fr; column-gap: 6em; align-content: start; align-items: start; padding-top: 3em; }
+.ar-16x9 .cs-comp ol { gap: 1em; }
+.ar-16x9 .cs-comp li { padding: 1.1em 1.8em; }
+.ar-16x9 .cs-comp li > b { font-size: 4.4em; }
+.ar-16x9 .cs-comp li.act > b { font-size: 5em; }
+.ar-16x9 .con-comp .cs-kin { grid-column: 2; }
+.ar-16x9 .con-comp .cs-comp { grid-row: 1 / span 2; margin-bottom: 0; }
+.ar-16x9 .con-comp .cs-pages { grid-column: 2; }
+.ar-1x1 .cs-comp { margin-bottom: 3em; }
+.ar-1x1 .cs-comp ol { flex-direction: row; flex-wrap: wrap; gap: 1em; }
+.ar-1x1 .cs-comp li { padding: 1em 1.6em; }

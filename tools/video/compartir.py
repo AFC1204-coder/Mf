@@ -32,10 +32,16 @@ from . import text as T
 from .corpus import Book, Lesson, Question
 from .scriptwriter import Beat, Episode, Part, Scene
 
-COMPARTIR_VERSION = 3
+COMPARTIR_VERSION = 4
 
 TIPOS = ("idea", "pregunta", "practica", "caso", "libro", "fondo")
 ASPECTOS = {"9:16": (1080, 1920), "1:1": (1080, 1080), "16:9": (1920, 1080)}
+
+# La voz de las piezas (motor Edge, gratuito): la que el dueño del proyecto eligió de oído entre once, sin tocarle
+# ritmo ni tono. Es multilingüe: pronuncia bien los títulos en inglés; su acento en español no es peninsular.
+VOZ_EDGE = "fr-FR-RemyMultilingualNeural"
+RITMO_EDGE, TONO_EDGE = "+0%", "+0Hz"
+FACTOR_VOZ = 0.87  # lo que tarda esa voz respecto a la que sirvió para ajustar `segundos_locucion` (la misma locución: 34,5 s frente a 39,8 s)
 
 # Fórmulas fijas: lo ÚNICO que la voz dice sin venir del corpus. `lint_pieza` rechaza cualquier otra.
 FORMULAS = {
@@ -214,7 +220,7 @@ def segundos_locucion(texto: str) -> float:
     letras = sum(len(t.strip(".,;:«»\"()¿?¡!—–")) for t in tokens)
     finales = sum(1 for t in tokens if re.search(r"[.!?…:][\"»”)]*$", t))
     comas = sum(1 for t in tokens if re.search(r"[,;][\"»”)]*$", t))
-    return max(0.6, 0.0638 * letras + 0.7358 * finales + 0.3309 * comas - 0.0678)
+    return max(0.6, FACTOR_VOZ * (0.0638 * letras + 0.7358 * finales + 0.3309 * comas - 0.0678))
 
 
 # ───────────────────────── selección de texto (siempre literal) ─────────────────────────
@@ -378,6 +384,75 @@ def escenas_explicacion(lesson: Lesson, max_words: int | None = EXPLICA_PALABRAS
         escena_frase("Explicación", "explica", ROTULOS["explica"], [parte], tema_txt=tema(lesson), pause_after_s=0.55)
         for parte in explicacion_partes(lesson, max_words, ya_dicho)
     ]
+
+
+_VACIAS = frozenset("el la los las un una unos unas de del al a en y o que se su sus lo por para con es".split())
+
+
+def _raiz(palabra: str) -> str:
+    for sufijo in ("es", "s"):
+        if len(palabra) > 4 and palabra.endswith(sufijo):
+            return palabra[: -len(sufijo)]
+    return palabra
+
+
+def _limpias(tokens: list[str]) -> list[str]:
+    return [_raiz(T.norm(t).strip(".,;:«»\"'()¿?¡!—–[]")) for t in tokens]
+
+
+def donde_nombra(titulo: str, tokens: list[str]) -> int | None:
+    """En qué palabra de `tokens` se nombra el rótulo `titulo`: sus palabras con contenido, en su orden y casi
+    seguidas (como mucho dos palabras entre una y la siguiente). None si no se nombra. No interpreta: «marco
+    estrecho» casa con «el marco estrecho», no con «un marco demasiado pequeño para verlo»."""
+    buscadas = [_raiz(w) for w in (T.norm(t).strip(".,;:«»\"'()¿?¡!—–[]") for t in titulo.split()) if w and w not in _VACIAS]
+    if not buscadas:
+        return None
+    limpias = _limpias(tokens)
+    for i, w in enumerate(limpias):
+        if w != buscadas[0]:
+            continue
+        k = i
+        for b in buscadas[1:]:
+            k = next((j for j in range(k + 1, min(k + 4, len(limpias))) if limpias[j] == b), -1)
+            if k < 0:
+                break
+        else:
+            return i
+    return None
+
+
+def acompanar(explicacion: list[Scene], figura: list[Scene]) -> bool:
+    """Pone el esquema de la lección junto a la explicación: sus rótulos (literales) a la vista mientras se explica,
+    y cada uno se enciende **en el momento en que la voz lo nombra**. Lo que se oye se ve dos veces: escrito y
+    situado en la estructura. No añade ni cambia texto; solo decide cuándo se ilumina un rótulo que ya es del esquema.
+
+    Devuelve True si la explicación ha nombrado todas las piezas: entonces recorrerlas después, una a una, sería repetir.
+    """
+    if not explicacion or not figura:
+        return False
+    base = figura[0].view
+    piezas = [{"t": p.get("t"), "tone": p.get("tone")} for p in base.get("pieces") or []]
+    if not (2 <= len(piezas) <= 7) or sum(T.n_words(str(p["t"])) for p in piezas) > 26:
+        return False  # demasiados rótulos (o demasiado largos) para tenerlos a la vista junto al texto
+    fig = {"title": base.get("title"), "pieces": piezas, "patron": base.get("patron")}
+    encendidas: list[int] = []
+    for scene in explicacion:
+        tokens = scene.view.get("words") or []
+        scene.view.update({"fig": fig, "fig_on": list(encendidas), "fig_act": -1})
+        hallazgos = sorted((i, j) for j, p in enumerate(piezas) if j not in encendidas for i in [donde_nombra(str(p["t"]), tokens)] if i is not None)
+        for i, j in hallazgos:
+            encendidas.append(j)
+            cambio = {"fig_on": list(encendidas), "fig_act": j}
+            # Entra con la ráfaga de texto que contiene la palabra: un solo cambio en pantalla, no dos.
+            antes = [b for b in scene.beats if b.at_word is not None and b.at_word <= i]
+            (antes[-1].patch if antes else scene.view).update(cambio)
+    return len(encendidas) == len(piezas)
+
+
+def cubre(texto: str, otro: str, umbral: float = 0.75) -> bool:
+    """¿Dice `otro` casi todo lo que dice `texto`? (palabras con contenido de `texto` que están en `otro`)."""
+    a, b = set(T.content_tokens(texto)), set(T.content_tokens(otro))
+    return bool(a) and len(a & b) / len(a) >= umbral
 
 
 def pregunta_autonoma(lesson: Lesson) -> Question | None:
@@ -778,6 +853,17 @@ def escenas_figura(lesson: Lesson, nivel_min: int = 0, max_words: int = FIGURA_P
 
 # ───────────────────────── las cuatro piezas ─────────────────────────
 
+def _sin_recorrido(figura: list[Scene]) -> list[Scene]:
+    """El esquema como recapitulación: la estructura entera (y su pie), sin recorrer las piezas una a una."""
+    return [s for s in figura if s.view.get("mode") != "pieza"]
+
+
+def _sin_pie_repetido(figura: list[Scene], lesson: Lesson) -> list[Scene]:
+    """Si el pie del esquema dice lo mismo que el matiz que viene justo después, se queda el matiz (que es obligatorio
+    y va entero): oír dos veces seguidas la misma salvedad no la refuerza, cansa."""
+    return [s for s in figura if not (s.view.get("mode") == "pie" and cubre(str(s.view.get("pie") or ""), lesson.autocorreccion))]
+
+
 def _base(book: Book, **kw: Any) -> Pieza:
     return Pieza(book_id=book.id, book_title=book.titulo, book_author=book.autor, eje=book.eje, total=len(book.lessons), kind="pieza", number=0, **kw)
 
@@ -869,13 +955,19 @@ def _pieza_idea(book: Book, index: int, apretar: int = 0, explicar: bool = False
         if abre:
             scenes.append(escena_frase("Pregunta", "pregunta", ROTULOS["idea"], [Part(abre, "leccion.cuerpo")], tema_txt=tema(lesson), pause_after_s=0.7))
             gancho, gancho_origen = abre, "leccion.cuerpo"
+        explicacion = escenas_explicacion(lesson, ya_dicho=(abre, idea)) if explicar else []
+        if acompanar(explicacion, figura):
+            figura = _sin_recorrido(figura)  # la explicación ya nombró cada pieza con el esquema delante
         scenes += [
             escena_frase("Idea", "idea", ROTULOS["idea"], [Part(idea, f"leccion.{origen}")], tema_txt=tema(lesson), pause_after_s=0.4),
             escena_credito(book),
-            *(escenas_explicacion(lesson, ya_dicho=(abre, idea)) if explicar else []),
+            *explicacion,
             *figura,
         ]
         recuerda = idea
+    if explicar and arco != "esquema_primero":
+        figura_sin_pie = _sin_pie_repetido(figura, lesson)
+        scenes = [s for s in scenes if s not in figura or s in figura_sin_pie]
     if explicar:
         matiz = escena_matiz(lesson, MATIZ_ENTERO)
     else:
@@ -1050,11 +1142,13 @@ def pieza_fondo(book: Book, index: int, breve: bool = False) -> Pieza | None:
     explicacion = escenas_explicacion(lesson, None, ya_dicho=(idea,))
     if sum(T.n_words(s.narration) for s in explicacion) < 60:
         return None  # con tan poco cuerpo, la pieza «idea» ya lo dice todo
+    figura = escenas_figura(lesson, max_words=FIGURA_FONDO)
+    acompanar(explicacion, figura)  # el esquema, a la vista mientras se explica; después se recorre entero igualmente
     scenes: list[Scene] = [
         escena_frase("Idea", "idea", ROTULOS["fondo"], [Part(idea, f"leccion.{origen}")], tema_txt=tema(lesson), pause_after_s=0.4),
         escena_credito(book),
         *explicacion,
-        *escenas_figura(lesson, max_words=FIGURA_FONDO),
+        *_sin_pie_repetido(figura, lesson),
     ]
     matiz = escena_matiz(lesson, 10**6)
     if matiz:

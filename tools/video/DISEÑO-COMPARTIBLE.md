@@ -134,9 +134,19 @@ La primera versión del formato se quedaba en 30-60 s: idea, esquema y matiz. Vi
 
 **Qué se controla** (`lint_pieza`): que la explicación siga el cuerpo párrafo a párrafo, sin saltos ni recortes; lo único que puede entrar suelto es una salvedad de seguridad de un párrafo que no cupo. Se detiene antes de un párrafo que solo se entiende dentro de la serie («como vimos», «la lección anterior») o que está en otro idioma. «La lección es que…» o «en el capítulo 3» no cortan: se entienden fuera (queda como aviso).
 
-**Lo que cuesta.** La pieza `idea` pasa de ~55 s a ~1 min 50 s de mediana. Es más de lo que piden TikTok o Reels para retener, y a cambio dice algo. Para quien quiera la pieza de un minuto, `--breve` da la versión anterior (sin explicación, matiz en su primera frase), y `--max-seg` sigue filtrando por duración. Sin `--breve`, también el matiz va entero (hasta 70 palabras) y la pieza `pregunta` da más porqué de su respuesta (hasta 60 palabras).
+**Lo que cuesta.** La pieza `idea` pasa de ~55 s a ~1 min 35 s de mediana. Es más de lo que piden TikTok o Reels para retener, y a cambio dice algo. Para quien quiera la pieza de un minuto, `--breve` da la versión anterior (sin explicación, matiz en su primera frase), y `--max-seg` sigue filtrando por duración. Sin `--breve`, también el matiz va entero (hasta 70 palabras) y la pieza `pregunta` da más porqué de su respuesta (hasta 60 palabras).
 
 **La pieza `fondo`** es la lección contada entera y suelta: idea → libro → todo el cuerpo → el esquema leído entero → el matiz completo → qué probar. De 3 a 4 minutos; va a YouTube como vídeo normal (no como Short) y a LinkedIn. No sale si el cuerpo no llega a 60 palabras. Abre igual que la pieza `idea` a propósito: es su versión larga.
+
+## Menos texto solo: el esquema acompaña a la explicación
+
+Segunda escucha del dueño del proyecto: la duración encaja y lo que se dice es coherente, pero el vídeo **depende demasiado del texto**, tiene pocos esquemas y transiciones, y **repite** (el matiz se oía dos veces). Tres cambios:
+
+- **El esquema, junto a la explicación** (`acompanar`). Mientras la voz explica, los rótulos del esquema de la lección están a la vista encima del texto (al lado, en horizontal), apagados, y **cada uno se enciende cuando la voz lo nombra**. No se añade ni se cambia texto: los rótulos son los de `datos/diagramas.json` y lo único que se decide es cuándo se ilumina cada uno. «Nombrar» es literal y prudente (`donde_nombra`): las palabras con contenido del rótulo, en su orden y casi seguidas; no se interpreta. Solo acompaña si el esquema tiene de 2 a 7 piezas y sus rótulos suman 26 palabras o menos. En la biblioteca: 3.457 de las 3.719 piezas `idea` llevan el esquema al lado; en 2.012 se enciende al menos una pieza y en 597 todas.
+- **Sin repeticiones.** Si la explicación ya nombró todas las piezas con el esquema delante, después no se recorren una a una: queda la estructura entera como recapitulación (597 piezas). Y si el pie del esquema dice lo mismo que el matiz que viene a continuación (tres de cada cuatro palabras con contenido), el pie no se lee: se queda el matiz, que es obligatorio y va entero. La pieza `fondo` sí recorre siempre el esquema completo.
+- **Movimiento.** Al cambiar de sección (idea → libro → explicación → esquema → matiz → cierre) el fotograma nuevo entra empujando al anterior desde la derecha (0,36 s, frenando al llegar); dentro de una sección, los cambios siguen siendo cortes en el instante de la palabra.
+
+Lo que esto **no** arregla: no hay imágenes ni ilustraciones (el corpus no las tiene y no se usan fotos de derechos dudosos); las piezas del esquema no se animan al entrar; y cuando el cuerpo no nombra las piezas con sus mismas palabras (1.445 piezas), el esquema acompaña pero no se enciende.
 
 ## El guion: qué se elige y qué no se toca
 
@@ -191,16 +201,16 @@ Lección aprendida en el formato `clase`: una figura completa a 1080 px de ancho
 
 ## Métricas
 
-**Biblioteca entera: 519 libros públicos, 3.719 lecciones.** Guiones planificados y pasados por el control de calidad uno a uno. Duraciones **estimadas** con el modelo ajustado a la voz real (`segundos_locucion`, voz por defecto a −8 %; a ritmo natural salen un 5-8 % más cortas).
+**Biblioteca entera: 519 libros públicos, 3.719 lecciones.** Guiones planificados y pasados por el control de calidad uno a uno. Duraciones **estimadas** con el modelo ajustado a la voz real (`segundos_locucion`, escalado a la voz elegida).
 
 | | Piezas | Duración: mín · p25 · mediana · p75 · p95 · máx | Por encima de 2 min |
 |---|---|---|---|
-| `idea` | 3.719 (100 % de las lecciones) | 46 · 102 · **112** · 124 · 143 · 201 s | 1.199 (32 %) |
-| `fondo` | 3.698 (99 %) | 108 · 189 · **204** · 223 · 271 · 407 s | casi todas (3.196 pasan de 3 min) |
-| `pregunta` | 2.620 (70 %) | 32 · 50 · **56** · 63 · 76 · 92 s | 0 |
-| `practica` | 3.476 (93 %) | 34 · 56 · **62** · 67 · 76 · 103 s | 0 |
-| `caso` | 482 (13 %) | 36 · 54 · **58** · 62 · 66 · 86 s | 0 |
-| `libro` | 506 de 519 (97 %) | 36 · 44 · **47** · 54 · 59 · 67 s | 0 |
+| `idea` | 3.719 (100 % de las lecciones) | 40 · 84 · **94** · 104 · 123 · 176 s | 237 (6 %) |
+| `fondo` | 3.698 (99 %) | 90 · 162 · **177** · 194 · 236 · 355 s | casi todas (1.651 pasan de 3 min) |
+| `pregunta` | 2.620 (70 %) | 28 · 44 · **50** · 56 · 67 · 81 s | 0 |
+| `practica` | 3.476 (93 %) | 30 · 49 · **54** · 59 · 66 · 90 s | 0 |
+| `caso` | 482 (13 %) | 31 · 48 · **51** · 54 · 58 · 76 s | 0 |
+| `libro` | 506 de 519 (97 %) | 32 · 39 · **41** · 48 · 52 · 59 s | 0 |
 
 - **14.501 piezas**, 26 por libro de mediana (de 10 a 77). **2 con error** en el control de calidad (las piezas `idea` y `fondo` de una misma lección, cuyo arranque acaba en una cita entre comillas simples y el control no reconoce dónde termina la frase: se quedan sin renderizar, que es lo previsto), 0 excepciones, 0 ganchos repetidos dentro de un libro.
 - Sin material: 1.099 lecciones sin pregunta que se entienda sola; 243 sin pieza `practica`; 21 sin pieza `fondo` (cuerpo demasiado breve); 13 libros sin mapa. Todas las lecciones tienen pieza `idea`.
@@ -229,7 +239,8 @@ Lo que **no** se puede medir y queda para oír (`ejemplos-compartir/con-voz/`): 
 
 - El ritmo (−8 %) y el tono (−2 Hz) rebajados que venían del formato `clase` aplanan la voz. Ahora son configurables (`--ritmo`, `--tono`, o `EDGE_RATE` y `EDGE_PITCH`) y entran en la caché y en la huella de cada pieza. El valor por defecto no se ha cambiado todavía: falta elegir de oído.
 - Se generó la misma locución con once voces gratuitas de Edge para comparar: las tres `es-ES` a ritmo natural, cinco multilingües (Brian, Ava, Emma, Remy, Vivienne) y dos `es-MX`. `en-US-AndrewMultilingualNeural` no devolvió audio en dos intentos y se quitó de la lista de muestras.
-- La pieza `06` de `con-voz/` está hecha con la voz por defecto a ritmo y tono naturales.
+- **Voz elegida:** la muestra 9, `fr-FR-RemyMultilingualNeural`, a su ritmo y tono naturales («suena más humana que el resto»). Es la voz por defecto de `--format compartir` (`VOZ_EDGE` en `compartir.py`); los formatos `clase` y `corto` no cambian. Las duraciones estimadas se escalan con `FACTOR_VOZ` (0,87): en las dos piezas renderizadas la estimación queda un 5 % corta (71 s frente a 75 s; 187 s frente a 197 s).
+- La pieza `06` de `con-voz/` está hecha con esa voz.
 
 ## Revisión independiente
 
@@ -264,7 +275,8 @@ De paso, al endurecer la comprobación de maquetación (ahora detecta también l
 
 ## Límites y lo que no se ha comprobado
 
-- **La voz.** La primera escucha dice que suena robótica (ver «Con voz real»). Hay muestras para elegir otra, pero la voz definitiva no está decidida ni comprobada de oído en piezas largas. Las gratuitas tienen un techo: si ninguna convence, lo siguiente es Kokoro (local) o una de pago.
+- **La voz.** Elegida de oído por el dueño (ver «Con voz real»), sobre una muestra de 35 s. Es una voz multilingüe de base francesa: no está comprobado cómo suena en piezas de tres minutos ni con nombres propios difíciles.
+- **Sigue siendo, sobre todo, texto.** El esquema acompaña y hay transiciones, pero no hay imágenes, iconos por concepto ni animación de las piezas. Es el siguiente límite del formato.
 - **La explicación no elige: empieza por el principio.** Lee los primeros párrafos del cuerpo, que no siempre son los que mejor explican la idea (a veces el argumento fuerte está en el tercero y la pieza `idea` no llega; la pieza `fondo` sí). Es el precio de no seleccionar frases sin entenderlas. Tampoco se ha medido con personas si se sigue bien un párrafo de 100 palabras en texto cinético.
 - **Las plataformas.** La zona segura sigue las guías habituales, pero no se ha subido nada: ni recortes, ni compresión, ni cómo trata cada red la miniatura.
 - **El 25 % de ideas que salen del cuerpo** son menos rotundas que una `idea_clave` (las que solo hablan del libro se detectan y abren con el esquema; el resto, no todas brillan). La solución de fondo es redactar la idea en la biblioteca, no en el vídeo.

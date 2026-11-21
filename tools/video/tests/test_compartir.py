@@ -192,7 +192,9 @@ class PiezasTest(unittest.TestCase):
 
     def test_la_idea_lleva_su_explicacion_el_cuerpo_por_parrafos_enteros(self):
         p = self.plan.piezas[1]
-        self.assertEqual([s.kind for s in p.scenes], ["c-frase", "c-credito", "c-frase", "c-frase", "c-figura", "c-figura", "c-figura", "c-figura", "c-frase", "c-cierre"])
+        # La explicación nombra las dos piezas del esquema: van a su lado, y después solo la estructura entera y su pie.
+        self.assertEqual([s.kind for s in p.scenes], ["c-frase", "c-credito", "c-frase", "c-frase", "c-figura", "c-figura", "c-frase", "c-cierre"])
+        self.assertEqual([s.view["mode"] for s in p.scenes if s.kind == "c-figura"], ["titulo", "pie"])
         explica = [s for s in p.scenes if s.section == "Explicación"]
         self.assertEqual([s.narration for s in explica], ["Todo empieza con una pregunta sencilla. La respuesta rápida suele ser la equivocada.", "Pensar despacio cuesta, pero corrige."])
         self.assertTrue(all(s.view["kicker"] == K.ROTULOS["explica"] and x.origin == "leccion.cuerpo" for s in explica for x in s.parts))
@@ -246,6 +248,34 @@ class PiezasTest(unittest.TestCase):
         self.assertFalse([s for s in idea.scenes if s.section == "Explicación"])
         self.assertLessEqual(idea.estimated_seconds, K.OBJETIVO_S)
 
+    def test_el_esquema_acompana_a_la_explicacion_y_se_enciende_al_nombrarlo(self):
+        p = self.plan.piezas[1]
+        primera, segunda = [s for s in p.scenes if s.section == "Explicación"]
+        self.assertEqual([x["t"] for x in primera.view["fig"]["pieces"]], ["Respuesta rápida", "Pensar despacio"])  # rótulos literales del esquema
+        self.assertEqual(primera.view["fig_on"], [])  # nada encendido hasta que se nombra
+        estados = CF.estados(primera)
+        self.assertEqual(estados[-1]["fig_on"], [0])  # «La respuesta rápida suele ser…»
+        self.assertEqual(estados[-1]["fig_act"], 0)
+        html, clase = CF._stage_frase(estados[-1], "")
+        self.assertEqual(clase, "con-comp")
+        self.assertIn('class="act', html)
+        self.assertEqual(segunda.view["fig_on"], [0, 1])  # lo encendido se conserva, y «Pensar despacio…» abre el párrafo: se enciende con él
+        self.assertEqual([i for i in L.lint_pieza(p, self.libro) if i.level == "error"], [])
+
+    def test_nombrar_un_rotulo_no_interpreta(self):
+        frase = "El primero es el marco estrecho: plantear la decisión como «esto sí o no».".split()
+        self.assertEqual(K.donde_nombra("Marco estrecho", frase), 4)
+        self.assertEqual(K.donde_nombra("Los marcos estrechos", frase), 4)  # plural y artículo no cuentan
+        self.assertIsNone(K.donde_nombra("Exceso de confianza", frase))
+        self.assertIsNone(K.donde_nombra("Marco estrecho", "Un marco que era demasiado pequeño y estrecho.".split()))
+
+    def test_si_el_pie_del_esquema_dice_lo_que_el_matiz_no_se_oye_dos_veces(self):
+        libro = _libro(**{"l-1": {"autocorreccion": "Son dos modos de responder, pero no toda intuición falla."}})
+        p = K.pieza_idea(libro, 0)
+        self.assertNotIn("pie", [s.view.get("mode") for s in p.scenes if s.kind == "c-figura"])
+        self.assertTrue(any(x.origin == "leccion.autocorreccion" for s in p.scenes for x in s.parts))  # el matiz sigue, entero
+        self.assertIn("pie", [s.view.get("mode") for s in self.plan.piezas[1].scenes if s.kind == "c-figura"])  # si no se repite, el pie se queda
+
     def test_el_cierre_retoma_el_gancho(self):
         for p in self.plan.piezas:
             cierre = p.scenes[-1]
@@ -272,7 +302,7 @@ class PiezasTest(unittest.TestCase):
         self.assertEqual(K.patron_visual({"plantilla": "mapa"}), "radial")
         self.assertEqual(K.patron_visual({"plantilla": "matriz", "datos": {"celdas": [{}, {}, {}]}}), "silueta")  # sin cuatro cuadrantes no hay matriz
         self.assertEqual(K.patron_visual({"plantilla": "grafica"}), "silueta")
-        figura = [s for s in self.plan.piezas[1].scenes if s.kind == "c-figura"]
+        figura = [s for s in K.pieza_idea(self.libro, 0, breve=True).scenes if s.kind == "c-figura"]
         self.assertTrue(all(s.view["patron"] == "contraste" for s in figura))
         self.assertEqual([s.view["mode"] for s in figura], ["titulo", "pieza", "pieza", "pie"])  # estructura entera → piezas → pie
 
@@ -590,7 +620,7 @@ class ControlTest(unittest.TestCase):
         self.assertEqual(p.scenes[0].narration, idea)  # la idea no se toca
         self.assertEqual([i for i in L.lint_pieza(p, libro) if i.level == "error"], [])
         practica = K.pieza_practica(libro, 0, breve=True)
-        self.assertLessEqual(len(practica.scenes[0].narration.split()), K.PRACTICA_BREVE)
+        self.assertLessEqual(practica.estimated_seconds, K.OBJETIVO_S + 5)
         self.assertTrue(practica.scenes[0].narration.endswith("."))
 
     def test_rechaza_texto_que_no_esta_en_el_corpus(self):
@@ -611,7 +641,7 @@ class ControlTest(unittest.TestCase):
 
     def test_rechaza_texto_que_solo_se_ve_y_no_esta_en_el_corpus(self):
         def errores(cambio):
-            plan = K.plan_libro(self.libro)
+            plan = K.plan_libro(self.libro, breve=True)
             p = plan.piezas[1]
             cambio(p)
             return " ".join(str(i) for i in L.lint_pieza(p, self.libro) if i.level == "error")
@@ -664,7 +694,8 @@ class FotogramasTest(unittest.TestCase):
                 for v in CF.estados(s):
                     self.assertLessEqual(CF.palabras_en_pantalla(s.kind, v), L.MAX_PALABRAS_EN_PANTALLA, (p.key, s.kind))
                     if s.kind == "c-frase":
-                        self.assertLessEqual(CF.palabras_en_pantalla(s.kind, v), K.PAGINA)
+                        rotulos = sum(len(str(x["t"]).split()) for x in (v.get("fig") or {}).get("pieces", [])) + len(str((v.get("fig") or {}).get("title") or "").split())
+                        self.assertLessEqual(CF.palabras_en_pantalla(s.kind, v) - rotulos, K.PAGINA)
 
     def test_el_fotograma_no_lleva_cromo_de_la_web_y_si_el_credito(self):
         p = self.plan.piezas[1]
@@ -686,7 +717,7 @@ class FotogramasTest(unittest.TestCase):
         self.assertEqual(cuerpo.count('class="w hot"'), s.view["shown"])
 
     def test_contraste_y_cadena_ensenan_la_estructura_y_abren_solo_la_pieza_activa(self):
-        figura = [s for s in self.plan.piezas[1].scenes if s.kind == "c-figura"]
+        figura = [s for s in K.pieza_idea(self.libro, 0, breve=True).scenes if s.kind == "c-figura"]
         inicio, _ = CF._stage_figura(figura[0].view, "")
         self.assertIn("p-contraste", inicio)
         self.assertEqual(inicio.count('class="cs-pan visto'), 2)  # antes de explicar: los dos lados, solo con su título
