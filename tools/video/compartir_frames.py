@@ -422,14 +422,25 @@ def palabras_en_pantalla(kind: str, view: dict[str, Any]) -> int:
     return 0
 
 
-def frame_html(pieza: K.Pieza, kind: str, view: dict[str, Any], aspecto: str = "9:16", motivo: int = 0) -> str:
-    """HTML completo de un fotograma. Sin red: todo se carga del repositorio."""
+def frame_html(
+    pieza: K.Pieza, kind: str, view: dict[str, Any], aspecto: str = "9:16", motivo: int = 0,
+    desde: dict[str, Any] | None = None, tween: float | None = None,
+) -> str:
+    """HTML completo de un fotograma. Sin red: todo se carga del repositorio.
+
+    Con `desde` y `tween` es un fotograma **intermedio**: el estado `view`, con sus paneles a medio camino entre
+    donde estaban en `desde` y donde van (ver `mover` en compartir.js). El texto es siempre el de `view`."""
     stage_fn = STAGES.get(kind)
     if stage_fn is None:
         raise ValueError(f"Plantilla de escena desconocida: {kind!r}")
     tag = K.ROTULOS.get(pieza.tipo, "").format(n=sum(1 for s in pieza.scenes if s.kind == "c-nodo"))
     cuerpo, clase_stage = stage_fn(view, tag)
+    fantasma = ""
+    if desde is not None and tween is not None:
+        cuerpo_antes, clase_antes = stage_fn(desde, tag)
+        fantasma = f'<main class="cs-stage cs-fantasma {clase_antes}">{cuerpo_antes}</main>'
     estado = {
+        "tween": tween,
         "eje": pieza.eje,
         "spec": view.get("spec"),
         "order": view.get("order"),
@@ -452,7 +463,7 @@ def frame_html(pieza: K.Pieza, kind: str, view: dict[str, Any], aspecto: str = "
 <div class="cs-frame">
   <div class="cs-bg"></div><div class="cs-shade"></div>
   <header class="cs-top"><span class="cs-brand"><i>§</i>{_e(K.ROTULOS["marca"])}</span><span class="cs-tag">{_e(tag if kind != "c-portada" else "")}</span></header>
-  <main class="cs-stage {clase_stage}">{cuerpo}</main>
+  {fantasma}<main class="cs-stage {clase_stage}">{cuerpo}</main>
   {pie}
 </div>
 <script>window.__CS__ = {json.dumps(estado, ensure_ascii=False).replace("</", "<\\/")};</script>
@@ -472,6 +483,31 @@ def pieza_pages(pieza: K.Pieza, aspecto: str = "9:16", motivo: int = 0) -> tuple
             states.append(st)
             pages.append(frame_html(pieza, scene.kind, st.view, aspecto, motivo))
     return states, pages
+
+
+PASOS_MOVIMIENTO = 8  # fotogramas intermedios por cada cambio de pieza de un esquema
+
+
+def pieza_movimientos(pieza: K.Pieza, aspecto: str = "9:16", motivo: int = 0) -> dict[int, list[str]]:
+    """Fotogramas intermedios para los cambios de pieza de un esquema en lista: índice del estado de llegada → sus HTML.
+
+    Solo entre dos estados seguidos del mismo esquema, cuando el de llegada abre una pieza (o muestra el pie con la
+    recapitulación) y los dos tienen los mismos paneles. Lo demás (otra figura, otra sección) entra como siempre."""
+    estados: list[State] = []
+    for i, scene in enumerate(pieza.scenes):
+        estados += scene_states(scene, i)
+    out: dict[int, list[str]] = {}
+    for n in range(1, len(estados)):
+        a, b = estados[n - 1], estados[n]
+        ka, kb = pieza.scenes[a.scene_index].kind, pieza.scenes[b.scene_index].kind
+        if ka != "c-figura" or kb != "c-figura" or b.view.get("patron") not in LISTAS:
+            continue
+        if b.view.get("mode") != "pieza" or a.view.get("title") != b.view.get("title"):
+            continue
+        if a.view.get("mode") == "titulo" and a.view.get("shown") not in (None, a.view.get("n")):
+            continue  # la estructura aún se está construyendo
+        out[n] = [frame_html(pieza, kb, b.view, aspecto, motivo, desde=a.view, tween=(k + 1) / (PASOS_MOVIMIENTO + 1)) for k in range(PASOS_MOVIMIENTO)]
+    return out
 
 
 def portada_html(pieza: K.Pieza, aspecto: str = "9:16", motivo: int = 0) -> str:

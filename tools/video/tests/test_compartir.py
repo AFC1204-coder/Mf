@@ -356,6 +356,20 @@ class PiezasTest(unittest.TestCase):
             finally:
                 K._iconos_cache = None
 
+    def test_al_cambiar_de_pieza_los_paneles_se_mueven_no_saltan(self):
+        p = K.pieza_idea(self.libro, 0, breve=True)
+        estados, paginas = CF.pieza_pages(p)
+        mov = CF.pieza_movimientos(p)
+        llegadas = [n for n, st in enumerate(estados) if p.scenes[st.scene_index].kind == "c-figura" and st.view.get("mode") == "pieza"]
+        self.assertEqual(sorted(mov), llegadas)  # un movimiento por cada pieza que se abre, y por nada más
+        for n, docs in mov.items():
+            self.assertEqual(len(docs), CF.PASOS_MOVIMIENTO)
+            self.assertTrue(all("cs-fantasma" in d and '"tween": ' in d for d in docs))
+            # El texto visible es el del estado de llegada: el intermedio no dice nada distinto.
+            visible = docs[0].split('<main class="cs-stage cs-fantasma')[1].split("</main>", 1)[1]
+            self.assertIn(paginas[n].split('<main class="cs-stage')[1].split("</main>")[0], visible)
+        self.assertNotIn("cs-fantasma", paginas[0])  # los fotogramas normales no cambian
+
     def test_el_cierre_retoma_el_gancho(self):
         for p in self.plan.piezas:
             cierre = p.scenes[-1]

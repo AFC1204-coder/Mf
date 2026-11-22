@@ -7,7 +7,7 @@
   var acento = (window.Mapa && window.Mapa.ACENTOS && window.Mapa.ACENTOS[st.eje]) || '#c9a84c';
   root.style.setProperty('--accent', acento);
 
-  var stage = document.querySelector('.cs-stage');
+  var stage = document.querySelector('.cs-stage:not(.cs-fantasma)');
   var MIN_ESCALA = 0.68;  // por debajo, la letra más pequeña del escenario bajaría de 30 px
 
   /* La figura de la lección, sin texto: la forma queda como orientación y cada pieza lleva una insignia
@@ -75,27 +75,54 @@
     el.innerHTML = '<svg viewBox="0 0 24 24">' + trazo + '</svg>';
   });
 
+  /* Encaja un escenario: la silueta cede altura antes que la letra; después, la letra, hasta el mínimo legible. */
+  function encajar(esc) {
+    // Con el contenido centrado, lo que sobra por arriba no cuenta en scrollHeight: se mide alineado arriba.
+    esc.classList.add('top');
+    var base = parseFloat(getComputedStyle(esc).fontSize) || 10;
+    var px = base;
+    var sil = esc.querySelector('.cs-sil');
+    var alto = sil ? sil.clientHeight : 0, minAlto = alto * 0.55;
+    while (sil && esc.scrollHeight > esc.clientHeight + 1 && alto > minAlto) {
+      alto -= 12; sil.style.height = alto + 'px';
+    }
+    // También a lo ancho: una palabra muy larga en letra grande puede no caber en la línea.
+    while ((esc.scrollHeight > esc.clientHeight + 1 || esc.scrollWidth > esc.clientWidth + 1) && px > base * MIN_ESCALA) {
+      px -= 0.1;
+      esc.style.fontSize = px + 'px';
+    }
+    var desborda = esc.scrollHeight > esc.clientHeight + 1 || esc.scrollWidth > esc.clientWidth + 1;
+    if (!desborda) esc.classList.remove('top');
+    return { escala: Math.round((px / base) * 100), desborda: desborda };
+  }
+
+  /* Fotograma intermedio de un esquema que cambia de pieza: el documento trae, invisible, el estado del que se
+     viene (.cs-fantasma). Cada panel sale de donde estaba y llega a donde va (st.tween: 0 = origen, 1 = destino);
+     el que se abre crece hacia abajo y su texto nuevo aparece al final. El contenido no cambia: solo se mueve. */
+  function mover(fantasma, t) {
+    var antes = fantasma.querySelectorAll('.cs-pan'), ahora = stage.querySelectorAll('.cs-pan');
+    if (!antes.length || antes.length !== ahora.length) return;
+    var s = 1 - Math.pow(1 - t, 3);  // sale deprisa y frena
+    for (var k = 0; k < ahora.length; k++) {
+      var a = antes[k].getBoundingClientRect(), b = ahora[k].getBoundingClientRect();
+      var dy = (a.top - b.top) * (1 - s), dx = (a.left - b.left) * (1 - s);
+      ahora[k].style.transform = 'translate(' + dx.toFixed(2) + 'px,' + dy.toFixed(2) + 'px)';
+      if (b.height > a.height + 2) {
+        var falta = (b.height - a.height) * (1 - s);
+        ahora[k].style.clipPath = 'inset(0 0 ' + falta.toFixed(2) + 'px 0 round 30px)';
+        var extra = ahora[k].querySelectorAll('span, ul');
+        for (var e = 0; e < extra.length; e++) extra[e].style.opacity = String(Math.max(0, (s - 0.45) / 0.55));
+      }
+    }
+  }
+
   function ajustar() {
     if (stage) {
-      // Con el contenido centrado, lo que sobra por arriba no cuenta en scrollHeight: se mide alineado arriba.
-      stage.classList.add('top');
-      var base = parseFloat(getComputedStyle(stage).fontSize) || 10;
-      var px = base;
-      // 1) La silueta cede altura antes que la letra; 2) después, la letra, hasta el mínimo legible.
-      var sil = stage.querySelector('.cs-sil');
-      var alto = sil ? sil.clientHeight : 0, minAlto = alto * 0.55;
-      while (sil && stage.scrollHeight > stage.clientHeight + 1 && alto > minAlto) {
-        alto -= 12; sil.style.height = alto + 'px';
-      }
-      // También a lo ancho: una palabra muy larga en letra grande puede no caber en la línea.
-      while ((stage.scrollHeight > stage.clientHeight + 1 || stage.scrollWidth > stage.clientWidth + 1) && px > base * MIN_ESCALA) {
-        px -= 0.1;
-        stage.style.fontSize = px + 'px';
-      }
-      var desborda = stage.scrollHeight > stage.clientHeight + 1 || stage.scrollWidth > stage.clientWidth + 1;
-      if (!desborda) stage.classList.remove('top');
-      root.dataset.escala = String(Math.round((px / base) * 100));
-      root.dataset.desborda = desborda ? '1' : '0';
+      var r = encajar(stage);
+      root.dataset.escala = String(r.escala);
+      root.dataset.desborda = r.desborda ? '1' : '0';
+      var fantasma = document.querySelector('.cs-fantasma');
+      if (fantasma && typeof st.tween === 'number') { encajar(fantasma); mover(fantasma, st.tween); }
     }
     if (host && host.querySelector('svg')) siluetar(host.querySelector('svg'), st);
     root.dataset.listo = '1';

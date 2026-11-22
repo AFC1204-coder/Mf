@@ -153,9 +153,12 @@ Segunda escucha del dueño del proyecto: la duración encaja y lo que se dice es
   | Cambia la sección (idea → libro → explicación → esquema → matiz → cierre) | Empuje lateral, 0,36 s | Se nota que empieza otra cosa |
   | Se **añade** una pieza al esquema | Se dibuja de arriba abajo, 0,42 s | Aparece en un hueco vacío: nada se mezcla |
   | Entra una ráfaga de texto en la misma página | Barrido de izquierda a derecha, 0,13 s | Igual: se añade |
-  | Se **sustituye** lo que había (otra página de texto, otra pieza abierta) | Fundido, 0,18-0,26 s | Un barrido mezclaría dos textos a medias |
+  | Se abre otra pieza de un esquema en lista | **Movimiento real**, 0,45 s: cada panel va de donde estaba a donde va, y el que se abre crece hacia abajo | Se ve qué pieza es cuál mientras cambia |
+  | Se **sustituye** otra cosa (otra página de texto, una matriz, un espectro) | Fundido, 0,18-0,26 s | Un barrido mezclaría dos textos a medias |
 
   El esquema **se construye**: primero el título y después cada pieza entra en su sitio, una cada 0,55 s. Las que aún no han entrado guardan su hueco, así que nada salta. Vale para todos los patrones propios (contraste, cadena, ciclo, radial, iceberg, matriz, espectro y cifra). En la cadena, cada eslabón trae su tramo de hilo; en el ciclo, lo último que se dibuja es la flecha que vuelve al principio.
+
+  El movimiento real sí necesita capturas: ocho fotogramas intermedios por cambio de pieza (`pieza_movimientos`). Cada uno es el estado de llegada con el de partida maquetado invisible al lado; el navegador mide dónde estaba cada panel y lo coloca a medio camino. El texto es siempre el del estado de llegada.
 
   Está hecho en el montaje (`_reveal_frames` en `renderer.py`): se compara el fotograma anterior con el nuevo y solo la zona que cambia se descubre con un borde suave. No hacen falta más capturas de navegador.
 - **El esquema acompañante toma la forma de su figura.** Ya no es siempre una lista: un contraste son dos lados enfrentados con su marca en medio; una cadena, eslabones unidos; un ciclo, la cadena con su flecha de vuelta; un mapa, el centro y lo que cuelga de él; una matriz, su cuadrícula de 2 × 2; un espectro, sus dos polos sobre la recta.
@@ -166,7 +169,7 @@ Segunda escucha del dueño del proyecto: la duración encaja y lo que se dice es
 - **Las cifras del texto se ven como dato.** Un número que el texto da («el 37 %», «1960») sale con más peso y en el color de la sección. Es literal: solo cambia cómo se ve.
 - **Iconos por concepto, con aprobación.** Qué icono va con qué pieza es una interpretación, así que no la decide el generador: se propone en `tools/video/iconos/<libro>.json` con `"aprobado": false` y **no sale en ningún vídeo** hasta que alguien lo revisa y lo pone a `true`. `--iconos-propuestos` los enseña para poder revisarlos. Hay propuesta para un libro piloto (*Decisive*, 25 piezas), sin aprobar.
 
-Lo que esto **no** arregla: no hay imágenes ni ilustraciones (el corpus no las tiene y no se usan fotos de derechos dudosos); las piezas se dibujan pero no se desplazan; no hay iconos por concepto (ver arriba); y cuando el cuerpo no nombra las piezas con sus mismas palabras (1.305 piezas), el esquema acompaña pero no se enciende.
+Lo que esto **no** arregla: no hay imágenes ni ilustraciones (el corpus no las tiene y no se usan fotos de derechos dudosos); el movimiento real es solo para esquemas en lista (contraste, cadena, ciclo, mapa, iceberg); y cuando el cuerpo no nombra las piezas con sus mismas palabras (1.305 piezas), el esquema acompaña pero no se enciende.
 
 ## El guion: qué se elige y qué no se toca
 

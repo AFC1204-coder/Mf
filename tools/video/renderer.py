@@ -48,6 +48,7 @@ class RenderStyle:
     trim_tail_s: float | None = None  # si se da: el silencio que el motor deja tras la última palabra se recorta a esto  # «#rrggbb»: barra de progreso continua arriba (vacío = sin barra)
     push_s: float = 0.0  # si > 0: al cambiar de sección, el fotograma nuevo entra empujando al anterior (en vez de fundirse)
     reveal_s: float = 0.0  # si > 0: lo que cambia en un esquema no aparece de golpe, se dibuja de arriba abajo en este tiempo
+    move_s: float = 0.0  # si > 0: duración del movimiento de los paneles de un esquema al cambiar de pieza (con `tweens`)
     reveal_text_s: float = 0.0  # si > 0: cada ráfaga de texto entra con un barrido breve de izquierda a derecha
     extra_deps: list[Path] = field(default_factory=list)  # estilos propios, para la huella de los fotogramas
 
@@ -353,6 +354,8 @@ def _video_entries(
     push_s: float = 0.0,
     reveal_s: float = 0.0,
     reveal_text_s: float = 0.0,
+    movimientos: dict[int, list[Path]] | None = None,
+    move_s: float = 0.0,
 ) -> list[tuple[Path, float]]:
     """De una lista de cortes (segundo, imagen, ¿cambia de escena?) a imágenes con duración, con fundidos."""
     entries: list[tuple[Path, float]] = []
@@ -366,6 +369,13 @@ def _video_entries(
             fade = fade_scene_s if new_scene in (1, 2, 3) else FADE_PAGE_S if new_scene == 5 else fade_beat_s
             if slot < fade + 0.2:
                 fade = 0.0
+        mov = (movimientos or {}).get(i)
+        if mov and move_s and slot >= move_s + 0.1:
+            # Movimiento real: los paneles del esquema van de donde estaban a donde van, fotograma a fotograma.
+            for b in mov:
+                entries.append((b, move_s / len(mov)))
+            entries.append((png, slot - move_s))
+            continue
         distinto = i > 0 and cuts[i - 1][1] != png
         barrido = (reveal_s if new_scene == 3 else reveal_text_s if new_scene == 4 else 0.0) if distinto else 0.0
         if barrido and slot >= barrido + 0.08:
@@ -418,6 +428,7 @@ def render_episode(
     style: RenderStyle | None = None,
     pages: tuple[list[State], list[str]] | None = None,
     thumb_page: str | None = None,
+    tweens: dict[int, list[str]] | None = None,
 ) -> RenderInfo:
     """Renderiza un episodio completo. Devuelve duración, capítulos (para la descripción) y voces usadas.
 
@@ -432,8 +443,16 @@ def render_episode(
 
     # 1 · Fotogramas.
     states, docs = pages if pages is not None else episode_pages(episode, photo)
-    todos = render_frames(docs + ([thumb_page] if thumb_page else []), frames_dir, size=size, extra_deps=style.extra_deps)
+    # Fotogramas intermedios (movimiento dentro de un esquema): índice del estado de llegada → sus HTML.
+    tweens = tweens or {}
+    docs_mov = [d for n in sorted(tweens) for d in tweens[n]]
+    todos = render_frames(docs + docs_mov + ([thumb_page] if thumb_page else []), frames_dir, size=size, extra_deps=style.extra_deps)
     pngs = todos[: len(docs)]
+    mov_pngs: dict[int, list[Path]] = {}
+    k = len(docs)
+    for n in sorted(tweens):
+        mov_pngs[n] = todos[k : k + len(tweens[n])]
+        k += len(tweens[n])
     log(f"      ✓ {len(set(pngs))} fotogramas")
 
     # 2 · Voz, escena a escena, y línea de tiempo.
@@ -472,7 +491,8 @@ def render_episode(
     # 3 · Cuándo entra cada estado.
     cuts: list[tuple[float, Path, bool]] = []
     states_prev: list[State] = []
-    for st, png in zip(states, pngs):
+    movimientos: dict[int, list[Path]] = {}  # índice del corte → fotogramas intermedios que llevan a él
+    for n_estado, (st, png) in enumerate(zip(states, pngs)):
         scene = episode.scenes[st.scene_index]
         tm = timings[st.scene_index]
         es_inicio = st.at_word == 0 and st.at_s == 0.0
@@ -501,10 +521,12 @@ def render_episode(
         else:
             codigo = 0
         states_prev.append(st)
+        if n_estado in mov_pngs:
+            movimientos[len(cuts)] = mov_pngs[n_estado]
         cuts.append((t, png, codigo))
 
     blend_dir = work_dir / "fundidos"
-    video_txt = _write_concat(_video_entries(cuts, total_s, blend_dir, style.fade_scene_s, style.fade_beat_s, style.push_s, style.reveal_s, style.reveal_text_s), work_dir / "video.txt")
+    video_txt = _write_concat(_video_entries(cuts, total_s, blend_dir, style.fade_scene_s, style.fade_beat_s, style.push_s, style.reveal_s, style.reveal_text_s, movimientos, style.move_s), work_dir / "video.txt")
 
     # 4 · Capítulos: dónde empieza cada sección del índice.
     chapters: list[tuple[str, float]] = []

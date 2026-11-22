@@ -438,3 +438,7 @@ body.cs.st-caso { --tone: #6cb2e2; }
 .cs-pat.pl-tiempo .cs-pan.on span { font-size: 5.6em; opacity: 1; }
 /* ── una cifra dentro del texto ── */
 .cs-kin .w.num { font-family: 'VF Outfit', sans-serif; font-weight: 700; font-size: 1.12em; color: var(--tone); font-variant-numeric: tabular-nums; }
+
+/* el estado del que viene un fotograma intermedio: se maqueta para medirlo, pero no se ve */
+.cs-stage.cs-fantasma { visibility: hidden !important; pointer-events: none; z-index: 0; }
+.cs-stage.cs-fantasma * { visibility: hidden !important; }

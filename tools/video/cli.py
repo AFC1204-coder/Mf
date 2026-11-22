@@ -290,7 +290,7 @@ def process_pieza(p: K.Pieza, book: Book, base: Path, args: argparse.Namespace, 
         "ajustes_voz": [os.getenv("EDGE_RATE", ""), os.getenv("EDGE_PITCH", "")],
         "fotogramas": _assets_stamp(CF.dependencias()),
         "aspecto": args.aspecto,
-        "montaje": 5,  # 4: el esquema se dibuja y el texto entra con barrido · sube cuando cambia cómo se monta (2: se recorta el silencio final de cada locución · 3: empuje entre secciones)
+        "montaje": 6,  # 4: el esquema se dibuja y el texto entra con barrido · sube cuando cambia cómo se monta (2: se recorta el silencio final de cada locución · 3: empuje entre secciones)
         "motivo": motivo,
     }
     estado_path = p_dir / "pieza.json"
@@ -306,12 +306,12 @@ def process_pieza(p: K.Pieza, book: Book, base: Path, args: argparse.Namespace, 
     ancho, alto = K.ASPECTOS[args.aspecto]
     estilo = RenderStyle(
         width=ancho, height=alto, burn_subs=False, lead_in_s=0.15, fade_scene_s=0.26, fade_beat_s=0.0,
-        progress_color=CF.acento_eje(book.eje), extra_deps=CF.dependencias(), trim_tail_s=0.12, push_s=0.36, reveal_s=0.42, reveal_text_s=0.13,
+        progress_color=CF.acento_eje(book.eje), extra_deps=CF.dependencias(), trim_tail_s=0.12, push_s=0.36, reveal_s=0.42, reveal_text_s=0.13, move_s=0.45,
     )
     work = p_dir / "_work"
     info = render_episode(
         p, tts, work, video, voice=args.voice, log=print, style=estilo,
-        pages=CF.pieza_pages(p, args.aspecto, motivo), thumb_page=CF.portada_html(p, args.aspecto, motivo),
+        pages=CF.pieza_pages(p, args.aspecto, motivo), thumb_page=CF.portada_html(p, args.aspecto, motivo), tweens=CF.pieza_movimientos(p, args.aspecto, motivo),
     )
     (p_dir / "publicacion.txt").write_text(K.texto_publicacion(p, info.duration_s), encoding="utf-8")
     estado_path.write_text(
