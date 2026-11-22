@@ -32,7 +32,7 @@ from . import text as T
 from .corpus import Book, Lesson, Question
 from .scriptwriter import Beat, Episode, Part, Scene
 
-COMPARTIR_VERSION = 5
+COMPARTIR_VERSION = 6
 
 TIPOS = ("idea", "pregunta", "practica", "caso", "libro", "fondo")
 ASPECTOS = {"9:16": (1080, 1920), "1:1": (1080, 1080), "16:9": (1920, 1080)}
@@ -104,6 +104,7 @@ MATIZ_PALABRAS = 38
 MATIZ_CORTO = 26
 MATIZ_ENTERO = 70  # sin prisa por acabar en 60 s, el matiz va entero casi siempre
 EXPLICA_PALABRAS = 150  # la explicación de la pieza «idea»: los primeros párrafos del cuerpo, enteros, hasta aquí
+CASO_PARRAFO = 120  # el párrafo del caso que la pieza «idea» añade a su explicación, entero, hasta aquí
 EXPLICACION_LARGA = 60  # el porqué de la respuesta, en la pieza «pregunta» sin prisa
 FIGURA_FONDO = 140  # en la pieza «a fondo» la voz lee el esquema entero casi siempre
 FIGURA_PALABRAS = 60  # la voz lee la tarjeta entera hasta aquí: con voz real, una tarjeta muda es aire muerto
@@ -122,7 +123,7 @@ OBJETIVO_S = 60.0
 PRACTICA_BREVE = 40
 
 # Duración razonable de cada tipo (segundos estimados): fuera de ahí, aviso.
-LIMITES = {"idea": (22, 170), "pregunta": (20, 90), "practica": (22, 90), "caso": (20, 90), "libro": (22, 90), "fondo": (75, 360)}
+LIMITES = {"idea": (22, 210), "pregunta": (20, 90), "practica": (22, 90), "caso": (20, 90), "libro": (22, 90), "fondo": (75, 360)}
 
 # Texto que solo tiene sentido dentro de la web (o delante de las opciones de un test).
 ANCLA_WEB = re.compile(
@@ -386,6 +387,26 @@ def explicacion_partes(lesson: Lesson, max_words: int | None = EXPLICA_PALABRAS,
             if SALVEDAD.search(f) and not ANCLA_SERIE.search(f):
                 partes.append(Part(f, "leccion.cuerpo"))
     return partes
+
+
+def caso_parrafo(lesson: Lesson, ya: list[Part], max_words: int = CASO_PARRAFO) -> Part | None:
+    """El párrafo del cuerpo que cuenta un caso y que la explicación no ha llegado a decir.
+
+    Solo vale un párrafo que **empieza** presentándose como caso («Por ejemplo», «Un ejemplo:», «Imagina», «En un
+    experimento»…): así se entiende aunque se hayan saltado los párrafos de en medio, y va entero, con las salvedades
+    que traiga. No se busca «el mejor ejemplo»: el primero que la lección marca así y cabe. None si no hay.
+    """
+    dichos = {T.clean(p.text) for p in ya}
+    for parrafo in T.paragraphs(lesson.cuerpo)[1:]:
+        if parrafo in dichos or any(parrafo.endswith(d) or d in parrafo for d in dichos if len(d) > 40):
+            continue
+        frases = T.split_sentences(parrafo)
+        if not frases or not ARRANQUE_CASO.search(frases[0]):
+            continue
+        if T.n_words(parrafo) > max_words or len(frases) < 2 or ANCLA_SERIE.search(parrafo) or parece_ingles(parrafo):
+            continue
+        return Part(parrafo, "leccion.cuerpo")
+    return None
 
 
 def escenas_explicacion(lesson: Lesson, max_words: int | None = EXPLICA_PALABRAS, ya_dicho: tuple[str, ...] = ()) -> list[Scene]:
@@ -1047,6 +1068,10 @@ def _pieza_idea(book: Book, index: int, apretar: int = 0, explicar: bool = False
         explicacion = escenas_explicacion(lesson, ya_dicho=(abre, idea)) if explicar else []
         if acompanar(explicacion, figura):
             figura = _sin_recorrido(figura)  # la explicación ya nombró cada pieza con el esquema delante
+        # Lo concreto, si la lección lo trae: el párrafo que cuenta un caso, aunque la explicación no haya llegado a él.
+        caso = caso_parrafo(lesson, [p for e in explicacion for p in e.parts]) if explicacion else None
+        if caso:
+            explicacion.append(escena_frase("Caso", "caso", ROTULOS["caso"], [caso], pause_after_s=0.55))
         scenes += [
             escena_frase("Idea", "idea", ROTULOS["idea"], [Part(idea, f"leccion.{origen}")], tema_txt=tema(lesson), pause_after_s=0.4),
             escena_credito(book),
@@ -1057,12 +1082,16 @@ def _pieza_idea(book: Book, index: int, apretar: int = 0, explicar: bool = False
     if explicar and arco != "esquema_primero":
         figura_sin_pie = _sin_pie_repetido(figura, lesson)
         scenes = [s for s in scenes if s not in figura or s in figura_sin_pie]
+    practica: list[Part] = []
     if explicar:
         matiz = escena_matiz(lesson, MATIZ_ENTERO)
+        practica = practica_partes(lesson, PRACTICA_BREVE)  # y qué hacer con la idea: la pieza no acaba en la teoría
     else:
         matiz = escena_matiz(lesson, MATIZ_CORTO if (largo_figura > 16 or apretar) else MATIZ_PALABRAS)
     if matiz:
         scenes.append(matiz)
+    if practica:
+        scenes.append(escena_frase("Práctica", "practica", ROTULOS["practica"], practica, pause_after_s=0.5))
     scenes.append(escena_cierre(book, recuerda=recuerda))
     return _base(
         book,

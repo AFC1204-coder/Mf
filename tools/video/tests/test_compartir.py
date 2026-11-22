@@ -193,7 +193,8 @@ class PiezasTest(unittest.TestCase):
     def test_la_idea_lleva_su_explicacion_el_cuerpo_por_parrafos_enteros(self):
         p = self.plan.piezas[1]
         # La explicación nombra las dos piezas del esquema: van a su lado, y después solo la estructura entera y su pie.
-        self.assertEqual([s.kind for s in p.scenes], ["c-frase", "c-credito", "c-frase", "c-frase", "c-figura", "c-figura", "c-frase", "c-cierre"])
+        self.assertEqual([s.kind for s in p.scenes], ["c-frase", "c-credito", "c-frase", "c-frase", "c-figura", "c-figura", "c-frase", "c-frase", "c-cierre"])
+        self.assertEqual([s.section for s in p.scenes[-3:-1]], ["Matiz", "Práctica"])  # tras el matiz, qué hacer con la idea
         self.assertEqual([s.view["mode"] for s in p.scenes if s.kind == "c-figura"], ["titulo", "pie"])
         explica = [s for s in p.scenes if s.section == "Explicación"]
         self.assertEqual([s.narration for s in explica], ["Todo empieza con una pregunta sencilla. La respuesta rápida suele ser la equivocada.", "Pensar despacio cuesta, pero corrige."])
@@ -314,6 +315,19 @@ class PiezasTest(unittest.TestCase):
         matiz = next(s for s in p.scenes if s.section == "Matiz")
         self.assertIn('data-icon="escudo"', CF._stage_frase(CF.estados(matiz)[-1], "")[0])
         self.assertEqual([i for i in L.lint_pieza(p, self.libro) if i.level == "error"], [])
+
+    def test_la_idea_anade_el_parrafo_del_caso_si_la_leccion_lo_marca(self):
+        relleno = "Dos sigue " + "con más palabras " * 40 + "hasta aquí."
+        caso = "Por ejemplo, una médica revisa su primer diagnóstico. Lo cambia al ver la analítica."
+        libro = _libro(**{"l-1": {"cuerpo": "\n\n".join(["Uno afirma algo. Y lo matiza enseguida.", relleno, "Tres no cabe " + "y es largo " * 40 + "del todo.", caso, "Cinco cierra."])}})
+        p = K.pieza_idea(libro, 0)
+        escena = next(s for s in p.scenes if s.section == "Caso")
+        self.assertEqual(escena.narration, caso)  # el párrafo entero, aunque se salte el tercero
+        self.assertEqual(escena.view["kicker"], K.ROTULOS["caso"])
+        self.assertEqual([i for i in L.lint_pieza(p, libro) if i.level == "error"], [])
+        # Un párrafo que no empieza presentándose como caso no se añade: saltado de su sitio, podría no entenderse.
+        sin = _libro(**{"l-1": {"cuerpo": "\n\n".join(["Uno afirma algo. Y lo matiza enseguida.", relleno, "Tres no cabe " + "y es largo " * 40 + "del todo.", "Eso pasó con una médica, por ejemplo. Cambió su diagnóstico."])}})
+        self.assertFalse([s for s in K.pieza_idea(sin, 0).scenes if s.section == "Caso"])
 
     def test_el_cierre_retoma_el_gancho(self):
         for p in self.plan.piezas:
