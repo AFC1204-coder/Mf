@@ -81,6 +81,7 @@ const msgTimer = setInterval(() => {
    STATE
 ═══════════════════════════════════════════ */
 let libros=[], lecs=[], preg=[], prog=[], revisiones=[];
+let videosIdx=null;   // datos/videos.json: qué lección y qué libro tienen vídeo (lib/video.js)
 let libroActual=null, lecActual=null;
 let ejeActivo=null, subEjeActivo=null, searchQ='', lecFilter='all';
 let testPregs=[], testIdx=0, testResp=[], testCorr=0, testErr=0;
@@ -521,17 +522,18 @@ const leerJSON=async u=>{ try{ const r=await fetch(u,{cache:'no-cache'}); return
 
 /** Contenido: libros, lecciones (sin índice de búsqueda ni SVG antiguos), preguntas, diagramas y mapas. */
 async function descargarCorpus(){
-  const [lb, ls, pr, conUrl, conSvg, dg, mp] = await Promise.all([
+  const [lb, ls, pr, conUrl, conSvg, dg, mp, vd] = await Promise.all([
     sb('libros?select=*&publico=eq.true&order=fecha_creacion.asc'),
     sbAll(`lecciones?select=${Corpus.COLUMNAS_LECCION}&activa=eq.true&order=orden.asc`),
     sbAll('preguntas?select=*&activa=eq.true'),
     sbAll('lecciones?select=id,imagen_principal&activa=eq.true&imagen_principal=not.like.data:*'),
     sbAll('lecciones?select=id&activa=eq.true&imagen_principal=like.data:*'),
     leerJSON('datos/diagramas.json'),
-    leerJSON('datos/mapas.json')
+    leerJSON('datos/mapas.json'),
+    leerJSON('datos/videos.json')
   ]);
   Corpus.fusionarImagenes(ls, conUrl, conSvg);
-  return { v: Corpus.VERSION, ts: Date.now(), libros: lb, lecs: ls, preg: pr, dg, mp };
+  return { v: Corpus.VERSION, ts: Date.now(), libros: lb, lecs: ls, preg: pr, dg, mp, vd };
 }
 /** Datos del usuario (pequeños): se piden en cada apertura. */
 async function descargarUsuario(){
@@ -544,6 +546,7 @@ async function descargarUsuario(){
 function aplicarCorpus(c){
   libros = c.libros.map(l=>({...l, eje:normalizeEje(l.eje)}));
   lecs = c.lecs; preg = c.preg || [];
+  videosIdx = c.vd || null;
   try{
     if(typeof Visuales!=='undefined'){
       Visuales.fusionarDiagramas(lecs, c.dg, Diagrama);
@@ -1876,6 +1879,7 @@ function renderLibroHero(){
         </div>
       </div>
     </div>
+    ${videoBloqueHtml(typeof VideoLeccion!=='undefined'?VideoLeccion.deLibro(videosIdx,l.id):[])}
     ${ideasInvHtml}
     ${infografiaLibroHtml(l)}`;
   if(!l.portada_url){
@@ -2019,6 +2023,39 @@ function renderRuta(){
 }
 
 /* ═══════════════════════════════════════════
+   VÍDEO DE LA LECCIÓN Y DEL LIBRO (YouTube, bajo demanda)
+   Hasta que se pulsa no se carga nada de YouTube: ni reproductor ni miniatura.
+═══════════════════════════════════════════ */
+function videoBloqueHtml(items){
+  if(!items||!items.length) return '';
+  return `<div class="vid-bloque">
+    <div class="vid-botones">`+items.map(v=>`<button type="button" class="vid-btn" data-yt="${v.yt}" aria-expanded="false" onclick="videoAbrir(this)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="7,4 20,12 7,20"/></svg>
+      <span>${esc(v.etiqueta)}</span>${v.duracion?`<span class="vid-dur">${esc(v.duracion)}</span>`:''}
+    </button>`).join('')+`</div>
+    <div class="vid-marco" hidden></div>
+  </div>`;
+}
+function videoAbrir(btn){
+  const bloque=btn.closest('.vid-bloque'), marco=bloque&&bloque.querySelector('.vid-marco');
+  const yt=btn.dataset.yt, url=VideoLeccion.urlIncrustar(yt);
+  if(!marco||!url) return;
+  const yaAbierto=btn.getAttribute('aria-expanded')==='true';
+  videoCerrar();
+  if(yaAbierto) return;                              // segundo toque en el mismo botón: cerrar
+  if(typeof ttsStop==='function') ttsStop();         // el audio de la lección y el vídeo no suenan a la vez
+  btn.setAttribute('aria-expanded','true');
+  marco.innerHTML=`<div class="vid-caja"><iframe src="${url}" title="${esc(btn.querySelector('span').textContent)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+    <div class="vid-pie"><a href="${VideoLeccion.urlVer(yt)}" target="_blank" rel="noopener">Abrir en YouTube</a><button type="button" onclick="videoCerrar()">Cerrar</button></div>`;
+  marco.hidden=false;
+  marco.scrollIntoView({block:'nearest',behavior:'smooth'});
+}
+function videoCerrar(){
+  document.querySelectorAll('.vid-marco').forEach(m=>{ m.innerHTML=''; m.hidden=true; });
+  document.querySelectorAll('.vid-btn[aria-expanded="true"]').forEach(b=>b.setAttribute('aria-expanded','false'));
+}
+
+/* ═══════════════════════════════════════════
    VER LECCION
 ═══════════════════════════════════════════ */
 function verLeccion(id, from=null, skipPush=false, replace=false){
@@ -2107,6 +2144,8 @@ function verLeccion(id, from=null, skipPush=false, replace=false){
       <svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>
     </button>
   </div>`;
+
+  html+=videoBloqueHtml(typeof VideoLeccion!=='undefined'?VideoLeccion.deLeccion(videosIdx,lecActual.id):[]);
 
   if(lecActual.detalles?.length){
     html+=`<div class="det-grid">`+
@@ -3324,6 +3363,7 @@ function verAutor(enc){
    NAVIGATION
 ═══════════════════════════════════════════ */
 function showView(name, skipPush=false, replace=false){
+  videoCerrar();   // un vídeo abierto no sigue sonando en otra pantalla
   if(name!=='leccion' && typeof lecturaPausar==='function') lecturaPausar();
   if(name!=='leccion'){if(ttsAudio){ttsAudio.pause();ttsAudio=null;}if(window.speechSynthesis){speechSynthesis.cancel();}ttsUtterance=null;ttsPaused=false;ttsMode=null;ttsAudioUrl=null;}
   document.body.classList.toggle('noche', name==='cuaderno');

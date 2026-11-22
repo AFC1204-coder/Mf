@@ -38,7 +38,7 @@ from .tts.cache import CachedTTS
 VIDEO_DIR = Path(__file__).resolve().parent
 REPO_ROOT = VIDEO_DIR.parent.parent
 OUTPUT = VIDEO_DIR / "output"
-COMMANDS = ("leccion", "libro", "biblioteca", "calendario")
+COMMANDS = ("leccion", "libro", "biblioteca", "calendario", "publicados")
 
 
 def _load_env() -> None:
@@ -203,6 +203,19 @@ def _filtra_plan(plan: K.Plan, args: argparse.Namespace) -> K.Plan:
         else:
             quedan.append(p)
     return K.Plan(quedan, omitidas, K.orden_sugerido(quedan))
+
+
+def publicados(args: argparse.Namespace) -> int:
+    """Registro de vídeos subidos (`tools/video/publicados.csv`) → índice de la web (`datos/videos.json`)."""
+    from . import publicados as P
+
+    registro, indice = VIDEO_DIR / "publicados.csv", REPO_ROOT / "datos" / "videos.json"
+    recuento, avisos = P.actualizar(registro, indice, OUTPUT, args.aspecto.replace(":", "x"))
+    for a in avisos:
+        print(f"  [aviso] {a}")
+    print(f"Registro: {recuento['filas']} piezas, {recuento['con_enlace']} con enlace → {registro}")
+    print(f"Índice de la web: {recuento['publicados']} vídeos publicados → {indice}")
+    return 0
 
 
 def calendario(args: argparse.Namespace) -> int:
@@ -616,6 +629,9 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--desde", default=None, help="Fecha de la primera pieza (AAAA-MM-DD). Sin ella, «día 1», «día 2»…")
     p.add_argument("--todas", action="store_true", help="Incluye también las piezas planificadas que aún no tienen vídeo.")
 
+    p = sub.add_parser("publicados", help="(compartir) Pone al día el registro de vídeos subidos a YouTube y el índice que lee la web.")
+    p.add_argument("--aspecto", choices=list(K.ASPECTOS), default="9:16")
+
     p = sub.add_parser("biblioteca", parents=[comun], help="Recorre la biblioteca y genera las series que faltan.")
     p.add_argument("--eje", default=None, help="Solo libros de este eje (texto parcial: «Psicología», «Economía»…).")
     p.add_argument("--limit", type=int, default=3, help="Cuántos libros como máximo en esta ejecución (por defecto 3).")
@@ -638,6 +654,8 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.command == "calendario":
         return calendario(args)
+    if args.command == "publicados":
+        return publicados(args)
     if not args.engine:  # sin --engine: TTS_ENGINE o el motor gratuito por defecto
         args.engine = (os.getenv("TTS_ENGINE") or DEFAULT_ENGINE).strip().lower()
     if getattr(args, "format", "") == "compartir" and args.engine == "edge":

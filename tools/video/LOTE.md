@@ -68,3 +68,30 @@ tools/video/.venv/bin/python -m tools.video.cli calendario --por-dia 2
 | Ver el aspecto sin gastar voz (rápido) | `--engine mudo` |
 | Otra voz | `--voice es-ES-AlvaroNeural` |
 | Solo la lección 3 de un libro | `--only 3` |
+
+## Publicar en la web
+
+Los vídeos no van en el repositorio: se suben a YouTube y la web los incrusta. La web solo necesita saber qué pieza es qué vídeo.
+
+1. Sube los vídeos a YouTube. El título y la descripción de cada uno están en su `publicacion.txt`.
+2. Abre `tools/video/publicados.csv` (hay una fila por pieza generada) y pega en la columna `youtube` el enlace de cada vídeo subido. Vale cualquier enlace de YouTube o el identificador suelto. No toques las demás columnas.
+3. Lanza:
+
+```bash
+tools/video/.venv/bin/python -m tools.video.cli publicados
+```
+
+4. Sube al repositorio los dos archivos que cambian: `tools/video/publicados.csv` y `datos/videos.json`.
+
+Qué sale en la web:
+
+- **En la lección:** «Ver en vídeo» (la pieza `idea`) y «Versión larga» (la `fondo`).
+- **En la ficha del libro:** «El libro en vídeo» (la pieza `libro`).
+- Las piezas de pregunta, práctica y caso se pueden registrar igual, pero la web no las muestra: son para redes.
+- Una lección sin vídeo registrado no muestra nada.
+
+Qué avisa la orden:
+
+- **Enlace que no es de YouTube, o el mismo vídeo en dos filas:** no se publica.
+- **Guion cambiado:** si regeneras una pieza y su guion ya no es el del vídeo subido, ese vídeo deja de salir en la web. Sube el nuevo y cambia el enlace de la fila.
+- Si lanzas la orden en un equipo donde no están generados todos los libros, los vídeos ya publicados de los demás se conservan.
