@@ -265,6 +265,29 @@ Lo que **no** se puede medir y queda para oír (`ejemplos-compartir/con-voz/`): 
 - **Voz elegida:** la muestra 9, `fr-FR-RemyMultilingualNeural`, a su ritmo y tono naturales («suena más humana que el resto»). Es la voz por defecto de `--format compartir` (`VOZ_EDGE` en `compartir.py`); los formatos `clase` y `corto` no cambian. Las duraciones estimadas se escalan con `FACTOR_VOZ` (0,87): en las dos piezas renderizadas la estimación queda un 5 % corta (71 s frente a 75 s; 187 s frente a 197 s).
 - La pieza `06` de `con-voz/` está hecha con esa voz.
 
+## Lote de diez libros con voz real
+
+Un lote completo, en 9:16 y con la voz por defecto, en un contenedor en la nube con tres libros a la vez.
+
+| Libro | Piezas | Vídeo |
+|---|---|---|
+| Decisive | 28 | 44,2 min |
+| Four Thousand Weeks | 23 | 33,9 min |
+| Hábitos Atómicos | 29 | 54,4 min |
+| El hombre en busca de sentido | 32 | 52,9 min |
+| The War of Art | 40 | 64,1 min |
+| Dopamine Nation | 22 | 46,1 min |
+| Range | 34 | 65,3 min |
+| Verbal Judo | 22 | 47,6 min |
+| Attached | 21 | 34,1 min |
+| Games People Play | 29 | 45,1 min |
+| **Total** | **280** | **487,7 min (unas 8 h)** |
+
+- **Tiempo.** Primera pasada: unas 6 h 10 min de reloj. Segunda pasada (recuperar fallos y rehacer cuatro libros con el código más reciente): 1 h 25 min más.
+- **Fallos.** En la primera pasada, 4 piezas de 279, todas porque el servicio de voz no devolvió audio («NoAudioReceived»); ninguna por el generador ni por el lint. Tres ocurrieron con 4 reintentos; con 6 reintentos y esperas más largas falló una. La segunda pasada las recuperó todas: 280 de 280.
+- **Versiones.** El código cambió durante el lote. Decisive, Four Thousand Weeks y Hábitos Atómicos se rehicieron enteros al final; los otros siete salieron con la versión vigente cuando arrancó cada uno, así que algunos no llevan el movimiento real entre piezas del esquema. Relanzar la orden los pone al día.
+- **No revisado.** Nadie ha visto las 280 piezas. Se revisó una («Decisive», idea 2) en una hoja de fotogramas.
+
 ## Revisión independiente
 
 Antes de dar el trabajo por terminado se pidió a otro agente, sin contexto previo, que buscara fallos reales en el código. Encontró nueve y los nueve están corregidos, cada uno con su prueba:
