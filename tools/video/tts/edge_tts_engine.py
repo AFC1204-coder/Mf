@@ -69,8 +69,8 @@ def _preparar_red() -> str | None:
 
 
 RITMO, TONO = "-8%", "-2Hz"
-REINTENTOS = 4  # intentos por locución ante un fallo pasajero del servicio
-ESPERA_REINTENTO_S = 2.0  # espera antes del segundo intento; se dobla en cada uno
+REINTENTOS = 6  # intentos por locución ante un fallo pasajero del servicio (en total espera hasta minuto y medio)
+ESPERA_REINTENTO_S = 3.0  # espera antes del segundo intento; se dobla en cada uno
 
 
 def _ajuste(valor: str | None, unidad: str, por_defecto: str) -> str:
