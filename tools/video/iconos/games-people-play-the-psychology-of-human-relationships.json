@@ -1,0 +1,191 @@
+{
+  "libro": "Games People Play: The Psychology of Human Relationships",
+  "libro_id": "354ab840-d4b8-4c12-8fd8-f092db5056d7",
+  "como_se_usa": "Cada entrada propone un icono de la biblioteca para una pieza de esquema. No sale en ningún vídeo hasta que alguien revisa la propuesta y pone \"aprobado\": true. Un icono vacío significa que ninguno de los 18 encaja: la pieza sigue con su número. Iconos válidos: balanza, bandera, bombilla, brujula, camino, ciclo, dado, diana, escudo, grafico, grupo, libro, llave, lupa, ojo, pregunta, red, reloj.",
+  "piezas": [
+    {
+      "leccion_id": "545e1249-8676-4c8c-809e-caa382646bf9",
+      "leccion": "Padre, Adulto y Niño: tres estados del yo en una misma persona",
+      "esquema": "Los tres estados del yo de Berne",
+      "pieza": "Padre",
+      "icono": "escudo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "545e1249-8676-4c8c-809e-caa382646bf9",
+      "leccion": "Padre, Adulto y Niño: tres estados del yo en una misma persona",
+      "esquema": "Los tres estados del yo de Berne",
+      "pieza": "Adulto",
+      "icono": "balanza",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "545e1249-8676-4c8c-809e-caa382646bf9",
+      "leccion": "Padre, Adulto y Niño: tres estados del yo en una misma persona",
+      "esquema": "Los tres estados del yo de Berne",
+      "pieza": "Niño",
+      "icono": "bombilla",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "545e1249-8676-4c8c-809e-caa382646bf9",
+      "leccion": "Padre, Adulto y Niño: tres estados del yo en una misma persona",
+      "esquema": "Los tres estados del yo de Berne",
+      "pieza": "No son roles ni edades",
+      "icono": "pregunta",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "99ace814-5863-4536-8c04-1fcc795b6818",
+      "leccion": "Transacciones complementarias, cruzadas y ulteriores",
+      "esquema": "Tres tipos de transacción según Berne",
+      "pieza": "Complementaria",
+      "icono": "red",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "99ace814-5863-4536-8c04-1fcc795b6818",
+      "leccion": "Transacciones complementarias, cruzadas y ulteriores",
+      "esquema": "Tres tipos de transacción según Berne",
+      "pieza": "Cruzada",
+      "icono": "camino",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "99ace814-5863-4536-8c04-1fcc795b6818",
+      "leccion": "Transacciones complementarias, cruzadas y ulteriores",
+      "esquema": "Tres tipos de transacción según Berne",
+      "pieza": "Ulterior",
+      "icono": "ojo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "173ca498-68c2-4d29-8687-0dabcf4923da",
+      "leccion": "Qué es un juego: transacciones ulteriores con trampa y premio",
+      "esquema": "Las fases de un juego según Berne",
+      "pieza": "Gancho",
+      "icono": "llave",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "173ca498-68c2-4d29-8687-0dabcf4923da",
+      "leccion": "Qué es un juego: transacciones ulteriores con trampa y premio",
+      "esquema": "Las fases de un juego según Berne",
+      "pieza": "Respuesta",
+      "icono": "camino",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "173ca498-68c2-4d29-8687-0dabcf4923da",
+      "leccion": "Qué es un juego: transacciones ulteriores con trampa y premio",
+      "esquema": "Las fases de un juego según Berne",
+      "pieza": "Giro",
+      "icono": "ciclo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "173ca498-68c2-4d29-8687-0dabcf4923da",
+      "leccion": "Qué es un juego: transacciones ulteriores con trampa y premio",
+      "esquema": "Las fases de un juego según Berne",
+      "pieza": "Desconcierto",
+      "icono": "pregunta",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "173ca498-68c2-4d29-8687-0dabcf4923da",
+      "leccion": "Qué es un juego: transacciones ulteriores con trampa y premio",
+      "esquema": "Las fases de un juego según Berne",
+      "pieza": "Premio",
+      "icono": "diana",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "e80bab83-84ca-450a-8da4-10d3aa5dde54",
+      "leccion": "«Sí, pero…» y «Patéame»: dos juegos de ejemplo",
+      "esquema": "«Sí, pero…» y «Patéame»",
+      "pieza": "«Sí, pero…»",
+      "icono": "pregunta",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "e80bab83-84ca-450a-8da4-10d3aa5dde54",
+      "leccion": "«Sí, pero…» y «Patéame»: dos juegos de ejemplo",
+      "esquema": "«Sí, pero…» y «Patéame»",
+      "pieza": "«Patéame»",
+      "icono": "",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "de7381a3-f21a-4d18-8ccc-4d5cca2c7474",
+      "leccion": "Caricias y estructuración del tiempo: por qué buscamos juegos",
+      "esquema": "Caricias y estructuración del tiempo",
+      "pieza": "Hambre de estímulo",
+      "icono": "bombilla",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "de7381a3-f21a-4d18-8ccc-4d5cca2c7474",
+      "leccion": "Caricias y estructuración del tiempo: por qué buscamos juegos",
+      "esquema": "Caricias y estructuración del tiempo",
+      "pieza": "Hambre de estructura",
+      "icono": "red",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "de7381a3-f21a-4d18-8ccc-4d5cca2c7474",
+      "leccion": "Caricias y estructuración del tiempo: por qué buscamos juegos",
+      "esquema": "Caricias y estructuración del tiempo",
+      "pieza": "Seis maneras de llenar el tiempo",
+      "icono": "reloj",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "de7381a3-f21a-4d18-8ccc-4d5cca2c7474",
+      "leccion": "Caricias y estructuración del tiempo: por qué buscamos juegos",
+      "esquema": "Caricias y estructuración del tiempo",
+      "pieza": "Extremos",
+      "icono": "balanza",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "de7381a3-f21a-4d18-8ccc-4d5cca2c7474",
+      "leccion": "Caricias y estructuración del tiempo: por qué buscamos juegos",
+      "esquema": "Caricias y estructuración del tiempo",
+      "pieza": "El juego",
+      "icono": "dado",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "7341a832-8593-418a-8afb-759ebe29f334",
+      "leccion": "Más allá de los juegos: conciencia, espontaneidad e intimidad",
+      "esquema": "Más allá de los juegos: la autonomía",
+      "pieza": "Conciencia",
+      "icono": "ojo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "7341a832-8593-418a-8afb-759ebe29f334",
+      "leccion": "Más allá de los juegos: conciencia, espontaneidad e intimidad",
+      "esquema": "Más allá de los juegos: la autonomía",
+      "pieza": "Espontaneidad",
+      "icono": "bombilla",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "7341a832-8593-418a-8afb-759ebe29f334",
+      "leccion": "Más allá de los juegos: conciencia, espontaneidad e intimidad",
+      "esquema": "Más allá de los juegos: la autonomía",
+      "pieza": "Intimidad",
+      "icono": "grupo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "7341a832-8593-418a-8afb-759ebe29f334",
+      "leccion": "Más allá de los juegos: conciencia, espontaneidad e intimidad",
+      "esquema": "Más allá de los juegos: la autonomía",
+      "pieza": "Romper un juego",
+      "icono": "llave",
+      "aprobado": false
+    }
+  ]
+}

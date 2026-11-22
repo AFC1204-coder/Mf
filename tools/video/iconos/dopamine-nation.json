@@ -1,0 +1,167 @@
+{
+  "libro": "Dopamine Nation",
+  "libro_id": "8f978a60-d21d-4788-bf8c-04d07a5b78fe",
+  "como_se_usa": "Cada entrada propone un icono de la biblioteca para una pieza de esquema. No sale en ningún vídeo hasta que alguien revisa la propuesta y pone \"aprobado\": true. Un icono vacío significa que ninguno de los 18 encaja: la pieza sigue con su número. Iconos válidos: balanza, bandera, bombilla, brujula, camino, ciclo, dado, diana, escudo, grafico, grupo, libro, llave, lupa, ojo, pregunta, red, reloj.",
+  "piezas": [
+    {
+      "leccion_id": "2b0c7beb-56a7-419f-a332-0f700e603d3b",
+      "leccion": "La Paradoja de la Sobreabundancia: Más Placer, Más Dolor",
+      "esquema": "La paradoja de la sobreabundancia",
+      "pieza": "Más acceso al placer",
+      "icono": "llave",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "2b0c7beb-56a7-419f-a332-0f700e603d3b",
+      "leccion": "La Paradoja de la Sobreabundancia: Más Placer, Más Dolor",
+      "esquema": "La paradoja de la sobreabundancia",
+      "pieza": "Más sufrimiento",
+      "icono": "grafico",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "b0e2ad69-dfbb-4fed-9edb-888e3c9390b9",
+      "leccion": "Neurociencia del Sistema Dopaminérgico: La Moneda del Deseo",
+      "esquema": "La dopamina no es placer",
+      "pieza": "Idea popular",
+      "icono": "grupo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "b0e2ad69-dfbb-4fed-9edb-888e3c9390b9",
+      "leccion": "Neurociencia del Sistema Dopaminérgico: La Moneda del Deseo",
+      "esquema": "La dopamina no es placer",
+      "pieza": "Para Lembke",
+      "icono": "libro",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "150d1661-90bb-4b63-add7-f24e40ac6a79",
+      "leccion": "El Ayuno Dopaminérgico: La Abstinencia como Restauración",
+      "esquema": "El ayuno dopaminérgico",
+      "pieza": "Abstinencia total",
+      "icono": "escudo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "150d1661-90bb-4b63-add7-f24e40ac6a79",
+      "leccion": "El Ayuno Dopaminérgico: La Abstinencia como Restauración",
+      "esquema": "El ayuno dopaminérgico",
+      "pieza": "Típicamente unas 4 semanas",
+      "icono": "reloj",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "150d1661-90bb-4b63-add7-f24e40ac6a79",
+      "leccion": "El Ayuno Dopaminérgico: La Abstinencia como Restauración",
+      "esquema": "El ayuno dopaminérgico",
+      "pieza": "El cerebro se recalibra",
+      "icono": "ciclo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "150d1661-90bb-4b63-add7-f24e40ac6a79",
+      "leccion": "El Ayuno Dopaminérgico: La Abstinencia como Restauración",
+      "esquema": "El ayuno dopaminérgico",
+      "pieza": "Se recupera el equilibrio",
+      "icono": "balanza",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "c3c3bc59-68c5-4aa8-a073-4289207826af",
+      "leccion": "La Honestidad Radical como Antídoto a la Adicción",
+      "esquema": "Honestidad y adicción",
+      "pieza": "Deshonestidad",
+      "icono": "pregunta",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "c3c3bc59-68c5-4aa8-a073-4289207826af",
+      "leccion": "La Honestidad Radical como Antídoto a la Adicción",
+      "esquema": "Honestidad y adicción",
+      "pieza": "Honestidad radical",
+      "icono": "ojo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "a015d2ed-ed4b-48b1-9625-14f150d78775",
+      "leccion": "Dolor como Medicina: La Reinterpretación de la Incomodidad",
+      "esquema": "El dolor como medicina",
+      "pieza": "Exposición voluntaria a incomodidad",
+      "icono": "bandera",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "a015d2ed-ed4b-48b1-9625-14f150d78775",
+      "leccion": "Dolor como Medicina: La Reinterpretación de la Incomodidad",
+      "esquema": "El dolor como medicina",
+      "pieza": "El cerebro libera dopamina",
+      "icono": "bombilla",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "a015d2ed-ed4b-48b1-9625-14f150d78775",
+      "leccion": "Dolor como Medicina: La Reinterpretación de la Incomodidad",
+      "esquema": "El dolor como medicina",
+      "pieza": "Se reequilibra la recompensa",
+      "icono": "balanza",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "a015d2ed-ed4b-48b1-9625-14f150d78775",
+      "leccion": "Dolor como Medicina: La Reinterpretación de la Incomodidad",
+      "esquema": "El dolor como medicina",
+      "pieza": "Reinterpretar la incomodidad",
+      "icono": "lupa",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "62852b8f-32f9-4b05-b2b1-24747018959c",
+      "leccion": "La Cultura de la Automedicación: Por Qué Estamos Todos Aquí",
+      "esquema": "De la adicción a la cultura",
+      "pieza": "Individuo",
+      "icono": "llave",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "62852b8f-32f9-4b05-b2b1-24747018959c",
+      "leccion": "La Cultura de la Automedicación: Por Qué Estamos Todos Aquí",
+      "esquema": "De la adicción a la cultura",
+      "pieza": "Cultura",
+      "icono": "grupo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "a2479388-c785-421a-b698-a50bc435ebe1",
+      "leccion": "Presión, Contemplación y los Límites del Autocontrol",
+      "esquema": "Por qué falla el autocontrol",
+      "pieza": "Idea común",
+      "icono": "grupo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "a2479388-c785-421a-b698-a50bc435ebe1",
+      "leccion": "Presión, Contemplación y los Límites del Autocontrol",
+      "esquema": "Por qué falla el autocontrol",
+      "pieza": "Visión de Lembke",
+      "icono": "libro",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "161526fb-906a-41bd-a542-087e7ae1a1cd",
+      "leccion": "Identidad y Narrativa: El Yo que se Recupera",
+      "esquema": "Identidad y narrativa",
+      "pieza": "Técnica terapéutica",
+      "icono": "llave",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "161526fb-906a-41bd-a542-087e7ae1a1cd",
+      "leccion": "Identidad y Narrativa: El Yo que se Recupera",
+      "esquema": "Identidad y narrativa",
+      "pieza": "Identidad y narrativa",
+      "icono": "libro",
+      "aprobado": false
+    }
+  ]
+}

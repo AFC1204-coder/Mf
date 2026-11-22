@@ -9,7 +9,7 @@
       "esquema": "Los cuatro villanos de la decisión",
       "pieza": "Marco estrecho",
       "icono": "ojo",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "b5db45f2-9b8d-4cba-b7da-a9b775f075a4",
@@ -17,7 +17,7 @@
       "esquema": "Los cuatro villanos de la decisión",
       "pieza": "Sesgo de confirmación",
       "icono": "lupa",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "b5db45f2-9b8d-4cba-b7da-a9b775f075a4",
@@ -25,7 +25,7 @@
       "esquema": "Los cuatro villanos de la decisión",
       "pieza": "Emoción a corto plazo",
       "icono": "reloj",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "b5db45f2-9b8d-4cba-b7da-a9b775f075a4",
@@ -33,7 +33,7 @@
       "esquema": "Los cuatro villanos de la decisión",
       "pieza": "Exceso de confianza",
       "icono": "dado",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "197bb40a-62f2-4c06-8581-cc766713728c",
@@ -41,7 +41,7 @@
       "esquema": "Ampliar las opciones",
       "pieza": "El problema: marco estrecho",
       "icono": "ojo",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "197bb40a-62f2-4c06-8581-cc766713728c",
@@ -49,7 +49,7 @@
       "esquema": "Ampliar las opciones",
       "pieza": "Opciones que desaparecen",
       "icono": "pregunta",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "197bb40a-62f2-4c06-8581-cc766713728c",
@@ -57,7 +57,7 @@
       "esquema": "Ampliar las opciones",
       "pieza": "Seguimiento en paralelo",
       "icono": "red",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "197bb40a-62f2-4c06-8581-cc766713728c",
@@ -65,7 +65,7 @@
       "esquema": "Ampliar las opciones",
       "pieza": "Quien ya lo resolvió",
       "icono": "grupo",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "b6b9ce29-d22c-4dea-bfee-518b3c6742af",
@@ -73,7 +73,7 @@
       "esquema": "Contrastar los supuestos con la realidad",
       "pieza": "Buscar lo que contradice",
       "icono": "balanza",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "b6b9ce29-d22c-4dea-bfee-518b3c6742af",
@@ -81,7 +81,7 @@
       "esquema": "Contrastar los supuestos con la realidad",
       "pieza": "Mirar desde fuera",
       "icono": "grafico",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "b6b9ce29-d22c-4dea-bfee-518b3c6742af",
@@ -89,7 +89,7 @@
       "esquema": "Contrastar los supuestos con la realidad",
       "pieza": "Mirar desde cerca",
       "icono": "lupa",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "b6b9ce29-d22c-4dea-bfee-518b3c6742af",
@@ -97,7 +97,7 @@
       "esquema": "Contrastar los supuestos con la realidad",
       "pieza": "Probar en pequeño",
       "icono": "diana",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "b4b44d25-181d-48fe-b3f3-da788991e159",
@@ -105,7 +105,7 @@
       "esquema": "Tomar distancia: la regla 10/10/10",
       "pieza": "Regla 10/10/10",
       "icono": "reloj",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "b4b44d25-181d-48fe-b3f3-da788991e159",
@@ -113,7 +113,7 @@
       "esquema": "Tomar distancia: la regla 10/10/10",
       "pieza": "Consejo a un amigo",
       "icono": "grupo",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "b4b44d25-181d-48fe-b3f3-da788991e159",
@@ -121,7 +121,7 @@
       "esquema": "Tomar distancia: la regla 10/10/10",
       "pieza": "Prioridades esenciales",
       "icono": "brujula",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "84b80988-51df-4fc3-8456-5fdd87370237",
@@ -129,7 +129,7 @@
       "esquema": "Prepararse para equivocarse",
       "pieza": "Un abanico de resultados",
       "icono": "dado",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "84b80988-51df-4fc3-8456-5fdd87370237",
@@ -137,7 +137,7 @@
       "esquema": "Prepararse para equivocarse",
       "pieza": "Análisis previo al fracaso",
       "icono": "lupa",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "84b80988-51df-4fc3-8456-5fdd87370237",
@@ -145,7 +145,7 @@
       "esquema": "Prepararse para equivocarse",
       "pieza": "Preparar también el éxito",
       "icono": "bandera",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "84b80988-51df-4fc3-8456-5fdd87370237",
@@ -153,7 +153,7 @@
       "esquema": "Prepararse para equivocarse",
       "pieza": "Cables trampa",
       "icono": "escudo",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "6d416e06-b6a8-4096-a6d1-9517d84c9e30",
@@ -161,7 +161,7 @@
       "esquema": "El proceso WRAP completo",
       "pieza": "Ampliar las opciones",
       "icono": "red",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "6d416e06-b6a8-4096-a6d1-9517d84c9e30",
@@ -169,7 +169,7 @@
       "esquema": "El proceso WRAP completo",
       "pieza": "Contrastar supuestos con la realidad",
       "icono": "balanza",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "6d416e06-b6a8-4096-a6d1-9517d84c9e30",
@@ -177,7 +177,7 @@
       "esquema": "El proceso WRAP completo",
       "pieza": "Tomar distancia antes de decidir",
       "icono": "reloj",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "6d416e06-b6a8-4096-a6d1-9517d84c9e30",
@@ -185,7 +185,7 @@
       "esquema": "El proceso WRAP completo",
       "pieza": "Prepararse para equivocarse",
       "icono": "escudo",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "26002584-f210-4027-a2e7-fcf2a6ecefd8",
@@ -193,7 +193,7 @@
       "esquema": "Cuánto proceso aplicar a una decisión",
       "pieza": "Error barato y reversible",
       "icono": "ciclo",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "26002584-f210-4027-a2e7-fcf2a6ecefd8",
@@ -201,7 +201,7 @@
       "esquema": "Cuánto proceso aplicar a una decisión",
       "pieza": "Error caro e incierto",
       "icono": "dado",
-      "aprobado": false
+      "aprobado": true
     }
   ]
 }

@@ -1,0 +1,175 @@
+{
+  "libro": "Verbal Judo",
+  "libro_id": "dba2ee67-e0f4-4906-ac96-e4831612b9bc",
+  "como_se_usa": "Cada entrada propone un icono de la biblioteca para una pieza de esquema. No sale en ningún vídeo hasta que alguien revisa la propuesta y pone \"aprobado\": true. Un icono vacío significa que ninguno de los 18 encaja: la pieza sigue con su número. Iconos válidos: balanza, bandera, bombilla, brujula, camino, ciclo, dado, diana, escudo, grafico, grupo, libro, llave, lupa, ojo, pregunta, red, reloj.",
+  "piezas": [
+    {
+      "leccion_id": "8eb2e1d6-c70a-42d0-a3a8-80ac7af52b51",
+      "leccion": "El principio del judo verbal: responder, no reaccionar",
+      "esquema": "Responder, no reaccionar",
+      "pieza": "Fuerza contra fuerza",
+      "icono": "escudo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "8eb2e1d6-c70a-42d0-a3a8-80ac7af52b51",
+      "leccion": "El principio del judo verbal: responder, no reaccionar",
+      "esquema": "Responder, no reaccionar",
+      "pieza": "Redirigir",
+      "icono": "brujula",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "363212cc-439f-4190-b506-7df67c69d2be",
+      "leccion": "Empatía táctica: la diferencia entre sentir y funcionar",
+      "esquema": "Sentir frente a funcionar",
+      "pieza": "Empatía emocional",
+      "icono": "grupo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "363212cc-439f-4190-b506-7df67c69d2be",
+      "leccion": "Empatía táctica: la diferencia entre sentir y funcionar",
+      "esquema": "Sentir frente a funcionar",
+      "pieza": "Empatía táctica",
+      "icono": "diana",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "14d38fee-d1b7-4b63-82f3-14bd84b45270",
+      "leccion": "Las cinco frases más destructivas y cómo el ego sabotea la comunicación",
+      "esquema": "Cuando el ego toma el control",
+      "pieza": "Ego al mando",
+      "icono": "bandera",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "14d38fee-d1b7-4b63-82f3-14bd84b45270",
+      "leccion": "Las cinco frases más destructivas y cómo el ego sabotea la comunicación",
+      "esquema": "Cuando el ego toma el control",
+      "pieza": "Propósito al mando",
+      "icono": "brujula",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "07f4841a-afda-46d5-9ff7-72c6da4a9726",
+      "leccion": "El parafraseo como arma: escuchar para redirigir",
+      "esquema": "Parafrasear no es repetir",
+      "pieza": "Repetir",
+      "icono": "ciclo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "07f4841a-afda-46d5-9ff7-72c6da4a9726",
+      "leccion": "El parafraseo como arma: escuchar para redirigir",
+      "esquema": "Parafrasear no es repetir",
+      "pieza": "Parafrasear",
+      "icono": "libro",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "83fd131b-6ca9-4d97-a1e4-47e999c74db7",
+      "leccion": "El sistema de cinco pasos para personas difíciles",
+      "esquema": "Five-Step Hard Style",
+      "pieza": "Sistema secuencial",
+      "icono": "camino",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "83fd131b-6ca9-4d97-a1e4-47e999c74db7",
+      "leccion": "El sistema de cinco pasos para personas difíciles",
+      "esquema": "Five-Step Hard Style",
+      "pieza": "Pensado para policías",
+      "icono": "escudo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "83fd131b-6ca9-4d97-a1e4-47e999c74db7",
+      "leccion": "El sistema de cinco pasos para personas difíciles",
+      "esquema": "Five-Step Hard Style",
+      "pieza": "Aplicable a otras situaciones",
+      "icono": "red",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "83fd131b-6ca9-4d97-a1e4-47e999c74db7",
+      "leccion": "El sistema de cinco pasos para personas difíciles",
+      "esquema": "Five-Step Hard Style",
+      "pieza": "Genera cooperación",
+      "icono": "grupo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "8ed935bc-ca59-44c7-8583-eb2f342dfddf",
+      "leccion": "La voz como instrumento: tono, registro y las strip phrases",
+      "esquema": "La voz como instrumento",
+      "pieza": "Idea común",
+      "icono": "grupo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "8ed935bc-ca59-44c7-8583-eb2f342dfddf",
+      "leccion": "La voz como instrumento: tono, registro y las strip phrases",
+      "esquema": "La voz como instrumento",
+      "pieza": "Tesis de Thompson",
+      "icono": "libro",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "e14ed280-6809-44bc-9cba-2f8ee944eb40",
+      "leccion": "LEAPS: el sistema integrado de comunicación bajo presión",
+      "esquema": "LEAPS",
+      "pieza": "Listen",
+      "icono": "",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "e14ed280-6809-44bc-9cba-2f8ee944eb40",
+      "leccion": "LEAPS: el sistema integrado de comunicación bajo presión",
+      "esquema": "LEAPS",
+      "pieza": "Empathize",
+      "icono": "grupo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "e14ed280-6809-44bc-9cba-2f8ee944eb40",
+      "leccion": "LEAPS: el sistema integrado de comunicación bajo presión",
+      "esquema": "LEAPS",
+      "pieza": "Ask",
+      "icono": "pregunta",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "e14ed280-6809-44bc-9cba-2f8ee944eb40",
+      "leccion": "LEAPS: el sistema integrado de comunicación bajo presión",
+      "esquema": "LEAPS",
+      "pieza": "Paraphrase",
+      "icono": "libro",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "e14ed280-6809-44bc-9cba-2f8ee944eb40",
+      "leccion": "LEAPS: el sistema integrado de comunicación bajo presión",
+      "esquema": "LEAPS",
+      "pieza": "Summarize",
+      "icono": "diana",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "922e7ca4-cef1-4c4c-ae8f-226f8bca7358",
+      "leccion": "Los cuatro apeles y la comunicación como sistema integrado",
+      "esquema": "Los cuatro apelos de Thompson",
+      "pieza": "Para el comunicador",
+      "icono": "llave",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "922e7ca4-cef1-4c4c-ae8f-226f8bca7358",
+      "leccion": "Los cuatro apeles y la comunicación como sistema integrado",
+      "esquema": "Los cuatro apelos de Thompson",
+      "pieza": "Para el otro",
+      "icono": "grupo",
+      "aprobado": false
+    }
+  ]
+}

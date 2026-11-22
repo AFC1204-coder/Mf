@@ -1,0 +1,207 @@
+{
+  "libro": "The War of Art: Break Through the Blocks and Win Your Inner Creative Battles",
+  "libro_id": "64d0bb20-64a9-4caf-8461-8f9f236c337c",
+  "como_se_usa": "Cada entrada propone un icono de la biblioteca para una pieza de esquema. No sale en ningún vídeo hasta que alguien revisa la propuesta y pone \"aprobado\": true. Un icono vacío significa que ninguno de los 18 encaja: la pieza sigue con su número. Iconos válidos: balanza, bandera, bombilla, brujula, camino, ciclo, dado, diana, escudo, grafico, grupo, libro, llave, lupa, ojo, pregunta, red, reloj.",
+  "piezas": [
+    {
+      "leccion_id": "88b66018-c3b6-460c-826f-120a8f633b11",
+      "leccion": "La Resistencia: la fuerza invisible que frena el trabajo que importa",
+      "esquema": "Los cuatro rasgos de la Resistencia",
+      "pieza": "Interna: nace de dentro",
+      "icono": "lupa",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "88b66018-c3b6-460c-826f-120a8f633b11",
+      "leccion": "La Resistencia: la fuerza invisible que frena el trabajo que importa",
+      "esquema": "Los cuatro rasgos de la Resistencia",
+      "pieza": "Universal: alcanza a quien crea",
+      "icono": "grupo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "88b66018-c3b6-460c-826f-120a8f633b11",
+      "leccion": "La Resistencia: la fuerza invisible que frena el trabajo que importa",
+      "esquema": "Los cuatro rasgos de la Resistencia",
+      "pieza": "Impersonal: nada contra ti",
+      "icono": "balanza",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "88b66018-c3b6-460c-826f-120a8f633b11",
+      "leccion": "La Resistencia: la fuerza invisible que frena el trabajo que importa",
+      "esquema": "Los cuatro rasgos de la Resistencia",
+      "pieza": "Persistente: reaparece cada mañana",
+      "icono": "ciclo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "9b8bbbf8-e1c7-4a9d-8fba-86cb977549ba",
+      "leccion": "Las máscaras de la Resistencia: procrastinar, anestesiarse y racionalizar",
+      "esquema": "Las máscaras y lo que hacen",
+      "pieza": "Cómo se presenta",
+      "icono": "ojo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "9b8bbbf8-e1c7-4a9d-8fba-86cb977549ba",
+      "leccion": "Las máscaras de la Resistencia: procrastinar, anestesiarse y racionalizar",
+      "esquema": "Las máscaras y lo que hacen",
+      "pieza": "Qué hace",
+      "icono": "diana",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "712aab21-dd0c-4e08-8b79-80e5cde525b3",
+      "leccion": "El miedo como indicador: lo que más asusta suele ser lo que hay que hacer",
+      "esquema": "Del cuánto miedo al qué evito",
+      "pieza": "Pregunta habitual",
+      "icono": "pregunta",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "712aab21-dd0c-4e08-8b79-80e5cde525b3",
+      "leccion": "El miedo como indicador: lo que más asusta suele ser lo que hay que hacer",
+      "esquema": "Del cuánto miedo al qué evito",
+      "pieza": "Pregunta de Pressfield",
+      "icono": "libro",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "78e3f57a-cd50-4746-8266-d4d2468032fe",
+      "leccion": "Del aficionado al profesional: una decisión sobre cómo te comportas",
+      "esquema": "Aficionado y profesional",
+      "pieza": "Aficionado",
+      "icono": "dado",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "78e3f57a-cd50-4746-8266-d4d2468032fe",
+      "leccion": "Del aficionado al profesional: una decisión sobre cómo te comportas",
+      "esquema": "Aficionado y profesional",
+      "pieza": "Profesional",
+      "icono": "diana",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "68182a16-a64e-472f-8928-d5d1e99be5e2",
+      "leccion": "Hacer el trabajo: sentarse a trabajar sin esperar a la inspiración",
+      "esquema": "Hacer el trabajo, sesión tras sesión",
+      "pieza": "Sentarse a la hora acordada",
+      "icono": "reloj",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "68182a16-a64e-472f-8928-d5d1e99be5e2",
+      "leccion": "Hacer el trabajo: sentarse a trabajar sin esperar a la inspiración",
+      "esquema": "Hacer el trabajo, sesión tras sesión",
+      "pieza": "Empezar, tenga o no ganas",
+      "icono": "bandera",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "68182a16-a64e-472f-8928-d5d1e99be5e2",
+      "leccion": "Hacer el trabajo: sentarse a trabajar sin esperar a la inspiración",
+      "esquema": "Hacer el trabajo, sesión tras sesión",
+      "pieza": "Se acumulan sesiones",
+      "icono": "grafico",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "68182a16-a64e-472f-8928-d5d1e99be5e2",
+      "leccion": "Hacer el trabajo: sentarse a trabajar sin esperar a la inspiración",
+      "esquema": "Hacer el trabajo, sesión tras sesión",
+      "pieza": "Pulir y juzgar después",
+      "icono": "lupa",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "a151dfb7-b454-4043-8082-df62f8af49bb",
+      "leccion": "No confundirse con la obra: el fracaso y la crítica como parte del oficio",
+      "esquema": "Cuando llega un rechazo",
+      "pieza": "Obra e identidad se funden",
+      "icono": "red",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "a151dfb7-b454-4043-8082-df62f8af49bb",
+      "leccion": "No confundirse con la obra: el fracaso y la crítica como parte del oficio",
+      "esquema": "Cuando llega un rechazo",
+      "pieza": "Se separan",
+      "icono": "balanza",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "a151dfb7-b454-4043-8082-df62f8af49bb",
+      "leccion": "No confundirse con la obra: el fracaso y la crítica como parte del oficio",
+      "esquema": "Cuando llega un rechazo",
+      "pieza": "El rechazo es un dato",
+      "icono": "grafico",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "a151dfb7-b454-4043-8082-df62f8af49bb",
+      "leccion": "No confundirse con la obra: el fracaso y la crítica como parte del oficio",
+      "esquema": "Cuando llega un rechazo",
+      "pieza": "Se decide la siguiente acción",
+      "icono": "camino",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "47903d30-3f87-4ed8-8f91-66703fb20615",
+      "leccion": "Territorio frente a jerarquía: trabajar por la obra y no por el rango",
+      "esquema": "Jerarquía frente a territorio",
+      "pieza": "Jerarquía",
+      "icono": "grupo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "47903d30-3f87-4ed8-8f91-66703fb20615",
+      "leccion": "Territorio frente a jerarquía: trabajar por la obra y no por el rango",
+      "esquema": "Jerarquía frente a territorio",
+      "pieza": "Territorio",
+      "icono": "brujula",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "d5c016a2-d873-46ad-8c57-8ad5a3d9ffb5",
+      "leccion": "La Musa y el yo superior: el tramo místico del libro",
+      "esquema": "Los nombres del reino superior",
+      "pieza": "La Musa",
+      "icono": "bombilla",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "d5c016a2-d873-46ad-8c57-8ad5a3d9ffb5",
+      "leccion": "La Musa y el yo superior: el tramo místico del libro",
+      "esquema": "Los nombres del reino superior",
+      "pieza": "El genio",
+      "icono": "llave",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "d5c016a2-d873-46ad-8c57-8ad5a3d9ffb5",
+      "leccion": "La Musa y el yo superior: el tramo místico del libro",
+      "esquema": "Los nombres del reino superior",
+      "pieza": "La ayuda inesperada",
+      "icono": "dado",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "d5c016a2-d873-46ad-8c57-8ad5a3d9ffb5",
+      "leccion": "La Musa y el yo superior: el tramo místico del libro",
+      "esquema": "Los nombres del reino superior",
+      "pieza": "El yo superior",
+      "icono": "brujula",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "d5c016a2-d873-46ad-8c57-8ad5a3d9ffb5",
+      "leccion": "La Musa y el yo superior: el tramo místico del libro",
+      "esquema": "Los nombres del reino superior",
+      "pieza": "El ego, sede de la Resistencia",
+      "icono": "escudo",
+      "aprobado": false
+    }
+  ]
+}

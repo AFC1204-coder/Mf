@@ -1,0 +1,143 @@
+{
+  "libro": "Attached: The New Science of Adult Attachment and How It Can Help You Find—and Keep—Love",
+  "libro_id": "cf9a48f9-0645-4324-8daa-127a604a58ca",
+  "como_se_usa": "Cada entrada propone un icono de la biblioteca para una pieza de esquema. No sale en ningún vídeo hasta que alguien revisa la propuesta y pone \"aprobado\": true. Un icono vacío significa que ninguno de los 18 encaja: la pieza sigue con su número. Iconos válidos: balanza, bandera, bombilla, brujula, camino, ciclo, dado, diana, escudo, grafico, grupo, libro, llave, lupa, ojo, pregunta, red, reloj.",
+  "piezas": [
+    {
+      "leccion_id": "5439dd88-2261-4ff7-8700-9626fee8000d",
+      "leccion": "Tres maneras de vincularse: seguro, ansioso y evitativo",
+      "esquema": "El apego como lente (lectura de la lección)",
+      "pieza": "Seguro: «Está ocupado»",
+      "icono": "escudo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "5439dd88-2261-4ff7-8700-9626fee8000d",
+      "leccion": "Tres maneras de vincularse: seguro, ansioso y evitativo",
+      "esquema": "El apego como lente (lectura de la lección)",
+      "pieza": "Ansioso: «Me están dejando»",
+      "icono": "pregunta",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "5439dd88-2261-4ff7-8700-9626fee8000d",
+      "leccion": "Tres maneras de vincularse: seguro, ansioso y evitativo",
+      "esquema": "El apego como lente (lectura de la lección)",
+      "pieza": "Evitativo: «Por fin tengo espacio»",
+      "icono": "camino",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "e1104f02-7f4e-4de3-8112-5f57a0b7051f",
+      "leccion": "Activar y desactivar: cómo se protege cada estilo",
+      "esquema": "Activar y desactivar: dos estrategias automáticas",
+      "pieza": "Activación (ansiosos)",
+      "icono": "bombilla",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "e1104f02-7f4e-4de3-8112-5f57a0b7051f",
+      "leccion": "Activar y desactivar: cómo se protege cada estilo",
+      "esquema": "Activar y desactivar: dos estrategias automáticas",
+      "pieza": "Desactivación (evitativos)",
+      "icono": "escudo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "2fd3bdb3-b7f5-43a7-813c-42b2d9762fec",
+      "leccion": "La trampa ansioso-evitativa y el círculo que se retroalimenta",
+      "esquema": "El círculo ansioso-evitativo",
+      "pieza": "El ansioso busca más cercanía",
+      "icono": "lupa",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "2fd3bdb3-b7f5-43a7-813c-42b2d9762fec",
+      "leccion": "La trampa ansioso-evitativa y el círculo que se retroalimenta",
+      "esquema": "El círculo ansioso-evitativo",
+      "pieza": "El evitativo siente presión",
+      "icono": "escudo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "2fd3bdb3-b7f5-43a7-813c-42b2d9762fec",
+      "leccion": "La trampa ansioso-evitativa y el círculo que se retroalimenta",
+      "esquema": "El círculo ansioso-evitativo",
+      "pieza": "La retirada confirma el temor",
+      "icono": "ciclo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "2fd3bdb3-b7f5-43a7-813c-42b2d9762fec",
+      "leccion": "La trampa ansioso-evitativa y el círculo que se retroalimenta",
+      "esquema": "El círculo ansioso-evitativo",
+      "pieza": "El ansioso insiste más",
+      "icono": "grafico",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "1fad1f46-112c-4221-8dc3-5f43ede14114",
+      "leccion": "La paradoja de la dependencia y la base segura",
+      "esquema": "La paradoja de la dependencia",
+      "pieza": "Pareja disponible y fiable",
+      "icono": "grupo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "1fad1f46-112c-4221-8dc3-5f43ede14114",
+      "leccion": "La paradoja de la dependencia y la base segura",
+      "esquema": "La paradoja de la dependencia",
+      "pieza": "Se calma el sistema de alarma",
+      "icono": "escudo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "1fad1f46-112c-4221-8dc3-5f43ede14114",
+      "leccion": "La paradoja de la dependencia y la base segura",
+      "esquema": "La paradoja de la dependencia",
+      "pieza": "Energía libre",
+      "icono": "bombilla",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "1fad1f46-112c-4221-8dc3-5f43ede14114",
+      "leccion": "La paradoja de la dependencia y la base segura",
+      "esquema": "La paradoja de la dependencia",
+      "pieza": "Más autonomía",
+      "icono": "brujula",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "de8daf79-7130-4ca0-8188-dc74f6690ac5",
+      "leccion": "Elegir pareja y comunicar: el estilo no es destino",
+      "esquema": "Elegir pareja y comunicar con claridad",
+      "pieza": "Observar la respuesta a la cercanía",
+      "icono": "ojo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "de8daf79-7130-4ca0-8188-dc74f6690ac5",
+      "leccion": "Elegir pareja y comunicar: el estilo no es destino",
+      "esquema": "Elegir pareja y comunicar con claridad",
+      "pieza": "Decir las necesidades con claridad",
+      "icono": "bandera",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "de8daf79-7130-4ca0-8188-dc74f6690ac5",
+      "leccion": "Elegir pareja y comunicar: el estilo no es destino",
+      "esquema": "Elegir pareja y comunicar con claridad",
+      "pieza": "Escuchar las del otro",
+      "icono": "grupo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "de8daf79-7130-4ca0-8188-dc74f6690ac5",
+      "leccion": "Elegir pareja y comunicar: el estilo no es destino",
+      "esquema": "Elegir pareja y comunicar con claridad",
+      "pieza": "Revisar cómo responde",
+      "icono": "lupa",
+      "aprobado": false
+    }
+  ]
+}

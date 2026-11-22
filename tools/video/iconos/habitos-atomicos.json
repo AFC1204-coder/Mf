@@ -1,0 +1,191 @@
+{
+  "libro": "Hábitos Atómicos",
+  "libro_id": "982704b8-95e7-4ec3-91d3-1a5dfd9d68b4",
+  "como_se_usa": "Cada entrada propone un icono de la biblioteca para una pieza de esquema. No sale en ningún vídeo hasta que alguien revisa la propuesta y pone \"aprobado\": true. Un icono vacío significa que ninguno de los 18 encaja: la pieza sigue con su número. Iconos válidos: balanza, bandera, bombilla, brujula, camino, ciclo, dado, diana, escudo, grafico, grupo, libro, llave, lupa, ojo, pregunta, red, reloj.",
+  "piezas": [
+    {
+      "leccion_id": "149ffd37-1493-4b73-82af-5eec8cfdcfef",
+      "leccion": "El Poder del 1%: Mejora Marginal Compuesta y la Trampa de las Metas",
+      "esquema": "El poder del 1 %",
+      "pieza": "37×",
+      "icono": "grafico",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "149ffd37-1493-4b73-82af-5eec8cfdcfef",
+      "leccion": "El Poder del 1%: Mejora Marginal Compuesta y la Trampa de las Metas",
+      "esquema": "El poder del 1 %",
+      "pieza": "≈0",
+      "icono": "grafico",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "2532f2be-367e-4580-b1ff-b81644306e10",
+      "leccion": "El Cambio de Identidad: Por qué el \"Quién\" Precede al \"Qué\"",
+      "esquema": "El quién precede al qué",
+      "pieza": "Resultado",
+      "icono": "diana",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "2532f2be-367e-4580-b1ff-b81644306e10",
+      "leccion": "El Cambio de Identidad: Por qué el \"Quién\" Precede al \"Qué\"",
+      "esquema": "El quién precede al qué",
+      "pieza": "Proceso",
+      "icono": "camino",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "2532f2be-367e-4580-b1ff-b81644306e10",
+      "leccion": "El Cambio de Identidad: Por qué el \"Quién\" Precede al \"Qué\"",
+      "esquema": "El quién precede al qué",
+      "pieza": "Fracasan a largo plazo",
+      "icono": "reloj",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "2532f2be-367e-4580-b1ff-b81644306e10",
+      "leccion": "El Cambio de Identidad: Por qué el \"Quién\" Precede al \"Qué\"",
+      "esquema": "El quién precede al qué",
+      "pieza": "Identidad",
+      "icono": "llave",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "d0426e86-5b3f-480c-9d08-84ac97d9c460",
+      "leccion": "Las Cuatro Leyes del Cambio de Comportamiento: El Marco Completo",
+      "esquema": "El bucle del hábito",
+      "pieza": "Señal",
+      "icono": "ojo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "d0426e86-5b3f-480c-9d08-84ac97d9c460",
+      "leccion": "Las Cuatro Leyes del Cambio de Comportamiento: El Marco Completo",
+      "esquema": "El bucle del hábito",
+      "pieza": "Antojo",
+      "icono": "bombilla",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "d0426e86-5b3f-480c-9d08-84ac97d9c460",
+      "leccion": "Las Cuatro Leyes del Cambio de Comportamiento: El Marco Completo",
+      "esquema": "El bucle del hábito",
+      "pieza": "Respuesta",
+      "icono": "camino",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "d0426e86-5b3f-480c-9d08-84ac97d9c460",
+      "leccion": "Las Cuatro Leyes del Cambio de Comportamiento: El Marco Completo",
+      "esquema": "El bucle del hábito",
+      "pieza": "Recompensa",
+      "icono": "diana",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "b01b8e33-7b7b-4a9d-b47b-ec958b2bb45a",
+      "leccion": "Diseño de Entorno: El Arquitecto de tu Comportamiento",
+      "esquema": "Voluntad frente a entorno",
+      "pieza": "Lo que creemos",
+      "icono": "pregunta",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "b01b8e33-7b7b-4a9d-b47b-ec958b2bb45a",
+      "leccion": "Diseño de Entorno: El Arquitecto de tu Comportamiento",
+      "esquema": "Voluntad frente a entorno",
+      "pieza": "Lo que muestra Clear",
+      "icono": "libro",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "abedf634-ff67-474d-8ee5-8bce12858a4f",
+      "leccion": "La Regla del Plateau de Latencia: Por qué los Hábitos Parecen No Funcionar antes de Funcionar",
+      "esquema": "El plateau de latencia",
+      "pieza": "Empiezas un hábito",
+      "icono": "bandera",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "abedf634-ff67-474d-8ee5-8bce12858a4f",
+      "leccion": "La Regla del Plateau de Latencia: Por qué los Hábitos Parecen No Funcionar antes de Funcionar",
+      "esquema": "El plateau de latencia",
+      "pieza": "No ves resultados",
+      "icono": "ojo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "abedf634-ff67-474d-8ee5-8bce12858a4f",
+      "leccion": "La Regla del Plateau de Latencia: Por qué los Hábitos Parecen No Funcionar antes de Funcionar",
+      "esquema": "El plateau de latencia",
+      "pieza": "La mayoría abandona",
+      "icono": "grupo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "abedf634-ff67-474d-8ee5-8bce12858a4f",
+      "leccion": "La Regla del Plateau de Latencia: Por qué los Hábitos Parecen No Funcionar antes de Funcionar",
+      "esquema": "El plateau de latencia",
+      "pieza": "Los resultados llegan después",
+      "icono": "grafico",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "bd4754df-b96e-4d66-be06-cc29df9adbc3",
+      "leccion": "Agrupación de Tentaciones y el Papel del Entorno Social en la Adherencia",
+      "esquema": "Dos estrategias para mantener hábitos",
+      "pieza": "Agrupación de tentaciones",
+      "icono": "red",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "bd4754df-b96e-4d66-be06-cc29df9adbc3",
+      "leccion": "Agrupación de Tentaciones y el Papel del Entorno Social en la Adherencia",
+      "esquema": "Dos estrategias para mantener hábitos",
+      "pieza": "Entorno social",
+      "icono": "grupo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "ffe0a50a-9ade-4f5a-a079-9253e91cb8ed",
+      "leccion": "El Problema del Exceso de Optimización: Cuando los Hábitos se Convierten en Rigidez",
+      "esquema": "Cuando el hábito estorba",
+      "pieza": "El hábito se automatiza",
+      "icono": "ciclo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "ffe0a50a-9ade-4f5a-a079-9253e91cb8ed",
+      "leccion": "El Problema del Exceso de Optimización: Cuando los Hábitos se Convierten en Rigidez",
+      "esquema": "Cuando el hábito estorba",
+      "pieza": "El entorno cambia",
+      "icono": "brujula",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "ffe0a50a-9ade-4f5a-a079-9253e91cb8ed",
+      "leccion": "El Problema del Exceso de Optimización: Cuando los Hábitos se Convierten en Rigidez",
+      "esquema": "Cuando el hábito estorba",
+      "pieza": "Inercia contra la adaptación",
+      "icono": "balanza",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "b69c9f31-f706-47c3-8bd9-177c93a76935",
+      "leccion": "Síntesis: Los Hábitos Atómicos como Sistema de Diseño Personal",
+      "esquema": "El aporte de Clear",
+      "pieza": "Estrategias específicas",
+      "icono": "diana",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "b69c9f31-f706-47c3-8bd9-177c93a76935",
+      "leccion": "Síntesis: Los Hábitos Atómicos como Sistema de Diseño Personal",
+      "esquema": "El aporte de Clear",
+      "pieza": "Marco integrado",
+      "icono": "red",
+      "aprobado": false
+    }
+  ]
+}

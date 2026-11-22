@@ -1,0 +1,199 @@
+{
+  "libro": "Four Thousand Weeks",
+  "libro_id": "b64353e5-af8f-4aee-8cb1-4ecec4f718f2",
+  "como_se_usa": "Cada entrada propone un icono de la biblioteca para una pieza de esquema. No sale en ningún vídeo hasta que alguien revisa la propuesta y pone \"aprobado\": true. Un icono vacío significa que ninguno de los 18 encaja: la pieza sigue con su número. Iconos válidos: balanza, bandera, bombilla, brujula, camino, ciclo, dado, diana, escudo, grafico, grupo, libro, llave, lupa, ojo, pregunta, red, reloj.",
+  "piezas": [
+    {
+      "leccion_id": "cab602ee-068d-4b62-ac0a-fd51350fb327",
+      "leccion": "Cuatro mil semanas",
+      "esquema": "Cuatro mil semanas",
+      "pieza": "Promesa de la productividad",
+      "icono": "bandera",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "cab602ee-068d-4b62-ac0a-fd51350fb327",
+      "leccion": "Cuatro mil semanas",
+      "esquema": "Cuatro mil semanas",
+      "pieza": "Planteamiento de Burkeman",
+      "icono": "libro",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "ec5eaadc-3c9e-4cc6-b8af-70bd3f181831",
+      "leccion": "La trampa de la eficiencia",
+      "esquema": "La trampa de la eficiencia",
+      "pieza": "Intentas rendir más con tu tiempo",
+      "icono": "reloj",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "ec5eaadc-3c9e-4cc6-b8af-70bd3f181831",
+      "leccion": "La trampa de la eficiencia",
+      "esquema": "La trampa de la eficiencia",
+      "pieza": "Respondes rápido, resuelves más",
+      "icono": "diana",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "ec5eaadc-3c9e-4cc6-b8af-70bd3f181831",
+      "leccion": "La trampa de la eficiencia",
+      "esquema": "La trampa de la eficiencia",
+      "pieza": "Te llega más trabajo",
+      "icono": "red",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "ec5eaadc-3c9e-4cc6-b8af-70bd3f181831",
+      "leccion": "La trampa de la eficiencia",
+      "esquema": "La trampa de la eficiencia",
+      "pieza": "Más ocupación, prisa y ansiedad",
+      "icono": "ciclo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "2e7a1dd9-a4fd-4c82-a3e2-8ea14c90fbbd",
+      "leccion": "Elegir es renunciar",
+      "esquema": "Elegir es renunciar",
+      "pieza": "Asumir la renuncia",
+      "icono": "balanza",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "2e7a1dd9-a4fd-4c82-a3e2-8ea14c90fbbd",
+      "leccion": "Elegir es renunciar",
+      "esquema": "Elegir es renunciar",
+      "pieza": "Pagarse primero",
+      "icono": "llave",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "2e7a1dd9-a4fd-4c82-a3e2-8ea14c90fbbd",
+      "leccion": "Elegir es renunciar",
+      "esquema": "Elegir es renunciar",
+      "pieza": "Limitar el trabajo en curso",
+      "icono": "escudo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "2e7a1dd9-a4fd-4c82-a3e2-8ea14c90fbbd",
+      "leccion": "Elegir es renunciar",
+      "esquema": "Elegir es renunciar",
+      "pieza": "Elegir en qué fallar",
+      "icono": "dado",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "094ce585-fbb0-4af3-bd5b-ab28aca92258",
+      "leccion": "La distracción como huida",
+      "esquema": "La distracción como huida",
+      "pieza": "Tarea importante",
+      "icono": "diana",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "094ce585-fbb0-4af3-bd5b-ab28aca92258",
+      "leccion": "La distracción como huida",
+      "esquema": "La distracción como huida",
+      "pieza": "Incomodidad ante los límites",
+      "icono": "escudo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "094ce585-fbb0-4af3-bd5b-ab28aca92258",
+      "leccion": "La distracción como huida",
+      "esquema": "La distracción como huida",
+      "pieza": "Huida: la distracción",
+      "icono": "camino",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "094ce585-fbb0-4af3-bd5b-ab28aca92258",
+      "leccion": "La distracción como huida",
+      "esquema": "La distracción como huida",
+      "pieza": "Quedarse con la tarea",
+      "icono": "llave",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "f2978a90-8453-4090-9317-4f69d19b84be",
+      "leccion": "Paciencia en un mundo con prisa",
+      "esquema": "Paciencia en un mundo con prisa",
+      "pieza": "La prisa",
+      "icono": "reloj",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "f2978a90-8453-4090-9317-4f69d19b84be",
+      "leccion": "Paciencia en un mundo con prisa",
+      "esquema": "Paciencia en un mundo con prisa",
+      "pieza": "Gusto por los problemas",
+      "icono": "pregunta",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "f2978a90-8453-4090-9317-4f69d19b84be",
+      "leccion": "Paciencia en un mundo con prisa",
+      "esquema": "Paciencia en un mundo con prisa",
+      "pieza": "Incrementalismo radical",
+      "icono": "grafico",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "f2978a90-8453-4090-9317-4f69d19b84be",
+      "leccion": "Paciencia en un mundo con prisa",
+      "esquema": "Paciencia en un mundo con prisa",
+      "pieza": "Quedarse en el autobús",
+      "icono": "camino",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "862dedf7-bee4-46fe-9566-3971fc23a1de",
+      "leccion": "Herramientas para abrazar la finitud",
+      "esquema": "Herramientas para abrazar la finitud",
+      "pieza": "Volumen fijo",
+      "icono": "balanza",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "862dedf7-bee4-46fe-9566-3971fc23a1de",
+      "leccion": "Herramientas para abrazar la finitud",
+      "esquema": "Herramientas para abrazar la finitud",
+      "pieza": "Terminar uno a uno",
+      "icono": "diana",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "862dedf7-bee4-46fe-9566-3971fc23a1de",
+      "leccion": "Herramientas para abrazar la finitud",
+      "esquema": "Herramientas para abrazar la finitud",
+      "pieza": "Decidir en qué fracasar",
+      "icono": "dado",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "862dedf7-bee4-46fe-9566-3971fc23a1de",
+      "leccion": "Herramientas para abrazar la finitud",
+      "esquema": "Herramientas para abrazar la finitud",
+      "pieza": "Mirar lo ya hecho",
+      "icono": "ojo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "862dedf7-bee4-46fe-9566-3971fc23a1de",
+      "leccion": "Herramientas para abrazar la finitud",
+      "esquema": "Herramientas para abrazar la finitud",
+      "pieza": "Pocas causas",
+      "icono": "grupo",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "862dedf7-bee4-46fe-9566-3971fc23a1de",
+      "leccion": "Herramientas para abrazar la finitud",
+      "esquema": "Herramientas para abrazar la finitud",
+      "pieza": "Practicar la inacción",
+      "icono": "reloj",
+      "aprobado": false
+    }
+  ]
+}
