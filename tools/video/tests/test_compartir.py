@@ -678,6 +678,12 @@ class ControlTest(unittest.TestCase):
         mensajes = " ".join(str(i) for i in L.lint_pieza(p, self.libro) if i.level == "error")
         self.assertIn("empieza a media frase", mensajes)
 
+    def test_una_frase_empieza_tambien_tras_una_cita_entre_comillas_simples(self):
+        fuente = "Unas entran diciendo 'Ahí estás tú!' La segunda actitud es el fundamento. Otra frase."
+        self.assertTrue(L._desde_inicio_de_frase("La segunda actitud es el fundamento.", fuente))
+        self.assertFalse(L._desde_inicio_de_frase("actitud es el fundamento.", fuente))
+        self.assertFalse(L._desde_inicio_de_frase("estás tú!' La segunda actitud", fuente))
+
     def test_rechaza_texto_que_solo_se_ve_y_no_esta_en_el_corpus(self):
         def errores(cambio):
             plan = K.plan_libro(self.libro, breve=True)

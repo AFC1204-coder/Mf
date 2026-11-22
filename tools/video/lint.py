@@ -7,6 +7,7 @@ que no esté en la biblioteca.
 
 from __future__ import annotations
 
+import re
 import json
 import shutil
 import subprocess
@@ -95,7 +96,8 @@ def _desde_inicio_de_frase(part: str, source: str) -> bool:
         pos = b.find(cand) if cand else -1
         while pos >= 0:
             previo = b[:pos].rstrip()
-            if not previo or previo[-1] in ".!?…¶:;»”\")—–":
+            # …o donde acaba una cita entre comillas simples que cierra su frase: «…diciendo 'Ahí estás tú!' La segunda…».
+            if not previo or previo[-1] in ".!?…¶:;»”\")—–" or re.search(r"[.!?…]['’]$", previo):
                 return True
             pos = b.find(cand, pos + 1)
     return False
