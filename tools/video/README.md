@@ -161,6 +161,7 @@ tools/video/.venv/bin/python -m tools.video.cli biblioteca --format compartir --
 |---|---|
 | `--format clase\|corto\|compartir` | Lección completa (por defecto), resumen de 60-90 s dentro de la serie, o piezas sueltas para compartir. |
 | `--piezas idea,pregunta,practica,caso,libro,fondo` *(compartir)* | Qué tipos de pieza generar. Por defecto, todos. |
+| `--iconos-propuestos` *(compartir)* | Previsualiza los iconos por pieza de `tools/video/iconos/` que aún no están aprobados. Sin esta opción solo salen los que tienen `"aprobado": true`. |
 | `--breve` *(compartir)* | Las piezas de 30-60 s: la idea sin la explicación del cuerpo y el matiz en su primera frase. |
 | `--ritmo +0%` · `--tono +0Hz` *(edge)* | Velocidad y tono de la voz. Por defecto −8 % y −2 Hz en `clase` y `corto`; en `compartir`, `+0%` y `+0Hz` (la voz como es). También `EDGE_RATE` y `EDGE_PITCH`. |
 | `--max-seg 60` *(compartir)* | No genera las piezas que duren (estimado) más de esos segundos. |

@@ -23,7 +23,10 @@ Tres reglas propias de este formato (las del generador siguen valiendo: la voz s
 from __future__ import annotations
 
 import hashlib
+import os
+import json
 import re
+from pathlib import Path
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -90,6 +93,37 @@ ICONOS = {
     "contraste": "balanza", "cadena": "camino", "ciclo": "ciclo", "radial": "red", "matriz": "brujula",
     "espectro": "grafico", "cifra": "grafico", "iceberg": "lupa", "silueta": "red",
 }
+
+# Iconos por concepto: SOLO los que una persona ha aprobado en `tools/video/iconos/<libro>.json`. Qué icono va con
+# qué pieza de un esquema es una interpretación, así que no la decide el generador: se propone en ese archivo
+# (`"aprobado": false`) y no sale en ningún vídeo hasta que alguien lo revisa y lo pone a true.
+ICONOS_DIR = Path(__file__).resolve().parent / "iconos"
+ICONOS_BIBLIOTECA = frozenset(
+    "bombilla diana ojo balanza dado ciclo red reloj escudo brujula libro grupo grafico pregunta bandera lupa llave camino".split()
+)
+_iconos_cache: dict[tuple[str, str], str] | None = None
+
+
+def iconos_de_piezas(recargar: bool = False) -> dict[tuple[str, str], str]:
+    """(id de lección, rótulo de la pieza) → icono aprobado. Con ICONOS_PROPUESTOS=1 entran también los propuestos
+    (para previsualizarlos antes de aprobarlos). Un icono que no sea de la biblioteca se ignora."""
+    global _iconos_cache
+    if _iconos_cache is None or recargar:
+        ver_propuestos = os.getenv("ICONOS_PROPUESTOS", "") not in ("", "0")
+        tabla: dict[tuple[str, str], str] = {}
+        for archivo in sorted(ICONOS_DIR.glob("*.json")) if ICONOS_DIR.is_dir() else []:
+            try:
+                datos = json.loads(archivo.read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                continue
+            for e in datos.get("piezas") or []:
+                if not isinstance(e, dict) or e.get("icono") not in ICONOS_BIBLIOTECA:
+                    continue
+                if e.get("aprobado") is True or ver_propuestos:
+                    tabla[(str(e.get("leccion_id")), T.clean(e.get("pieza")))] = e["icono"]
+        _iconos_cache = tabla
+    return _iconos_cache
+
 
 # Prefijos fijos de los textos de publicación (título y descripción). Como las fórmulas: declarados y comprobados.
 PREFIJOS_PUB = ("El matiz: ", "La respuesta: ", "La idea detrás: ", "Pruébalo: ", "Un caso: ", "A fondo: ")
@@ -515,7 +549,7 @@ def acompanar(explicacion: list[Scene], figura: list[Scene]) -> bool:
     if not explicacion or not figura:
         return False
     base = figura[0].view
-    piezas = [{"t": p.get("t"), "tone": p.get("tone")} for p in base.get("pieces") or []]
+    piezas = [{k: p.get(k) for k in ("t", "tone", "icon") if p.get(k) is not None} for p in base.get("pieces") or []]
     if not (2 <= len(piezas) <= 7) or sum(T.n_words(str(p["t"])) for p in piezas) > 26:
         return False  # demasiados rótulos (o demasiado largos) para tenerlos a la vista junto al texto
     marco = base.get("marco") or {}
@@ -899,6 +933,11 @@ def marco_figura(spec: dict[str, Any]) -> dict[str, Any]:
     return marco
 
 
+def _con_icono(vista: dict[str, Any], lesson: Lesson) -> dict[str, Any]:
+    icono = iconos_de_piezas().get((str(lesson.id), T.clean(vista.get("t"))))
+    return dict(vista, icon=icono) if icono else vista
+
+
 def _lectura(p: G.Piece, nivel: int) -> list[str]:
     """Qué se lee de una pieza del esquema: todo, título + su primer rótulo, o solo el título."""
     if nivel == 0:
@@ -926,7 +965,7 @@ def escenas_figura(lesson: Lesson, nivel_min: int = 0, max_words: int = FIGURA_P
     titulo = T.clean(spec.get("titulo"))
     pie = T.clean(spec.get("pie"))
     base = {
-        "spec": spec, "pieces": [p.to_view() for p in ps], "order": G.order(ps), "n": len(ps), "title": titulo,
+        "spec": spec, "pieces": [_con_icono(p.to_view(), lesson) for p in ps], "order": G.order(ps), "n": len(ps), "title": titulo,
         "kicker": ROTULOS["figura"], "patron": patron_visual(spec), "marco": marco,
     }
     nivel = next((nv for nv in (0, 1, 2) if nv >= nivel_min and sum(T.n_words(x) for p in ps for x in _lectura(p, nv)) <= max_words), 2)

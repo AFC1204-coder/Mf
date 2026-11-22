@@ -329,6 +329,33 @@ class PiezasTest(unittest.TestCase):
         sin = _libro(**{"l-1": {"cuerpo": "\n\n".join(["Uno afirma algo. Y lo matiza enseguida.", relleno, "Tres no cabe " + "y es largo " * 40 + "del todo.", "Eso pasó con una médica, por ejemplo. Cambió su diagnóstico."])}})
         self.assertFalse([s for s in K.pieza_idea(sin, 0).scenes if s.section == "Caso"])
 
+    def test_un_icono_por_pieza_solo_sale_si_alguien_lo_aprobo(self):
+        import json
+        import tempfile
+        from pathlib import Path
+        from unittest import mock
+
+        entradas = [
+            {"leccion_id": "l-1", "pieza": "Respuesta rápida", "icono": "reloj", "aprobado": True},
+            {"leccion_id": "l-1", "pieza": "Pensar despacio", "icono": "lupa", "aprobado": False},  # propuesto, sin revisar
+            {"leccion_id": "l-1", "pieza": "Otra", "icono": "unicornio", "aprobado": True},  # no es de la biblioteca
+        ]
+        with tempfile.TemporaryDirectory() as d, mock.patch.object(K, "ICONOS_DIR", Path(d)), mock.patch.dict("os.environ", {"ICONOS_PROPUESTOS": ""}):
+            (Path(d) / "prueba.json").write_text(json.dumps({"piezas": entradas}), encoding="utf-8")
+            try:
+                self.assertEqual(K.iconos_de_piezas(recargar=True), {("l-1", "Respuesta rápida"): "reloj"})
+                p = K.pieza_idea(self.libro, 0, breve=True)
+                piezas = next(s for s in p.scenes if s.kind == "c-figura").view["pieces"]
+                self.assertEqual([x.get("icon") for x in piezas], ["reloj", None])
+                html, _ = CF._stage_figura(next(s for s in p.scenes if s.kind == "c-figura" and s.view["mode"] == "pieza").view, "")
+                self.assertIn('data-icon="reloj"', html)
+                self.assertNotIn('data-icon="lupa"', html)
+                self.assertEqual([i for i in L.lint_pieza(p, self.libro) if i.level == "error"], [])
+                with mock.patch.dict("os.environ", {"ICONOS_PROPUESTOS": "1"}):  # la previsualización sí los enseña
+                    self.assertEqual(K.iconos_de_piezas(recargar=True)[("l-1", "Pensar despacio")], "lupa")
+            finally:
+                K._iconos_cache = None
+
     def test_el_cierre_retoma_el_gancho(self):
         for p in self.plan.piezas:
             cierre = p.scenes[-1]

@@ -18,6 +18,8 @@ from . import text as T
 from .frames import ASSETS, REPO_ROOT, State, scene_states
 from .scriptwriter import Scene
 
+_CIFRA = re.compile(r"\d")
+
 DEPENDENCIAS = [ASSETS / "compartir.css", ASSETS / "compartir.js"]
 
 
@@ -65,6 +67,8 @@ def _stage_frase(v: dict[str, Any], tag: str) -> tuple[str, str]:
         # «no X, sino Y»: lo afirmado se queda en color una vez dicho. Lo negado no se toca (ver `compartir.no_sino`).
         if i < visto and afi[0] <= i < afi[1]:
             cls += " afi"
+        if _CIFRA.search(palabras[i]):
+            cls += " num"  # una cifra que el texto da se ve como dato: es literal, solo cambia su peso
         trozos.append(f'<span class="{cls}">{_e(palabras[i])}</span>')
     n = b - a
     talla = " xl" if n > 16 else " l" if n > 11 else " m" if n > 7 else ""
@@ -92,7 +96,7 @@ def _companero(v: dict[str, Any]) -> str:
     act = int(v.get("fig_act") if v.get("fig_act") is not None else -1)
     def chip(j: int, p: dict[str, Any]) -> str:
         estado = "act" if j == act else "on" if j in on else ""
-        return f'<li class="{estado} tn-{_e(p.get("tone") or "a")}"><i>{j + 1}</i><b>{_e(p.get("t"))}</b></li>'
+        return f'<li class="{estado} tn-{_e(p.get("tone") or "a")}">{_insignia(p, j)}<b>{_e(p.get("t"))}</b></li>'
 
     patron = str(fig.get("patron") or "")
     chips = "".join(chip(j, p) for j, p in enumerate(piezas))
@@ -129,14 +133,31 @@ def _tarjeta(v: dict[str, Any]) -> str:
     )
 
 
-def _panel(p: dict[str, Any], j: int, estado: str) -> str:
+def _panel(p: dict[str, Any], j: int, estado: str, ancho: float = 0.0) -> str:
     """Un lado de un contraste o un eslabón de una cadena. `estado`: on (entero) · visto (solo el título) · falta."""
     cuerpo = ""
     if estado == "on":
         desc = f'<span>{_e(p.get("d"))}</span>' if p.get("d") else ""
         items = "".join(f"<li>{_e(x)}</li>" for x in p.get("items") or [])
         cuerpo = desc + (f"<ul>{items}</ul>" if items else "")
-    return f'<div class="cs-pan {estado} tn-{_e(p.get("tone") or "a")}"><i>{j + 1}</i><div><b>{_e(p.get("t"))}</b>{cuerpo}</div></div>'
+    estilo = f' style="width:{ancho:.0f}%"' if ancho else ""
+    return f'<div class="cs-pan {estado} tn-{_e(p.get("tone") or "a")}"{estilo}>{_insignia(p, j)}<div><b>{_e(p.get("t"))}</b>{cuerpo}</div></div>'
+
+
+def _insignia(p: dict[str, Any], j: int) -> str:
+    """El número de la pieza o, si una persona le ha aprobado uno, su icono (ver `compartir.iconos_de_piezas`)."""
+    if p.get("icon"):
+        return f'<i class="ic" data-icon="{_e(p.get("icon"))}"></i>'
+    return f"<i>{j + 1}</i>"
+
+
+def _ancho_nivel(plantilla: str, j: int, n: int) -> float:
+    """Una pirámide se ensancha de la cima a la base y un embudo se estrecha, como en la figura de la app
+    (`lib/diagram.js`): el ancho de cada nivel, en % (0 = el normal). El texto manda: nunca menos del 64 %."""
+    if n < 2 or plantilla not in ("piramide", "embudo"):
+        return 0.0
+    f = j / (n - 1)
+    return 64 + 36 * (f if plantilla == "piramide" else 1 - f)
 
 
 def _recapitula(v: dict[str, Any]) -> bool:
@@ -169,6 +190,7 @@ def _patron(v: dict[str, Any]) -> str:
     modo = v.get("mode") or "titulo"
     activa = int(v.get("active") if v.get("active") is not None else -1)
     filas = []
+    plantilla = str((v.get("spec") or {}).get("plantilla") or "")
     for j, p in enumerate(pz):
         if modo == "pieza":
             estado = "on" if j == activa else "visto" if j < activa else "falta"
@@ -182,12 +204,12 @@ def _patron(v: dict[str, Any]) -> str:
                 filas.append(f'<div class="cs-ice">{_e(marco.get("superficie"))}</div>')
             if j == int(marco.get("corte") or 0):
                 filas.append(f'<div class="cs-ice fondo">{_e(marco.get("fondo"))}</div>')
-        filas.append(_panel(p, j, estado))
+        filas.append(_panel(p, j, estado, _ancho_nivel(plantilla, j, len(pz))))
     pie = f'<p class="cs-pie">{_e(v.get("pie"))}</p>' if modo == "pie" else ""
     if modo == "pie" and not _recapitula(v):
         return _centro(v) + pie  # con el pie, la recapitulación de títulos ya sería demasiado texto a la vez
     abierto = " abierto" if (v.get("patron") == "ciclo" and v.get("vuelta") == 0) else ""  # la flecha de vuelta aún no se ha dibujado
-    return _centro(v) + f'<div class="cs-pat p-{_e(v.get("patron"))} n-{len(pz)}{abierto}">{"".join(filas)}</div>{pie}'
+    return _centro(v) + f'<div class="cs-pat p-{_e(v.get("patron"))} pl-{_e(plantilla)} n-{len(pz)}{abierto}">{"".join(filas)}</div>{pie}'
 
 
 def _matriz(v: dict[str, Any]) -> str:
