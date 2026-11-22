@@ -268,6 +268,16 @@ class PiezasTest(unittest.TestCase):
         self.assertEqual(K.donde_nombra("Los marcos estrechos", frase), 4)  # plural y artículo no cuentan
         self.assertIsNone(K.donde_nombra("Exceso de confianza", frase))
         self.assertIsNone(K.donde_nombra("Marco estrecho", "Un marco que era demasiado pequeño y estrecho.".split()))
+        # Regla amplia, solo con dos o más palabras: otra forma de la misma palabra y en otro orden, sin cruzar frases.
+        self.assertEqual(K.donde_nombra("Control sobrestimado", "dirigentes que sobrestimaban su control de los acontecimientos".split()), 2)
+        self.assertEqual(K.donde_nombra("Reinvertir en el negocio", "cinco usos del capital: reinvertirlo en el negocio, comprar".split()), 4)
+        self.assertIsNone(K.donde_nombra("Mundo real", "a los riesgos reales. En el mundo digital ocurrió lo contrario".split()))  # cruza un punto
+        self.assertIsNone(K.donde_nombra("Costes de decisión", "no hay costes externos (todas las decisiones requieren".split()))  # cruza un paréntesis
+        self.assertIsNone(K.donde_nombra("X causa Y", "La segunda: Y causa X (la causalidad inversa)".split()))  # el orden importa
+        self.assertIsNone(K.donde_nombra("Planes y doctrinas rígidos", "se aferraban a planes y doctrinas, que malinterpretaban".split()))  # no puede faltar ninguna
+        # Un rótulo de una sola palabra no usa la regla amplia.
+        self.assertIsNone(K.donde_nombra("El plan", "diseñó el plano maestro en forma de avión".split()))
+        self.assertIsNone(K.donde_nombra("Lo que funciona", "La función no reside en lo que está presente".split()))
 
     def test_si_el_pie_del_esquema_dice_lo_que_el_matiz_no_se_oye_dos_veces(self):
         libro = _libro(**{"l-1": {"autocorreccion": "Son dos modos de responder, pero no toda intuición falla."}})

@@ -410,14 +410,27 @@ def _limpias(tokens: list[str]) -> list[str]:
     return [_raiz(T.norm(t).strip(".,;:«»\"'()¿?¡!—–[]")) for t in tokens]
 
 
-def donde_nombra(titulo: str, tokens: list[str]) -> int | None:
-    """En qué palabra de `tokens` se nombra el rótulo `titulo`: sus palabras con contenido, en su orden y casi
-    seguidas (como mucho dos palabras entre una y la siguiente). None si no se nombra. No interpreta: «marco
-    estrecho» casa con «el marco estrecho», no con «un marco demasiado pequeño para verlo»."""
-    buscadas = [_raiz(w) for w in (T.norm(t).strip(".,;:«»\"'()¿?¡!—–[]") for t in titulo.split()) if w and w not in _VACIAS]
-    if not buscadas:
-        return None
-    limpias = _limpias(tokens)
+_CLITICO = re.compile(r"(?<=[aei]r)(?:se|lo|la|le|los|las|les|nos|me|te)$|(?<=ndo)(?:se|lo|la|le|los|las|les)$")
+_CORTA_VENTANA = re.compile(r"[.;:?!…)\]—–]$|[.;:?!…][»\"”]$")
+_ABRE_INCISO = re.compile(r"[(\[—–]")
+
+
+def _afines(a: str, b: str) -> bool:
+    """¿Son la misma palabra en otra forma? («sobrestimado» / «sobrestimaban», «reinvertir» / «reinvertirlo»,
+    «creciente» / «crecientes»). Comparten casi todo el arranque; no basta con parecerse («organismo» / «organización»)."""
+    if a == b:
+        return True
+    a, b = _CLITICO.sub("", a), _CLITICO.sub("", b)
+    if a == b:
+        return True
+    corta = min(len(a), len(b))
+    c = 0
+    while c < corta and a[c] == b[c]:
+        c += 1
+    return (c >= 5 and c >= 0.72 * max(len(a), len(b))) or (c >= 4 and c >= corta - 1 and abs(len(a) - len(b)) <= 2)
+
+
+def _nombra_estricto(buscadas: list[str], limpias: list[str]) -> int | None:
     for i, w in enumerate(limpias):
         if w != buscadas[0]:
             continue
@@ -426,6 +439,46 @@ def donde_nombra(titulo: str, tokens: list[str]) -> int | None:
             k = next((j for j in range(k + 1, min(k + 4, len(limpias))) if limpias[j] == b), -1)
             if k < 0:
                 break
+        else:
+            return i
+    return None
+
+
+def donde_nombra(titulo: str, tokens: list[str]) -> int | None:
+    """En qué palabra de `tokens` se nombra el rótulo `titulo`. None si no se nombra. No interpreta.
+
+    Dos reglas, de la más segura a la más amplia:
+      1. Las palabras con contenido del rótulo, en su orden y casi seguidas («marco estrecho» en «el marco estrecho»).
+      2. Solo si el rótulo tiene **dos o más** palabras con contenido: todas ellas, en cualquier orden y en otra forma
+         de la misma palabra, dentro de un tramo corto que no cruza un punto, dos puntos, paréntesis ni raya
+         («Control sobrestimado» en «sobrestimaban su control»; «Reinvertir en el negocio» en «reinvertirlo en el negocio»).
+         Ninguna palabra del rótulo puede faltar, y con palabras de una o dos letras («X causa Y») el orden se respeta.
+
+    Un rótulo de una sola palabra solo casa por la regla 1: con la 2, «El plan» encendía «plano» y «Lo que funciona»,
+    «la función» (6 errores en 100 coincidencias revisadas a mano; con el límite, ninguno de esos seis).
+    """
+    crudas = [T.norm(t).strip(".,;:«»\"'()¿?¡!—–[]") for t in titulo.split()]
+    con_contenido = [w for w in crudas if w and w not in _VACIAS]
+    if not con_contenido:
+        return None
+    estricto = _nombra_estricto([_raiz(w) for w in con_contenido], _limpias(tokens))
+    if estricto is not None or len(con_contenido) < 2:
+        return estricto
+    llanas = [T.norm(t).strip(".,;:«»\"'()¿?¡!—–[]") for t in tokens]
+    libre = all(len(b) >= 3 for b in con_contenido)
+    for i, w in enumerate(llanas):
+        if not any(_afines(w, b) for b in con_contenido):
+            continue
+        fin = i
+        while fin < len(llanas) - 1 and fin - i < len(con_contenido) + 1 and not _CORTA_VENTANA.search(tokens[fin]) and not _ABRE_INCISO.match(tokens[fin + 1]):
+            fin += 1
+        tramo = llanas[i : fin + 1]
+        usadas: list[int] = []
+        for b in con_contenido:
+            k = next((n for n, x in enumerate(tramo) if n not in usadas and _afines(x, b) and (libre or not usadas or n > usadas[-1])), None)
+            if k is None:
+                break
+            usadas.append(k)
         else:
             return i
     return None
