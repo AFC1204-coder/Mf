@@ -6,6 +6,7 @@ import asyncio
 import os
 import re
 import ssl
+import time
 from pathlib import Path
 from urllib.parse import urlparse
 from urllib.request import proxy_bypass_environment
@@ -68,6 +69,8 @@ def _preparar_red() -> str | None:
 
 
 RITMO, TONO = "-8%", "-2Hz"
+REINTENTOS = 4  # intentos por locución ante un fallo pasajero del servicio
+ESPERA_REINTENTO_S = 2.0  # espera antes del segundo intento; se dobla en cada uno
 
 
 def _ajuste(valor: str | None, unidad: str, por_defecto: str) -> str:
@@ -137,7 +140,23 @@ class EdgeTTSEngine(TTSEngine):
 
     def synthesize(self, text: str, out_path: Path, voice: str | None = None) -> TTSResult:
         chosen_voice = voice or self.voice
-        timings = asyncio.run(self._synth_async(text, out_path, chosen_voice))
+        # El servicio falla de vez en cuando sin motivo («No audio was received», un corte de red): en una tanda de
+        # cientos de locuciones eso tumbaba una pieza de cada diez. Se reintenta con espera creciente antes de rendirse.
+        ultimo: Exception | None = None
+        timings: list[WordTiming] = []
+        for intento in range(REINTENTOS):
+            try:
+                timings = asyncio.run(self._synth_async(text, out_path, chosen_voice))
+                if out_path.exists() and out_path.stat().st_size > 0:
+                    ultimo = None
+                    break
+                ultimo = RuntimeError("Edge TTS devolvió un audio vacío")
+            except Exception as exc:  # noqa: BLE001 (edge-tts y aiohttp lanzan tipos distintos para el mismo fallo pasajero)
+                ultimo = exc
+            if intento < REINTENTOS - 1:
+                time.sleep(ESPERA_REINTENTO_S * (2**intento))
+        if ultimo is not None:
+            raise ultimo
         duration = probe_duration(out_path)
         if not timings:
             timings = estimate_word_timings(text, duration)

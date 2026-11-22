@@ -72,3 +72,35 @@ class AjustesDeVozTest(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as d:
             self.assertNotEqual(CachedTTS(normal, Path(d))._key("hola", "v"), CachedTTS(natural, Path(d))._key("hola", "v"))
+
+
+class ReintentosTest(unittest.TestCase):
+    def test_un_fallo_pasajero_se_reintenta_y_uno_persistente_se_rinde(self):
+        import tempfile
+        from pathlib import Path
+
+        from tools.video.tts import edge_tts_engine as M
+
+        with tempfile.TemporaryDirectory() as d, mock.patch.object(M, "ESPERA_REINTENTO_S", 0), mock.patch.object(M, "probe_duration", return_value=1.0):
+            salida = Path(d) / "a.mp3"
+            llamadas = []
+
+            async def falla_dos_veces(self, text, out_path, voice):
+                llamadas.append(1)
+                if len(llamadas) < 3:
+                    raise RuntimeError("No audio was received.")
+                out_path.write_bytes(b"x")
+                return []
+
+            with mock.patch.object(M.EdgeTTSEngine, "_synth_async", falla_dos_veces):
+                M.EdgeTTSEngine().synthesize("hola mundo", salida)
+            self.assertEqual(len(llamadas), 3)
+
+            async def falla_siempre(self, text, out_path, voice):
+                llamadas.append(1)
+                raise RuntimeError("No audio was received.")
+
+            llamadas.clear()
+            with mock.patch.object(M.EdgeTTSEngine, "_synth_async", falla_siempre), self.assertRaises(RuntimeError):
+                M.EdgeTTSEngine().synthesize("hola mundo", salida)
+            self.assertEqual(len(llamadas), M.REINTENTOS)
