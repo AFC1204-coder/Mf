@@ -33,6 +33,7 @@ body.cs.ar-16x9 { width: 1920px; height: 1080px; --pad-l: 190px; --pad-r: 190px;
 body.cs.st-matiz { --tone: var(--cs-mal); }
 body.cs.st-practica, body.cs.st-respuesta { --tone: var(--cs-ok); }
 body.cs.st-caso { --tone: #6cb2e2; }
+body.cs.st-conexion { --tone: #9d8fe0; }
 
 .cs-frame { position: absolute; inset: 0; overflow: hidden; }
 
@@ -97,9 +98,9 @@ body.cs.st-caso { --tone: #6cb2e2; }
 .cs-pages i.on { background: var(--tone); }
 .cs-pages i.done { background: color-mix(in srgb, var(--tone) 45%, transparent); }
 
-.st-matiz .cs-kin, .st-respuesta .cs-kin, .st-practica .cs-kin, .st-caso .cs-kin, .st-explica .cs-kin { font-family: 'VF Serif', serif; font-weight: 600; font-size: 10.6em; line-height: 1.2; }
-.st-matiz .cs-kin.m, .st-respuesta .cs-kin.m, .st-practica .cs-kin.m, .st-caso .cs-kin.m, .st-explica .cs-kin.m { font-size: 9.4em; }
-.st-matiz .cs-kin.l, .st-respuesta .cs-kin.l, .st-practica .cs-kin.l, .st-caso .cs-kin.l, .st-explica .cs-kin.l { font-size: 8.4em; }
+.st-matiz .cs-kin, .st-respuesta .cs-kin, .st-practica .cs-kin, .st-caso .cs-kin, .st-conexion .cs-kin, .st-explica .cs-kin { font-family: 'VF Serif', serif; font-weight: 600; font-size: 10.6em; line-height: 1.2; }
+.st-matiz .cs-kin.m, .st-respuesta .cs-kin.m, .st-practica .cs-kin.m, .st-caso .cs-kin.m, .st-conexion .cs-kin.m, .st-explica .cs-kin.m { font-size: 9.4em; }
+.st-matiz .cs-kin.l, .st-respuesta .cs-kin.l, .st-practica .cs-kin.l, .st-caso .cs-kin.l, .st-conexion .cs-kin.l, .st-explica .cs-kin.l { font-size: 8.4em; }
 .st-matiz .cs-kin { padding-left: 0.5em; border-left: 0.12em solid var(--cs-mal); }
 .st-matiz .cs-stage.solo .cs-kin { border-left-color: transparent; }
 
@@ -442,3 +443,9 @@ body.cs.st-caso { --tone: #6cb2e2; }
 /* el estado del que viene un fotograma intermedio: se maqueta para medirlo, pero no se ve */
 .cs-stage.cs-fantasma { visibility: hidden !important; pointer-events: none; z-index: 0; }
 .cs-stage.cs-fantasma * { visibility: hidden !important; }
+
+/* Conexiones: los autores que el texto nombra, en fila; cada uno se enciende al oírlo. */
+.cs-comp.cp-nombres ol { flex-direction: row; flex-wrap: wrap; gap: 1.2em 1.4em; }
+.cs-comp.cp-nombres li { padding: 1em 2em 1em 1.3em; gap: 1em; border-radius: 4em; --tn2: #9d8fe0; }
+.cs-comp.cp-nombres li > b { font-size: 4.4em; white-space: nowrap; }
+.cs-comp.cp-nombres li.act > b { font-size: 4.4em; }

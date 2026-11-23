@@ -310,7 +310,7 @@ class PiezasTest(unittest.TestCase):
         iconos_biblioteca = {"bombilla", "diana", "ojo", "balanza", "dado", "ciclo", "red", "reloj", "escudo", "brujula", "libro", "grupo", "grafico", "pregunta", "bandera", "lupa", "llave", "camino"}
         self.assertLessEqual(set(K.ICONOS.values()), iconos_biblioteca)  # solo los de lib/mapa.js
         # Se asignan por estilo de escena o por forma de figura: ninguna clave depende del texto de la lección.
-        self.assertLessEqual(set(K.ICONOS), {"idea", "pregunta", "explica", "matiz", "practica", "caso", "respuesta", "credito", "pensar", *K.PATRONES.values(), "silueta", "matriz", "espectro", "cifra", "iceberg", "ciclo", "radial", "cadena", "contraste"})
+        self.assertLessEqual(set(K.ICONOS), {"idea", "pregunta", "explica", "matiz", "practica", "caso", "respuesta", "credito", "pensar", "conexion", "nombres", *K.PATRONES.values(), "silueta", "matriz", "espectro", "cifra", "iceberg", "ciclo", "radial", "cadena", "contraste"})
         p = self.plan.piezas[1]
         matiz = next(s for s in p.scenes if s.section == "Matiz")
         self.assertIn('data-icon="escudo"', CF._stage_frase(CF.estados(matiz)[-1], "")[0])
@@ -851,3 +851,59 @@ class PitidosTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class FondoConComprobacionYConexionesTest(unittest.TestCase):
+    """La versión larga pregunta antes de seguir y sitúa la idea entre otros autores, siempre con texto del corpus."""
+
+    def _leccion(self, **kw):
+        from tools.video.corpus import Lesson, Question
+
+        base = dict(
+            id="L1", titulo="Ampliar las opciones", orden=1,
+            cuerpo="\n\n".join(["Decidir entre una sola opción y nada es decidir a ciegas. " * 6] * 3),
+            idea_clave="Considerar al menos dos alternativas reales mejora el resultado.",
+            autocorreccion="Demasiadas alternativas pueden paralizar.",
+            conexion_cruzada="Esto conecta con Kahneman, que describe los sesgos de base, y con Olson, que estudia los grupos. Es lectura nuestra.",
+            autores_relacionados=["Daniel Kahneman", "Mancur Olson", "Gary Klein"],
+            preguntas=[Question("q1", "¿Por qué no basta con conocer los sesgos?", ["Porque conocerlos no impide caer en ellos", "Porque son pocos"], 0, "Por eso proponen un proceso.")],
+        )
+        base.update(kw)
+        return Lesson(**base)
+
+    def _fondo(self, lesson):
+        from tools.video.corpus import Book
+
+        book = Book(id="B", titulo="Decisive", autor="Chip Heath", eje="Psicología y Conducta", descripcion="", lessons=[lesson])
+        return K.pieza_fondo(book, 0), book
+
+    def test_conexion_entera_con_los_autores_que_el_texto_nombra(self):
+        pieza, book = self._fondo(self._leccion())
+        con = next(s for s in pieza.scenes if s.section == "Conexiones")
+        self.assertEqual(con.narration, "Esto conecta con Kahneman, que describe los sesgos de base, y con Olson, que estudia los grupos. Es lectura nuestra.")
+        self.assertEqual([p.origin for p in con.parts], ["leccion.conexion_cruzada"])
+        # Klein está en la lista pero el texto no lo nombra: no se muestra.
+        self.assertEqual([p["t"] for p in con.view["fig"]["pieces"]], ["Daniel Kahneman", "Mancur Olson"])
+        finales = [b.patch.get("fig_on") for b in con.beats if "fig_on" in b.patch] or [con.view["fig_on"]]
+        self.assertEqual(finales[-1], [0, 1])
+        self.assertFalse(L.has_errors(L.lint_pieza(pieza, book)))
+
+    def test_conexion_que_remite_a_la_serie_o_demasiado_larga_no_entra(self):
+        for texto in ("Como vimos en la lección anterior, Kahneman describe los sesgos de base y Olson los grupos.", "palabra " * 200):
+            pieza, _ = self._fondo(self._leccion(conexion_cruzada=texto))
+            self.assertFalse([s for s in pieza.scenes if s.section == "Conexiones"], texto[:30])
+
+    def test_comprobacion_pregunta_pausa_y_respuesta_correcta(self):
+        pieza, book = self._fondo(self._leccion())
+        tipos = [(s.kind, s.section) for s in pieza.scenes]
+        i = tipos.index(("c-pausa", "Pregunta"))
+        self.assertEqual(pieza.scenes[i - 1].narration, "¿Por qué no basta con conocer los sesgos?")
+        self.assertEqual(pieza.scenes[i - 1].view["kicker"], K.ROTULOS["comprueba"])
+        self.assertIn("Porque conocerlos no impide caer en ellos.", pieza.scenes[i + 1].narration)
+        self.assertLess(i, next(n for n, s in enumerate(pieza.scenes) if s.section == "Conexiones"))
+
+    def test_el_lint_rechaza_una_respuesta_que_no_es_la_correcta(self):
+        pieza, book = self._fondo(self._leccion())
+        resp = next(s for s in pieza.scenes if s.section == "Respuesta")
+        resp.parts[1] = K.Part("Porque son pocos.", "pregunta.opcion")
+        self.assertTrue(any("no es la opción correcta" in i.message for i in L.lint_pieza(pieza, book)))

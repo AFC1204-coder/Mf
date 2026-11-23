@@ -81,6 +81,8 @@ def _stage_frase(v: dict[str, Any], tag: str) -> tuple[str, str]:
     if comp:
         # Con el esquema delante, el texto baja un cuerpo y el rótulo del tema sobra: el esquema ya dice de qué va.
         talla = " xl" if n > 11 else " l"
+        if not (v.get("fig") or {}).get("title"):  # unos nombres sueltos no dicen qué momento es: lo dice el rótulo
+            comp = _kicker(rotulo, icono=str(v.get("style") or "")) + comp
         return comp + f'<p class="cs-kin{talla}">{" ".join(trozos)}</p>' + puntos, "con-comp"
     cuerpo = _kicker(rotulo, tema=bool(v.get("tema")), icono=str(v.get("style") or "")) + f'<p class="cs-kin{talla}">{" ".join(trozos)}</p>' + puntos
     return cuerpo, ("solo" if visto == 0 else "")

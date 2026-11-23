@@ -52,8 +52,9 @@ def _sources(book: Book, episode: Episode) -> dict[str, str]:
     src["pregunta.explicacion"] = " ¶ ".join(q.explicacion for q in preguntas)
 
     def campos(prefijo: str, lec) -> None:
-        for campo in ("cuerpo", "idea_clave", "cita_memorable", "autocorreccion", "aplicacion_practica", "titulo"):
+        for campo in ("cuerpo", "idea_clave", "cita_memorable", "autocorreccion", "aplicacion_practica", "conexion_cruzada", "titulo"):
             src[f"{prefijo}.{campo}"] = T.clean(getattr(lec, campo))
+        src[f"{prefijo}.autores_relacionados"] = " ¶ ".join(T.clean(a) for a in lec.autores_relacionados)
 
     for i, lec in enumerate(book.lessons):
         campos(f"leccion[{i + 1}]", lec)
@@ -361,6 +362,19 @@ def lint_pieza(pieza, book: Book) -> list[Issue]:
             issues.append(Issue("error", pieza.key, "la respuesta que se da no es la opción correcta de la pregunta que se hace"))
         elif K.PREGUNTA_INVERSA.search(q.texto):
             issues.append(Issue("error", pieza.key, "pregunta en negativo o que depende de la lista de opciones: su «respuesta» suelta desinforma"))
+    else:
+        # En cualquier otra pieza, una opción de test solo puede decirse como respuesta a su pregunta, hecha en la
+        # misma pieza, y tiene que ser la correcta.
+        lec = next((l for l in book.lessons if l.id == pieza.lesson_id), None)
+        hechas = {p.text for s in pieza.scenes for p in s.parts if p.origin == "pregunta.texto"}
+        dichas = [p.text for s in pieza.scenes for p in s.parts if p.origin == "pregunta.opcion"]
+        qs = [x for x in (lec.preguntas if lec else []) if x.valid and x.texto in hechas]
+        if dichas or hechas:
+            # (Una lección puede traer la misma pregunta dos veces: vale la respuesta correcta de cualquiera de las dos.)
+            if not qs or len(dichas) != 1 or len(hechas) != 1 or not any(dichas[0].rstrip(".") == T.clean(q.opciones[q.correcta]).rstrip(".") for q in qs):
+                issues.append(Issue("error", pieza.key, "la respuesta que se da no es la opción correcta de la pregunta que se hace"))
+            elif K.PREGUNTA_INVERSA.search(qs[0].texto):
+                issues.append(Issue("error", pieza.key, "pregunta en negativo o que depende de la lista de opciones: su «respuesta» suelta desinforma"))
     for rotulo in [*K.ROTULOS.values(), *K.FORMULAS.values()]:
         if K.ANCLA_WEB.search(rotulo):
             issues.append(Issue("error", pieza.key, f"rótulo o fórmula que ancla a la web: {rotulo!r}"))

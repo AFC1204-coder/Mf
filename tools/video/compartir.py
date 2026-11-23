@@ -35,7 +35,7 @@ from . import text as T
 from .corpus import Book, Lesson, Question
 from .scriptwriter import Beat, Episode, Part, Scene
 
-COMPARTIR_VERSION = 6
+COMPARTIR_VERSION = 7
 
 TIPOS = ("idea", "pregunta", "practica", "caso", "libro", "fondo")
 ASPECTOS = {"9:16": (1080, 1920), "1:1": (1080, 1080), "16:9": (1920, 1080)}
@@ -82,13 +82,15 @@ ROTULOS = {
     "lema": "Biblioteca de ideas",
     "seguir": "Sigue para más ideas con su matiz",
     "recuerda": "QUÉDATE CON ESTO",
+    "conexion": "CONECTA CON",
+    "comprueba": "COMPRUÉBALO",
 }
 
 # Iconos (los 18 de la biblioteca, `lib/mapa.js`). Señalan **qué tipo de momento o de figura** es, igual que los
 # rótulos: nunca qué significa el contenido. Asignar un icono a un concepto sería interpretarlo; aquí no se hace.
 ICONOS = {
     "idea": "bombilla", "pregunta": "pregunta", "explica": "lupa", "matiz": "escudo", "practica": "diana",
-    "caso": "ojo", "respuesta": "llave", "credito": "libro", "pensar": "reloj",
+    "caso": "ojo", "respuesta": "llave", "credito": "libro", "pensar": "reloj", "conexion": "red", "nombres": "grupo",
     # por la forma de la figura
     "contraste": "balanza", "cadena": "camino", "ciclo": "ciclo", "radial": "red", "matriz": "brujula",
     "espectro": "grafico", "cifra": "grafico", "iceberg": "lupa", "silueta": "red",
@@ -570,6 +572,70 @@ def acompanar(explicacion: list[Scene], figura: list[Scene]) -> bool:
             antes = [b for b in scene.beats if b.at_word is not None and b.at_word <= i]
             (antes[-1].patch if antes else scene.view).update(cambio)
     return len(encendidas) == len(piezas)
+
+
+CONEXION_PALABRAS = (12, 160)  # el campo va entero o no va: su salvedad («es lectura nuestra…») suele estar al final
+
+
+def _apellido(nombre: str) -> str:
+    palabras = [T.norm(w).strip(".,;:«»\"'()") for w in nombre.split()]
+    return next((w for w in reversed(palabras) if len(w) >= 3), "")
+
+
+def escena_conexion(lesson: Lesson) -> Scene | None:
+    """Con qué otros autores conecta la idea: el campo `conexion_cruzada` de la lección, **entero y literal**.
+
+    Junto al texto, los nombres de `autores_relacionados` que el propio texto menciona; cada uno se enciende cuando
+    la voz lo nombra (por su apellido, tal cual). Un autor de la lista que el texto no menciona no se muestra.
+    """
+    texto = T.clean(lesson.conexion_cruzada)
+    if not (CONEXION_PALABRAS[0] <= T.n_words(texto) <= CONEXION_PALABRAS[1]) or ANCLA_SERIE.search(texto):
+        return None
+    scene = escena_frase("Conexiones", "conexion", ROTULOS["conexion"], [Part(texto, "leccion.conexion_cruzada")], pause_after_s=0.5)
+    tokens = [T.norm(w).strip(".,;:«»\"'()¿?¡!—–[]") for w in scene.view.get("words") or []]
+    nombrados: list[tuple[int, str]] = []
+    for nombre in dict.fromkeys(T.clean(a) for a in lesson.autores_relacionados):
+        ap = _apellido(nombre)
+        if not ap or T.n_words(nombre) > 4:
+            continue
+        i = next((k for k, w in enumerate(tokens) if w == ap), None)
+        if i is not None and not any(_apellido(n) == ap for _, n in nombrados):
+            nombrados.append((i, nombre))
+    if 2 <= len(nombrados) <= 6:
+        nombrados.sort()
+        fig = {"pieces": [{"t": n, "tone": "info", "icon": ICONOS["nombres"]} for _, n in nombrados], "patron": "nombres"}
+        encendidas: list[int] = []
+        scene.view.update({"fig": fig, "fig_on": [], "fig_act": -1})
+        for j, (i, _) in enumerate(nombrados):
+            encendidas.append(j)
+            cambio = {"fig_on": list(encendidas), "fig_act": j}
+            antes = [b for b in scene.beats if b.at_word is not None and b.at_word <= i]
+            (antes[-1].patch if antes else scene.view).update(cambio)
+    return scene
+
+
+def escenas_comprueba(lesson: Lesson, breve: bool = False, rotulo: str | None = None) -> list[Scene]:
+    """Pregunta → pausa para pensar → respuesta y su porqué. Vacío si la lección no tiene una pregunta que se entienda sola."""
+    q = pregunta_autonoma(lesson)
+    if not q:
+        return []
+    correcta = _punto(q.opciones[q.correcta])
+    explic = explicacion_autonoma(q, EXPLICACION_PALABRAS if breve else EXPLICACION_LARGA)
+    respuesta = [_fixed("respuesta"), Part(correcta, "pregunta.opcion")] + ([Part(explic, "pregunta.explicacion")] if explic else [])
+    pensar = Scene(
+        "c-pausa",
+        "Pregunta",
+        {"kicker": ROTULOS["pensar"], "question": q.texto, "countdown": 3},
+        [],
+        [Beat({"countdown": c}, at_s=PAUSA_PENSAR_S * (3 - c) / 3) for c in (2, 1)],
+        hold_s=PAUSA_PENSAR_S,
+        pause_after_s=0.0,
+    )
+    return [
+        escena_frase("Pregunta", "pregunta", rotulo or ROTULOS["pregunta"], [Part(q.texto, "pregunta.texto")], tema_txt=tema(lesson) if not rotulo else "", pause_after_s=0.15),
+        pensar,
+        escena_frase("Respuesta", "respuesta", ROTULOS["respuesta"], respuesta, skip_parts=1, pause_after_s=0.5),
+    ]
 
 
 def cubre(texto: str, otro: str, umbral: float = 0.75) -> bool:
@@ -1160,23 +1226,7 @@ def pieza_pregunta(book: Book, index: int, breve: bool = False) -> Pieza | None:
         return None
     k = index + 1
     correcta = _punto(q.opciones[q.correcta])
-    explic = explicacion_autonoma(q, EXPLICACION_PALABRAS if breve else EXPLICACION_LARGA)
-    respuesta = [_fixed("respuesta"), Part(correcta, "pregunta.opcion")] + ([Part(explic, "pregunta.explicacion")] if explic else [])
-    pensar = Scene(
-        "c-pausa",
-        "Pregunta",
-        {"kicker": ROTULOS["pensar"], "question": q.texto, "countdown": 3},
-        [],
-        [Beat({"countdown": c}, at_s=PAUSA_PENSAR_S * (3 - c) / 3) for c in (2, 1)],
-        hold_s=PAUSA_PENSAR_S,
-        pause_after_s=0.0,
-    )
-    scenes: list[Scene] = [
-        escena_frase("Pregunta", "pregunta", ROTULOS["pregunta"], [Part(q.texto, "pregunta.texto")], tema_txt=tema(lesson), pause_after_s=0.15),
-        pensar,
-        escena_frase("Respuesta", "respuesta", ROTULOS["respuesta"], respuesta, skip_parts=1, pause_after_s=0.5),
-        escena_credito(book),
-    ]
+    scenes: list[Scene] = [*escenas_comprueba(lesson, breve), escena_credito(book)]
     matiz = escena_matiz(lesson, MATIZ_CORTO if breve else MATIZ_ENTERO)
     if matiz:
         scenes.append(matiz)
@@ -1306,7 +1356,11 @@ def pieza_fondo(book: Book, index: int, breve: bool = False) -> Pieza | None:
         escena_credito(book),
         *explicacion,
         *_sin_pie_repetido(figura, lesson),
+        *escenas_comprueba(lesson, rotulo=ROTULOS["comprueba"]),  # antes de seguir: ¿se ha entendido? (recordar activamente fija la idea)
     ]
+    conexion = escena_conexion(lesson)
+    if conexion:
+        scenes.append(conexion)  # la idea, situada entre otros autores, antes de su matiz
     matiz = escena_matiz(lesson, 10**6)
     if matiz:
         scenes.append(matiz)
