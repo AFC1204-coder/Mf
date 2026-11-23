@@ -67,6 +67,8 @@ tools/video/.venv/bin/python -m tools.video.cli calendario --por-dia 2
 | Cuadrado u horizontal | `--aspecto 1:1` o `--aspecto 16:9` |
 | Ver el aspecto sin gastar voz (rápido) | `--engine mudo` |
 | Otra voz | `--voice es-ES-AlvaroNeural` |
+| Efectos de sonido (sintetizados, sin archivos de terceros) | `--sonidos` |
+| Ver los iconos propuestos aún sin aprobar (no publicar) | `--iconos-propuestos` |
 | Solo la lección 3 de un libro | `--only 3` |
 
 ## Publicar en la web
@@ -86,7 +88,7 @@ tools/video/.venv/bin/python -m tools.video.cli publicados
 Qué sale en la web:
 
 - **En la lección:** «Ver en vídeo» (la pieza `idea`) y «Versión larga» (la `fondo`).
-- **En la ficha del libro:** «El libro en vídeo» (la pieza `libro`).
+- **En la ficha del libro:** «El libro en vídeo» (la pieza `libro`) e «Idea a idea» (la `recorrido`).
 - Las piezas de pregunta, práctica y caso se pueden registrar igual, pero la web no las muestra: son para redes.
 - Una lección sin vídeo registrado no muestra nada.
 

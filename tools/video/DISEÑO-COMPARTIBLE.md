@@ -12,16 +12,17 @@ El formato nuevo parte de la pregunta contraria: **¿qué entiende alguien que v
 
 **Una idea de una lección, con su explicación, su matiz y su crédito.** No un libro resumido: una afirmación, por qué se sostiene, de dónde sale y dónde se le discute. Dura lo que la explicación pida —lo normal, entre uno y dos minutos—, no lo que mande un tope (ver «La explicación»). Es la unidad natural del corpus (cada lección ya tiene `idea_clave`, esquema y `autocorreccion`) y es lo que distingue a la biblioteca de un canal de frases: aquí la idea viene con su límite.
 
-De ahí sale un catálogo de seis piezas. Todas se montan solas con campos del corpus; cada una usa un campo que las otras no explotan y **abre de una manera distinta**, así que las piezas de una misma lección no se pisan.
+De ahí sale un catálogo de siete piezas. Todas se montan solas con campos del corpus; cada una usa un campo que las otras no explotan y **abre de una manera distinta**, así que las piezas de una misma lección no se pisan.
 
 | Pieza | Abre con (gancho) | Centro | Campos |
 |---|---|---|---|
 | **`idea`** — la principal | La idea misma, en frío | La explicación (primeros párrafos del cuerpo) y el esquema | `idea_clave` · cuerpo · `datos/diagramas.json` · `autocorreccion` |
-| `fondo` — la lección entera | La idea misma | Todo el cuerpo, el esquema leído entero, el matiz completo y qué probar | los mismos · `aplicacion_practica` |
+| `fondo` — la lección entera | La idea misma | Todo el cuerpo, sus esquemas leídos enteros, una pregunta para comprobar, con qué autores conecta, el matiz completo y qué probar | los mismos · `preguntas` · `conexion_cruzada` · `autores_relacionados` · `aplicacion_practica` |
 | `pregunta` | Una pregunta de la lección | 3 s de pausa, respuesta y porqué | `preguntas` · `autocorreccion` |
 | `practica` | Qué probar | La idea que hay detrás | `aplicacion_practica` · la idea · `autocorreccion` |
 | `caso` | El caso concreto que la lección cuenta | La idea que hay detrás | cuerpo («Un ejemplo:», «Imagina que…») · la idea · `autocorreccion` |
 | `libro` | El libro en una frase | Sus ideas centrales | `datos/mapas.json` |
+| `recorrido` — el libro, idea a idea | La descripción del libro | El título y la idea literal de cada lección que tiene una; cierra con la frase que las une | `descripcion_breve` · `titulo` e `idea_clave` de cada lección · `datos/mapas.json` |
 
 Lo que se repite en todas (y da la identidad): **gancho → contenido → «Del libro X, de Y» → «El matiz» → cierre que retoma el gancho**. El estribillo es deliberado: quien ve dos piezas reconoce la tercera.
 
@@ -288,6 +289,42 @@ Un lote completo, en 9:16 y con la voz por defecto, en un contenedor en la nube 
 - **Versiones.** El código cambió durante el lote. Decisive, Four Thousand Weeks y Hábitos Atómicos se rehicieron enteros al final; los otros siete salieron con la versión vigente cuando arrancó cada uno, así que algunos no llevan el movimiento real entre piezas del esquema. Relanzar la orden los pone al día.
 - **No revisado.** Nadie ha visto las 280 piezas. Se revisó una («Decisive», idea 2) en una hoja de fotogramas.
 
+## Tercera vuelta: más fondo, más herramientas y un mapa de la pieza
+
+Lo que cambió en una noche de iteración, con la biblioteca entera medida antes y después (519 libros, 3.719 lecciones). El lint no rechaza ninguna de las 14.772 piezas planificadas.
+
+**Profundidad**
+
+- **«Conecta con».** La pieza `fondo` dice ahora el campo `conexion_cruzada` de la lección, que no salía en ningún vídeo: con qué otros autores conecta la idea. Va **entero o no va** (entre 12 y 160 palabras), porque su salvedad («es lectura nuestra, no lo dice el autor») suele estar en la última frase. Si remite a la serie («como vimos»), no entra.
+- **«Compruébalo».** Antes del matiz, la `fondo` hace una pregunta de la lección, deja 3 s y da la respuesta correcta con su porqué. Solo si la lección tiene una pregunta que se entiende sola (el 70 %). El lint comprueba, en cualquier pieza, que una opción de test solo se diga como respuesta a su pregunta y que sea la correcta.
+- **Segundo esquema.** Las 74 lecciones con más de un esquema los recorren todos en la `fondo`.
+- **`recorrido`.** Pieza nueva a nivel de libro: el título y la idea literal de cada lección. Sale para 403 libros (mediana, 1 min 39 s); los otros 116 tienen menos de tres lecciones con idea redactada.
+- La `fondo` pasa de una mediana de 2 min 57 s a 3 min 35 s.
+
+**Herramientas para enseñar**
+
+- **Nombres que se encienden.** En «Conecta con», los autores de `autores_relacionados` que el texto nombra aparecen como fichas y cada una se enciende cuando la voz dice su apellido. Un autor de la lista que el texto no menciona no se muestra.
+- **El esquema sigue a la voz.** Una pieza ya encendida vuelve a destacarse cuando un párrafo posterior la nombra de nuevo.
+- **224 iconos más.** Subconjunto de Lucide (licencia ISC, aviso en `assets/LICENCIA-lucide.txt`), con el prefijo `lu-`. Siguen la misma regla: ningún icono por pieza sale en un vídeo sin `"aprobado": true`. La propuesta de los nueve libros pendientes está rehecha con ellos, sin aprobar.
+- **Efectos de sonido, opcionales** (`--sonidos`). Sintetizados por el propio generador, sin archivos de terceros: un soplo al cambiar de sección, un toque al entrar cada pieza del esquema, la cuenta atrás de la pausa y dos notas al llegar la respuesta. Picos unos 18 dB por debajo de los de la voz. Desactivados por defecto: hay que juzgarlos de oído.
+
+**Atención**
+
+- **Mapa de tramos.** Bajo la cabecera, un tramo por sección (y por párrafo de la explicación), tan ancho como dura: hecho, en curso, por venir. Sin texto. Solo en piezas de cuatro tramos o más.
+- **Páginas más cortas junto al esquema.** Con los rótulos del esquema delante, la página de texto se acorta para que entre los dos no pasen de 32 palabras. Las piezas con alguna página por encima bajan de 2.324 a 935 (las que quedan son tarjetas de esquema y fichas del `recorrido`).
+- **Menos arranques que hablan del libro.** «El capítulo más provocador del libro…», «Uno de los conceptos más potentes de…» ya no abren una pieza como si fueran la idea: esas 132 lecciones abren por su esquema. Coste: 131 piezas `practica` menos, porque no tienen una idea que poner detrás.
+
+**Fallos corregidos**
+
+- En horizontal, una explicación con muchas páginas ensanchaba su columna y dejaba el esquema acompañante a 20 px. Letra mínima medida ahora: 30 px en 9:16, 25 px en 1:1 y 27 px en 16:9 (2.500 fotogramas por aspecto, piezas `fondo` de 26 libros).
+- Una lección con la misma pregunta escrita dos veces hacía fallar el lint.
+
+**No comprobado**
+
+- Los efectos de sonido no se han oído: solo se ha medido su nivel y que caen donde deben.
+- Las piezas `recorrido` y las secciones nuevas se han visto en hojas de fotogramas de «Decisive», no en más libros.
+- Imágenes libres: el entorno donde se trabajó no llega a ninguna fuente de imágenes (solo al registro de paquetes, de donde salen los iconos).
+
 ## Revisión independiente
 
 Antes de dar el trabajo por terminado se pidió a otro agente, sin contexto previo, que buscara fallos reales en el código. Encontró nueve y los nueve están corregidos, cada uno con su prueba:
@@ -322,7 +359,7 @@ De paso, al endurecer la comprobación de maquetación (ahora detecta también l
 ## Límites y lo que no se ha comprobado
 
 - **La voz.** Elegida de oído por el dueño (ver «Con voz real»), sobre una muestra de 35 s. Es una voz multilingüe de base francesa: no está comprobado cómo suena en piezas de tres minutos ni con nombres propios difíciles.
-- **Sigue siendo, sobre todo, texto.** El esquema acompaña, se construye y hay transiciones, pero no hay imágenes ni iconos por concepto. La animación es un descubrimiento progresivo, no movimiento real de los elementos. Y nada de esto se ha visto en una plataforma ni con espectadores.
+- **Sigue siendo, sobre todo, texto.** El esquema acompaña, se construye y hay transiciones, pero no hay imágenes, y los iconos por concepto solo salen en los libros donde alguien los ha aprobado. Y nada de esto se ha visto en una plataforma ni con espectadores.
 - **La explicación no elige: empieza por el principio.** Lee los primeros párrafos del cuerpo, que no siempre son los que mejor explican la idea (a veces el argumento fuerte está en el tercero y la pieza `idea` no llega; la pieza `fondo` sí). Es el precio de no seleccionar frases sin entenderlas. Tampoco se ha medido con personas si se sigue bien un párrafo de 100 palabras en texto cinético.
 - **Las plataformas.** La zona segura sigue las guías habituales, pero no se ha subido nada: ni recortes, ni compresión, ni cómo trata cada red la miniatura.
 - **El 25 % de ideas que salen del cuerpo** son menos rotundas que una `idea_clave` (las que solo hablan del libro se detectan y abren con el esquema; el resto, no todas brillan). La solución de fondo es redactar la idea en la biblioteca, no en el vídeo.
