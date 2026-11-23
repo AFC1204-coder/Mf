@@ -132,6 +132,8 @@ PREFIJOS_PUB = ("El matiz: ", "La respuesta: ", "La idea detrás: ", "Pruébalo:
 
 # Presupuestos (palabras). El texto en pantalla va por páginas: nunca más de PAGINA a la vez.
 PAGINA = 14
+EN_PANTALLA = 32  # texto más rótulos del esquema que lo acompaña (el mismo máximo orientativo que avisa el lint)
+PAGINA_MIN = 8
 RAFAGA = 4
 RECUERDA_PALABRAS = 40  # el mensaje de cierre: la idea entera en el 99 % de los casos
 PORTADA_PALABRAS = 30  # la miniatura: la frase entera casi siempre
@@ -560,8 +562,15 @@ def acompanar(explicacion: list[Scene], figura: list[Scene]) -> bool:
         fig["centro"] = marco.get("centro")  # de dónde cuelgan las piezas (o alrededor de qué giran)
     if base.get("patron") == "espectro" and len(marco.get("polos") or []) == 2:
         fig["polos"] = list(marco.get("polos"))
+    # Con los rótulos del esquema delante, la página de texto se acorta lo que haga falta para que entre los dos no
+    # pasen de lo que se lee de un vistazo (EN_PANTALLA palabras).
+    rotulos = sum(T.n_words(str(x)) for x in [fig.get("title"), fig.get("centro"), *(fig.get("polos") or []), *(p["t"] for p in piezas)] if x)
+    pagina = max(PAGINA_MIN, min(PAGINA, EN_PANTALLA - rotulos))
     encendidas: list[int] = []
     for scene in explicacion:
+        if pagina < PAGINA:
+            corta = escena_frase(scene.section, scene.view["style"], scene.view["kicker"], scene.parts, tema_txt=scene.view.get("tema") or "", pause_after_s=scene.pause_after_s, pagina=pagina)
+            scene.view, scene.beats = corta.view, corta.beats
         tokens = scene.view.get("words") or []
         scene.view.update({"fig": fig, "fig_on": list(encendidas), "fig_act": -1})
         hallazgos = sorted((i, j) for j, p in enumerate(piezas) if j not in encendidas for i in [donde_nombra(str(p["t"]), tokens)] if i is not None)
@@ -779,6 +788,7 @@ def escena_frase(
     skip_parts: int = 0,
     tema_txt: str = "",
     pause_after_s: float = 0.35,
+    pagina: int = PAGINA,
 ) -> Scene:
     """Texto cinético: lo que dice la voz entra en pantalla por ráfagas, página a página.
 
@@ -791,7 +801,7 @@ def escena_frase(
     visibles = tokens[salto:]
     giro = no_sino(visibles) if estilo == "idea" else None
     # Un «no X, sino Y» breve va en una sola página: el contraste se ve entero, con lo negado apagado junto a lo afirmado.
-    paginas = [(0, len(visibles))] if (giro and len(visibles) <= GIRO_PAGINA) else paginar(visibles)
+    paginas = [(0, len(visibles))] if (giro and len(visibles) <= GIRO_PAGINA) else paginar(visibles, pagina)
     cortes: list[tuple[int, int, int]] = []  # (página, inicio, fin) de cada ráfaga, sobre `visibles`
     for pi, (a, b) in enumerate(paginas):
         cortes += [(pi, i, j) for i, j in rafagas(visibles, a, b)]
