@@ -23,6 +23,7 @@ import json
 import subprocess
 import sys
 import tempfile
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
 
@@ -40,6 +41,7 @@ ROTULO_MATIZ = "El matiz."  # el mismo rótulo que dicen los vídeos
 RECETA = 1  # súbelo al cambiar qué se dice o cómo se monta: obliga a regenerar
 PAUSA_PARRAFO_S, PAUSA_PARTE_S = 0.45, 0.9
 VERSION = 1
+EN_PARALELO = 4  # locuciones de una misma lección que se piden a la vez
 MAX_CARACTERES = 2500  # por locución; un párrafo más largo se parte por frases enteras
 
 
@@ -160,6 +162,27 @@ def escribir_indice(indice: dict[str, Any], ruta: Path = INDICE) -> None:
     ruta.write_text(json.dumps(indice, ensure_ascii=False, indent=1, sort_keys=True) + "\n", encoding="utf-8")
 
 
+def anotar(leccion_id: str, entrada: dict[str, Any] | None, ruta: Path = INDICE) -> None:
+    """Apunta (o borra, con None) una lección en el índice del disco sin tocar las demás.
+
+    Se relee el índice cada vez para que dos tandas a la vez, con libros distintos, no se pisen.
+    """
+    ruta.parent.mkdir(parents=True, exist_ok=True)
+    with open(ruta.with_suffix(".lock"), "w") as cerrojo:
+        try:
+            import fcntl  # no existe en Windows: allí, sin cerrojo (una sola tanda a la vez)
+
+            fcntl.flock(cerrojo, fcntl.LOCK_EX)
+        except ImportError:
+            pass
+        en_disco = leer_indice(ruta)
+        if entrada is None:
+            en_disco["lecciones"].pop(leccion_id, None)
+        else:
+            en_disco["lecciones"][leccion_id] = entrada
+        escribir_indice(en_disco, ruta)
+
+
 def al_dia(entrada: Any, h: str, r: str, mp3: Path) -> bool:
     return isinstance(entrada, dict) and entrada.get("h") == h and entrada.get("r") == r and mp3.is_file() and mp3.stat().st_size > 1000
 
@@ -185,20 +208,24 @@ def generar_libro(book: C.Book, tts: Any, voz: str, indice: dict[str, Any], *, c
         else:
             try:
                 with tempfile.TemporaryDirectory() as tmp:
-                    rutas: list[list[Path]] = []
-                    for i, parte in enumerate(partes_de_leccion(n, lec.titulo, lec.cuerpo, lec.autocorreccion, con_matiz)):
-                        rutas.append([])
-                        for j, texto in enumerate(parte):
-                            res = tts.synthesize(texto, Path(tmp) / f"{i:02d}-{j:02d}.mp3", voice=voz)
-                            rutas[-1].append(res.audio_path)
+                    partes = partes_de_leccion(n, lec.titulo, lec.cuerpo, lec.autocorreccion, con_matiz)
+                    # El servicio entrega cada locución casi a tiempo real: las de una lección se piden a la vez.
+                    with ThreadPoolExecutor(max_workers=EN_PARALELO) as pool:
+                        pedidas = [
+                            [pool.submit(tts.synthesize, texto, Path(tmp) / f"{i:02d}-{j:02d}.mp3", voz) for j, texto in enumerate(parte)]
+                            for i, parte in enumerate(partes)
+                        ]
+                        rutas = [[f.result().audio_path for f in parte] for parte in pedidas]
                     dur = montar(rutas, mp3, {"title": f"{n:02d}. {lec.titulo}", "artist": book.autor, "album": f"{book.titulo} · Mente Fría", "track": str(n)})
             except Exception as exc:  # noqa: BLE001 (una lección que falla no detiene el libro)
                 cuenta["fallidos"] += 1
                 indice["lecciones"].pop(lec.id, None)
+                anotar(lec.id, None)
                 mp3.unlink(missing_ok=True)
                 print(f"  ✗ {n:02d} {lec.titulo[:60]} — {exc}", flush=True)
                 continue
             indice["lecciones"][lec.id] = {"s": int(round(dur)), "h": h, "r": r, "b": mp3.stat().st_size}
+            anotar(lec.id, indice["lecciones"][lec.id])  # ya: si la tanda se corta, esta lección no se repite
             cuenta["nuevos"] += 1
             print(f"  ✓ {n:02d} {lec.titulo[:60]} — {dur:.0f} s ({mp3.stat().st_size // 1024} KB)", flush=True)
         items.append({"orden": n, "id": lec.id, "titulo": lec.titulo, "archivo": str(mp3.relative_to(REPO_ROOT)) if mp3.is_relative_to(REPO_ROOT) else str(mp3), "duracion_s": dur})
@@ -239,16 +266,7 @@ def main(argv: list[str] | None = None) -> int:
         cuenta = generar_libro(book, tts, args.voice, indice, con_matiz=not args.sin_matiz, merge=args.merge)
         for k, v in cuenta.items():
             total[k] += v
-        # Tras cada libro: si la tanda se corta, lo hecho queda registrado. Se vuelve a leer el índice del disco y solo
-        # se tocan las lecciones de este libro, para que dos tandas a la vez (libros distintos) no se pisen.
-        en_disco = leer_indice()
-        for lec in book.lessons:
-            if lec.id in indice["lecciones"]:
-                en_disco["lecciones"][lec.id] = indice["lecciones"][lec.id]
-            else:
-                en_disco["lecciones"].pop(lec.id, None)
-        indice = en_disco
-        escribir_indice(indice)
+        indice = leer_indice()  # lo que hayan apuntado mientras tanto otras tandas
     seg = sum(int(e.get("s") or 0) for e in indice["lecciones"].values())
     mb = sum(int(e.get("b") or 0) for e in indice["lecciones"].values()) / 1_048_576
     print(f"\nListo: {total['nuevos']} nuevos, {total['sin_cambios']} sin cambios, {total['fallidos']} fallidos. "
