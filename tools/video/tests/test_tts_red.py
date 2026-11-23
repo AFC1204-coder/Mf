@@ -90,11 +90,23 @@ class ReintentosTest(unittest.TestCase):
                 if len(llamadas) < 3:
                     raise RuntimeError("No audio was received.")
                 out_path.write_bytes(b"x")
-                return []
+                return [M.WordTiming(text="hola", start_s=0.0, end_s=0.3), M.WordTiming(text="mundo", start_s=0.3, end_s=0.6)]
 
             with mock.patch.object(M.EdgeTTSEngine, "_synth_async", falla_dos_veces):
                 M.EdgeTTSEngine().synthesize("hola mundo", salida)
             self.assertEqual(len(llamadas), 3)
+
+            # Una locución cortada (el audio acaba antes que su última palabra) cuenta como fallo pasajero.
+            async def cortada_una_vez(self, text, out_path, voice):
+                llamadas.append(1)
+                out_path.write_bytes(b"x")
+                fin = 5.0 if len(llamadas) < 2 else 0.6
+                return [M.WordTiming(text="hola", start_s=0.0, end_s=0.3), M.WordTiming(text="mundo", start_s=0.3, end_s=fin)]
+
+            llamadas.clear()
+            with mock.patch.object(M.EdgeTTSEngine, "_synth_async", cortada_una_vez):
+                M.EdgeTTSEngine().synthesize("hola mundo", salida)
+            self.assertEqual(len(llamadas), 2)
 
             async def falla_siempre(self, text, out_path, voice):
                 llamadas.append(1)

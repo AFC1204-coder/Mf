@@ -339,6 +339,8 @@ Cambios hechos tras ver y oír los vídeos del lote; lo anterior de este documen
   - Estado: «Decisive», cinco imágenes aprobadas. Los otros ocho libros con propuesta, 19 imágenes **sin aprobar**. «Games People Play» no tiene ninguna.
 - **El autor, sin fotografía.** No se encontró retrato con licencia aceptada para los autores del lote, así que el crédito del libro muestra un medallón con sus iniciales, dibujado por el propio vídeo. Si un catálogo trae un `retrato` aprobado, se usa en su lugar.
 
+- **Locuciones cortadas.** Al comprobar los audiolibros con un reconocedor de voz apareció que el servicio devuelve a veces una locución sin su última frase y sin dar error (2 de 74 lecciones). El motor ahora lo detecta (menos marcas de palabra que palabras, o audio más corto que su última marca) y la vuelve a pedir. **Los 280 vídeos del lote se renderizaron antes de esta comprobación:** alguno puede tener una frase escrita en pantalla y no dicha; hay que regenerarlos antes de publicar.
+
 **No comprobado en esta vuelta:** las imágenes en vídeo cuadrado y horizontal (solo en fotogramas); los sonidos, de oído.
 
 ## Revisión independiente

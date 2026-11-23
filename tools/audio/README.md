@@ -49,6 +49,18 @@ El *service worker* no guarda los MP3 en su caché (pesan); la app guarda aparte
 
 Los MP3 viven en el repositorio (carpeta `audio/`) y los sirve GitHub Pages, como el resto de la web. Eso vale para una tanda de libros, no para la biblioteca entera: las 3.719 lecciones serían unas 119 horas y unos 2,6 GB, más de lo que admite un sitio de GitHub Pages (1 GB). Para pasar de unas decenas de libros hay que llevar los MP3 a un almacenamiento aparte y cambiar `base` en `datos/audios.json` (la app solo acepta una ruta relativa del propio sitio; para otro dominio hay que ampliar `grabado` en `lib/audio.js`).
 
-## Comprobación
+## Comprobación: que el audio diga todo el texto
 
-Cada tanda se puede comprobar con un reconocedor de voz (Whisper): transcribir el MP3 y medir cuántas palabras del texto se oyen, en orden. En los diez primeros libros, todas las lecciones salen reconocidas en español y con el texto completo (ver el PR).
+El servicio de voz devuelve a veces una locución **cortada sin dar error**: el archivo llega, suena bien y le falta la última frase. En la primera grabación de los diez libros pasó en 2 de 74 lecciones (una frase del matiz y otra del cuerpo sin decir). Hay tres barreras:
+
+1. **En el motor de voz** (`tools/video/tts/edge_tts_engine.py`, `incompleta`; vale también para los vídeos): una locución con marcas para menos palabras de las que tiene el texto, o cuyo audio acaba antes que su última palabra, se vuelve a pedir.
+2. **En el montaje:** el MP3 final debe durar lo que suman sus locuciones y pausas (±1 s); si no, la lección falla y no entra en el índice.
+3. **De extremo a extremo, con un reconocedor de voz** (opcional, `pip install faster-whisper`):
+
+   ```bash
+   python -m tools.audio.verificar "Decisive" "Range"
+   ```
+
+   Transcribe cada MP3 y lo compara con el texto. Falla si una lección no se reconoce en español, si falta un tramo de seis palabras o más, o si el parecido baja de 0,90.
+
+Resultado tras regrabar con las barreras 1 y 2: las 74 lecciones reconocidas en español, ningún tramo sin decir, parecido entre 0,946 y 1 (lo que baja de 1 son apellidos, cifras y palabras en inglés que el reconocedor escribe a su manera).

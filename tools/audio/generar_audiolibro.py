@@ -38,9 +38,10 @@ INDICE = REPO_ROOT / "datos" / "audios.json"
 
 VOZ = "fr-FR-RemyMultilingualNeural"  # la de los vídeos (tools/video/compartir.py, VOZ_EDGE)
 ROTULO_MATIZ = "El matiz."  # el mismo rótulo que dicen los vídeos
-RECETA = 1  # súbelo al cambiar qué se dice o cómo se monta: obliga a regenerar
+RECETA = 2  # súbelo al cambiar qué se dice o cómo se monta: obliga a regenerar
 PAUSA_PARRAFO_S, PAUSA_PARTE_S = 0.45, 0.9
 VERSION = 1
+TOLERANCIA_S = 1.0  # diferencia admitida entre el montaje y la suma de sus locuciones
 EN_PARALELO = 4  # locuciones de una misma lección que se piden a la vez
 MAX_CARACTERES = 2500  # por locución; un párrafo más largo se parte por frases enteras
 
@@ -136,6 +137,15 @@ def montar(partes: list[list[Path]], out_mp3: Path, etiquetas: dict[str, str] | 
     return _duracion(out_mp3)
 
 
+def duracion_esperada(partes: list[list[float]]) -> float:
+    """Lo que debe durar el montaje: las locuciones más sus pausas. Si el MP3 final no dura eso, falta o sobra algo."""
+    total, ultima = 0.0, (len(partes) - 1, len(partes[-1]) - 1) if partes else (0, 0)
+    for i, parte in enumerate(partes):
+        for j, d in enumerate(parte):
+            total += d + (0.0 if (i, j) == ultima else (PAUSA_PARTE_S if j == len(parte) - 1 else PAUSA_PARRAFO_S))
+    return total
+
+
 def unir(mp3s: list[Path], out_mp3: Path) -> None:
     with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False, encoding="utf-8") as f:
         f.writelines(f"file '{p.resolve()}'\n" for p in mp3s)
@@ -215,8 +225,12 @@ def generar_libro(book: C.Book, tts: Any, voz: str, indice: dict[str, Any], *, c
                             [pool.submit(tts.synthesize, texto, Path(tmp) / f"{i:02d}-{j:02d}.mp3", voz) for j, texto in enumerate(parte)]
                             for i, parte in enumerate(partes)
                         ]
-                        rutas = [[f.result().audio_path for f in parte] for parte in pedidas]
+                        hechas = [[f.result() for f in parte] for parte in pedidas]
+                    rutas = [[res.audio_path for res in parte] for parte in hechas]
+                    esperado = duracion_esperada([[res.duration_s for res in parte] for parte in hechas])
                     dur = montar(rutas, mp3, {"title": f"{n:02d}. {lec.titulo}", "artist": book.autor, "album": f"{book.titulo} · Mente Fría", "track": str(n)})
+                    if abs(dur - esperado) > TOLERANCIA_S:
+                        raise RuntimeError(f"el montaje dura {dur:.1f} s y sus locuciones suman {esperado:.1f} s")
             except Exception as exc:  # noqa: BLE001 (una lección que falla no detiene el libro)
                 cuenta["fallidos"] += 1
                 indice["lecciones"].pop(lec.id, None)

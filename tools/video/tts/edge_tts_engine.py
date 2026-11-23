@@ -92,6 +92,26 @@ def necesita_apoyo(texto: str, voz: str) -> bool:
     m = _PRIMERA_FRASE.match(t)
     primera = m.group(1) if m else t
     return 0 < len(primera.split()) <= APOYO_HASTA
+# El servicio corta a veces una locución antes del final sin dar error: el archivo llega, suena bien y le falta la
+# última frase. Se vio al comprobar los audiolibros con un reconocedor de voz (2 de 74 lecciones, una frase del matiz
+# sin decir). Dos señales lo delatan: llegan marcas para menos palabras de las que tiene el texto, o el audio dura
+# menos que la última marca. Una locución así se trata como un fallo pasajero y se vuelve a pedir.
+MARCAS_MIN = 0.85  # marcas de palabra recibidas / palabras del texto (lo normal es 0,97-1,03)
+COLA_MIN_S = -0.05  # el audio termina, como poco, donde termina la última palabra (lo normal son 0,37 s de cola)
+
+
+def incompleta(texto: str, timings: list[WordTiming], duracion_s: float) -> str:
+    """Motivo por el que la locución no dice todo el texto, o cadena vacía si está entera."""
+    palabras = len(re.findall(r"\w+", texto or ""))
+    if not timings:
+        return "" if palabras == 0 else "sin marcas de palabra"
+    if palabras >= 8 and len(timings) < MARCAS_MIN * len((texto or "").split()):
+        return f"{len(timings)} marcas para {len(texto.split())} palabras"
+    if duracion_s - timings[-1].end_s < COLA_MIN_S:
+        return f"dura {duracion_s:.1f} s y la última palabra acaba en {timings[-1].end_s:.1f} s"
+    return ""
+
+
 REINTENTOS = 6  # intentos por locución ante un fallo pasajero del servicio (en total espera hasta minuto y medio)
 ESPERA_REINTENTO_S = 3.0  # espera antes del segundo intento; se dobla en cada uno
 
@@ -194,9 +214,13 @@ class EdgeTTSEngine(TTSEngine):
                 else:
                     timings = asyncio.run(self._synth_async(text, out_path, chosen_voice))
                 if out_path.exists() and out_path.stat().st_size > 0:
-                    ultimo = None
-                    break
-                ultimo = RuntimeError("Edge TTS devolvió un audio vacío")
+                    falta = incompleta(text, timings, probe_duration(out_path))
+                    if not falta:
+                        ultimo = None
+                        break
+                    ultimo = RuntimeError(f"Edge TTS devolvió un audio incompleto ({falta})")
+                else:
+                    ultimo = RuntimeError("Edge TTS devolvió un audio vacío")
             except Exception as exc:  # noqa: BLE001 (edge-tts y aiohttp lanzan tipos distintos para el mismo fallo pasajero)
                 ultimo = exc
             if intento < REINTENTOS - 1:
