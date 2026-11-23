@@ -71,7 +71,9 @@
 
   document.querySelectorAll('[data-icon]').forEach(function (el) {
     var iconos = (window.Mapa && window.Mapa.ICONOS) || {};
-    var trazo = iconos[el.getAttribute('data-icon')] || iconos.bombilla || '';
+    var nombre = el.getAttribute('data-icon') || '';
+    // «lu-…»: iconos de Lucide (iconos-lucide.js). Los demás, los 18 de la biblioteca de la app (lib/mapa.js).
+    var trazo = (nombre.indexOf('lu-') === 0 && (window.CS_LUCIDE || {})[nombre.slice(3)]) || iconos[nombre] || iconos.bombilla || '';
     el.innerHTML = '<svg viewBox="0 0 24 24">' + trazo + '</svg>';
   });
 

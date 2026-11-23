@@ -1,14 +1,14 @@
 {
   "libro": "El hombre en busca de sentido",
   "libro_id": "5db71134-47e4-4b9f-97b4-6915e68f99aa",
-  "como_se_usa": "Cada entrada propone un icono de la biblioteca para una pieza de esquema. No sale en ningún vídeo hasta que alguien revisa la propuesta y pone \"aprobado\": true. Un icono vacío significa que ninguno de los 18 encaja: la pieza sigue con su número. Iconos válidos: balanza, bandera, bombilla, brujula, camino, ciclo, dado, diana, escudo, grafico, grupo, libro, llave, lupa, ojo, pregunta, red, reloj.",
+  "como_se_usa": "Cada entrada propone un icono para una pieza de esquema. No sale en ningún vídeo hasta que alguien revisa la propuesta y pone \"aprobado\": true. Iconos válidos: los 18 de la biblioteca de la app (balanza, bandera, bombilla, brujula, camino, ciclo, dado, diana, escudo, grafico, grupo, libro, llave, lupa, ojo, pregunta, red, reloj) y los de Lucide incorporados en tools/video/assets/iconos-lucide.js, escritos con el prefijo «lu-» (lu-brain, lu-scale…). Un icono vacío deja el número de la pieza.",
   "piezas": [
     {
       "leccion_id": "823e23b4-0f0a-4196-9c3c-47a412a7f240",
       "leccion": "Llegada: shock, ilusión del indulto y humor",
       "esquema": "La llegada al campo según Frankl",
       "pieza": "Ilusión del indulto",
-      "icono": "ojo",
+      "icono": "lu-sparkles",
       "aprobado": false
     },
     {
@@ -24,7 +24,7 @@
       "leccion": "Llegada: shock, ilusión del indulto y humor",
       "esquema": "La llegada al campo según Frankl",
       "pieza": "Curiosidad fría",
-      "icono": "lupa",
+      "icono": "lu-microscope",
       "aprobado": false
     },
     {
@@ -32,7 +32,7 @@
       "leccion": "Llegada: shock, ilusión del indulto y humor",
       "esquema": "La llegada al campo según Frankl",
       "pieza": "Humor",
-      "icono": "bombilla",
+      "icono": "lu-drama",
       "aprobado": false
     },
     {
@@ -40,7 +40,7 @@
       "leccion": "Apatía y vida interior: la coraza y el refugio",
       "esquema": "Apatía y vida interior",
       "pieza": "Apatía: la coraza",
-      "icono": "escudo",
+      "icono": "lu-shield",
       "aprobado": false
     },
     {
@@ -48,7 +48,7 @@
       "leccion": "Apatía y vida interior: la coraza y el refugio",
       "esquema": "Apatía y vida interior",
       "pieza": "Vida interior: el refugio",
-      "icono": "libro",
+      "icono": "lu-house",
       "aprobado": false
     },
     {
@@ -56,7 +56,7 @@
       "leccion": "La última libertad: elegir la actitud",
       "esquema": "La última libertad según Frankl",
       "pieza": "Lo que queda",
-      "icono": "llave",
+      "icono": "lu-key",
       "aprobado": false
     },
     {
@@ -64,7 +64,7 @@
       "leccion": "La última libertad: elegir la actitud",
       "esquema": "La última libertad según Frankl",
       "pieza": "Pocos casos bastan",
-      "icono": "grupo",
+      "icono": "lu-users",
       "aprobado": false
     },
     {
@@ -80,7 +80,7 @@
       "leccion": "La última libertad: elegir la actitud",
       "esquema": "La última libertad según Frankl",
       "pieza": "Poder desafiante del espíritu",
-      "icono": "bandera",
+      "icono": "lu-flame",
       "aprobado": false
     },
     {
@@ -88,7 +88,7 @@
       "leccion": "La última libertad: elegir la actitud",
       "esquema": "La última libertad según Frankl",
       "pieza": "Libertad como respuesta",
-      "icono": "brujula",
+      "icono": "lu-compass",
       "aprobado": false
     },
     {
@@ -96,7 +96,7 @@
       "leccion": "Un porqué para vivir: el futuro como sostén",
       "esquema": "Un porqué para vivir",
       "pieza": "Sin fe en el futuro",
-      "icono": "reloj",
+      "icono": "lu-hourglass",
       "aprobado": false
     },
     {
@@ -104,7 +104,7 @@
       "leccion": "Un porqué para vivir: el futuro como sostén",
       "esquema": "Un porqué para vivir",
       "pieza": "Con una tarea por delante",
-      "icono": "diana",
+      "icono": "lu-target",
       "aprobado": false
     },
     {
@@ -112,7 +112,7 @@
       "leccion": "Voluntad de sentido y vacío existencial",
       "esquema": "Placer, poder o sentido",
       "pieza": "Freud y Adler",
-      "icono": "grupo",
+      "icono": "lu-users",
       "aprobado": false
     },
     {
@@ -120,7 +120,7 @@
       "leccion": "Voluntad de sentido y vacío existencial",
       "esquema": "Placer, poder o sentido",
       "pieza": "Frankl: voluntad de sentido",
-      "icono": "brujula",
+      "icono": "lu-compass",
       "aprobado": false
     },
     {
@@ -128,7 +128,7 @@
       "leccion": "Tres caminos hacia el sentido",
       "esquema": "Tres vías hacia el sentido",
       "pieza": "Una obra o un acto",
-      "icono": "diana",
+      "icono": "lu-hammer",
       "aprobado": false
     },
     {
@@ -136,7 +136,7 @@
       "leccion": "Tres caminos hacia el sentido",
       "esquema": "Tres vías hacia el sentido",
       "pieza": "Experimentar algo o a alguien",
-      "icono": "ojo",
+      "icono": "lu-heart",
       "aprobado": false
     },
     {
@@ -144,7 +144,7 @@
       "leccion": "Tres caminos hacia el sentido",
       "esquema": "Tres vías hacia el sentido",
       "pieza": "La actitud ante lo inevitable",
-      "icono": "escudo",
+      "icono": "lu-mountain",
       "aprobado": false
     },
     {
@@ -152,7 +152,7 @@
       "leccion": "Sufrimiento inevitable y optimismo trágico",
       "esquema": "Optimismo trágico según Frankl",
       "pieza": "Tríada trágica",
-      "icono": "balanza",
+      "icono": "lu-triangle-exclamation-point",
       "aprobado": false
     },
     {
@@ -160,7 +160,7 @@
       "leccion": "Sufrimiento inevitable y optimismo trágico",
       "esquema": "Optimismo trágico según Frankl",
       "pieza": "Cómo transformarla",
-      "icono": "ciclo",
+      "icono": "lu-refresh-cw",
       "aprobado": false
     },
     {
@@ -176,7 +176,7 @@
       "leccion": "Intención paradójica, desreflexión y responsabilidad",
       "esquema": "Dos técnicas de la logoterapia",
       "pieza": "Desreflexión",
-      "icono": "ojo",
+      "icono": "lu-eye-off",
       "aprobado": false
     }
   ]

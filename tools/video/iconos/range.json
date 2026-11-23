@@ -1,14 +1,14 @@
 {
   "libro": "Range",
   "libro_id": "1903788c-d5a2-475a-b026-db608bf300b5",
-  "como_se_usa": "Cada entrada propone un icono de la biblioteca para una pieza de esquema. No sale en ningún vídeo hasta que alguien revisa la propuesta y pone \"aprobado\": true. Un icono vacío significa que ninguno de los 18 encaja: la pieza sigue con su número. Iconos válidos: balanza, bandera, bombilla, brujula, camino, ciclo, dado, diana, escudo, grafico, grupo, libro, llave, lupa, ojo, pregunta, red, reloj.",
+  "como_se_usa": "Cada entrada propone un icono para una pieza de esquema. No sale en ningún vídeo hasta que alguien revisa la propuesta y pone \"aprobado\": true. Iconos válidos: los 18 de la biblioteca de la app (balanza, bandera, bombilla, brujula, camino, ciclo, dado, diana, escudo, grafico, grupo, libro, llave, lupa, ojo, pregunta, red, reloj) y los de Lucide incorporados en tools/video/assets/iconos-lucide.js, escritos con el prefijo «lu-» (lu-brain, lu-scale…). Un icono vacío deja el número de la pieza.",
   "piezas": [
     {
       "leccion_id": "8153db1a-ddc7-425a-9f83-7baa3a936578",
       "leccion": "Dominios Amables vs. Dominios Perversos: Cuándo Funciona la Especialización",
       "esquema": "Dominios amables y perversos",
       "pieza": "Dominios amables",
-      "icono": "diana",
+      "icono": "lu-chess-knight",
       "aprobado": false
     },
     {
@@ -16,7 +16,7 @@
       "leccion": "Dominios Amables vs. Dominios Perversos: Cuándo Funciona la Especialización",
       "esquema": "Dominios amables y perversos",
       "pieza": "Dominios perversos",
-      "icono": "dado",
+      "icono": "lu-dices",
       "aprobado": false
     },
     {
@@ -24,7 +24,7 @@
       "leccion": "El Mito de Tiger Woods: La Trampa de la Especialización Temprana",
       "esquema": "Woods frente a Federer",
       "pieza": "Tiger Woods",
-      "icono": "diana",
+      "icono": "lu-target",
       "aprobado": false
     },
     {
@@ -32,7 +32,7 @@
       "leccion": "El Mito de Tiger Woods: La Trampa de la Especialización Temprana",
       "esquema": "Woods frente a Federer",
       "pieza": "Roger Federer",
-      "icono": "camino",
+      "icono": "lu-shapes",
       "aprobado": false
     },
     {
@@ -48,7 +48,7 @@
       "leccion": "La Transferencia de Aprendizaje: Por Qué el Conocimiento Profundo no Viaja",
       "esquema": "Transferencia de aprendizaje",
       "pieza": "Lo que ocurre",
-      "icono": "ojo",
+      "icono": "lu-eye",
       "aprobado": false
     },
     {
@@ -56,7 +56,7 @@
       "leccion": "El Pensamiento desde Fuera de la Categoría: Outsiders y Analogías",
       "esquema": "Outsiders y expertos",
       "pieza": "Expertos del dominio",
-      "icono": "lupa",
+      "icono": "lu-microscope",
       "aprobado": false
     },
     {
@@ -64,7 +64,7 @@
       "leccion": "El Pensamiento desde Fuera de la Categoría: Outsiders y Analogías",
       "esquema": "Outsiders y expertos",
       "pieza": "Outsiders",
-      "icono": "brujula",
+      "icono": "lu-telescope",
       "aprobado": false
     },
     {
@@ -72,7 +72,7 @@
       "leccion": "La Carrera en Zigzag: Exploración Tardía como Ventaja",
       "esquema": "Carrera lineal y en zigzag",
       "pieza": "Especializar pronto",
-      "icono": "diana",
+      "icono": "lu-target",
       "aprobado": false
     },
     {
@@ -80,7 +80,7 @@
       "leccion": "La Carrera en Zigzag: Exploración Tardía como Ventaja",
       "esquema": "Carrera lineal y en zigzag",
       "pieza": "Explorar antes",
-      "icono": "brujula",
+      "icono": "lu-compass",
       "aprobado": false
     },
     {
@@ -88,7 +88,7 @@
       "leccion": "Grit vs. Quit: Cuándo Perseverar y Cuándo Abandonar",
       "esquema": "Grit frente a quit",
       "pieza": "Grit",
-      "icono": "escudo",
+      "icono": "lu-mountain",
       "aprobado": false
     },
     {
@@ -96,7 +96,7 @@
       "leccion": "Grit vs. Quit: Cuándo Perseverar y Cuándo Abandonar",
       "esquema": "Grit frente a quit",
       "pieza": "Saber abandonar",
-      "icono": "camino",
+      "icono": "lu-door-open",
       "aprobado": false
     },
     {
@@ -112,7 +112,7 @@
       "leccion": "El Yo del Futuro y la Identidad en Desarrollo",
       "esquema": "El yo del futuro",
       "pieza": "La investigación",
-      "icono": "lupa",
+      "icono": "lu-flask-conical",
       "aprobado": false
     },
     {
@@ -120,7 +120,7 @@
       "leccion": "La Ventaja del Generalista en Problemas Complejos: Foxes vs Hedgehogs",
       "esquema": "Zorros y erizos",
       "pieza": "Especialistas",
-      "icono": "lupa",
+      "icono": "lu-microscope",
       "aprobado": false
     },
     {
@@ -128,7 +128,7 @@
       "leccion": "La Ventaja del Generalista en Problemas Complejos: Foxes vs Hedgehogs",
       "esquema": "Zorros y erizos",
       "pieza": "Generalistas (zorros)",
-      "icono": "red",
+      "icono": "lu-network",
       "aprobado": false
     },
     {
@@ -136,7 +136,7 @@
       "leccion": "Aprendizaje por Dificultad Deseable: Por Qué lo Fácil no Enseña",
       "esquema": "Dificultad deseable",
       "pieza": "Aprender sin esfuerzo",
-      "icono": "camino",
+      "icono": "lu-feather",
       "aprobado": false
     },
     {
@@ -144,7 +144,7 @@
       "leccion": "Aprendizaje por Dificultad Deseable: Por Qué lo Fácil no Enseña",
       "esquema": "Dificultad deseable",
       "pieza": "Dificultad deseable",
-      "icono": "escudo",
+      "icono": "lu-dumbbell",
       "aprobado": false
     },
     {
@@ -152,7 +152,7 @@
       "leccion": "Innovación por Importación: Cómo los Outsiders Resuelven Problemas que los Expertos No Pueden",
       "esquema": "Innovar importando",
       "pieza": "Expertos",
-      "icono": "lupa",
+      "icono": "lu-microscope",
       "aprobado": false
     },
     {
@@ -160,7 +160,7 @@
       "leccion": "Innovación por Importación: Cómo los Outsiders Resuelven Problemas que los Expertos No Pueden",
       "esquema": "Innovar importando",
       "pieza": "Outsiders",
-      "icono": "brujula",
+      "icono": "lu-telescope",
       "aprobado": false
     }
   ]

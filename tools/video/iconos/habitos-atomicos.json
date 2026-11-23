@@ -1,14 +1,14 @@
 {
   "libro": "Hábitos Atómicos",
   "libro_id": "982704b8-95e7-4ec3-91d3-1a5dfd9d68b4",
-  "como_se_usa": "Cada entrada propone un icono de la biblioteca para una pieza de esquema. No sale en ningún vídeo hasta que alguien revisa la propuesta y pone \"aprobado\": true. Un icono vacío significa que ninguno de los 18 encaja: la pieza sigue con su número. Iconos válidos: balanza, bandera, bombilla, brujula, camino, ciclo, dado, diana, escudo, grafico, grupo, libro, llave, lupa, ojo, pregunta, red, reloj.",
+  "como_se_usa": "Cada entrada propone un icono para una pieza de esquema. No sale en ningún vídeo hasta que alguien revisa la propuesta y pone \"aprobado\": true. Iconos válidos: los 18 de la biblioteca de la app (balanza, bandera, bombilla, brujula, camino, ciclo, dado, diana, escudo, grafico, grupo, libro, llave, lupa, ojo, pregunta, red, reloj) y los de Lucide incorporados en tools/video/assets/iconos-lucide.js, escritos con el prefijo «lu-» (lu-brain, lu-scale…). Un icono vacío deja el número de la pieza.",
   "piezas": [
     {
       "leccion_id": "149ffd37-1493-4b73-82af-5eec8cfdcfef",
       "leccion": "El Poder del 1%: Mejora Marginal Compuesta y la Trampa de las Metas",
       "esquema": "El poder del 1 %",
       "pieza": "37×",
-      "icono": "grafico",
+      "icono": "lu-trending-up",
       "aprobado": false
     },
     {
@@ -16,7 +16,7 @@
       "leccion": "El Poder del 1%: Mejora Marginal Compuesta y la Trampa de las Metas",
       "esquema": "El poder del 1 %",
       "pieza": "≈0",
-      "icono": "grafico",
+      "icono": "lu-trending-down",
       "aprobado": false
     },
     {
@@ -24,7 +24,7 @@
       "leccion": "El Cambio de Identidad: Por qué el \"Quién\" Precede al \"Qué\"",
       "esquema": "El quién precede al qué",
       "pieza": "Resultado",
-      "icono": "diana",
+      "icono": "lu-trophy",
       "aprobado": false
     },
     {
@@ -32,7 +32,7 @@
       "leccion": "El Cambio de Identidad: Por qué el \"Quién\" Precede al \"Qué\"",
       "esquema": "El quién precede al qué",
       "pieza": "Proceso",
-      "icono": "camino",
+      "icono": "lu-route",
       "aprobado": false
     },
     {
@@ -40,7 +40,7 @@
       "leccion": "El Cambio de Identidad: Por qué el \"Quién\" Precede al \"Qué\"",
       "esquema": "El quién precede al qué",
       "pieza": "Fracasan a largo plazo",
-      "icono": "reloj",
+      "icono": "lu-hourglass",
       "aprobado": false
     },
     {
@@ -48,7 +48,7 @@
       "leccion": "El Cambio de Identidad: Por qué el \"Quién\" Precede al \"Qué\"",
       "esquema": "El quién precede al qué",
       "pieza": "Identidad",
-      "icono": "llave",
+      "icono": "lu-fingerprint-pattern",
       "aprobado": false
     },
     {
@@ -56,7 +56,7 @@
       "leccion": "Las Cuatro Leyes del Cambio de Comportamiento: El Marco Completo",
       "esquema": "El bucle del hábito",
       "pieza": "Señal",
-      "icono": "ojo",
+      "icono": "lu-bell",
       "aprobado": false
     },
     {
@@ -64,7 +64,7 @@
       "leccion": "Las Cuatro Leyes del Cambio de Comportamiento: El Marco Completo",
       "esquema": "El bucle del hábito",
       "pieza": "Antojo",
-      "icono": "bombilla",
+      "icono": "lu-magnet",
       "aprobado": false
     },
     {
@@ -72,7 +72,7 @@
       "leccion": "Las Cuatro Leyes del Cambio de Comportamiento: El Marco Completo",
       "esquema": "El bucle del hábito",
       "pieza": "Respuesta",
-      "icono": "camino",
+      "icono": "lu-footprints",
       "aprobado": false
     },
     {
@@ -80,7 +80,7 @@
       "leccion": "Las Cuatro Leyes del Cambio de Comportamiento: El Marco Completo",
       "esquema": "El bucle del hábito",
       "pieza": "Recompensa",
-      "icono": "diana",
+      "icono": "lu-gift",
       "aprobado": false
     },
     {
@@ -96,7 +96,7 @@
       "leccion": "Diseño de Entorno: El Arquitecto de tu Comportamiento",
       "esquema": "Voluntad frente a entorno",
       "pieza": "Lo que muestra Clear",
-      "icono": "libro",
+      "icono": "lu-book-open",
       "aprobado": false
     },
     {
@@ -104,7 +104,7 @@
       "leccion": "La Regla del Plateau de Latencia: Por qué los Hábitos Parecen No Funcionar antes de Funcionar",
       "esquema": "El plateau de latencia",
       "pieza": "Empiezas un hábito",
-      "icono": "bandera",
+      "icono": "lu-flag",
       "aprobado": false
     },
     {
@@ -112,7 +112,7 @@
       "leccion": "La Regla del Plateau de Latencia: Por qué los Hábitos Parecen No Funcionar antes de Funcionar",
       "esquema": "El plateau de latencia",
       "pieza": "No ves resultados",
-      "icono": "ojo",
+      "icono": "lu-eye-off",
       "aprobado": false
     },
     {
@@ -120,7 +120,7 @@
       "leccion": "La Regla del Plateau de Latencia: Por qué los Hábitos Parecen No Funcionar antes de Funcionar",
       "esquema": "El plateau de latencia",
       "pieza": "La mayoría abandona",
-      "icono": "grupo",
+      "icono": "lu-door-open",
       "aprobado": false
     },
     {
@@ -128,7 +128,7 @@
       "leccion": "La Regla del Plateau de Latencia: Por qué los Hábitos Parecen No Funcionar antes de Funcionar",
       "esquema": "El plateau de latencia",
       "pieza": "Los resultados llegan después",
-      "icono": "grafico",
+      "icono": "lu-sprout",
       "aprobado": false
     },
     {
@@ -136,7 +136,7 @@
       "leccion": "Agrupación de Tentaciones y el Papel del Entorno Social en la Adherencia",
       "esquema": "Dos estrategias para mantener hábitos",
       "pieza": "Agrupación de tentaciones",
-      "icono": "red",
+      "icono": "lu-link",
       "aprobado": false
     },
     {
@@ -144,7 +144,7 @@
       "leccion": "Agrupación de Tentaciones y el Papel del Entorno Social en la Adherencia",
       "esquema": "Dos estrategias para mantener hábitos",
       "pieza": "Entorno social",
-      "icono": "grupo",
+      "icono": "lu-users",
       "aprobado": false
     },
     {
@@ -152,7 +152,7 @@
       "leccion": "El Problema del Exceso de Optimización: Cuando los Hábitos se Convierten en Rigidez",
       "esquema": "Cuando el hábito estorba",
       "pieza": "El hábito se automatiza",
-      "icono": "ciclo",
+      "icono": "lu-repeat",
       "aprobado": false
     },
     {
@@ -160,7 +160,7 @@
       "leccion": "El Problema del Exceso de Optimización: Cuando los Hábitos se Convierten en Rigidez",
       "esquema": "Cuando el hábito estorba",
       "pieza": "El entorno cambia",
-      "icono": "brujula",
+      "icono": "lu-wind",
       "aprobado": false
     },
     {
@@ -168,7 +168,7 @@
       "leccion": "El Problema del Exceso de Optimización: Cuando los Hábitos se Convierten en Rigidez",
       "esquema": "Cuando el hábito estorba",
       "pieza": "Inercia contra la adaptación",
-      "icono": "balanza",
+      "icono": "lu-anchor",
       "aprobado": false
     },
     {
@@ -176,7 +176,7 @@
       "leccion": "Síntesis: Los Hábitos Atómicos como Sistema de Diseño Personal",
       "esquema": "El aporte de Clear",
       "pieza": "Estrategias específicas",
-      "icono": "diana",
+      "icono": "lu-wrench",
       "aprobado": false
     },
     {
@@ -184,7 +184,7 @@
       "leccion": "Síntesis: Los Hábitos Atómicos como Sistema de Diseño Personal",
       "esquema": "El aporte de Clear",
       "pieza": "Marco integrado",
-      "icono": "red",
+      "icono": "lu-workflow",
       "aprobado": false
     }
   ]

@@ -1,14 +1,14 @@
 {
   "libro": "Four Thousand Weeks",
   "libro_id": "b64353e5-af8f-4aee-8cb1-4ecec4f718f2",
-  "como_se_usa": "Cada entrada propone un icono de la biblioteca para una pieza de esquema. No sale en ningún vídeo hasta que alguien revisa la propuesta y pone \"aprobado\": true. Un icono vacío significa que ninguno de los 18 encaja: la pieza sigue con su número. Iconos válidos: balanza, bandera, bombilla, brujula, camino, ciclo, dado, diana, escudo, grafico, grupo, libro, llave, lupa, ojo, pregunta, red, reloj.",
+  "como_se_usa": "Cada entrada propone un icono para una pieza de esquema. No sale en ningún vídeo hasta que alguien revisa la propuesta y pone \"aprobado\": true. Iconos válidos: los 18 de la biblioteca de la app (balanza, bandera, bombilla, brujula, camino, ciclo, dado, diana, escudo, grafico, grupo, libro, llave, lupa, ojo, pregunta, red, reloj) y los de Lucide incorporados en tools/video/assets/iconos-lucide.js, escritos con el prefijo «lu-» (lu-brain, lu-scale…). Un icono vacío deja el número de la pieza.",
   "piezas": [
     {
       "leccion_id": "cab602ee-068d-4b62-ac0a-fd51350fb327",
       "leccion": "Cuatro mil semanas",
       "esquema": "Cuatro mil semanas",
       "pieza": "Promesa de la productividad",
-      "icono": "bandera",
+      "icono": "lu-rocket",
       "aprobado": false
     },
     {
@@ -16,7 +16,7 @@
       "leccion": "Cuatro mil semanas",
       "esquema": "Cuatro mil semanas",
       "pieza": "Planteamiento de Burkeman",
-      "icono": "libro",
+      "icono": "lu-book-open",
       "aprobado": false
     },
     {
@@ -24,7 +24,7 @@
       "leccion": "La trampa de la eficiencia",
       "esquema": "La trampa de la eficiencia",
       "pieza": "Intentas rendir más con tu tiempo",
-      "icono": "reloj",
+      "icono": "lu-timer",
       "aprobado": false
     },
     {
@@ -32,7 +32,7 @@
       "leccion": "La trampa de la eficiencia",
       "esquema": "La trampa de la eficiencia",
       "pieza": "Respondes rápido, resuelves más",
-      "icono": "diana",
+      "icono": "lu-send",
       "aprobado": false
     },
     {
@@ -40,7 +40,7 @@
       "leccion": "La trampa de la eficiencia",
       "esquema": "La trampa de la eficiencia",
       "pieza": "Te llega más trabajo",
-      "icono": "red",
+      "icono": "lu-mail",
       "aprobado": false
     },
     {
@@ -48,7 +48,7 @@
       "leccion": "La trampa de la eficiencia",
       "esquema": "La trampa de la eficiencia",
       "pieza": "Más ocupación, prisa y ansiedad",
-      "icono": "ciclo",
+      "icono": "lu-activity",
       "aprobado": false
     },
     {
@@ -56,7 +56,7 @@
       "leccion": "Elegir es renunciar",
       "esquema": "Elegir es renunciar",
       "pieza": "Asumir la renuncia",
-      "icono": "balanza",
+      "icono": "lu-scale",
       "aprobado": false
     },
     {
@@ -64,7 +64,7 @@
       "leccion": "Elegir es renunciar",
       "esquema": "Elegir es renunciar",
       "pieza": "Pagarse primero",
-      "icono": "llave",
+      "icono": "lu-piggy-bank",
       "aprobado": false
     },
     {
@@ -72,7 +72,7 @@
       "leccion": "Elegir es renunciar",
       "esquema": "Elegir es renunciar",
       "pieza": "Limitar el trabajo en curso",
-      "icono": "escudo",
+      "icono": "lu-layers",
       "aprobado": false
     },
     {
@@ -80,7 +80,7 @@
       "leccion": "Elegir es renunciar",
       "esquema": "Elegir es renunciar",
       "pieza": "Elegir en qué fallar",
-      "icono": "dado",
+      "icono": "lu-dices",
       "aprobado": false
     },
     {
@@ -88,7 +88,7 @@
       "leccion": "La distracción como huida",
       "esquema": "La distracción como huida",
       "pieza": "Tarea importante",
-      "icono": "diana",
+      "icono": "lu-target",
       "aprobado": false
     },
     {
@@ -96,7 +96,7 @@
       "leccion": "La distracción como huida",
       "esquema": "La distracción como huida",
       "pieza": "Incomodidad ante los límites",
-      "icono": "escudo",
+      "icono": "lu-thermometer",
       "aprobado": false
     },
     {
@@ -104,7 +104,7 @@
       "leccion": "La distracción como huida",
       "esquema": "La distracción como huida",
       "pieza": "Huida: la distracción",
-      "icono": "camino",
+      "icono": "lu-door-open",
       "aprobado": false
     },
     {
@@ -112,7 +112,7 @@
       "leccion": "La distracción como huida",
       "esquema": "La distracción como huida",
       "pieza": "Quedarse con la tarea",
-      "icono": "llave",
+      "icono": "lu-anchor",
       "aprobado": false
     },
     {
@@ -120,7 +120,7 @@
       "leccion": "Paciencia en un mundo con prisa",
       "esquema": "Paciencia en un mundo con prisa",
       "pieza": "La prisa",
-      "icono": "reloj",
+      "icono": "lu-timer",
       "aprobado": false
     },
     {
@@ -128,7 +128,7 @@
       "leccion": "Paciencia en un mundo con prisa",
       "esquema": "Paciencia en un mundo con prisa",
       "pieza": "Gusto por los problemas",
-      "icono": "pregunta",
+      "icono": "lu-puzzle",
       "aprobado": false
     },
     {
@@ -136,7 +136,7 @@
       "leccion": "Paciencia en un mundo con prisa",
       "esquema": "Paciencia en un mundo con prisa",
       "pieza": "Incrementalismo radical",
-      "icono": "grafico",
+      "icono": "lu-trending-up",
       "aprobado": false
     },
     {
@@ -144,7 +144,7 @@
       "leccion": "Paciencia en un mundo con prisa",
       "esquema": "Paciencia en un mundo con prisa",
       "pieza": "Quedarse en el autobús",
-      "icono": "camino",
+      "icono": "lu-route",
       "aprobado": false
     },
     {
@@ -152,7 +152,7 @@
       "leccion": "Herramientas para abrazar la finitud",
       "esquema": "Herramientas para abrazar la finitud",
       "pieza": "Volumen fijo",
-      "icono": "balanza",
+      "icono": "lu-ruler",
       "aprobado": false
     },
     {
@@ -160,7 +160,7 @@
       "leccion": "Herramientas para abrazar la finitud",
       "esquema": "Herramientas para abrazar la finitud",
       "pieza": "Terminar uno a uno",
-      "icono": "diana",
+      "icono": "lu-list-checks",
       "aprobado": false
     },
     {
@@ -168,7 +168,7 @@
       "leccion": "Herramientas para abrazar la finitud",
       "esquema": "Herramientas para abrazar la finitud",
       "pieza": "Decidir en qué fracasar",
-      "icono": "dado",
+      "icono": "lu-dices",
       "aprobado": false
     },
     {
@@ -176,7 +176,7 @@
       "leccion": "Herramientas para abrazar la finitud",
       "esquema": "Herramientas para abrazar la finitud",
       "pieza": "Mirar lo ya hecho",
-      "icono": "ojo",
+      "icono": "lu-circle-check",
       "aprobado": false
     },
     {
@@ -184,7 +184,7 @@
       "leccion": "Herramientas para abrazar la finitud",
       "esquema": "Herramientas para abrazar la finitud",
       "pieza": "Pocas causas",
-      "icono": "grupo",
+      "icono": "lu-hand-heart",
       "aprobado": false
     },
     {
@@ -192,7 +192,7 @@
       "leccion": "Herramientas para abrazar la finitud",
       "esquema": "Herramientas para abrazar la finitud",
       "pieza": "Practicar la inacción",
-      "icono": "reloj",
+      "icono": "lu-hourglass",
       "aprobado": false
     }
   ]

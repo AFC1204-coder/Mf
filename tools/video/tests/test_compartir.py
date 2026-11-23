@@ -939,3 +939,21 @@ class CarrilTest(FondoConComprobacionYConexionesTest):
         pieza = K.pieza_pregunta(book, 0)
         self.assertLess(len(CF.capitulos(pieza)), CF.CARRIL_MIN)
         self.assertNotIn("cs-carril", CF.pieza_pages(pieza)[1][0])
+
+
+class IconosLucideTest(unittest.TestCase):
+    def test_los_iconos_propuestos_existen_y_ninguno_nuevo_sale_sin_aprobar(self):
+        import json
+
+        self.assertGreater(len(K.ICONOS_LUCIDE), 200)
+        self.assertTrue(all(n.startswith("lu-") for n in K.ICONOS_LUCIDE))
+        for archivo in sorted(K.ICONOS_DIR.glob("*.json")):
+            for e in json.loads(archivo.read_text(encoding="utf-8"))["piezas"]:
+                self.assertTrue(not e["icono"] or e["icono"] in K.ICONOS_VALIDOS, f"{archivo.name}: {e['icono']}")
+        usados = set(K.iconos_de_piezas(recargar=True).values())
+        self.assertFalse({i for i in usados if i.startswith("lu-")}, "hay iconos de Lucide en uso sin que nadie los haya aprobado")
+
+    def test_el_archivo_de_iconos_lleva_su_licencia(self):
+        assets = K.ICONOS_DIR.parent / "assets"
+        self.assertIn("ISC", (assets / "LICENCIA-lucide.txt").read_text(encoding="utf-8"))
+        self.assertIn("ISC", (assets / "iconos-lucide.js").read_text(encoding="utf-8")[:300])

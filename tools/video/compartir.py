@@ -103,6 +103,19 @@ ICONOS_DIR = Path(__file__).resolve().parent / "iconos"
 ICONOS_BIBLIOTECA = frozenset(
     "bombilla diana ojo balanza dado ciclo red reloj escudo brujula libro grupo grafico pregunta bandera lupa llave camino".split()
 )
+
+
+def _iconos_lucide() -> frozenset[str]:
+    """Los iconos de Lucide incorporados (`assets/iconos-lucide.js`, licencia ISC), con su prefijo: «lu-brain»."""
+    try:
+        texto = (Path(__file__).resolve().parent / "assets" / "iconos-lucide.js").read_text(encoding="utf-8")
+        return frozenset(f"lu-{n}" for n in json.loads(texto[texto.index("{") : texto.rindex("}") + 1]))
+    except (OSError, ValueError):
+        return frozenset()
+
+
+ICONOS_LUCIDE = _iconos_lucide()
+ICONOS_VALIDOS = ICONOS_BIBLIOTECA | ICONOS_LUCIDE  # lo que puede proponerse para una pieza de esquema
 _iconos_cache: dict[tuple[str, str], str] | None = None
 
 
@@ -119,7 +132,7 @@ def iconos_de_piezas(recargar: bool = False) -> dict[tuple[str, str], str]:
             except (OSError, ValueError):
                 continue
             for e in datos.get("piezas") or []:
-                if not isinstance(e, dict) or e.get("icono") not in ICONOS_BIBLIOTECA:
+                if not isinstance(e, dict) or e.get("icono") not in ICONOS_VALIDOS:
                     continue
                 if e.get("aprobado") is True or ver_propuestos:
                     tabla[(str(e.get("leccion_id")), T.clean(e.get("pieza")))] = e["icono"]

@@ -1,14 +1,14 @@
 {
   "libro": "Attached: The New Science of Adult Attachment and How It Can Help You Find—and Keep—Love",
   "libro_id": "cf9a48f9-0645-4324-8daa-127a604a58ca",
-  "como_se_usa": "Cada entrada propone un icono de la biblioteca para una pieza de esquema. No sale en ningún vídeo hasta que alguien revisa la propuesta y pone \"aprobado\": true. Un icono vacío significa que ninguno de los 18 encaja: la pieza sigue con su número. Iconos válidos: balanza, bandera, bombilla, brujula, camino, ciclo, dado, diana, escudo, grafico, grupo, libro, llave, lupa, ojo, pregunta, red, reloj.",
+  "como_se_usa": "Cada entrada propone un icono para una pieza de esquema. No sale en ningún vídeo hasta que alguien revisa la propuesta y pone \"aprobado\": true. Iconos válidos: los 18 de la biblioteca de la app (balanza, bandera, bombilla, brujula, camino, ciclo, dado, diana, escudo, grafico, grupo, libro, llave, lupa, ojo, pregunta, red, reloj) y los de Lucide incorporados en tools/video/assets/iconos-lucide.js, escritos con el prefijo «lu-» (lu-brain, lu-scale…). Un icono vacío deja el número de la pieza.",
   "piezas": [
     {
       "leccion_id": "5439dd88-2261-4ff7-8700-9626fee8000d",
       "leccion": "Tres maneras de vincularse: seguro, ansioso y evitativo",
       "esquema": "El apego como lente (lectura de la lección)",
       "pieza": "Seguro: «Está ocupado»",
-      "icono": "escudo",
+      "icono": "lu-shield-check",
       "aprobado": false
     },
     {
@@ -16,7 +16,7 @@
       "leccion": "Tres maneras de vincularse: seguro, ansioso y evitativo",
       "esquema": "El apego como lente (lectura de la lección)",
       "pieza": "Ansioso: «Me están dejando»",
-      "icono": "pregunta",
+      "icono": "lu-heart-crack",
       "aprobado": false
     },
     {
@@ -24,7 +24,7 @@
       "leccion": "Tres maneras de vincularse: seguro, ansioso y evitativo",
       "esquema": "El apego como lente (lectura de la lección)",
       "pieza": "Evitativo: «Por fin tengo espacio»",
-      "icono": "camino",
+      "icono": "lu-door-open",
       "aprobado": false
     },
     {
@@ -32,7 +32,7 @@
       "leccion": "Activar y desactivar: cómo se protege cada estilo",
       "esquema": "Activar y desactivar: dos estrategias automáticas",
       "pieza": "Activación (ansiosos)",
-      "icono": "bombilla",
+      "icono": "lu-siren",
       "aprobado": false
     },
     {
@@ -40,7 +40,7 @@
       "leccion": "Activar y desactivar: cómo se protege cada estilo",
       "esquema": "Activar y desactivar: dos estrategias automáticas",
       "pieza": "Desactivación (evitativos)",
-      "icono": "escudo",
+      "icono": "lu-lock",
       "aprobado": false
     },
     {
@@ -48,7 +48,7 @@
       "leccion": "La trampa ansioso-evitativa y el círculo que se retroalimenta",
       "esquema": "El círculo ansioso-evitativo",
       "pieza": "El ansioso busca más cercanía",
-      "icono": "lupa",
+      "icono": "lu-magnet",
       "aprobado": false
     },
     {
@@ -56,7 +56,7 @@
       "leccion": "La trampa ansioso-evitativa y el círculo que se retroalimenta",
       "esquema": "El círculo ansioso-evitativo",
       "pieza": "El evitativo siente presión",
-      "icono": "escudo",
+      "icono": "lu-gauge",
       "aprobado": false
     },
     {
@@ -64,7 +64,7 @@
       "leccion": "La trampa ansioso-evitativa y el círculo que se retroalimenta",
       "esquema": "El círculo ansioso-evitativo",
       "pieza": "La retirada confirma el temor",
-      "icono": "ciclo",
+      "icono": "lu-door-closed",
       "aprobado": false
     },
     {
@@ -72,7 +72,7 @@
       "leccion": "La trampa ansioso-evitativa y el círculo que se retroalimenta",
       "esquema": "El círculo ansioso-evitativo",
       "pieza": "El ansioso insiste más",
-      "icono": "grafico",
+      "icono": "lu-repeat",
       "aprobado": false
     },
     {
@@ -80,7 +80,7 @@
       "leccion": "La paradoja de la dependencia y la base segura",
       "esquema": "La paradoja de la dependencia",
       "pieza": "Pareja disponible y fiable",
-      "icono": "grupo",
+      "icono": "lu-handshake",
       "aprobado": false
     },
     {
@@ -88,7 +88,7 @@
       "leccion": "La paradoja de la dependencia y la base segura",
       "esquema": "La paradoja de la dependencia",
       "pieza": "Se calma el sistema de alarma",
-      "icono": "escudo",
+      "icono": "lu-shield-check",
       "aprobado": false
     },
     {
@@ -96,7 +96,7 @@
       "leccion": "La paradoja de la dependencia y la base segura",
       "esquema": "La paradoja de la dependencia",
       "pieza": "Energía libre",
-      "icono": "bombilla",
+      "icono": "lu-zap",
       "aprobado": false
     },
     {
@@ -104,7 +104,7 @@
       "leccion": "La paradoja de la dependencia y la base segura",
       "esquema": "La paradoja de la dependencia",
       "pieza": "Más autonomía",
-      "icono": "brujula",
+      "icono": "lu-compass",
       "aprobado": false
     },
     {
@@ -112,7 +112,7 @@
       "leccion": "Elegir pareja y comunicar: el estilo no es destino",
       "esquema": "Elegir pareja y comunicar con claridad",
       "pieza": "Observar la respuesta a la cercanía",
-      "icono": "ojo",
+      "icono": "lu-eye",
       "aprobado": false
     },
     {
@@ -120,7 +120,7 @@
       "leccion": "Elegir pareja y comunicar: el estilo no es destino",
       "esquema": "Elegir pareja y comunicar con claridad",
       "pieza": "Decir las necesidades con claridad",
-      "icono": "bandera",
+      "icono": "lu-megaphone",
       "aprobado": false
     },
     {
@@ -128,7 +128,7 @@
       "leccion": "Elegir pareja y comunicar: el estilo no es destino",
       "esquema": "Elegir pareja y comunicar con claridad",
       "pieza": "Escuchar las del otro",
-      "icono": "grupo",
+      "icono": "lu-ear",
       "aprobado": false
     },
     {
@@ -136,7 +136,7 @@
       "leccion": "Elegir pareja y comunicar: el estilo no es destino",
       "esquema": "Elegir pareja y comunicar con claridad",
       "pieza": "Revisar cómo responde",
-      "icono": "lupa",
+      "icono": "lu-search",
       "aprobado": false
     }
   ]

@@ -20,7 +20,7 @@ from .scriptwriter import Scene
 
 _CIFRA = re.compile(r"\d")
 
-DEPENDENCIAS = [ASSETS / "compartir.css", ASSETS / "compartir.js"]
+DEPENDENCIAS = [ASSETS / "compartir.css", ASSETS / "compartir.js", ASSETS / "iconos-lucide.js"]
 
 
 def _e(v: Any) -> str:
@@ -506,6 +506,7 @@ def frame_html(
 <script>window.__CS__ = {json.dumps(estado, ensure_ascii=False).replace("</", "<\\/")};</script>
 <script src="{(REPO_ROOT / 'lib' / 'diagram.js').as_uri()}"></script>
 <script src="{(REPO_ROOT / 'lib' / 'mapa.js').as_uri()}"></script>
+<script src="{(ASSETS / 'iconos-lucide.js').as_uri()}"></script>
 <script src="{(ASSETS / 'compartir.js').as_uri()}"></script>
 </body></html>
 """

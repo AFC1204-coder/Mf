@@ -1,14 +1,14 @@
 {
   "libro": "Dopamine Nation",
   "libro_id": "8f978a60-d21d-4788-bf8c-04d07a5b78fe",
-  "como_se_usa": "Cada entrada propone un icono de la biblioteca para una pieza de esquema. No sale en ningún vídeo hasta que alguien revisa la propuesta y pone \"aprobado\": true. Un icono vacío significa que ninguno de los 18 encaja: la pieza sigue con su número. Iconos válidos: balanza, bandera, bombilla, brujula, camino, ciclo, dado, diana, escudo, grafico, grupo, libro, llave, lupa, ojo, pregunta, red, reloj.",
+  "como_se_usa": "Cada entrada propone un icono para una pieza de esquema. No sale en ningún vídeo hasta que alguien revisa la propuesta y pone \"aprobado\": true. Iconos válidos: los 18 de la biblioteca de la app (balanza, bandera, bombilla, brujula, camino, ciclo, dado, diana, escudo, grafico, grupo, libro, llave, lupa, ojo, pregunta, red, reloj) y los de Lucide incorporados en tools/video/assets/iconos-lucide.js, escritos con el prefijo «lu-» (lu-brain, lu-scale…). Un icono vacío deja el número de la pieza.",
   "piezas": [
     {
       "leccion_id": "2b0c7beb-56a7-419f-a332-0f700e603d3b",
       "leccion": "La Paradoja de la Sobreabundancia: Más Placer, Más Dolor",
       "esquema": "La paradoja de la sobreabundancia",
       "pieza": "Más acceso al placer",
-      "icono": "llave",
+      "icono": "lu-lock-open",
       "aprobado": false
     },
     {
@@ -16,7 +16,7 @@
       "leccion": "La Paradoja de la Sobreabundancia: Más Placer, Más Dolor",
       "esquema": "La paradoja de la sobreabundancia",
       "pieza": "Más sufrimiento",
-      "icono": "grafico",
+      "icono": "lu-trending-down",
       "aprobado": false
     },
     {
@@ -24,7 +24,7 @@
       "leccion": "Neurociencia del Sistema Dopaminérgico: La Moneda del Deseo",
       "esquema": "La dopamina no es placer",
       "pieza": "Idea popular",
-      "icono": "grupo",
+      "icono": "lu-users",
       "aprobado": false
     },
     {
@@ -32,7 +32,7 @@
       "leccion": "Neurociencia del Sistema Dopaminérgico: La Moneda del Deseo",
       "esquema": "La dopamina no es placer",
       "pieza": "Para Lembke",
-      "icono": "libro",
+      "icono": "lu-book-open",
       "aprobado": false
     },
     {
@@ -40,7 +40,7 @@
       "leccion": "El Ayuno Dopaminérgico: La Abstinencia como Restauración",
       "esquema": "El ayuno dopaminérgico",
       "pieza": "Abstinencia total",
-      "icono": "escudo",
+      "icono": "lu-ban",
       "aprobado": false
     },
     {
@@ -48,7 +48,7 @@
       "leccion": "El Ayuno Dopaminérgico: La Abstinencia como Restauración",
       "esquema": "El ayuno dopaminérgico",
       "pieza": "Típicamente unas 4 semanas",
-      "icono": "reloj",
+      "icono": "lu-calendar",
       "aprobado": false
     },
     {
@@ -56,7 +56,7 @@
       "leccion": "El Ayuno Dopaminérgico: La Abstinencia como Restauración",
       "esquema": "El ayuno dopaminérgico",
       "pieza": "El cerebro se recalibra",
-      "icono": "ciclo",
+      "icono": "lu-refresh-cw",
       "aprobado": false
     },
     {
@@ -64,7 +64,7 @@
       "leccion": "El Ayuno Dopaminérgico: La Abstinencia como Restauración",
       "esquema": "El ayuno dopaminérgico",
       "pieza": "Se recupera el equilibrio",
-      "icono": "balanza",
+      "icono": "lu-scale",
       "aprobado": false
     },
     {
@@ -72,7 +72,7 @@
       "leccion": "La Honestidad Radical como Antídoto a la Adicción",
       "esquema": "Honestidad y adicción",
       "pieza": "Deshonestidad",
-      "icono": "pregunta",
+      "icono": "lu-venetian-mask",
       "aprobado": false
     },
     {
@@ -80,7 +80,7 @@
       "leccion": "La Honestidad Radical como Antídoto a la Adicción",
       "esquema": "Honestidad y adicción",
       "pieza": "Honestidad radical",
-      "icono": "ojo",
+      "icono": "lu-eye",
       "aprobado": false
     },
     {
@@ -88,7 +88,7 @@
       "leccion": "Dolor como Medicina: La Reinterpretación de la Incomodidad",
       "esquema": "El dolor como medicina",
       "pieza": "Exposición voluntaria a incomodidad",
-      "icono": "bandera",
+      "icono": "lu-dumbbell",
       "aprobado": false
     },
     {
@@ -96,7 +96,7 @@
       "leccion": "Dolor como Medicina: La Reinterpretación de la Incomodidad",
       "esquema": "El dolor como medicina",
       "pieza": "El cerebro libera dopamina",
-      "icono": "bombilla",
+      "icono": "lu-brain",
       "aprobado": false
     },
     {
@@ -104,7 +104,7 @@
       "leccion": "Dolor como Medicina: La Reinterpretación de la Incomodidad",
       "esquema": "El dolor como medicina",
       "pieza": "Se reequilibra la recompensa",
-      "icono": "balanza",
+      "icono": "lu-scale",
       "aprobado": false
     },
     {
@@ -112,7 +112,7 @@
       "leccion": "Dolor como Medicina: La Reinterpretación de la Incomodidad",
       "esquema": "El dolor como medicina",
       "pieza": "Reinterpretar la incomodidad",
-      "icono": "lupa",
+      "icono": "lu-glasses",
       "aprobado": false
     },
     {
@@ -120,7 +120,7 @@
       "leccion": "La Cultura de la Automedicación: Por Qué Estamos Todos Aquí",
       "esquema": "De la adicción a la cultura",
       "pieza": "Individuo",
-      "icono": "llave",
+      "icono": "lu-user",
       "aprobado": false
     },
     {
@@ -128,7 +128,7 @@
       "leccion": "La Cultura de la Automedicación: Por Qué Estamos Todos Aquí",
       "esquema": "De la adicción a la cultura",
       "pieza": "Cultura",
-      "icono": "grupo",
+      "icono": "lu-users",
       "aprobado": false
     },
     {
@@ -136,7 +136,7 @@
       "leccion": "Presión, Contemplación y los Límites del Autocontrol",
       "esquema": "Por qué falla el autocontrol",
       "pieza": "Idea común",
-      "icono": "grupo",
+      "icono": "lu-users",
       "aprobado": false
     },
     {
@@ -144,7 +144,7 @@
       "leccion": "Presión, Contemplación y los Límites del Autocontrol",
       "esquema": "Por qué falla el autocontrol",
       "pieza": "Visión de Lembke",
-      "icono": "libro",
+      "icono": "lu-book-open",
       "aprobado": false
     },
     {
@@ -152,7 +152,7 @@
       "leccion": "Identidad y Narrativa: El Yo que se Recupera",
       "esquema": "Identidad y narrativa",
       "pieza": "Técnica terapéutica",
-      "icono": "llave",
+      "icono": "lu-wrench",
       "aprobado": false
     },
     {
@@ -160,7 +160,7 @@
       "leccion": "Identidad y Narrativa: El Yo que se Recupera",
       "esquema": "Identidad y narrativa",
       "pieza": "Identidad y narrativa",
-      "icono": "libro",
+      "icono": "lu-scroll",
       "aprobado": false
     }
   ]

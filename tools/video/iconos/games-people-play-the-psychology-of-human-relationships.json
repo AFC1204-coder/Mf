@@ -1,7 +1,7 @@
 {
   "libro": "Games People Play: The Psychology of Human Relationships",
   "libro_id": "354ab840-d4b8-4c12-8fd8-f092db5056d7",
-  "como_se_usa": "Cada entrada propone un icono de la biblioteca para una pieza de esquema. No sale en ningún vídeo hasta que alguien revisa la propuesta y pone \"aprobado\": true. Un icono vacío significa que ninguno de los 18 encaja: la pieza sigue con su número. Iconos válidos: balanza, bandera, bombilla, brujula, camino, ciclo, dado, diana, escudo, grafico, grupo, libro, llave, lupa, ojo, pregunta, red, reloj.",
+  "como_se_usa": "Cada entrada propone un icono para una pieza de esquema. No sale en ningún vídeo hasta que alguien revisa la propuesta y pone \"aprobado\": true. Iconos válidos: los 18 de la biblioteca de la app (balanza, bandera, bombilla, brujula, camino, ciclo, dado, diana, escudo, grafico, grupo, libro, llave, lupa, ojo, pregunta, red, reloj) y los de Lucide incorporados en tools/video/assets/iconos-lucide.js, escritos con el prefijo «lu-» (lu-brain, lu-scale…). Un icono vacío deja el número de la pieza.",
   "piezas": [
     {
       "leccion_id": "545e1249-8676-4c8c-809e-caa382646bf9",
@@ -16,7 +16,7 @@
       "leccion": "Padre, Adulto y Niño: tres estados del yo en una misma persona",
       "esquema": "Los tres estados del yo de Berne",
       "pieza": "Adulto",
-      "icono": "balanza",
+      "icono": "lu-scale",
       "aprobado": false
     },
     {
@@ -24,7 +24,7 @@
       "leccion": "Padre, Adulto y Niño: tres estados del yo en una misma persona",
       "esquema": "Los tres estados del yo de Berne",
       "pieza": "Niño",
-      "icono": "bombilla",
+      "icono": "lu-sparkles",
       "aprobado": false
     },
     {
@@ -32,7 +32,7 @@
       "leccion": "Padre, Adulto y Niño: tres estados del yo en una misma persona",
       "esquema": "Los tres estados del yo de Berne",
       "pieza": "No son roles ni edades",
-      "icono": "pregunta",
+      "icono": "lu-ban",
       "aprobado": false
     },
     {
@@ -40,7 +40,7 @@
       "leccion": "Transacciones complementarias, cruzadas y ulteriores",
       "esquema": "Tres tipos de transacción según Berne",
       "pieza": "Complementaria",
-      "icono": "red",
+      "icono": "lu-repeat",
       "aprobado": false
     },
     {
@@ -48,7 +48,7 @@
       "leccion": "Transacciones complementarias, cruzadas y ulteriores",
       "esquema": "Tres tipos de transacción según Berne",
       "pieza": "Cruzada",
-      "icono": "camino",
+      "icono": "lu-split",
       "aprobado": false
     },
     {
@@ -56,7 +56,7 @@
       "leccion": "Transacciones complementarias, cruzadas y ulteriores",
       "esquema": "Tres tipos de transacción según Berne",
       "pieza": "Ulterior",
-      "icono": "ojo",
+      "icono": "lu-venetian-mask",
       "aprobado": false
     },
     {
@@ -64,7 +64,7 @@
       "leccion": "Qué es un juego: transacciones ulteriores con trampa y premio",
       "esquema": "Las fases de un juego según Berne",
       "pieza": "Gancho",
-      "icono": "llave",
+      "icono": "lu-magnet",
       "aprobado": false
     },
     {
@@ -72,7 +72,7 @@
       "leccion": "Qué es un juego: transacciones ulteriores con trampa y premio",
       "esquema": "Las fases de un juego según Berne",
       "pieza": "Respuesta",
-      "icono": "camino",
+      "icono": "lu-message-circle",
       "aprobado": false
     },
     {
@@ -80,7 +80,7 @@
       "leccion": "Qué es un juego: transacciones ulteriores con trampa y premio",
       "esquema": "Las fases de un juego según Berne",
       "pieza": "Giro",
-      "icono": "ciclo",
+      "icono": "lu-refresh-cw",
       "aprobado": false
     },
     {
@@ -96,7 +96,7 @@
       "leccion": "Qué es un juego: transacciones ulteriores con trampa y premio",
       "esquema": "Las fases de un juego según Berne",
       "pieza": "Premio",
-      "icono": "diana",
+      "icono": "lu-trophy",
       "aprobado": false
     },
     {
@@ -104,7 +104,7 @@
       "leccion": "«Sí, pero…» y «Patéame»: dos juegos de ejemplo",
       "esquema": "«Sí, pero…» y «Patéame»",
       "pieza": "«Sí, pero…»",
-      "icono": "pregunta",
+      "icono": "lu-messages-square",
       "aprobado": false
     },
     {
@@ -120,7 +120,7 @@
       "leccion": "Caricias y estructuración del tiempo: por qué buscamos juegos",
       "esquema": "Caricias y estructuración del tiempo",
       "pieza": "Hambre de estímulo",
-      "icono": "bombilla",
+      "icono": "lu-zap",
       "aprobado": false
     },
     {
@@ -128,7 +128,7 @@
       "leccion": "Caricias y estructuración del tiempo: por qué buscamos juegos",
       "esquema": "Caricias y estructuración del tiempo",
       "pieza": "Hambre de estructura",
-      "icono": "red",
+      "icono": "lu-calendar",
       "aprobado": false
     },
     {
@@ -136,7 +136,7 @@
       "leccion": "Caricias y estructuración del tiempo: por qué buscamos juegos",
       "esquema": "Caricias y estructuración del tiempo",
       "pieza": "Seis maneras de llenar el tiempo",
-      "icono": "reloj",
+      "icono": "lu-clock",
       "aprobado": false
     },
     {
@@ -144,7 +144,7 @@
       "leccion": "Caricias y estructuración del tiempo: por qué buscamos juegos",
       "esquema": "Caricias y estructuración del tiempo",
       "pieza": "Extremos",
-      "icono": "balanza",
+      "icono": "lu-scale",
       "aprobado": false
     },
     {
@@ -152,7 +152,7 @@
       "leccion": "Caricias y estructuración del tiempo: por qué buscamos juegos",
       "esquema": "Caricias y estructuración del tiempo",
       "pieza": "El juego",
-      "icono": "dado",
+      "icono": "lu-dices",
       "aprobado": false
     },
     {
@@ -160,7 +160,7 @@
       "leccion": "Más allá de los juegos: conciencia, espontaneidad e intimidad",
       "esquema": "Más allá de los juegos: la autonomía",
       "pieza": "Conciencia",
-      "icono": "ojo",
+      "icono": "lu-eye",
       "aprobado": false
     },
     {
@@ -168,7 +168,7 @@
       "leccion": "Más allá de los juegos: conciencia, espontaneidad e intimidad",
       "esquema": "Más allá de los juegos: la autonomía",
       "pieza": "Espontaneidad",
-      "icono": "bombilla",
+      "icono": "lu-sparkles",
       "aprobado": false
     },
     {
@@ -176,7 +176,7 @@
       "leccion": "Más allá de los juegos: conciencia, espontaneidad e intimidad",
       "esquema": "Más allá de los juegos: la autonomía",
       "pieza": "Intimidad",
-      "icono": "grupo",
+      "icono": "lu-heart-handshake",
       "aprobado": false
     },
     {
@@ -184,7 +184,7 @@
       "leccion": "Más allá de los juegos: conciencia, espontaneidad e intimidad",
       "esquema": "Más allá de los juegos: la autonomía",
       "pieza": "Romper un juego",
-      "icono": "llave",
+      "icono": "lu-scissors",
       "aprobado": false
     }
   ]
