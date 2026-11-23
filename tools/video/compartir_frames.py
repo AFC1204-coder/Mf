@@ -120,7 +120,8 @@ def _companero(v: dict[str, Any]) -> str:
     if fig.get("polos"):
         antes = f'<div class="cs-comp-polos"><span>{_e(fig["polos"][0])}</span><span>{_e(fig["polos"][1])}</span></div>'
     marca = f'<span class="cs-kic" data-icon="{_e(K.ICONOS.get(patron, ""))}"></span>' if K.ICONOS.get(patron) else ""
-    titulo = f'<div class="cs-comp-t{" con-ic" if marca else ""}">{marca}<span>{_e(fig.get("title"))}</span></div>' if fig.get("title") else ""
+    cabecera = fig.get("title") or fig.get("kicker")  # el título del esquema o, en una lista sin esquema, su rótulo fijo
+    titulo = f'<div class="cs-comp-t{" con-ic" if marca else ""}">{marca}<span>{_e(cabecera)}</span></div>' if cabecera else ""
     return f'<div class="cs-comp cp-{_e(patron)} cn-{len(piezas)}">{titulo}{antes}<ol>{chips}</ol></div>'
 
 

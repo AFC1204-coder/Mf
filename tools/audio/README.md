@@ -47,7 +47,19 @@ El *service worker* no guarda los MP3 en su caché (pesan); la app guarda aparte
 
 ## Cuánto ocupa y dónde vive
 
-Los MP3 viven en el repositorio (carpeta `audio/`) y los sirve GitHub Pages, como el resto de la web. Eso vale para una tanda de libros, no para la biblioteca entera: las 3.719 lecciones serían unas 119 horas y unos 2,6 GB, más de lo que admite un sitio de GitHub Pages (1 GB). Para pasar de unas decenas de libros hay que llevar los MP3 a un almacenamiento aparte y cambiar `base` en `datos/audios.json` (la app solo acepta una ruta relativa del propio sitio; para otro dominio hay que ampliar `grabado` en `lib/audio.js`).
+Hoy los MP3 viven en el repositorio (carpeta `audio/`) y los sirve GitHub Pages, como el resto de la web. Eso vale para una tanda de libros. La biblioteca entera no cabe: a 2,5 min y 0,9 MB por lección, las 3.719 lecciones son unas 157 horas y unos **3,4 GB**, y un sitio de GitHub Pages admite 1 GB.
+
+Alternativas miradas (datos de la documentación oficial de cada servicio, noviembre de 2026; lo marcado «sin confirmar» no se pudo verificar):
+
+| Opción | Gratis hasta | Encaja | Pegas |
+|---|---|---|---|
+| **Cloudflare R2** | 10 GB, descargas sin coste | Sí, entero y con margen | Hay que crear cuenta; puede pedir un medio de pago aunque no cobre (sin confirmar). La dirección pública `r2.dev` es «solo para desarrollo» y limita peticiones: lo serio es un dominio propio en Cloudflare. Se puede subir con un token de API, sin claves en el equipo. |
+| **Backblaze B2** | 10 GB; descargas gratis hasta el triple de lo guardado al mes (unos 10 GB) | Sí | Hay que crear cuenta (sin tarjeta, sin confirmar). Por encima de ese tráfico cobra. |
+| **Varios repositorios con GitHub Pages** | 1 GB por sitio, 100 GB de tráfico al mes (límites blandos) | Con cinco repositorios | Sin cuenta nueva ni tarjeta, pero es un apaño: cinco repositorios solo para audio y al borde de lo que GitHub considera uso razonable. |
+| **Supabase (el proyecto de la app)** | 1 GB y 5 GB de tráfico | No | El plan gratuito se queda corto; el de pago son 25 $ al mes. |
+| **GitHub Releases** | Sin límite total | No | Las descargas no llevan cabecera CORS: la app no puede leerlas. |
+
+La app está preparada para cualquiera de ellas con un cambio pequeño: hoy `base` en `datos/audios.json` solo admite una ruta del propio sitio; para otro dominio hay que añadirlo a una lista de permitidos en `grabado` (`lib/audio.js`).
 
 ## Comprobación: que el audio diga todo el texto
 

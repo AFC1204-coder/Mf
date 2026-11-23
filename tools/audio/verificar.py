@@ -4,6 +4,7 @@ Es la comprobación de extremo a extremo (opcional: necesita `pip install faster
 unos 500 MB la primera vez). Encontró lo que ninguna otra veía: locuciones que el servicio de voz devolvía cortadas.
 
     python -m tools.audio.verificar "Decisive" "Range"
+    python -m tools.audio.verificar --piezas tools/video/output/decisive      # los vídeos de un libro
 
 Sale con error si alguna lección no se reconoce en español o si falta un tramo de seis palabras o más, o si el parecido baja de 0,90. Un valor entre
 0,93 y 1 es normal: el reconocedor escribe a su manera nombres propios, cifras y palabras en inglés.
@@ -42,7 +43,8 @@ def faltan(esperado: list[str], oido: list[str], minimo: int = 6) -> list[str]:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="python -m tools.audio.verificar", description=__doc__.split("\n")[0])
-    ap.add_argument("libros", nargs="+")
+    ap.add_argument("libros", nargs="*")
+    ap.add_argument("--piezas", help="En lugar de audiolibros: una carpeta con vídeos de tools/video (busca cada script.json con su video.mp4) y comprueba que la voz dice todo el guion.")
     ap.add_argument("--modelo", default="small", help="Modelo de Whisper o ruta a uno ya descargado (por defecto: small).")
     args = ap.parse_args(argv)
     try:
@@ -53,6 +55,28 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     modelo = WhisperModel(args.modelo, device="cpu", compute_type="int8")
     malas = 0
+
+    def comprobar(nombre: str, medio, esperado: list[str]) -> None:
+        nonlocal malas
+        pcm = subprocess.run(["ffmpeg", "-v", "error", "-i", str(medio), "-vn", "-f", "f32le", "-ac", "1", "-ar", str(MUESTREO), "-"], capture_output=True, check=True).stdout
+        segmentos, info = modelo.transcribe(np.frombuffer(pcm, dtype=np.float32), language=None, beam_size=1)
+        oido = palabras(" ".join(s.text for s in segmentos))
+        r, huecos = parecido(esperado, oido), faltan(esperado, oido)
+        mal = info.language != "es" or r < UMBRAL or bool(huecos)
+        malas += mal
+        print(f"{'✗' if mal else '✓'} {nombre}  {info.language}  {r:.3f}  {len(esperado)}→{len(oido)} palabras", flush=True)
+        for h in huecos:
+            print(f"      no se oye: «{h[:160]}»", flush=True)
+
+    if args.piezas:
+        import json
+        from pathlib import Path
+
+        for guion in sorted(Path(args.piezas).rglob("script.json")):
+            video = guion.with_name("video.mp4")
+            if video.is_file():
+                escenas = json.loads(guion.read_text(encoding="utf-8")).get("scenes") or []
+                comprobar(f"{guion.parent.name[:48]:48}", video, palabras(" ".join(str(e.get("narration") or "") for e in escenas)))
     for q in args.libros:
         book = C.load_book(q)
         for n, lec in enumerate(book.lessons, start=1):
@@ -60,15 +84,7 @@ def main(argv: list[str] | None = None) -> int:
             if not mp3.is_file():
                 continue
             esperado = palabras(" ".join(t for p in G.partes_de_leccion(n, lec.titulo, lec.cuerpo, lec.autocorreccion) for t in p))
-            pcm = subprocess.run(["ffmpeg", "-v", "error", "-i", str(mp3), "-f", "f32le", "-ac", "1", "-ar", str(MUESTREO), "-"], capture_output=True, check=True).stdout
-            segmentos, info = modelo.transcribe(np.frombuffer(pcm, dtype=np.float32), language=None, beam_size=1)
-            oido = palabras(" ".join(s.text for s in segmentos))
-            r, huecos = parecido(esperado, oido), faltan(esperado, oido)
-            mal = info.language != "es" or r < UMBRAL or bool(huecos)
-            malas += mal
-            print(f"{'✗' if mal else '✓'} {book.titulo[:28]:28} {n:02d}  {info.language}  {r:.3f}  {len(esperado)}→{len(oido)} palabras", flush=True)
-            for h in huecos:
-                print(f"      no se oye: «{h[:160]}»", flush=True)
+            comprobar(f"{book.titulo[:28]:28} {n:02d}", mp3, esperado)
     print(f"\n{'Todo se oye entero.' if not malas else f'{malas} lecciones por revisar.'}", flush=True)
     return 1 if malas else 0
 

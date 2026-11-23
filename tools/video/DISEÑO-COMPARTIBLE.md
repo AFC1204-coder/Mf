@@ -343,6 +343,24 @@ Cambios hechos tras ver y oír los vídeos del lote; lo anterior de este documen
 
 **No comprobado en esta vuelta:** las imágenes en vídeo cuadrado y horizontal (solo en fotogramas); los sonidos, de oído.
 
+## Quinta vuelta: más fondo y más formas de enseñar
+
+Todo en la pieza larga (`fondo`). Nada de lo nuevo añade texto que no esté en la lección: son campos del corpus que no se usaban y estructura que el propio texto ya marca.
+
+| Herramienta | Qué hace | De dónde sale | Piezas (de 3.698) |
+|---|---|---|---|
+| **Enumeración** | Cuando un párrafo enumera («por tres razones. Primero, … Segundo, …» o «(1) … (2) …»), aparece junto al texto una lista numerada y cada punto se enciende cuando la voz llega a él. Sustituye al esquema acompañante solo en ese párrafo. | El propio párrafo. El rótulo de cada punto es su arranque literal hasta el signo que el texto pone (punto, dos puntos, interrogación), si cabe en 7 palabras; si no, todos van por su ordinal («Primero», «Segundo»). | 226 |
+| **Más a fondo** | Los apartados de ampliación de la lección: la voz dice su título, que queda de rótulo, y su texto entero. | Campo `detalles` (hasta ahora sin usar). Un apartado va entero o no va (25-140 palabras; 260 en total). | 226 |
+| **Otra comprobación** | Una segunda pregunta, distinta de la primera, justo antes del cierre: recordar otra vez al cabo de un rato. | Otra pregunta de la lección que se entienda sola y no pregunte lo mismo. | 1.595 |
+| **Dónde se aplica** | Junto a «qué probar», las etiquetas de ámbito de la lección. Solo se ven; la voz no las lee. | Campo `dominio_aplicacion`, tal cual (de 2 a 5 etiquetas). | 2.835 |
+
+- **Control de calidad:** el lint admite ahora varias preguntas por pieza, pero exige que cada una vaya seguida de **su** respuesta correcta (una respuesta cruzada se rechaza; hay prueba). Los rótulos de las listas pasan por la misma regla que el resto de lo que solo se ve: literales y desde el arranque de una frase o de un punto.
+- **Medido en toda la biblioteca:** 3.698 piezas largas, ninguna rechazada. Duración mediana 228 s, percentil 90 de 293 s, máxima 484 s (el máximo orientativo sube de 360 a 480 s).
+- **Visto:** fotogramas de las cuatro herramientas en vertical, horizontal y cuadrado; letra mínima medida de 30 px. Un vídeo completo («Hábitos Atómicos», lección 3) con la práctica enumerada.
+- **Verificación de voz para vídeos:** `python -m tools.audio.verificar --piezas <carpeta>` transcribe cada vídeo y lo compara con su guion. Los dos de ejemplo salen enteros.
+- **Lo que se descartó:** una «ficha» resumen con idea, esquema, matiz y práctica en un solo fotograma (pasa de las 32 palabras en pantalla; la app ya tiene sus infografías); rótulos de enumeración cortados a mitad de frase.
+- **No comprobado:** «Más a fondo» y «Otra comprobación» en un vídeo renderizado (solo en fotogramas y en el lint).
+
 ## Revisión independiente
 
 Antes de dar el trabajo por terminado se pidió a otro agente, sin contexto previo, que buscara fallos reales en el código. Encontró nueve y los nueve están corregidos, cada uno con su prueba:

@@ -303,7 +303,7 @@ def process_pieza(p: K.Pieza, book: Book, base: Path, args: argparse.Namespace, 
         "ajustes_voz": [os.getenv("EDGE_RATE", ""), os.getenv("EDGE_PITCH", "")],
         "fotogramas": _assets_stamp(CF.dependencias()),
         "aspecto": args.aspecto,
-        "montaje": 7,  # 7: las frases de una a tres palabras se dicen tras una frase de apoyo en español · 4: el esquema se dibuja y el texto entra con barrido · sube cuando cambia cómo se monta (2: se recorta el silencio final de cada locución · 3: empuje entre secciones)
+        "montaje": 8,  # 7: las frases de una a tres palabras se dicen tras una frase de apoyo en español · 4: el esquema se dibuja y el texto entra con barrido · sube cuando cambia cómo se monta (2: se recorta el silencio final de cada locución · 3: empuje entre secciones)
         "motivo": motivo,
     }
     if getattr(args, "sonidos", True):

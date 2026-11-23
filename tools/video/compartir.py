@@ -36,7 +36,7 @@ from . import text as T
 from .corpus import Book, Lesson, Question
 from .scriptwriter import Beat, Episode, Part, Scene
 
-COMPARTIR_VERSION = 7
+COMPARTIR_VERSION = 8
 
 TIPOS = ("idea", "pregunta", "practica", "caso", "libro", "fondo", "recorrido")
 ASPECTOS = {"9:16": (1080, 1920), "1:1": (1080, 1080), "16:9": (1920, 1080)}
@@ -87,6 +87,9 @@ ROTULOS = {
     "comprueba": "COMPRUÉBALO",
     "recorrido": "EL LIBRO, IDEA A IDEA",
     "de_que_va": "DE QUÉ VA",
+    "detalle": "MÁS A FONDO",
+    "comprueba2": "OTRA COMPROBACIÓN",
+    "ambitos": "DÓNDE SE APLICA",
 }
 
 # Iconos (los 18 de la biblioteca, `lib/mapa.js`). Señalan **qué tipo de momento o de figura** es, igual que los
@@ -94,6 +97,7 @@ ROTULOS = {
 ICONOS = {
     "idea": "bombilla", "pregunta": "pregunta", "explica": "lupa", "matiz": "escudo", "practica": "diana",
     "caso": "ojo", "respuesta": "llave", "credito": "libro", "pensar": "reloj", "conexion": "red", "nombres": "grupo",
+    "enumera": "camino", "ambitos": "brujula",
     # por la forma de la figura
     "contraste": "balanza", "cadena": "camino", "ciclo": "ciclo", "radial": "red", "matriz": "brujula",
     "espectro": "grafico", "cifra": "grafico", "iceberg": "lupa", "silueta": "red",
@@ -177,7 +181,7 @@ OBJETIVO_S = 60.0
 PRACTICA_BREVE = 40
 
 # Duración razonable de cada tipo (segundos estimados): fuera de ahí, aviso.
-LIMITES = {"idea": (22, 210), "pregunta": (20, 90), "practica": (22, 90), "caso": (20, 90), "libro": (22, 90), "fondo": (75, 360), "recorrido": (40, 420)}
+LIMITES = {"idea": (22, 210), "pregunta": (20, 90), "practica": (22, 90), "caso": (20, 90), "libro": (22, 90), "fondo": (75, 480), "recorrido": (40, 420)}
 
 # Texto que solo tiene sentido dentro de la web (o delante de las opciones de un test).
 ANCLA_WEB = re.compile(
@@ -1404,6 +1408,169 @@ def _otras_figuras(lesson: Lesson) -> list[Scene]:
     return out
 
 
+# ───────────────────────── enumeraciones del propio texto ─────────────────────────
+# Cuando un párrafo enumera («por tres razones. Primero, … Segundo, … Tercero, …» o «(1) … (2) … (3) …»), la
+# enumeración se ve: una lista numerada junto al texto, y cada punto se enciende cuando la voz llega a él. La lista
+# no añade nada: cada rótulo es el arranque literal de su punto, cortado donde el propio texto pone el signo
+# (punto, dos puntos, punto y coma, interrogación), o solo su ordinal si ese arranque es largo.
+_ORDINALES = (("primero", "primera"), ("segundo", "segunda"), ("tercero", "tercera"), ("cuarto", "cuarta"), ("quinto", "quinta"), ("sexto", "sexta"))
+_FIN_PUNTO = ".:;?!…"
+ENUMERA_ROTULO = 7  # palabras, como mucho, del rótulo de un punto
+ENUMERA_TOTAL = 30  # y entre todos los rótulos
+_NUMERAL = re.compile(r"^\((\d)\)$")
+
+
+def _es_inicio(tokens: list[str], i: int) -> bool:
+    return i == 0 or tokens[i - 1][-1:] in _FIN_PUNTO
+
+
+def _rotulo_punto(tokens: list[str], i: int, tope: int, desde: int = 0) -> str:
+    """El arranque literal del punto que empieza en `i`, hasta el primer signo que lo cierra; '' si no cierra a tiempo."""
+    for j in range(i + desde, min(len(tokens), tope, i + desde + ENUMERA_ROTULO)):
+        sigue = tokens[j + 1 : j + 3]
+        ante_numeral = bool(sigue) and bool(_NUMERAL.match(sigue[0]) or (len(sigue) > 1 and sigue[0] in ("y", "o", "e", "u") and _NUMERAL.match(sigue[1])))
+        if tokens[j][-1:] in _FIN_PUNTO or (tokens[j].endswith(",") and ante_numeral):
+            return " ".join(tokens[i + desde : j + 1]).rstrip(".:;,…")
+    return ""
+
+
+def enumeracion(tokens: list[str]) -> list[tuple[int, str]]:
+    """Los puntos de una enumeración que el propio texto marca: [(índice de la palabra donde empieza, rótulo literal)].
+
+    Vale «Primero, … Segundo, …» (el ordinal abre frase y lleva coma o dos puntos) y «(1) … (2) …». Tienen que ir
+    en orden desde el primero y ser entre dos y seis. [] si no hay una enumeración clara.
+    """
+    puntos: list[int] = []
+    for i, tok in enumerate(tokens):
+        k = len(puntos)
+        if k < len(_ORDINALES) and tok[-1:] in ",:" and tok[:-1].lower() in _ORDINALES[k] and _es_inicio(tokens, i):
+            puntos.append(i)
+    if 2 <= len(puntos) <= 6:
+        fines = puntos[1:] + [len(tokens)]
+        rotulos = [_rotulo_punto(tokens, i, fin) if not tokens[i].endswith(":") else "" for i, fin in zip(puntos, fines)]
+        if sum(T.n_words(r) for r in rotulos) > ENUMERA_TOTAL or not all(rotulos):
+            rotulos = [tokens[i].rstrip(",:") for i in puntos]  # con algún arranque largo, todos por su ordinal: «Primero», «Segundo»…
+        return list(zip(puntos, rotulos))
+    puntos = []
+    for i, tok in enumerate(tokens):
+        m = _NUMERAL.match(tok)
+        if m and int(m.group(1)) == len(puntos) + 1:
+            puntos.append(i)
+    if 2 <= len(puntos) <= 6:
+        fines = puntos[1:] + [len(tokens)]
+        rotulos = [_rotulo_punto(tokens, i, fin, desde=1) for i, fin in zip(puntos, fines)]
+        rotulos = [re.sub(r"\s+[yo]$", "", r) for r in rotulos]  # «…, y (5) …»: la conjunción es del enlace, no del punto
+        if all(rotulos) and sum(T.n_words(r) for r in rotulos) <= ENUMERA_TOTAL:
+            return list(zip(puntos, rotulos))
+    return []
+
+
+def _con_lista(scene: Scene, puntos: list[tuple[int, str]], patron: str, todas: bool = False) -> Scene:
+    """Pone junto al texto de una escena una lista de rótulos literales; cada uno se enciende en su palabra
+    (o están todos encendidos desde el principio, con `todas`). La página de texto se acorta para que quepan."""
+    rotulos = sum(T.n_words(r) for _, r in puntos)
+    pagina = max(PAGINA_MIN, min(PAGINA, EN_PANTALLA - rotulos))
+    salto = len(scene.narration.split()) - len(scene.view.get("words") or [])
+    saltadas = 0
+    while saltadas < len(scene.parts) and sum(T.n_words(p.text) for p in scene.parts[:saltadas]) < salto:
+        saltadas += 1
+    corta = escena_frase(scene.section, scene.view["style"], scene.view["kicker"], scene.parts, skip_parts=saltadas, tema_txt=scene.view.get("tema") or "", pause_after_s=scene.pause_after_s, pagina=pagina)
+    foto = scene.view.get("foto")
+    scene.view, scene.beats = corta.view, corta.beats
+    if foto:
+        scene.view["foto"] = foto
+    fig = {"pieces": [{"t": r, "tone": "info"} for _, r in puntos], "patron": patron}
+    scene.view.update({"fig": fig, "fig_on": list(range(len(puntos))) if todas else [], "fig_act": -1})
+    if todas:
+        return scene
+    encendidas: list[int] = []
+    for j, (i, _) in enumerate(puntos):
+        encendidas.append(j)
+        cambio = {"fig_on": list(encendidas), "fig_act": j}
+        antes = [b for b in scene.beats if b.at_word is not None and b.at_word <= salto + i]
+        (antes[-1].patch if antes else scene.view).update(cambio)
+    return scene
+
+
+def enumerar(scene: Scene) -> bool:
+    """Si el texto de la escena enumera, le pone su lista numerada al lado (en lugar del esquema acompañante, que
+    vuelve en el párrafo siguiente). Devuelve si lo ha hecho."""
+    if scene.kind != "c-frase":
+        return False
+    puntos = enumeracion(list(scene.view.get("words") or []))
+    if not puntos:
+        return False
+    _con_lista(scene, puntos, "enumera")
+    return True
+
+
+DETALLE_PALABRAS = (25, 140)  # un apartado de ampliación va entero o no va
+DETALLES_MAX = 260  # palabras de ampliación, como mucho, en una pieza
+
+
+def escenas_detalles(lesson: Lesson, max_words: int = DETALLES_MAX) -> list[Scene]:
+    """Los apartados de ampliación que algunas lecciones traen (`detalles`): cada uno con su título, que la voz dice
+    y la pantalla deja de rótulo, y su texto **entero**. Van en su orden mientras quepan; uno que alude a la web, que
+    está en otro idioma o que repite un párrafo del cuerpo no entra."""
+    cuerpo = {T.norm(p) for p in T.paragraphs(lesson.cuerpo)}
+    out: list[Scene] = []
+    total = 0
+    for d in lesson.detalles:
+        titulo = T.clean(d.get("titulo"))
+        parrafos = T.paragraphs(d.get("cuerpo"))
+        texto = " ".join(parrafos)
+        w = T.n_words(texto)
+        if not titulo or not (DETALLE_PALABRAS[0] <= w <= DETALLE_PALABRAS[1]) or total + w > max_words:
+            continue
+        if ANCLA_SERIE.search(texto) or ANCLA_WEB.search(titulo) or parece_ingles(texto) or any(T.norm(p) in cuerpo for p in parrafos):
+            continue
+        for n, parrafo in enumerate(parrafos):
+            partes = ([Part(_punto(titulo), "leccion.detalles")] if n == 0 else []) + [Part(parrafo, "leccion.detalles")]
+            scene = escena_frase("Ampliación", "explica", ROTULOS["detalle"], partes, skip_parts=1 if n == 0 else 0, tema_txt=titulo, pause_after_s=0.55)
+            enumerar(scene)
+            out.append(scene)
+        total += w
+    return out
+
+
+def preguntas_autonomas(lesson: Lesson) -> list[Question]:
+    """Las preguntas de la lección que se entienden solas, de la más fácil a la más difícil (ver `pregunta_autonoma`)."""
+    primera = pregunta_autonoma(lesson)
+    if not primera:
+        return []
+    resto = Lesson(id=lesson.id, titulo=lesson.titulo, orden=lesson.orden, cuerpo=lesson.cuerpo, preguntas=[q for q in lesson.preguntas if q.id != primera.id])
+    return [primera] + preguntas_autonomas(resto)
+
+
+def escenas_comprueba_otra(lesson: Lesson) -> list[Scene]:
+    """Una segunda pregunta, distinta de la primera, para el final de la pieza larga: volver a recordar al cabo de un
+    rato fija más que hacerlo una sola vez. Vacío si no hay otra que se entienda sola y pregunte por otra cosa."""
+    qs = preguntas_autonomas(lesson)
+    if len(qs) < 2:
+        return []
+    primera = qs[0]
+    for q in qs[1:]:
+        if cubre(q.opciones[q.correcta], primera.opciones[primera.correcta], 0.6) or cubre(q.texto, primera.texto, 0.7):
+            continue
+        solo = Lesson(id=lesson.id, titulo=lesson.titulo, orden=lesson.orden, cuerpo=lesson.cuerpo, preguntas=[q])
+        return escenas_comprueba(solo, rotulo=ROTULOS["comprueba2"])
+    return []
+
+
+AMBITOS = (2, 5)  # cuántos ámbitos de aplicación hacen falta para enseñarlos, y cuántos caben
+
+
+def con_ambitos(scene: Scene, lesson: Lesson) -> Scene:
+    """Junto a «qué probar», los ámbitos donde la lección dice que se aplica (`dominio_aplicacion`), tal cual están
+    escritos. Solo se ven: la voz no los lee. Si la práctica enumera sus pasos, manda la enumeración."""
+    ambitos = list(dict.fromkeys(T.clean(e) for e in lesson.etiquetas if T.clean(e)))
+    if scene.view.get("fig") or not (AMBITOS[0] <= len(ambitos) <= AMBITOS[1]) or any(T.n_words(a) > 4 or parece_ingles(a) for a in ambitos):
+        return scene
+    _con_lista(scene, [(0, a) for a in ambitos], "ambitos", todas=True)
+    scene.view["fig"]["kicker"] = ROTULOS["ambitos"]
+    return scene
+
+
 def pieza_fondo(book: Book, index: int, breve: bool = False) -> Pieza | None:
     """La lección entera, suelta: la idea → de dónde sale → **todo el cuerpo**, párrafo a párrafo → el esquema leído
     entero → el matiz completo → qué probar → cierre. De dos a cuatro minutos; para YouTube, LinkedIn o quien quiera
@@ -1418,12 +1585,15 @@ def pieza_fondo(book: Book, index: int, breve: bool = False) -> Pieza | None:
         return None  # con tan poco cuerpo, la pieza «idea» ya lo dice todo
     figura = escenas_figura(lesson, max_words=FIGURA_FONDO)
     acompanar(explicacion, figura)  # el esquema, a la vista mientras se explica; después se recorre entero igualmente
+    for scene in explicacion:
+        enumerar(scene)  # un párrafo que enumera enseña su propia lista en lugar del esquema
     scenes: list[Scene] = [
         _con_foto(escena_frase("Idea", "idea", ROTULOS["fondo"], [Part(idea, f"leccion.{origen}")], tema_txt=tema(lesson), pause_after_s=0.4), foto_de("leccion", lesson.id)),
         escena_credito(book),
         *explicacion,
         *_sin_pie_repetido(figura, lesson),
         *_otras_figuras(lesson),
+        *escenas_detalles(lesson),  # lo que la lección amplía en apartados propios
         *escenas_comprueba(lesson, rotulo=ROTULOS["comprueba"]),  # antes de seguir: ¿se ha entendido? (recordar activamente fija la idea)
     ]
     conexion = escena_conexion(lesson)
@@ -1431,10 +1601,14 @@ def pieza_fondo(book: Book, index: int, breve: bool = False) -> Pieza | None:
         scenes.append(conexion)  # la idea, situada entre otros autores, antes de su matiz
     matiz = escena_matiz(lesson, 10**6)
     if matiz:
+        enumerar(matiz)
         scenes.append(matiz)
     practica = practica_partes(lesson, 10**6)
     if practica:
-        scenes.append(escena_frase("Práctica", "practica", ROTULOS["practica"], practica, pause_after_s=0.5))
+        escena = escena_frase("Práctica", "practica", ROTULOS["practica"], practica, pause_after_s=0.5)
+        enumerar(escena)
+        scenes.append(con_ambitos(escena, lesson))
+    scenes += escenas_comprueba_otra(lesson)  # antes de irse, otra vez: ¿qué queda?
     scenes.append(escena_cierre(book, recuerda=idea))
     return _base(
         book,

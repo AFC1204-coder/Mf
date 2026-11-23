@@ -460,6 +460,18 @@ body.cs.st-conexion { --tone: #9d8fe0; }
 .cs-comp.cp-nombres li > b { font-size: 4.4em; white-space: nowrap; }
 .cs-comp.cp-nombres li.act > b { font-size: 4.4em; }
 
+/* Enumeración del propio texto: lista numerada; cada punto se enciende al llegar la voz. */
+.cs-comp.cp-enumera li { padding: 1.2em 2em; }
+.cs-comp.cp-enumera li > b { font-size: 4.4em; font-family: 'VF Outfit', sans-serif; font-weight: 600; }
+.cs-comp.cp-enumera li.act > b { font-size: 4.8em; }
+.cs-comp.cp-enumera.cn-5 li, .cs-comp.cp-enumera.cn-6 li { padding: 0.9em 1.8em; }
+.cs-comp.cp-enumera.cn-5 li > b, .cs-comp.cp-enumera.cn-6 li > b { font-size: 3.8em; }
+/* Ámbitos de aplicación: etiquetas en fila, sin número. */
+.cs-comp.cp-ambitos ol { flex-direction: row; flex-wrap: wrap; gap: 1.1em 1.3em; }
+.cs-comp.cp-ambitos li { padding: 0.9em 1.9em; border-radius: 4em; }
+.cs-comp.cp-ambitos li > i { display: none; }
+.cs-comp.cp-ambitos li > b, .cs-comp.cp-ambitos li.act > b { font-size: 4.6em; font-family: 'VF Outfit', sans-serif; font-weight: 600; white-space: nowrap; }
+
 /* Imágenes libres (Wikimedia Commons): una por lección, sobre la idea que abre la pieza, y el retrato del autor en
    el crédito. En escala de grises con el tono del libro, para que una foto cualquiera no rompa la identidad. */
 .cs-foto { position: relative; margin: 0 0 4.4em; height: 44em; border-radius: 3em; overflow: hidden; flex: none; background: #121214; box-shadow: 0 0 0 0.2em color-mix(in srgb, var(--accent) 45%, transparent); }

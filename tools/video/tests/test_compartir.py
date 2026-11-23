@@ -310,7 +310,7 @@ class PiezasTest(unittest.TestCase):
         iconos_biblioteca = {"bombilla", "diana", "ojo", "balanza", "dado", "ciclo", "red", "reloj", "escudo", "brujula", "libro", "grupo", "grafico", "pregunta", "bandera", "lupa", "llave", "camino"}
         self.assertLessEqual(set(K.ICONOS.values()), iconos_biblioteca)  # solo los de lib/mapa.js
         # Se asignan por estilo de escena o por forma de figura: ninguna clave depende del texto de la lección.
-        self.assertLessEqual(set(K.ICONOS), {"idea", "pregunta", "explica", "matiz", "practica", "caso", "respuesta", "credito", "pensar", "conexion", "nombres", *K.PATRONES.values(), "silueta", "matriz", "espectro", "cifra", "iceberg", "ciclo", "radial", "cadena", "contraste"})
+        self.assertLessEqual(set(K.ICONOS), {"idea", "pregunta", "explica", "matiz", "practica", "caso", "respuesta", "credito", "pensar", "conexion", "nombres", "enumera", "ambitos", *K.PATRONES.values(), "silueta", "matriz", "espectro", "cifra", "iceberg", "ciclo", "radial", "cadena", "contraste"})
         p = self.plan.piezas[1]
         matiz = next(s for s in p.scenes if s.section == "Matiz")
         self.assertIn('data-icon="escudo"', CF._stage_frase(CF.estados(matiz)[-1], "")[0])
