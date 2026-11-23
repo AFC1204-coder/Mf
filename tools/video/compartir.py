@@ -1045,13 +1045,13 @@ def _lectura(p: G.Piece, nivel: int) -> list[str]:
     return [p.t]
 
 
-def escenas_figura(lesson: Lesson, nivel_min: int = 0, max_words: int = FIGURA_PALABRAS) -> list[Scene]:
+def escenas_figura(lesson: Lesson, nivel_min: int = 0, max_words: int = FIGURA_PALABRAS, cual: int = 0) -> list[Scene]:
     """El esquema verificado en formato legible: silueta sin texto + tarjeta grande de cada pieza.
 
     La tarjeta enseña la pieza **entera y literal**; la voz la lee entera si el esquema es breve y,
     si no, solo su título (y su primer rótulo). Cada tarjeta dura lo que se tarda en leerla.
     """
-    specs = lesson.main_diagrams()[:1]
+    specs = lesson.main_diagrams()[cual : cual + 1]  # `cual`: 0 el esquema principal, 1 el segundo de la lección…
     try:
         ps = piezas_figura(specs[0]) if specs else []
         marco = marco_figura(specs[0]) if ps else {}
@@ -1369,6 +1369,15 @@ def pieza_caso(book: Book, index: int, breve: bool = False) -> Pieza | None:
     )
 
 
+def _otras_figuras(lesson: Lesson) -> list[Scene]:
+    """Los demás esquemas de la lección (pocas tienen más de uno), recorridos enteros tras el principal. Solo en la
+    pieza «a fondo»: la corta enseña uno."""
+    out: list[Scene] = []
+    for cual in range(1, min(3, len(lesson.main_diagrams()))):
+        out += _sin_pie_repetido(escenas_figura(lesson, max_words=FIGURA_FONDO, cual=cual), lesson)
+    return out
+
+
 def pieza_fondo(book: Book, index: int, breve: bool = False) -> Pieza | None:
     """La lección entera, suelta: la idea → de dónde sale → **todo el cuerpo**, párrafo a párrafo → el esquema leído
     entero → el matiz completo → qué probar → cierre. De dos a cuatro minutos; para YouTube, LinkedIn o quien quiera
@@ -1388,6 +1397,7 @@ def pieza_fondo(book: Book, index: int, breve: bool = False) -> Pieza | None:
         escena_credito(book),
         *explicacion,
         *_sin_pie_repetido(figura, lesson),
+        *_otras_figuras(lesson),
         *escenas_comprueba(lesson, rotulo=ROTULOS["comprueba"]),  # antes de seguir: ¿se ha entendido? (recordar activamente fija la idea)
     ]
     conexion = escena_conexion(lesson)
