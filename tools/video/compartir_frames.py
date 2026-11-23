@@ -424,9 +424,43 @@ def palabras_en_pantalla(kind: str, view: dict[str, Any]) -> int:
     return 0
 
 
+CARRIL_MIN = 4  # con menos tramos, la pieza es tan corta que el mapa no orienta
+
+
+def capitulos(pieza: K.Pieza) -> list[tuple[int, int, float]]:
+    """Los tramos de la pieza: (primera escena, última escena, segundos estimados). Un tramo es una racha de escenas
+    de la misma sección (cada párrafo de la explicación, el suyo); el crédito del libro no abre tramo y el cierre no cuenta."""
+    tramos: list[list[Any]] = []
+    for i, s in enumerate(pieza.scenes):
+        if s.kind == "c-cierre":
+            break
+        seccion = s.section
+        # Cada párrafo de la explicación es su tramo: en una pieza larga, es donde más se agradece ver que se avanza.
+        mismo = seccion == tramos[-1][3] and seccion != "Explicación" if tramos else False
+        if tramos and (s.kind == "c-credito" or mismo or (seccion == "Respuesta" and tramos[-1][3] == "Pregunta")):
+            tramos[-1][1] = i
+            tramos[-1][2] += s.estimated_seconds
+        else:
+            tramos.append([i, i, s.estimated_seconds, seccion])
+    return [(a, b, float(d)) for a, b, d, _ in tramos]
+
+
+def _carril(pieza: K.Pieza, escena: int) -> str:
+    """El mapa de la pieza bajo la cabecera: un tramo por sección, tan ancho como dura. Hechos, en curso y por venir.
+    No lleva texto: dice cuánto queda y que lo que viene es otra cosa, no qué es."""
+    tramos = capitulos(pieza)
+    if len(tramos) < CARRIL_MIN:
+        return ""
+    marcas = []
+    for a, b, d in tramos:
+        estado = "hecho" if escena > b else "en" if a <= escena <= b else ""
+        marcas.append(f'<i class="{estado}" style="flex-grow:{max(d, 1.5):.1f}"></i>')
+    return f'<div class="cs-carril">{"".join(marcas)}</div>'
+
+
 def frame_html(
     pieza: K.Pieza, kind: str, view: dict[str, Any], aspecto: str = "9:16", motivo: int = 0,
-    desde: dict[str, Any] | None = None, tween: float | None = None,
+    desde: dict[str, Any] | None = None, tween: float | None = None, escena: int | None = None,
 ) -> str:
     """HTML completo de un fotograma. Sin red: todo se carga del repositorio.
 
@@ -455,6 +489,7 @@ def frame_html(
     if kind not in _SIN_PIE:
         pie = f'<footer class="cs-foot"><b>{_e(libro)}</b>{" · " + _e(pieza.book_author) if pieza.book_author else ""}</footer>'
     estilo = view.get("style") or ""
+    carril = _carril(pieza, escena) if escena is not None and kind != "c-cierre" else ""
     ar = aspecto.replace(":", "x")
     return f"""<!doctype html>
 <html lang="es"><head><meta charset="utf-8">
@@ -465,7 +500,7 @@ def frame_html(
 <div class="cs-frame">
   <div class="cs-bg"></div><div class="cs-shade"></div>
   <header class="cs-top"><span class="cs-brand"><i>§</i>{_e(K.ROTULOS["marca"])}</span><span class="cs-tag">{_e(tag if kind != "c-portada" else "")}</span></header>
-  {fantasma}<main class="cs-stage {clase_stage}">{cuerpo}</main>
+  {carril}{fantasma}<main class="cs-stage {clase_stage}">{cuerpo}</main>
   {pie}
 </div>
 <script>window.__CS__ = {json.dumps(estado, ensure_ascii=False).replace("</", "<\\/")};</script>
@@ -483,7 +518,7 @@ def pieza_pages(pieza: K.Pieza, aspecto: str = "9:16", motivo: int = 0) -> tuple
     for i, scene in enumerate(pieza.scenes):
         for st in scene_states(scene, i):
             states.append(st)
-            pages.append(frame_html(pieza, scene.kind, st.view, aspecto, motivo))
+            pages.append(frame_html(pieza, scene.kind, st.view, aspecto, motivo, escena=i))
     return states, pages
 
 
@@ -508,7 +543,7 @@ def pieza_movimientos(pieza: K.Pieza, aspecto: str = "9:16", motivo: int = 0) ->
             continue
         if a.view.get("mode") == "titulo" and a.view.get("shown") not in (None, a.view.get("n")):
             continue  # la estructura aún se está construyendo
-        out[n] = [frame_html(pieza, kb, b.view, aspecto, motivo, desde=a.view, tween=(k + 1) / (PASOS_MOVIMIENTO + 1)) for k in range(PASOS_MOVIMIENTO)]
+        out[n] = [frame_html(pieza, kb, b.view, aspecto, motivo, desde=a.view, tween=(k + 1) / (PASOS_MOVIMIENTO + 1), escena=b.scene_index) for k in range(PASOS_MOVIMIENTO)]
     return out
 
 

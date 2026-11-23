@@ -60,6 +60,12 @@ body.cs.st-conexion { --tone: #9d8fe0; }
 .cs-top { position: absolute; left: var(--pad-l); right: var(--pad-r); top: var(--top); display: flex; justify-content: space-between; align-items: center; }
 .cs-brand { display: flex; align-items: center; gap: 16px; font-size: 31px; font-weight: 700; letter-spacing: 0.2em; color: var(--cs-ink); }
 .cs-brand i { font-family: 'VF Playfair', serif; font-style: normal; font-size: 46px; line-height: 1; letter-spacing: 0; color: var(--accent); }
+/* El mapa de la pieza: un tramo por sección, tan ancho como dura. */
+.cs-carril { position: absolute; left: var(--pad-l); right: var(--pad-r); top: calc(var(--top) + var(--carril, 68px)); height: 6px; display: flex; gap: 10px; z-index: 1; }
+.cs-carril i { flex: 1 1 0; min-width: 14px; border-radius: 3px; background: color-mix(in srgb, var(--cs-ink) 16%, transparent); }
+.cs-carril i.hecho { background: color-mix(in srgb, var(--accent) 55%, transparent); }
+.cs-carril i.en { background: var(--tone, var(--accent)); box-shadow: 0 0 12px color-mix(in srgb, var(--tone, var(--accent)) 60%, transparent); }
+.ar-1x1 .cs-carril, .ar-16x9 .cs-carril { --carril: 64px; height: 5px; }
 .cs-tag { font-size: 30px; font-weight: 600; letter-spacing: 0.16em; color: var(--cs-ink2); }
 
 /* ── escenario ── */

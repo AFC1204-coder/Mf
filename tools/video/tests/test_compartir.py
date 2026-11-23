@@ -907,3 +907,35 @@ class FondoConComprobacionYConexionesTest(unittest.TestCase):
         resp = next(s for s in pieza.scenes if s.section == "Respuesta")
         resp.parts[1] = K.Part("Porque son pocos.", "pregunta.opcion")
         self.assertTrue(any("no es la opción correcta" in i.message for i in L.lint_pieza(pieza, book)))
+
+
+class CarrilTest(FondoConComprobacionYConexionesTest):
+    """El mapa de tramos: un tramo por sección (y por párrafo de la explicación), sin texto."""
+
+    def test_tramos_y_estado_en_cada_fotograma(self):
+        pieza, _ = self._fondo(self._leccion())
+        tramos = CF.capitulos(pieza)
+        self.assertGreaterEqual(len(tramos), CF.CARRIL_MIN)
+        self.assertEqual(tramos[0][0], 0)
+        self.assertEqual(tramos[-1][1], len(pieza.scenes) - 2)  # el cierre no cuenta
+        self.assertTrue(all(a <= b and d > 0 for a, b, d in tramos))
+        self.assertEqual([a for a, _, _ in tramos][1:], [b + 1 for _, b, _ in tramos][:-1])  # sin huecos ni solapes
+        # la pregunta, su pausa y su respuesta son un solo tramo
+        i = next(n for n, s in enumerate(pieza.scenes) if s.kind == "c-pausa")
+        self.assertTrue(any(a <= i - 1 and i + 1 <= b for a, b, _ in tramos))
+        estados, paginas = CF.pieza_pages(pieza)
+        medio = next(n for n, st in enumerate(estados) if st.scene_index == tramos[2][0])
+        html = paginas[medio]
+        self.assertEqual(html.count('<i class="hecho"'), 2)
+        self.assertEqual(html.count('<i class="en"'), 1)
+        self.assertNotIn("cs-carril", paginas[-1])  # el cierre va limpio
+        self.assertNotIn("cs-carril", CF.portada_html(pieza))
+
+    def test_una_pieza_corta_no_lleva_mapa(self):
+        from tools.video.corpus import Book
+
+        lesson = self._leccion()
+        book = Book(id="B", titulo="Decisive", autor="Chip Heath", eje="Psicología y Conducta", descripcion="", lessons=[lesson])
+        pieza = K.pieza_pregunta(book, 0)
+        self.assertLess(len(CF.capitulos(pieza)), CF.CARRIL_MIN)
+        self.assertNotIn("cs-carril", CF.pieza_pages(pieza)[1][0])
