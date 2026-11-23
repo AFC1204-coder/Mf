@@ -1930,6 +1930,7 @@ function renderLecs(list,q=''){
         <div class="ruta-m">
           <span>${Didactica.minutosLectura(l)} min</span>
           ${conFigura?`<span>con diagrama</span>`:''}
+          ${typeof VideoLeccion!=='undefined'&&VideoLeccion.tiene(videosIdx,l.id)?`<span>con vídeo</span>`:''}
           ${nA?`<span>${nA} autor${nA>1?'es':''} cruzado${nA>1?'s':''}</span>`:''}
           ${sig&&sig.id===l.id?`<span class="ruta-sig">siguiente</span>`:''}
         </div>

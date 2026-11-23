@@ -213,7 +213,11 @@ SALVEDAD = re.compile(
 ARRANQUE_META = re.compile(
     r"^(?:(?:el|la|este|esta) (?:libro|autor|autora|cap[ií]tulo|secci[oó]n|obra|ensayo)|[A-ZÁÉÍÓÚÑ][\wáéíóúüñ'’-]+(?: [A-ZÁÉÍÓÚÑ][\wáéíóúüñ'’-]+)?)"
     r" (?:dedica|articula|presenta|desarrolla|aborda|introduce|cierra|abre|comienza|empieza|documenta|termina|concluye|ofrece|propone una|analiza|examina|explora|describe)\b"
-    r"|^una de las (?:contribuciones|ideas|secciones|aportaciones|partes|claves)\b|^para entender\b|^en est[ea] (?:cap[ií]tulo|secci[oó]n|parte)\b",
+    r"|^una de las (?:contribuciones|ideas|secciones|aportaciones|partes|claves)\b|^para entender\b|^en est[ea] (?:cap[ií]tulo|secci[oó]n|parte)\b"
+    # «El capítulo más provocador del libro es el que X dedica a…», «Uno de los conceptos más potentes de X es…»,
+    # «Esta lección plantea…»: habla del libro o de la lección, no dice todavía la idea.
+    r"|^un[oa] de l[oa]s (?:cap[ií]tulos|argumentos|conceptos|lecciones|pasajes|temas)\b|^(?:el|los|un) cap[ií]tulos?\b|^seg[uú]n (?:esta|la) lecci[oó]n\b"
+    r"|^(?:la|esta) lecci[oó]n\b|^el (?:primer|segundo|tercer|[uú]ltimo) (?:paso|cap[ií]tulo|bloque)\b",
     re.IGNORECASE,
 )
 # Cómo introduce el corpus un caso concreto. Solo estos arranques explícitos: no se adivina qué es un ejemplo.
