@@ -378,7 +378,7 @@ body.cs.st-conexion { --tone: #9d8fe0; }
 .con-comp .cs-kin.xl { font-size: 7.8em; }
 .con-comp .cs-pages { margin-top: 2.6em; }
 /* en horizontal y en cuadrado, el esquema a la izquierda y el texto a la derecha */
-.ar-16x9 .cs-stage.con-comp { display: grid; grid-template-columns: 0.9fr 1.25fr; column-gap: 6em; align-content: start; align-items: start; padding-top: 3em; }
+.ar-16x9 .cs-stage.con-comp { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr); column-gap: 6em; align-content: start; align-items: start; padding-top: 3em; }
 .ar-16x9 .cs-comp ol { gap: 1em; }
 .ar-16x9 .cs-comp li { padding: 1.1em 1.8em; }
 .ar-16x9 .cs-comp li > b { font-size: 4.4em; }
@@ -386,6 +386,9 @@ body.cs.st-conexion { --tone: #9d8fe0; }
 .ar-16x9 .con-comp .cs-kin { grid-column: 2; }
 .ar-16x9 .con-comp .cs-comp { grid-row: 1 / span 2; margin-bottom: 0; }
 .ar-16x9 .con-comp .cs-pages { grid-column: 2; }
+/* Muchas páginas: las marcas se estrechan en vez de ensanchar la columna (y encoger el esquema de al lado). */
+.cs-pages i { flex: 0 1 4.4em; min-width: 0.8em; }
+.ar-16x9 .con-comp > * { min-width: 0; }
 .ar-1x1 .cs-comp { margin-bottom: 3em; }
 .ar-1x1 .cs-comp ol { flex-direction: row; flex-wrap: wrap; gap: 1em; }
 .ar-1x1 .cs-comp li { padding: 1em 1.6em; }
