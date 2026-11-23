@@ -9,7 +9,7 @@
       "esquema": "Los cuatro rasgos de la Resistencia",
       "pieza": "Interna: nace de dentro",
       "icono": "lu-brain",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "88b66018-c3b6-460c-826f-120a8f633b11",
@@ -17,7 +17,7 @@
       "esquema": "Los cuatro rasgos de la Resistencia",
       "pieza": "Universal: alcanza a quien crea",
       "icono": "lu-users",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "88b66018-c3b6-460c-826f-120a8f633b11",
@@ -25,7 +25,7 @@
       "esquema": "Los cuatro rasgos de la Resistencia",
       "pieza": "Impersonal: nada contra ti",
       "icono": "lu-scale",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "88b66018-c3b6-460c-826f-120a8f633b11",
@@ -33,7 +33,7 @@
       "esquema": "Los cuatro rasgos de la Resistencia",
       "pieza": "Persistente: reaparece cada mañana",
       "icono": "lu-sunrise",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "9b8bbbf8-e1c7-4a9d-8fba-86cb977549ba",
@@ -41,7 +41,7 @@
       "esquema": "Las máscaras y lo que hacen",
       "pieza": "Cómo se presenta",
       "icono": "lu-venetian-mask",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "9b8bbbf8-e1c7-4a9d-8fba-86cb977549ba",
@@ -49,7 +49,7 @@
       "esquema": "Las máscaras y lo que hacen",
       "pieza": "Qué hace",
       "icono": "lu-ban",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "712aab21-dd0c-4e08-8b79-80e5cde525b3",
@@ -57,7 +57,7 @@
       "esquema": "Del cuánto miedo al qué evito",
       "pieza": "Pregunta habitual",
       "icono": "pregunta",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "712aab21-dd0c-4e08-8b79-80e5cde525b3",
@@ -65,7 +65,7 @@
       "esquema": "Del cuánto miedo al qué evito",
       "pieza": "Pregunta de Pressfield",
       "icono": "lu-book-open",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "78e3f57a-cd50-4746-8266-d4d2468032fe",
@@ -73,7 +73,7 @@
       "esquema": "Aficionado y profesional",
       "pieza": "Aficionado",
       "icono": "lu-dices",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "78e3f57a-cd50-4746-8266-d4d2468032fe",
@@ -81,7 +81,7 @@
       "esquema": "Aficionado y profesional",
       "pieza": "Profesional",
       "icono": "lu-briefcase",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "68182a16-a64e-472f-8928-d5d1e99be5e2",
@@ -89,7 +89,7 @@
       "esquema": "Hacer el trabajo, sesión tras sesión",
       "pieza": "Sentarse a la hora acordada",
       "icono": "lu-alarm-clock",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "68182a16-a64e-472f-8928-d5d1e99be5e2",
@@ -97,7 +97,7 @@
       "esquema": "Hacer el trabajo, sesión tras sesión",
       "pieza": "Empezar, tenga o no ganas",
       "icono": "lu-flag",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "68182a16-a64e-472f-8928-d5d1e99be5e2",
@@ -105,7 +105,7 @@
       "esquema": "Hacer el trabajo, sesión tras sesión",
       "pieza": "Se acumulan sesiones",
       "icono": "lu-layers",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "68182a16-a64e-472f-8928-d5d1e99be5e2",
@@ -113,7 +113,7 @@
       "esquema": "Hacer el trabajo, sesión tras sesión",
       "pieza": "Pulir y juzgar después",
       "icono": "lu-search",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "a151dfb7-b454-4043-8082-df62f8af49bb",
@@ -121,7 +121,7 @@
       "esquema": "Cuando llega un rechazo",
       "pieza": "Obra e identidad se funden",
       "icono": "lu-link",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "a151dfb7-b454-4043-8082-df62f8af49bb",
@@ -129,7 +129,7 @@
       "esquema": "Cuando llega un rechazo",
       "pieza": "Se separan",
       "icono": "lu-split",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "a151dfb7-b454-4043-8082-df62f8af49bb",
@@ -137,7 +137,7 @@
       "esquema": "Cuando llega un rechazo",
       "pieza": "El rechazo es un dato",
       "icono": "lu-chart-column",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "a151dfb7-b454-4043-8082-df62f8af49bb",
@@ -145,7 +145,7 @@
       "esquema": "Cuando llega un rechazo",
       "pieza": "Se decide la siguiente acción",
       "icono": "lu-route",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "47903d30-3f87-4ed8-8f91-66703fb20615",
@@ -153,7 +153,7 @@
       "esquema": "Jerarquía frente a territorio",
       "pieza": "Jerarquía",
       "icono": "lu-podium",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "47903d30-3f87-4ed8-8f91-66703fb20615",
@@ -161,7 +161,7 @@
       "esquema": "Jerarquía frente a territorio",
       "pieza": "Territorio",
       "icono": "lu-map-pin",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "d5c016a2-d873-46ad-8c57-8ad5a3d9ffb5",
@@ -169,7 +169,7 @@
       "esquema": "Los nombres del reino superior",
       "pieza": "La Musa",
       "icono": "lu-sparkles",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "d5c016a2-d873-46ad-8c57-8ad5a3d9ffb5",
@@ -177,7 +177,7 @@
       "esquema": "Los nombres del reino superior",
       "pieza": "El genio",
       "icono": "lu-key",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "d5c016a2-d873-46ad-8c57-8ad5a3d9ffb5",
@@ -185,7 +185,7 @@
       "esquema": "Los nombres del reino superior",
       "pieza": "La ayuda inesperada",
       "icono": "lu-gift",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "d5c016a2-d873-46ad-8c57-8ad5a3d9ffb5",
@@ -193,7 +193,7 @@
       "esquema": "Los nombres del reino superior",
       "pieza": "El yo superior",
       "icono": "lu-compass",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "d5c016a2-d873-46ad-8c57-8ad5a3d9ffb5",
@@ -201,7 +201,7 @@
       "esquema": "Los nombres del reino superior",
       "pieza": "El ego, sede de la Resistencia",
       "icono": "lu-shield",
-      "aprobado": false
+      "aprobado": true
     }
   ]
 }

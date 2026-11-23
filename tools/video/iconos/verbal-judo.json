@@ -9,7 +9,7 @@
       "esquema": "Responder, no reaccionar",
       "pieza": "Fuerza contra fuerza",
       "icono": "lu-swords",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "8eb2e1d6-c70a-42d0-a3a8-80ac7af52b51",
@@ -17,7 +17,7 @@
       "esquema": "Responder, no reaccionar",
       "pieza": "Redirigir",
       "icono": "lu-route",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "363212cc-439f-4190-b506-7df67c69d2be",
@@ -25,7 +25,7 @@
       "esquema": "Sentir frente a funcionar",
       "pieza": "Empatía emocional",
       "icono": "lu-heart",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "363212cc-439f-4190-b506-7df67c69d2be",
@@ -33,7 +33,7 @@
       "esquema": "Sentir frente a funcionar",
       "pieza": "Empatía táctica",
       "icono": "lu-target",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "14d38fee-d1b7-4b63-82f3-14bd84b45270",
@@ -41,7 +41,7 @@
       "esquema": "Cuando el ego toma el control",
       "pieza": "Ego al mando",
       "icono": "lu-crown",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "14d38fee-d1b7-4b63-82f3-14bd84b45270",
@@ -49,7 +49,7 @@
       "esquema": "Cuando el ego toma el control",
       "pieza": "Propósito al mando",
       "icono": "lu-compass",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "07f4841a-afda-46d5-9ff7-72c6da4a9726",
@@ -57,7 +57,7 @@
       "esquema": "Parafrasear no es repetir",
       "pieza": "Repetir",
       "icono": "lu-repeat",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "07f4841a-afda-46d5-9ff7-72c6da4a9726",
@@ -65,7 +65,7 @@
       "esquema": "Parafrasear no es repetir",
       "pieza": "Parafrasear",
       "icono": "lu-message-circle",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "83fd131b-6ca9-4d97-a1e4-47e999c74db7",
@@ -73,7 +73,7 @@
       "esquema": "Five-Step Hard Style",
       "pieza": "Sistema secuencial",
       "icono": "lu-list-ordered",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "83fd131b-6ca9-4d97-a1e4-47e999c74db7",
@@ -81,7 +81,7 @@
       "esquema": "Five-Step Hard Style",
       "pieza": "Pensado para policías",
       "icono": "lu-shield",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "83fd131b-6ca9-4d97-a1e4-47e999c74db7",
@@ -89,7 +89,7 @@
       "esquema": "Five-Step Hard Style",
       "pieza": "Aplicable a otras situaciones",
       "icono": "lu-network",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "83fd131b-6ca9-4d97-a1e4-47e999c74db7",
@@ -97,7 +97,7 @@
       "esquema": "Five-Step Hard Style",
       "pieza": "Genera cooperación",
       "icono": "lu-handshake",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "8ed935bc-ca59-44c7-8583-eb2f342dfddf",
@@ -105,7 +105,7 @@
       "esquema": "La voz como instrumento",
       "pieza": "Idea común",
       "icono": "lu-users",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "8ed935bc-ca59-44c7-8583-eb2f342dfddf",
@@ -113,7 +113,7 @@
       "esquema": "La voz como instrumento",
       "pieza": "Tesis de Thompson",
       "icono": "lu-book-open",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "e14ed280-6809-44bc-9cba-2f8ee944eb40",
@@ -121,7 +121,7 @@
       "esquema": "LEAPS",
       "pieza": "Listen",
       "icono": "lu-ear",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "e14ed280-6809-44bc-9cba-2f8ee944eb40",
@@ -129,7 +129,7 @@
       "esquema": "LEAPS",
       "pieza": "Empathize",
       "icono": "lu-heart",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "e14ed280-6809-44bc-9cba-2f8ee944eb40",
@@ -137,7 +137,7 @@
       "esquema": "LEAPS",
       "pieza": "Ask",
       "icono": "pregunta",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "e14ed280-6809-44bc-9cba-2f8ee944eb40",
@@ -145,7 +145,7 @@
       "esquema": "LEAPS",
       "pieza": "Paraphrase",
       "icono": "lu-message-circle",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "e14ed280-6809-44bc-9cba-2f8ee944eb40",
@@ -153,7 +153,7 @@
       "esquema": "LEAPS",
       "pieza": "Summarize",
       "icono": "lu-list-checks",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "922e7ca4-cef1-4c4c-ae8f-226f8bca7358",
@@ -161,7 +161,7 @@
       "esquema": "Los cuatro apelos de Thompson",
       "pieza": "Para el comunicador",
       "icono": "lu-user",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "922e7ca4-cef1-4c4c-ae8f-226f8bca7358",
@@ -169,7 +169,7 @@
       "esquema": "Los cuatro apelos de Thompson",
       "pieza": "Para el otro",
       "icono": "lu-users",
-      "aprobado": false
+      "aprobado": true
     }
   ]
 }

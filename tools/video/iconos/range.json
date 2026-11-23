@@ -9,7 +9,7 @@
       "esquema": "Dominios amables y perversos",
       "pieza": "Dominios amables",
       "icono": "lu-chess-knight",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "8153db1a-ddc7-425a-9f83-7baa3a936578",
@@ -17,7 +17,7 @@
       "esquema": "Dominios amables y perversos",
       "pieza": "Dominios perversos",
       "icono": "lu-dices",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "16d9951a-7ef0-4c6d-8755-f09c2ad8a193",
@@ -25,7 +25,7 @@
       "esquema": "Woods frente a Federer",
       "pieza": "Tiger Woods",
       "icono": "lu-target",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "16d9951a-7ef0-4c6d-8755-f09c2ad8a193",
@@ -33,7 +33,7 @@
       "esquema": "Woods frente a Federer",
       "pieza": "Roger Federer",
       "icono": "lu-shapes",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "b4893172-56c2-4fd9-9566-6edf736e6560",
@@ -41,7 +41,7 @@
       "esquema": "Transferencia de aprendizaje",
       "pieza": "Lo que se supone",
       "icono": "pregunta",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "b4893172-56c2-4fd9-9566-6edf736e6560",
@@ -49,7 +49,7 @@
       "esquema": "Transferencia de aprendizaje",
       "pieza": "Lo que ocurre",
       "icono": "lu-eye",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "1736ba97-ba00-4b9a-b3dc-dcea500d1abb",
@@ -57,7 +57,7 @@
       "esquema": "Outsiders y expertos",
       "pieza": "Expertos del dominio",
       "icono": "lu-microscope",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "1736ba97-ba00-4b9a-b3dc-dcea500d1abb",
@@ -65,7 +65,7 @@
       "esquema": "Outsiders y expertos",
       "pieza": "Outsiders",
       "icono": "lu-telescope",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "86d4ddf1-1d6e-45c1-8eb7-51323c81d803",
@@ -73,7 +73,7 @@
       "esquema": "Carrera lineal y en zigzag",
       "pieza": "Especializar pronto",
       "icono": "lu-target",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "86d4ddf1-1d6e-45c1-8eb7-51323c81d803",
@@ -81,7 +81,7 @@
       "esquema": "Carrera lineal y en zigzag",
       "pieza": "Explorar antes",
       "icono": "lu-compass",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "5951fede-4d66-4412-8db5-fd5efbfec75d",
@@ -89,7 +89,7 @@
       "esquema": "Grit frente a quit",
       "pieza": "Grit",
       "icono": "lu-mountain",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "5951fede-4d66-4412-8db5-fd5efbfec75d",
@@ -97,7 +97,7 @@
       "esquema": "Grit frente a quit",
       "pieza": "Saber abandonar",
       "icono": "lu-door-open",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "b910c968-f729-481a-8b08-e94661b27853",
@@ -105,7 +105,7 @@
       "esquema": "El yo del futuro",
       "pieza": "Lo que asumimos",
       "icono": "pregunta",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "b910c968-f729-481a-8b08-e94661b27853",
@@ -113,7 +113,7 @@
       "esquema": "El yo del futuro",
       "pieza": "La investigación",
       "icono": "lu-flask-conical",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "ee9f4edb-287c-4068-92a8-898ae8066c62",
@@ -121,7 +121,7 @@
       "esquema": "Zorros y erizos",
       "pieza": "Especialistas",
       "icono": "lu-microscope",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "ee9f4edb-287c-4068-92a8-898ae8066c62",
@@ -129,7 +129,7 @@
       "esquema": "Zorros y erizos",
       "pieza": "Generalistas (zorros)",
       "icono": "lu-network",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "f824c213-e905-4a5c-8de0-8004dde8187a",
@@ -137,7 +137,7 @@
       "esquema": "Dificultad deseable",
       "pieza": "Aprender sin esfuerzo",
       "icono": "lu-feather",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "f824c213-e905-4a5c-8de0-8004dde8187a",
@@ -145,7 +145,7 @@
       "esquema": "Dificultad deseable",
       "pieza": "Dificultad deseable",
       "icono": "lu-dumbbell",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "57683a13-2324-4f05-8a79-eccd5b7350b0",
@@ -153,7 +153,7 @@
       "esquema": "Innovar importando",
       "pieza": "Expertos",
       "icono": "lu-microscope",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "57683a13-2324-4f05-8a79-eccd5b7350b0",
@@ -161,7 +161,7 @@
       "esquema": "Innovar importando",
       "pieza": "Outsiders",
       "icono": "lu-telescope",
-      "aprobado": false
+      "aprobado": true
     }
   ]
 }

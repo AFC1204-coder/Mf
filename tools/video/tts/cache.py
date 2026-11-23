@@ -31,7 +31,9 @@ class CachedTTS(TTSEngine):
 
     def _key(self, text: str, voice: str) -> str:
         ajustes = getattr(self.engine, "ajustes", lambda: "")()  # ritmo y tono, si no son los de siempre
-        raw = json.dumps([text, voice, ajustes] if ajustes else [text, voice], ensure_ascii=False)
+        variante = getattr(self.engine, "variante", lambda _t, _v: "")(text, voice)  # p. ej. la frase de apoyo de las voces multilingües
+        clave = [text, voice] + ([ajustes] if ajustes or variante else []) + ([variante] if variante else [])
+        raw = json.dumps(clave, ensure_ascii=False)
         return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:24]
 
     def synthesize(self, text: str, out_path: Path, voice: str | None = None) -> TTSResult:

@@ -9,7 +9,7 @@
       "esquema": "La llegada al campo según Frankl",
       "pieza": "Ilusión del indulto",
       "icono": "lu-sparkles",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "823e23b4-0f0a-4196-9c3c-47a412a7f240",
@@ -17,7 +17,7 @@
       "esquema": "La llegada al campo según Frankl",
       "pieza": "Despojo",
       "icono": "",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "823e23b4-0f0a-4196-9c3c-47a412a7f240",
@@ -25,7 +25,7 @@
       "esquema": "La llegada al campo según Frankl",
       "pieza": "Curiosidad fría",
       "icono": "lu-microscope",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "823e23b4-0f0a-4196-9c3c-47a412a7f240",
@@ -33,7 +33,7 @@
       "esquema": "La llegada al campo según Frankl",
       "pieza": "Humor",
       "icono": "lu-drama",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "c622add7-d470-43d9-a249-67c44255a585",
@@ -41,7 +41,7 @@
       "esquema": "Apatía y vida interior",
       "pieza": "Apatía: la coraza",
       "icono": "lu-shield",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "c622add7-d470-43d9-a249-67c44255a585",
@@ -49,7 +49,7 @@
       "esquema": "Apatía y vida interior",
       "pieza": "Vida interior: el refugio",
       "icono": "lu-house",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "da04ff31-fd95-4d52-8035-4234b539108f",
@@ -57,7 +57,7 @@
       "esquema": "La última libertad según Frankl",
       "pieza": "Lo que queda",
       "icono": "lu-key",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "da04ff31-fd95-4d52-8035-4234b539108f",
@@ -65,7 +65,7 @@
       "esquema": "La última libertad según Frankl",
       "pieza": "Pocos casos bastan",
       "icono": "lu-users",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "da04ff31-fd95-4d52-8035-4234b539108f",
@@ -73,7 +73,7 @@
       "esquema": "La última libertad según Frankl",
       "pieza": "Sin esencialismo",
       "icono": "pregunta",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "da04ff31-fd95-4d52-8035-4234b539108f",
@@ -81,7 +81,7 @@
       "esquema": "La última libertad según Frankl",
       "pieza": "Poder desafiante del espíritu",
       "icono": "lu-flame",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "da04ff31-fd95-4d52-8035-4234b539108f",
@@ -89,7 +89,7 @@
       "esquema": "La última libertad según Frankl",
       "pieza": "Libertad como respuesta",
       "icono": "lu-compass",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "ec3972fd-53c6-4cce-920b-31ea5514dfd8",
@@ -97,7 +97,7 @@
       "esquema": "Un porqué para vivir",
       "pieza": "Sin fe en el futuro",
       "icono": "lu-hourglass",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "ec3972fd-53c6-4cce-920b-31ea5514dfd8",
@@ -105,7 +105,7 @@
       "esquema": "Un porqué para vivir",
       "pieza": "Con una tarea por delante",
       "icono": "lu-target",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "e0b3ac07-1548-49b6-843c-41d6e59ffe28",
@@ -113,7 +113,7 @@
       "esquema": "Placer, poder o sentido",
       "pieza": "Freud y Adler",
       "icono": "lu-users",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "e0b3ac07-1548-49b6-843c-41d6e59ffe28",
@@ -121,7 +121,7 @@
       "esquema": "Placer, poder o sentido",
       "pieza": "Frankl: voluntad de sentido",
       "icono": "lu-compass",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "c054d325-a52b-41e6-80b0-b182cb0ba0c2",
@@ -129,7 +129,7 @@
       "esquema": "Tres vías hacia el sentido",
       "pieza": "Una obra o un acto",
       "icono": "lu-hammer",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "c054d325-a52b-41e6-80b0-b182cb0ba0c2",
@@ -137,7 +137,7 @@
       "esquema": "Tres vías hacia el sentido",
       "pieza": "Experimentar algo o a alguien",
       "icono": "lu-heart",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "c054d325-a52b-41e6-80b0-b182cb0ba0c2",
@@ -145,7 +145,7 @@
       "esquema": "Tres vías hacia el sentido",
       "pieza": "La actitud ante lo inevitable",
       "icono": "lu-mountain",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "2466ba44-20fe-4edf-9c92-54d36bef5a1e",
@@ -153,7 +153,7 @@
       "esquema": "Optimismo trágico según Frankl",
       "pieza": "Tríada trágica",
       "icono": "lu-triangle-exclamation-point",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "2466ba44-20fe-4edf-9c92-54d36bef5a1e",
@@ -161,7 +161,7 @@
       "esquema": "Optimismo trágico según Frankl",
       "pieza": "Cómo transformarla",
       "icono": "lu-refresh-cw",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "65082173-bb5b-4002-98d1-22562506ccdb",
@@ -169,7 +169,7 @@
       "esquema": "Dos técnicas de la logoterapia",
       "pieza": "Intención paradójica",
       "icono": "pregunta",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "65082173-bb5b-4002-98d1-22562506ccdb",
@@ -177,7 +177,7 @@
       "esquema": "Dos técnicas de la logoterapia",
       "pieza": "Desreflexión",
       "icono": "lu-eye-off",
-      "aprobado": false
+      "aprobado": true
     }
   ]
 }

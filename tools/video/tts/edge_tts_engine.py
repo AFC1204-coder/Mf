@@ -6,6 +6,8 @@ import asyncio
 import os
 import re
 import ssl
+import subprocess
+import tempfile
 import time
 from pathlib import Path
 from urllib.parse import urlparse
@@ -69,6 +71,27 @@ def _preparar_red() -> str | None:
 
 
 RITMO, TONO = "-8%", "-2Hz"
+
+# Las voces multilingües deciden el idioma frase a frase. Con una frase de una a tres palabras («Antojo.», «Señal.»,
+# «El matiz.») no tienen de dónde sacarlo y a menudo la dicen con acento inglés: medido con un reconocedor de voz
+# (Whisper), 20 de 40 rótulos cortos sonaban en inglés. Declarar el idioma en el SSML no cambia nada y la etiqueta
+# <lang> la rechaza el servicio. Lo que funciona es decir antes, en la misma frase, una frase de apoyo en español
+# y recortarla del audio: con ella, 35 de 40 suenan en español, lo mismo que con una voz nativa (los cinco restantes
+# son palabras que el reconocedor tampoco da por españolas con la voz nativa: «Zinc», «Ching», siglas, apellidos).
+APOYO_ES = "Lo que sigue se dice en español:"
+APOYO_HASTA = 3  # palabras de la primera frase a partir de las cuales ya no hace falta
+APOYO_MARGEN_S = 0.04  # el corte cae en la pausa tras los dos puntos, un poco antes de la primera palabra
+_PRIMERA_FRASE = re.compile(r"^(.*?[.!?…])(?:\s|$)", re.S)
+
+
+def necesita_apoyo(texto: str, voz: str) -> bool:
+    """¿Hay que darle a la voz el contexto en español? Solo voces multilingües y primera frase muy corta."""
+    if "Multilingual" not in voz:
+        return False
+    t = " ".join((texto or "").split())
+    m = _PRIMERA_FRASE.match(t)
+    primera = m.group(1) if m else t
+    return 0 < len(primera.split()) <= APOYO_HASTA
 REINTENTOS = 6  # intentos por locución ante un fallo pasajero del servicio (en total espera hasta minuto y medio)
 ESPERA_REINTENTO_S = 3.0  # espera antes del segundo intento; se dobla en cada uno
 
@@ -109,6 +132,25 @@ class EdgeTTSEngine(TTSEngine):
     def sample_voices(self) -> list[str]:
         return EDGE_VOICES
 
+    def variante(self, text: str, voice: str | None = None) -> str:
+        """Para la caché: la misma frase dicha con apoyo es otro audio que la dicha sin él."""
+        return "apoyo-es-1" if necesita_apoyo(text, voice or self.voice) else ""
+
+    def _con_apoyo(self, text: str, out_path: Path, voice: str) -> list[WordTiming]:
+        """Sintetiza «APOYO_ES + texto» y deja en `out_path` solo el texto, con sus marcas desplazadas."""
+        n = len(APOYO_ES.split())
+        with tempfile.TemporaryDirectory() as tmp:
+            bruto = Path(tmp) / "con-apoyo.mp3"
+            timings = asyncio.run(self._synth_async(f"{APOYO_ES} {text}", bruto, voice))
+            if len(timings) <= n or not timings[n - 1].text.lower().startswith("espa"):
+                raise RuntimeError("Edge TTS: las marcas de palabra no permiten recortar la frase de apoyo")
+            corte = max(timings[n - 1].end_s, timings[n].start_s - APOYO_MARGEN_S)
+            subprocess.run(
+                ["ffmpeg", "-v", "error", "-y", "-i", str(bruto), "-ss", f"{corte:.3f}", "-c:a", "libmp3lame", "-b:a", "64k", "-ar", "24000", "-ac", "1", str(out_path)],
+                check=True,
+            )
+        return [WordTiming(text=w.text, start_s=round(w.start_s - corte, 3), end_s=round(w.end_s - corte, 3)) for w in timings[n:]]
+
     async def _synth_async(self, text: str, out_path: Path, voice: str) -> list[WordTiming]:
         communicate = edge_tts.Communicate(
             text,
@@ -146,7 +188,11 @@ class EdgeTTSEngine(TTSEngine):
         timings: list[WordTiming] = []
         for intento in range(REINTENTOS):
             try:
-                timings = asyncio.run(self._synth_async(text, out_path, chosen_voice))
+                if necesita_apoyo(text, chosen_voice):
+                    out_path.parent.mkdir(parents=True, exist_ok=True)
+                    timings = self._con_apoyo(text, out_path, chosen_voice)
+                else:
+                    timings = asyncio.run(self._synth_async(text, out_path, chosen_voice))
                 if out_path.exists() and out_path.stat().st_size > 0:
                     ultimo = None
                     break

@@ -942,7 +942,7 @@ class CarrilTest(FondoConComprobacionYConexionesTest):
 
 
 class IconosLucideTest(unittest.TestCase):
-    def test_los_iconos_propuestos_existen_y_ninguno_nuevo_sale_sin_aprobar(self):
+    def test_los_iconos_propuestos_existen_y_solo_salen_los_aprobados(self):
         import json
 
         self.assertGreater(len(K.ICONOS_LUCIDE), 200)
@@ -950,8 +950,14 @@ class IconosLucideTest(unittest.TestCase):
         for archivo in sorted(K.ICONOS_DIR.glob("*.json")):
             for e in json.loads(archivo.read_text(encoding="utf-8"))["piezas"]:
                 self.assertTrue(not e["icono"] or e["icono"] in K.ICONOS_VALIDOS, f"{archivo.name}: {e['icono']}")
-        usados = set(K.iconos_de_piezas(recargar=True).values())
-        self.assertFalse({i for i in usados if i.startswith("lu-")}, "hay iconos de Lucide en uso sin que nadie los haya aprobado")
+        # Solo salen los aprobados: cada icono en uso tiene su entrada con "aprobado": true.
+        aprobados = {
+            (str(e.get("leccion_id")), K.T.clean(e.get("pieza")))
+            for archivo in K.ICONOS_DIR.glob("*.json")
+            for e in json.loads(archivo.read_text(encoding="utf-8"))["piezas"]
+            if e.get("aprobado") is True
+        }
+        self.assertLessEqual(set(K.iconos_de_piezas(recargar=True)), aprobados)
 
     def test_el_archivo_de_iconos_lleva_su_licencia(self):
         assets = K.ICONOS_DIR.parent / "assets"
