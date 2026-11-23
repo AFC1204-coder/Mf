@@ -588,9 +588,12 @@ def acompanar(explicacion: list[Scene], figura: list[Scene]) -> bool:
             scene.view, scene.beats = corta.view, corta.beats
         tokens = scene.view.get("words") or []
         scene.view.update({"fig": fig, "fig_on": list(encendidas), "fig_act": -1})
-        hallazgos = sorted((i, j) for j, p in enumerate(piezas) if j not in encendidas for i in [donde_nombra(str(p["t"]), tokens)] if i is not None)
+        # Una pieza ya encendida vuelve a destacarse cuando un párrafo posterior la nombra de nuevo: el esquema
+        # sigue a la voz durante toda la explicación, no solo la primera vez.
+        hallazgos = sorted((i, j) for j, p in enumerate(piezas) for i in [donde_nombra(str(p["t"]), tokens)] if i is not None)
         for i, j in hallazgos:
-            encendidas.append(j)
+            if j not in encendidas:
+                encendidas.append(j)
             cambio = {"fig_on": list(encendidas), "fig_act": j}
             # Entra con la ráfaga de texto que contiene la palabra: un solo cambio en pantalla, no dos.
             antes = [b for b in scene.beats if b.at_word is not None and b.at_word <= i]
