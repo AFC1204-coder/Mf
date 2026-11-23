@@ -306,7 +306,7 @@ Lo que cambió en una noche de iteración, con la biblioteca entera medida antes
 - **Nombres que se encienden.** En «Conecta con», los autores de `autores_relacionados` que el texto nombra aparecen como fichas y cada una se enciende cuando la voz dice su apellido. Un autor de la lista que el texto no menciona no se muestra.
 - **El esquema sigue a la voz.** Una pieza ya encendida vuelve a destacarse cuando un párrafo posterior la nombra de nuevo.
 - **224 iconos más.** Subconjunto de Lucide (licencia ISC, aviso en `assets/LICENCIA-lucide.txt`), con el prefijo `lu-`. Siguen la misma regla: ningún icono por pieza sale en un vídeo sin `"aprobado": true`. La propuesta de los nueve libros pendientes está rehecha con ellos, sin aprobar.
-- **Efectos de sonido, opcionales** (`--sonidos`). Sintetizados por el propio generador, sin archivos de terceros: un soplo al cambiar de sección, un toque al entrar cada pieza del esquema, la cuenta atrás de la pausa y dos notas al llegar la respuesta. Picos unos 18 dB por debajo de los de la voz. Desactivados por defecto: hay que juzgarlos de oído.
+- **Efectos de sonido** (después aprobados y puestos por defecto; ver «Cuarta vuelta»). Sintetizados por el propio generador, sin archivos de terceros: un soplo al cambiar de sección, un toque al entrar cada pieza del esquema, la cuenta atrás de la pausa y dos notas al llegar la respuesta. Picos unos 18 dB por debajo de los de la voz.
 
 **Atención**
 
@@ -323,7 +323,23 @@ Lo que cambió en una noche de iteración, con la biblioteca entera medida antes
 
 - Los efectos de sonido no se han oído: solo se ha medido su nivel y que caen donde deben.
 - Las piezas `recorrido` y las secciones nuevas se han visto en hojas de fotogramas de «Decisive», no en más libros.
-- Imágenes libres: el entorno donde se trabajó no llega a ninguna fuente de imágenes (solo al registro de paquetes, de donde salen los iconos).
+- Imágenes libres: resuelto después (ver «Cuarta vuelta»).
+
+## Cuarta vuelta: acento, imágenes libres y lo aprobado
+
+Cambios hechos tras ver y oír los vídeos del lote; lo anterior de este documento se lee con estas correcciones.
+
+- **Aprobado por el dueño:** los efectos de sonido van **por defecto** (`--sin-sonidos` los quita) y los iconos por pieza de los diez libros están aprobados (`"aprobado": true`).
+- **El acento inglés en los rótulos cortos.** Las voces multilingües deciden el idioma frase a frase; con una frase de una a tres palabras («Antojo.», «Señal.», «El matiz.») no tienen de dónde sacarlo y a menudo la dicen en inglés. Medido con un reconocedor de voz (Whisper) sobre 56 rótulos cortos reales: 31 sonaban en español. Declarar el idioma en el SSML no cambia nada y la etiqueta `<lang>` la rechaza el servicio. Lo que funciona: sintetizar una frase de apoyo en español delante («Lo que sigue se dice en español:») y recortarla del audio por la marca de palabra. Con ello, 50 de 56; los seis restantes son palabras que el reconocedor tampoco da por españolas con una voz nativa (siglas, apellidos, «Zinc»). Solo se aplica a voces multilingües y a locuciones cuya primera frase tiene tres palabras o menos; entra en la clave de la caché de voz (`tts/edge_tts_engine.py`, `tests/test_acento.py`).
+- **Imágenes libres, sin forzarlas.** Una lección puede abrir con una fotografía relacionada con lo que dice (un cruce de caminos para «decidir», un reloj de arena para «cuatro mil semanas»). Reglas:
+  - Solo Wikimedia Commons y solo **dominio público, CC0 o CC BY**. CC BY-SA, NC y ND quedan fuera: el dueño no acepta la obligación de compartir igual (`imagenes_libres.py`, `licencia_aceptada`).
+  - La imagen es una interpretación, así que sigue la regla de los iconos: se propone en `tools/video/imagenes/<libro>.json` con su porqué, autor, licencia y página de origen, y **no sale en ningún vídeo** hasta que alguien pone `"aprobado": true` (el control de calidad rechaza una pieza con imagen sin aprobar). `--imagenes-propuestas` las enseña para revisarlas.
+  - **Una lección sin referente visual claro no lleva imagen.** En los diez libros hay propuesta para 24 de 66 lecciones; se descartaron las candidatas con personas reconocibles, marcas de agua o relación forzada con la idea. Para «El hombre en busca de sentido» solo se buscaron imágenes neutras (un faro, un sendero).
+  - El crédito («Foto: autor · licencia») va sobre la imagen y en la descripción de la pieza («Imágenes: …»).
+  - Estado: «Decisive», cinco imágenes aprobadas. Los otros ocho libros con propuesta, 19 imágenes **sin aprobar**. «Games People Play» no tiene ninguna.
+- **El autor, sin fotografía.** No se encontró retrato con licencia aceptada para los autores del lote, así que el crédito del libro muestra un medallón con sus iniciales, dibujado por el propio vídeo. Si un catálogo trae un `retrato` aprobado, se usa en su lugar.
+
+**No comprobado en esta vuelta:** las imágenes en vídeo cuadrado y horizontal (solo en fotogramas); los sonidos, de oído.
 
 ## Revisión independiente
 

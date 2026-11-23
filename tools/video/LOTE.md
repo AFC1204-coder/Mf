@@ -67,7 +67,8 @@ tools/video/.venv/bin/python -m tools.video.cli calendario --por-dia 2
 | Cuadrado u horizontal | `--aspecto 1:1` o `--aspecto 16:9` |
 | Ver el aspecto sin gastar voz (rápido) | `--engine mudo` |
 | Otra voz | `--voice es-ES-AlvaroNeural` |
-| Efectos de sonido (sintetizados, sin archivos de terceros) | `--sonidos` |
+| Sin los efectos de sonido (van por defecto; sintetizados, sin archivos de terceros) | `--sin-sonidos` |
+| Ver las imágenes propuestas aún sin aprobar (no publicar) | `--imagenes-propuestas` |
 | Ver los iconos propuestos aún sin aprobar (no publicar) | `--iconos-propuestos` |
 | Solo la lección 3 de un libro | `--only 3` |
 

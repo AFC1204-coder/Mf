@@ -1,0 +1,47 @@
+{
+  "libro": "Four Thousand Weeks",
+  "libro_id": "b64353e5-af8f-4aee-8cb1-4ecec4f718f2",
+  "como_se_usa": "Cada entrada propone una imagen libre de Wikimedia Commons para una lección (sale sobre la idea que abre la pieza) o, en «retrato», la del autor (sale en el crédito del libro). No sale en ningún vídeo hasta que alguien la revisa y pone \"aprobado\": true. Solo valen dominio público, CC0 y CC BY. Una lección sin imagen clara no lleva ninguna.",
+  "retrato": null,
+  "lecciones": [
+    {
+      "leccion_id": "cab602ee-068d-4b62-ac0a-fd51350fb327",
+      "leccion": "Cuatro mil semanas",
+      "consulta": "hourglass",
+      "por_que": "Un reloj de arena: el tiempo de una vida es finito.",
+      "archivo": "0d4335c4a6539d.jpg",
+      "titulo": "File:Hourglass with sand.jpg",
+      "autor": "John Morgan",
+      "licencia": "CC BY 2.0",
+      "licencia_url": "https://creativecommons.org/licenses/by/2.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Hourglass_with_sand.jpg",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "094ce585-fbb0-4af3-bd5b-ab28aca92258",
+      "leccion": "La distracción como huida",
+      "consulta": "smartphone in hand",
+      "por_que": "El móvil en la mano: la distracción al alcance.",
+      "archivo": "06d1dab19cbe01.jpg",
+      "titulo": "File:Hands-coffee-smartphone-technology (23698591814).jpg",
+      "autor": "Pixel.la Free Stock Photos",
+      "licencia": "CC0",
+      "licencia_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Hands-coffee-smartphone-technology_(23698591814).jpg",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "f2978a90-8453-4090-9317-4f69d19b84be",
+      "leccion": "Paciencia en un mundo con prisa",
+      "consulta": "tortoise walking",
+      "por_que": "Una tortuga caminando: lo valioso lleva su propio ritmo.",
+      "archivo": "d819116dd00002.jpg",
+      "titulo": "File:Baby Desert Tortoise Walking (15490143732).jpg",
+      "autor": "Joshua Tree National Park",
+      "licencia": "Public domain",
+      "licencia_url": "",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Baby_Desert_Tortoise_Walking_(15490143732).jpg",
+      "aprobado": false
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "libro": "El hombre en busca de sentido",
+  "libro_id": "5db71134-47e4-4b9f-97b4-6915e68f99aa",
+  "como_se_usa": "Cada entrada propone una imagen libre de Wikimedia Commons para una lección (sale sobre la idea que abre la pieza) o, en «retrato», la del autor (sale en el crédito del libro). No sale en ningún vídeo hasta que alguien la revisa y pone \"aprobado\": true. Solo valen dominio público, CC0 y CC BY. Una lección sin imagen clara no lleva ninguna.",
+  "retrato": null,
+  "lecciones": [
+    {
+      "leccion_id": "ec3972fd-53c6-4cce-920b-31ea5514dfd8",
+      "leccion": "Un porqué para vivir: el futuro como sostén",
+      "consulta": "lighthouse",
+      "por_que": "Un faro: algo hacia lo que orientarse.",
+      "archivo": "c4e8c4db3dadfb.jpg",
+      "titulo": "File:Lighthouse Chania evening sun.jpg",
+      "autor": "Jebulon",
+      "licencia": "CC0",
+      "licencia_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Lighthouse_Chania_evening_sun.jpg",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "c054d325-a52b-41e6-80b0-b182cb0ba0c2",
+      "leccion": "Tres caminos hacia el sentido",
+      "consulta": "mountain trail hiker",
+      "por_que": "Un sendero que sube: los caminos hacia el sentido.",
+      "archivo": "9631f1d1046af8.jpg",
+      "titulo": "File:Hiking trail on Námafjall Mountain, Iceland, 20240716 1130 1346.jpg",
+      "autor": "Jakub Hałun",
+      "licencia": "CC BY 4.0",
+      "licencia_url": "https://creativecommons.org/licenses/by/4.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Hiking_trail_on_N%C3%A1mafjall_Mountain,_Iceland,_20240716_1130_1346.jpg",
+      "aprobado": false
+    }
+  ]
+}
