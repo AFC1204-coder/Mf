@@ -1,0 +1,73 @@
+{
+  "libro": "Decisive",
+  "libro_id": "7e663827-1e5e-4bca-9e10-535d3a8838f5",
+  "como_se_usa": "Cada entrada propone una imagen libre de Wikimedia Commons para una lección (sale sobre la idea que abre la pieza) o, en «retrato», la del autor (sale en el crédito del libro). No sale en ningún vídeo hasta que alguien la revisa y pone \"aprobado\": true. Solo valen dominio público, CC0 y CC BY. Una lección sin imagen clara no lleva ninguna.",
+  "retrato": null,
+  "lecciones": [
+    {
+      "leccion_id": "b5db45f2-9b8d-4cba-b7da-a9b775f075a4",
+      "leccion": "Los cuatro villanos de la decisión",
+      "consulta": "crossroads signpost",
+      "por_que": "El poste de un cruce: decidir es elegir dirección.",
+      "archivo": "2da25e2965af03.jpg",
+      "titulo": "File:North Lincolnshire sign.jpg",
+      "autor": "Zakhx150",
+      "licencia": "CC BY 4.0",
+      "licencia_url": "https://creativecommons.org/licenses/by/4.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:North_Lincolnshire_sign.jpg",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "197bb40a-62f2-4c06-8581-cc766713728c",
+      "leccion": "Ampliar las opciones",
+      "consulta": "fork in the road path",
+      "por_que": "Un camino que se bifurca: más de una opción real.",
+      "archivo": "beeae8a4cc2519.jpg",
+      "titulo": "File:Bifurcação, Caminho para o Casarão Devoluto à esquerda.jpg",
+      "autor": "Manuel Curral",
+      "licencia": "CC0",
+      "licencia_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Bifurca%C3%A7%C3%A3o,_Caminho_para_o_Casar%C3%A3o_Devoluto_%C3%A0_esquerda.jpg",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "b6b9ce29-d22c-4dea-bfee-518b3c6742af",
+      "leccion": "Contrastar los supuestos con la realidad",
+      "consulta": "magnifying glass",
+      "por_que": "Una lupa: mirar de cerca antes de dar algo por cierto.",
+      "archivo": "2045fcf5cf0c76.jpg",
+      "titulo": "File:Magnifying glass.jpg",
+      "autor": "Tomomarusan",
+      "licencia": "CC BY 2.5",
+      "licencia_url": "https://creativecommons.org/licenses/by/2.5",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Magnifying_glass.jpg",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "b4b44d25-181d-48fe-b3f3-da788991e159",
+      "leccion": "Tomar distancia: la regla 10/10/10",
+      "consulta": "mountain summit view",
+      "por_que": "La vista desde una cumbre: tomar distancia.",
+      "archivo": "f1b7e781133a7d.jpg",
+      "titulo": "File:Gokyo Ri summit, Gokyo Lake, Nepal, Himalayas.jpg",
+      "autor": "Vyacheslav Argenberg",
+      "licencia": "CC BY 4.0",
+      "licencia_url": "https://creativecommons.org/licenses/by/4.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Gokyo_Ri_summit,_Gokyo_Lake,_Nepal,_Himalayas.jpg",
+      "aprobado": false
+    },
+    {
+      "leccion_id": "84b80988-51df-4fc3-8456-5fdd87370237",
+      "leccion": "Prepararse para equivocarse",
+      "consulta": "lifebuoy",
+      "por_que": "Un salvavidas: prepararse para que algo salga mal.",
+      "archivo": "a8401894182fea.jpg",
+      "titulo": "File:Port buoy Rivedoux, Ré island, Charente-Maritime, France.jpg",
+      "autor": "Jebulon",
+      "licencia": "CC0",
+      "licencia_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Port_buoy_Rivedoux,_R%C3%A9_island,_Charente-Maritime,_France.jpg",
+      "aprobado": false
+    }
+  ]
+}

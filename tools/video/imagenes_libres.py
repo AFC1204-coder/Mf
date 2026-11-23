@@ -19,6 +19,7 @@ import os
 import re
 import ssl
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -30,7 +31,7 @@ AGENTE = "MenteFriaVideo/1.0 (generador de videos educativos)"
 COMMONS = "https://commons.wikimedia.org/w/api.php"
 WIKIDATA = "https://www.wikidata.org/w/api.php"
 ANCHO = 960  # la miniatura que se descarga: de sobra para media pantalla de 1080 px
-ANCHO_MIN = 700
+ANCHO_MIN = 1000  # siempre mayor que ANCHO: así se pide la miniatura estándar y nunca el original
 PAUSA_S = 1.0
 _LIBRE = re.compile(r"^(?:public domain|pd\b|pd-|cc0|cc[ -]by[ -]\d|cc[ -]by$|no restrictions|attribution$)", re.I)
 _NO = re.compile(r"\bsa\b|-sa|\bnc\b|-nc|\bnd\b|-nd|fair use|copyright", re.I)
@@ -49,27 +50,50 @@ def _contexto() -> ssl.SSLContext:
     return ctx
 
 
-def _get(url: str, params: dict[str, Any] | None = None, binario: bool = False, intentos: int = 5):
+def _pedir(url: str) -> tuple[int, float, bytes]:
+    """Una petición: (código HTTP, segundos de espera que pide el servidor, cuerpo). Con `curl` si está instalado:
+    Wikimedia rechaza por su política de robots las peticiones de la biblioteca estándar de Python, no las de curl."""
+    import shutil
+    import subprocess
+    import tempfile
+
+    if shutil.which("curl"):
+        with tempfile.TemporaryDirectory() as tmp:
+            cuerpo, cab = Path(tmp) / "cuerpo", Path(tmp) / "cabeceras"
+            r = subprocess.run(
+                ["curl", "-s", "-L", "-m", "60", "-A", AGENTE, "-D", str(cab), "-o", str(cuerpo), "-w", "%{http_code}", url],
+                capture_output=True, text=True,
+            )
+            codigo = int(r.stdout.strip() or 0) if r.stdout.strip().isdigit() else 0
+            cabeceras = cab.read_text(encoding="utf-8", errors="ignore") if cab.exists() else ""
+            m = re.findall(r"(?im)^retry-after:\s*(\d+)", cabeceras)
+            return codigo, float(m[-1]) if m else 0.0, cuerpo.read_bytes() if cuerpo.exists() else b""
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": AGENTE, "Accept": "*/*"})
+        with urllib.request.urlopen(req, timeout=60, context=_contexto()) as r:
+            return 200, 0.0, r.read()
+    except urllib.error.HTTPError as exc:
+        try:
+            espera = float(exc.headers.get("Retry-After") or 0)
+        except (TypeError, ValueError):
+            espera = 0.0
+        return exc.code, espera, b""
+    except OSError:
+        return 0, 0.0, b""
+
+
+def _get(url: str, params: dict[str, Any] | None = None, binario: bool = False, intentos: int = 8):
     if params:
         url += "?" + urllib.parse.urlencode(params)
-    ultimo: Exception | None = None
+    codigo = 0
     for k in range(intentos):
         time.sleep(PAUSA_S)  # Wikimedia limita a los clientes que piden muy seguido
-        try:
-            req = urllib.request.Request(url, headers={"User-Agent": AGENTE, "Accept": "*/*"})
-            with urllib.request.urlopen(req, timeout=40, context=_contexto()) as r:
-                datos = r.read()
+        codigo, espera, datos = _pedir(url)
+        if codigo == 200 and datos:
             return datos if binario else json.loads(datos.decode("utf-8"))
-        except Exception as exc:  # noqa: BLE001 (red: se reintenta)
-            ultimo = exc
-            espera = 1.5 * (k + 1)
-            if getattr(exc, "code", 0) == 429:  # el servidor dice cuánto esperar: se le hace caso
-                try:
-                    espera = float(exc.headers.get("Retry-After") or 30) + 3
-                except (TypeError, ValueError, AttributeError):
-                    espera = 33
-            time.sleep(espera)
-    raise RuntimeError(f"No se pudo leer {url[:90]}: {ultimo!r}")
+        # 429: el servidor dice cuánto esperar y se le hace caso (con un tope). Otro fallo: espera creciente.
+        time.sleep(min(espera or 30.0, 30.0) + 2 if codigo == 429 else 1.5 * (k + 1))
+    raise RuntimeError(f"No se pudo leer {url[:90]} (HTTP {codigo})")
 
 
 def _limpio(v: str) -> str:
@@ -90,6 +114,7 @@ def _ficha(pagina: dict[str, Any]) -> dict[str, Any] | None:
         "pagina": info.get("descriptionurl", ""),
         # Wikimedia solo sirve miniaturas de unos anchos fijos: si el original es más estrecho que el pedido, se usa tal cual.
         "miniatura": info.get("thumburl") if int(info.get("width") or 0) > ANCHO and info.get("thumburl") else info.get("url", ""),
+        "original": info.get("url", ""), "bytes": int(info.get("size") or 0),
         "ancho": int(info.get("width") or 0), "alto": int(info.get("height") or 0),
         "autor": autor, "licencia": lic, "licencia_url": _limpio((meta.get("LicenseUrl") or {}).get("value", "")),
         "descripcion": _limpio((meta.get("ImageDescription") or {}).get("value", ""))[:160],
@@ -139,14 +164,26 @@ def _en_upload(url: str) -> str:
     return re.sub(r"^https://thumb\.wikimedia\.org/", "https://upload.wikimedia.org/", url)
 
 
+
+
 def descargar(ficha: dict[str, Any]) -> str:
-    """Guarda la miniatura en `imagenes/archivos/` y devuelve su nombre de archivo (estable: sale del título)."""
+    """Baja la imagen a ANCHO px y la guarda como JPEG en `imagenes/archivos/`. Devuelve su nombre (estable: sale
+    del título)."""
+    import io
+
+    from PIL import Image
+
     ARCHIVOS.mkdir(parents=True, exist_ok=True)
-    ext = ".png" if ficha["miniatura"].lower().split("?")[0].endswith(".png") else ".jpg"
-    nombre = hashlib.sha1(ficha["titulo"].encode("utf-8")).hexdigest()[:14] + ext
+    nombre = hashlib.sha1(ficha["titulo"].encode("utf-8")).hexdigest()[:14] + ".jpg"
     destino = ARCHIVOS / nombre
     if not destino.exists():
-        destino.write_bytes(_get(_en_upload(ficha["miniatura"]), binario=True))
+        # La miniatura de ANCHO px (un tamaño de los que Wikimedia sirve a clientes automáticos); el original solo
+        # si es más estrecho que eso.
+        img = Image.open(io.BytesIO(_get(_en_upload(ficha["miniatura"]), binario=True)))
+        img = img.convert("RGB")
+        if img.width > ANCHO:
+            img = img.resize((ANCHO, round(img.height * ANCHO / img.width)), Image.LANCZOS)
+        img.save(destino, "JPEG", quality=84, optimize=True)
     return nombre
 
 

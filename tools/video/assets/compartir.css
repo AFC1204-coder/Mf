@@ -472,3 +472,5 @@ body.cs.st-conexion { --tone: #9d8fe0; }
 .ar-1x1 .cs-foto { height: 26em; margin-bottom: 3em; }
 .ar-16x9 .cs-foto { height: 24em; margin-bottom: 2.6em; width: 62%; }
 .ar-1x1 .cs-foto.retrato, .ar-16x9 .cs-foto.retrato { width: 20em; height: 20em; }
+/* Con imagen, el contenido se ancla arriba: si se centrara, la foto se movería al cambiar de página el texto. */
+.cs-stage.con-foto { justify-content: flex-start; padding-top: 2em; }
