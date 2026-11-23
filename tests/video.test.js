@@ -9,7 +9,7 @@ const indice = {
     l2: { fondo: { yt: OTRO, s: 45 } },
     mala: { idea: { yt: '"><script>', s: 60 } },
   },
-  libros: { b1: { libro: { yt: ID, s: 44.7 } } },
+  libros: { b1: { libro: { yt: ID, s: 44.7 } }, b2: { libro: { yt: ID, s: 40 }, recorrido: { yt: OTRO, s: 110 } } },
 };
 
 describe('vídeos de la lección', () => {
@@ -40,6 +40,7 @@ describe('vídeos de la lección', () => {
   it('el libro tiene su vídeo de presentación', () => {
     expect(V.deLibro(indice, 'b1')).toEqual([{ tipo: 'libro', etiqueta: 'El libro en vídeo', yt: ID, duracion: '45 s' }]);
     expect(V.deLibro(indice, 'l1')).toEqual([]);
+    expect(V.deLibro(indice, 'b2').map(v => v.etiqueta)).toEqual(['El libro en vídeo', 'Idea a idea']);
   });
   it('direcciones: reproductor sin cookies, miniatura y enlace', () => {
     expect(V.urlIncrustar(ID)).toBe(`https://www.youtube-nocookie.com/embed/${ID}?autoplay=1&playsinline=1&rel=0`);

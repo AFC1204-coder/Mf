@@ -164,7 +164,7 @@ class PiezasTest(unittest.TestCase):
         self.assertEqual(claves[0], "libro")
         self.assertEqual(sum(p.tipo == "idea" for p in self.plan.piezas), 3)
         self.assertEqual([p.key for p in self.plan.piezas if p.tipo == "pregunta"], ["pregunta-01-la-primera-idea"])
-        self.assertEqual({(o.tipo, o.leccion_n) for o in self.plan.omitidas if o.tipo not in ("caso", "fondo")}, {("pregunta", 2), ("pregunta", 3), ("practica", 3)})
+        self.assertEqual({(o.tipo, o.leccion_n) for o in self.plan.omitidas if o.tipo not in ("caso", "fondo", "recorrido")}, {("pregunta", 2), ("pregunta", 3), ("practica", 3)})
         self.assertEqual(sum(o.tipo == "fondo" for o in self.plan.omitidas), 3)  # cuerpos de dos frases: no dan para una pieza larga
         self.assertEqual(sum(o.tipo == "caso" for o in self.plan.omitidas), 3)  # el libro de prueba no cuenta ningún caso
         self.assertTrue(all(o.motivo for o in self.plan.omitidas))
@@ -957,3 +957,48 @@ class IconosLucideTest(unittest.TestCase):
         assets = K.ICONOS_DIR.parent / "assets"
         self.assertIn("ISC", (assets / "LICENCIA-lucide.txt").read_text(encoding="utf-8"))
         self.assertIn("ISC", (assets / "iconos-lucide.js").read_text(encoding="utf-8")[:300])
+
+
+class RecorridoTest(unittest.TestCase):
+    """El libro, idea a idea: el título y la idea literal de cada lección que tiene una."""
+
+    def _libro(self, n=4, **kw):
+        from tools.video.corpus import Book, Lesson
+
+        lecciones = [
+            Lesson(id=f"L{i}", titulo=f"Lección número {i}", orden=i, cuerpo="Texto del cuerpo de la lección. " * 20,
+                   idea_clave=f"La idea central número {i} se dice en una frase.", autocorreccion="Con su matiz.")
+            for i in range(1, n + 1)
+        ]
+        lecciones[1].idea_clave = ""  # sin idea redactada: no entra
+        datos = dict(id="B", titulo="Decisive", autor="Chip Heath", eje="Psicología y Conducta", descripcion="Un proceso para decidir mejor frente a cuatro villanos.", lessons=lecciones)
+        datos.update(kw)
+        return Book(**datos)
+
+    def test_recorre_las_lecciones_con_idea_y_cuenta_solo_esas(self):
+        book = self._libro()
+        pieza = K.pieza_recorrido(book)
+        nodos = [s for s in pieza.scenes if s.kind == "c-nodo"]
+        self.assertEqual([s.view["label"] for s in nodos], ["Lección número 1", "Lección número 3", "Lección número 4"])
+        self.assertEqual({s.view["n"] for s in nodos}, {3})
+        self.assertEqual(nodos[1].narration, "Lección número 3. La idea central número 3 se dice en una frase.")
+        self.assertEqual([p.origin for p in nodos[1].parts], ["leccion[3].titulo", "leccion[3].idea_clave"])
+        self.assertEqual(pieza.scenes[0].narration, "Un proceso para decidir mejor frente a cuatro villanos.")
+        self.assertFalse(L.has_errors(L.lint_pieza(pieza, book)), [str(i) for i in L.lint_pieza(pieza, book) if i.level == "error"])
+
+    def test_con_menos_de_tres_ideas_no_hay_recorrido_y_queda_anotado(self):
+        book = self._libro(n=3)
+        self.assertIsNone(K.pieza_recorrido(book))
+        plan = K.plan_libro(book)
+        self.assertIn(("recorrido", 0), {(o.tipo, o.leccion_n) for o in plan.omitidas})
+
+    def test_va_al_final_del_orden_de_publicacion(self):
+        plan = K.plan_libro(self._libro())
+        self.assertEqual(plan.orden[-1], "recorrido")
+
+    def test_el_lint_rechaza_una_idea_cambiada(self):
+        book = self._libro()
+        pieza = K.pieza_recorrido(book)
+        nodo = next(s for s in pieza.scenes if s.kind == "c-nodo")
+        nodo.parts[1] = K.Part("La idea central número 1 se dice mejor así.", nodo.parts[1].origin)
+        self.assertTrue(L.has_errors(L.lint_pieza(pieza, book)))

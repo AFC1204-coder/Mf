@@ -122,7 +122,7 @@ def _orden(pieza: str) -> tuple[int, int]:
     m = re.match(r"([a-z]+)-(\d+)", pieza)
     tipos = ["idea", "pregunta", "practica", "caso", "fondo"]
     if not m:
-        return (0, 0)
+        return (0, 0) if pieza == "libro" else (0, 1)
     return (int(m.group(2)), tipos.index(m.group(1)) if m.group(1) in tipos else len(tipos))
 
 
