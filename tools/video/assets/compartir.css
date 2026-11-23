@@ -474,3 +474,8 @@ body.cs.st-conexion { --tone: #9d8fe0; }
 .ar-1x1 .cs-foto.retrato, .ar-16x9 .cs-foto.retrato { width: 20em; height: 20em; }
 /* Con imagen, el contenido se ancla arriba: si se centrara, la foto se movería al cambiar de página el texto. */
 .cs-stage.con-foto { justify-content: flex-start; padding-top: 2em; }
+/* El autor sin foto: medallón con sus iniciales. */
+.cs-medallones { display: flex; gap: 2.2em; margin-bottom: 4em; }
+.cs-medallones span { width: 5.2em; height: 5.2em; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 5.4em; letter-spacing: 0.02em; color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, #121214); box-shadow: inset 0 0 0 0.05em color-mix(in srgb, var(--accent) 65%, transparent), 0 0 0 0.14em color-mix(in srgb, var(--accent) 16%, transparent); }
+.ar-1x1 .cs-medallones, .ar-16x9 .cs-medallones { margin-bottom: 2.4em; }
+.ar-1x1 .cs-medallones span, .ar-16x9 .cs-medallones span { font-size: 4em; }

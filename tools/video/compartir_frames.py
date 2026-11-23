@@ -314,11 +314,33 @@ def _stage_figura(v: dict[str, Any], tag: str) -> tuple[str, str]:
     return _kicker(v.get("kicker"), icono="silueta") + titulo + f'<div class="cs-figrow">{silueta}{resto}</div>', f"m-{modo}"
 
 
+def iniciales(autor: str) -> list[str]:
+    """Las iniciales de cada autor del libro, para su medallón: «Chip Heath y Dan Heath» → ["CH", "DH"].
+    Sale solo del nombre que ya está en pantalla; hasta tres autores, y nada si el nombre no se deja partir."""
+    nombres = [n.strip() for n in re.split(r"\s+y\s+|\s+&\s+|\s+and\s+|,|;", autor or "") if n.strip()]
+    out = []
+    for n in nombres[:3]:
+        palabras = [w for w in re.split(r"[\s.\-]+", n) if w and w[0].isalpha() and w.lower() not in ("de", "del", "la", "van", "von", "da", "di", "jr", "dr")]
+        if not palabras:
+            return []
+        out.append((palabras[0][0] + (palabras[-1][0] if len(palabras) > 1 else "")).upper())
+    return out
+
+
+def _medallon(v: dict[str, Any]) -> str:
+    """El autor sin foto: un medallón con sus iniciales. Cuando no hay un retrato con licencia libre (lo normal),
+    el crédito no se queda en solo texto y no se usa ninguna imagen de derechos dudosos."""
+    ini = iniciales(str(v.get("author") or ""))
+    if not ini:
+        return ""
+    return '<div class="cs-medallones">' + "".join(f"<span>{_e(x)}</span>" for x in ini) + "</div>"
+
+
 def _stage_credito(v: dict[str, Any], tag: str) -> tuple[str, str]:
     rotulo = v.get("kicker") if v.get("kicker") != tag else K.ROTULOS["credito"]
     autor = f'<div class="cs-author">{_e(v.get("author"))}</div>' if v.get("author") else ""
     return (
-        _foto(v, "retrato")
+        (_foto(v, "retrato") or _medallon(v))
         + _kicker(rotulo, icono="credito")
         + f'<h1 class="cs-book{_largo(v.get("title", ""), 28, 52)}">{_e(v.get("title"))}</h1>'
         + autor

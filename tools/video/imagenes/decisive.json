@@ -15,7 +15,7 @@
       "licencia": "CC BY 4.0",
       "licencia_url": "https://creativecommons.org/licenses/by/4.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:North_Lincolnshire_sign.jpg",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "197bb40a-62f2-4c06-8581-cc766713728c",
@@ -28,7 +28,7 @@
       "licencia": "CC0",
       "licencia_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
       "pagina": "https://commons.wikimedia.org/wiki/File:Bifurca%C3%A7%C3%A3o,_Caminho_para_o_Casar%C3%A3o_Devoluto_%C3%A0_esquerda.jpg",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "b6b9ce29-d22c-4dea-bfee-518b3c6742af",
@@ -41,7 +41,7 @@
       "licencia": "CC BY 2.5",
       "licencia_url": "https://creativecommons.org/licenses/by/2.5",
       "pagina": "https://commons.wikimedia.org/wiki/File:Magnifying_glass.jpg",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "b4b44d25-181d-48fe-b3f3-da788991e159",
@@ -54,7 +54,7 @@
       "licencia": "CC BY 4.0",
       "licencia_url": "https://creativecommons.org/licenses/by/4.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:Gokyo_Ri_summit,_Gokyo_Lake,_Nepal,_Himalayas.jpg",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "84b80988-51df-4fc3-8456-5fdd87370237",
@@ -67,7 +67,7 @@
       "licencia": "CC0",
       "licencia_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
       "pagina": "https://commons.wikimedia.org/wiki/File:Port_buoy_Rivedoux,_R%C3%A9_island,_Charente-Maritime,_France.jpg",
-      "aprobado": false
+      "aprobado": true
     }
   ]
 }
