@@ -1507,8 +1507,9 @@ def pieza_recorrido(book: Book) -> Pieza | None:
             Scene(
                 "c-nodo",
                 "Ideas",
-                {"kicker": rotulo, "index": k, "n": n, "icon": ICONOS["idea"], "label": titulo, "text": idea},
+                {"kicker": rotulo, "index": k, "n": n, "icon": ICONOS["idea"], "label": titulo, "text": idea, "espera": True},
                 [Part(f"{titulo}.", f"leccion[{i + 1}].titulo"), Part(idea, f"leccion[{i + 1}].{origen}")],
+                [Beat({"espera": False}, at_word=T.n_words(titulo))],  # primero el título; la idea entra cuando la voz llega a ella
                 pause_after_s=0.45,
             )
         )

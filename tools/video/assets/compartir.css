@@ -171,6 +171,7 @@ body.cs.st-conexion { --tone: #9d8fe0; }
   background: color-mix(in srgb, var(--accent) 14%, transparent); border: 0.26em solid color-mix(in srgb, var(--accent) 60%, transparent); }
 .cs-ic svg { width: 9em; height: 9em; fill: none; stroke: var(--accent); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .cs-node-t { margin: 0; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 12.4em; line-height: 1.1; color: var(--cs-ink); text-wrap: balance; }
+.cs-node-d.espera { visibility: hidden; }
 .cs-node-d { margin: 0.6em 0 0; font-size: 6.8em; line-height: 1.26; color: var(--cs-ink2); text-wrap: pretty; }
 
 /* ── cierre: lo que abrió la pieza, otra vez; la marca y dónde seguir ── */

@@ -317,7 +317,8 @@ def _stage_credito(v: dict[str, Any], tag: str) -> tuple[str, str]:
 def _stage_nodo(v: dict[str, Any], tag: str) -> tuple[str, str]:
     i, n = int(v.get("index") or 0), int(v.get("n") or 0)
     puntos = "".join(f'<i class="{"on" if j == i else "done" if j < i else ""}"></i>' for j in range(n))
-    texto = f'<p class="cs-node-d">{_e(v.get("text"))}</p>' if v.get("text") else ""
+    # «espera»: el texto ocupa ya su sitio pero aún no se ve (entra cuando la voz acaba de decir el título).
+    texto = f'<p class="cs-node-d{" espera" if v.get("espera") else ""}">{_e(v.get("text"))}</p>' if v.get("text") else ""
     return (
         f'<div class="cs-dots">{puntos}</div>'
         + f'<div class="cs-node-hd"><div class="cs-node-n">{i + 1}</div><div class="cs-ic" data-icon="{_e(v.get("icon"))}"></div></div>'
