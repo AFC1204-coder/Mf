@@ -50,6 +50,7 @@ class RenderStyle:
     reveal_s: float = 0.0  # si > 0: lo que cambia en un esquema no aparece de golpe, se dibuja de arriba abajo en este tiempo
     move_s: float = 0.0  # si > 0: duración del movimiento de los paneles de un esquema al cambiar de pieza (con `tweens`)
     reveal_text_s: float = 0.0  # si > 0: cada ráfaga de texto entra con un barrido breve de izquierda a derecha
+    sfx: bool = False  # efectos de sonido sintetizados (ver `_pista_sfx`): cambio de sección, pieza de esquema, cuenta atrás
     extra_deps: list[Path] = field(default_factory=list)  # estilos propios, para la huella de los fotogramas
 
 
@@ -261,6 +262,67 @@ def _subtitle_track(chunks: list[Chunk], total_s: float, sub_dir: Path) -> Path:
     if total_s > cursor + 0.02:
         entries.append((blank, total_s - cursor))
     return _write_concat(entries, sub_dir / "subs.txt")
+
+
+SFX_NIVEL = 1.0  # volumen de los efectos frente a la voz ya normalizada
+
+
+def _pista_sfx(eventos: list[tuple[float, str]], total_s: float, out_wav: Path) -> Path:
+    """Efectos de sonido **sintetizados aquí** (ningún archivo de terceros): un tono o un soplo breve y bajo en cada
+    cambio que se ve. `paso`: cambio de sección (soplo que sube) · `pieza`: entra o se abre una pieza del esquema
+    (toque corto) · `tic`: cuenta atrás de la pausa para pensar · `resp`: llega la respuesta (dos notas).
+    Mismo guion, mismos sonidos: el ruido sale de una semilla fija."""
+    import math
+    import random
+
+    n = int((total_s + 0.5) * SAMPLE_RATE)
+    buf = [0.0] * n
+    rng = random.Random(7)
+
+    def poner(t0: float, muestras: list[float]) -> None:
+        i0 = int(t0 * SAMPLE_RATE)
+        for k, v in enumerate(muestras):
+            if 0 <= i0 + k < n:
+                buf[i0 + k] += v
+
+    def tono(hz: float, dur: float, amp: float, caida: float = 5.0, hz_fin: float | None = None) -> list[float]:
+        m = int(dur * SAMPLE_RATE)
+        out, fase = [], 0.0
+        for k in range(m):
+            x = k / m
+            f = hz + ((hz_fin or hz) - hz) * x
+            fase += 2 * math.pi * f / SAMPLE_RATE
+            ataque = min(1.0, k / (0.004 * SAMPLE_RATE))
+            out.append(amp * ataque * math.exp(-caida * x) * math.sin(fase))
+        return out
+
+    def soplo(dur: float, amp: float) -> list[float]:
+        m = int(dur * SAMPLE_RATE)
+        out, y = [], 0.0
+        for k in range(m):
+            x = k / m
+            alfa = 0.02 + 0.10 * x  # el filtro se abre: el soplo «sube»
+            y += alfa * (rng.uniform(-1, 1) - y)
+            out.append(amp * math.sin(math.pi * x) ** 2 * y)
+        return out
+
+    for t0, tipo in eventos:
+        if tipo == "paso":
+            poner(t0, soplo(0.34, 0.5))
+        elif tipo == "pieza":
+            poner(t0, tono(740, 0.09, 0.13, caida=6, hz_fin=660))
+        elif tipo == "tic":
+            poner(t0, tono(520, 0.07, 0.16, caida=7))
+        elif tipo == "resp":
+            poner(t0, tono(587, 0.16, 0.14, caida=4))
+            poner(t0 + 0.11, tono(880, 0.30, 0.14, caida=4))
+    pcm = array.array("h", (int(max(-1.0, min(1.0, v)) * 32767 * SFX_NIVEL) for v in buf))
+    with wave.open(str(out_wav), "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(SAMPLE_RATE)
+        w.writeframes(pcm.tobytes())
+    return out_wav
 
 
 def _write_concat(entries: list[tuple[Path, float]], out_txt: Path) -> Path:
@@ -491,6 +553,7 @@ def render_episode(
     # 3 · Cuándo entra cada estado.
     cuts: list[tuple[float, Path, bool]] = []
     states_prev: list[State] = []
+    eventos: list[tuple[float, str]] = []  # (momento, tipo) de los efectos de sonido, si el estilo los pide
     movimientos: dict[int, list[Path]] = {}  # índice del corte → fotogramas intermedios que llevan a él
     for n_estado, (st, png) in enumerate(zip(states, pngs)):
         scene = episode.scenes[st.scene_index]
@@ -520,6 +583,12 @@ def render_episode(
             codigo = 4 if misma_pagina else 5
         else:
             codigo = 0
+        if es_inicio and cambia and st.scene_index > 0:
+            eventos.append((t, "resp" if scene.section == "Respuesta" else "tic" if scene.kind == "c-pausa" else "paso"))
+        elif scene.kind == "c-pausa" and not es_inicio:
+            eventos.append((t, "tic"))
+        elif codigo == 3 and (st.view.get("mode") == "pieza" or st.view.get("shown") is not None):
+            eventos.append((t, "pieza"))
         states_prev.append(st)
         if n_estado in mov_pngs:
             movimientos[len(cuts)] = mov_pngs[n_estado]
@@ -554,6 +623,10 @@ def render_episode(
     entradas = ["-f", "concat", "-safe", "0", "-i", str(video_txt), "-i", str(wav), "-f", "ffmetadata", "-i", str(meta)]
     video_filter = f"[0:v]fps={FPS},format=yuv420p[v0]"
     ultimo = "v0"
+    if style.sfx and eventos and not style.burn_subs:
+        fx = _pista_sfx(eventos, total_s, work_dir / "efectos.wav")
+        entradas += ["-i", str(fx)]  # entrada 3: va antes que los subtítulos, que aquí no se queman
+        audio_filter = audio_filter.replace("[a]", "[voz]") + ";[3:a]aresample=48000[fx];[voz][fx]amix=inputs=2:duration=first:normalize=0[a]"
     if style.burn_subs:
         subs_txt = _subtitle_track(chunks, total_s, work_dir / "subs")
         entradas += ["-f", "concat", "-safe", "0", "-i", str(subs_txt)]

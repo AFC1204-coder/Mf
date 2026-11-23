@@ -306,6 +306,8 @@ def process_pieza(p: K.Pieza, book: Book, base: Path, args: argparse.Namespace, 
         "montaje": 6,  # 4: el esquema se dibuja y el texto entra con barrido · sube cuando cambia cómo se monta (2: se recorta el silencio final de cada locución · 3: empuje entre secciones)
         "motivo": motivo,
     }
+    if getattr(args, "sonidos", False):
+        huella["sonidos"] = 1
     estado_path = p_dir / "pieza.json"
     video = p_dir / "video.mp4"
     if not args.force and video.exists() and estado_path.exists():
@@ -319,7 +321,7 @@ def process_pieza(p: K.Pieza, book: Book, base: Path, args: argparse.Namespace, 
     ancho, alto = K.ASPECTOS[args.aspecto]
     estilo = RenderStyle(
         width=ancho, height=alto, burn_subs=False, lead_in_s=0.15, fade_scene_s=0.26, fade_beat_s=0.0,
-        progress_color=CF.acento_eje(book.eje), extra_deps=CF.dependencias(), trim_tail_s=0.12, push_s=0.36, reveal_s=0.42, reveal_text_s=0.13, move_s=0.45,
+        progress_color=CF.acento_eje(book.eje), extra_deps=CF.dependencias(), trim_tail_s=0.12, push_s=0.36, reveal_s=0.42, reveal_text_s=0.13, move_s=0.45, sfx=bool(getattr(args, "sonidos", False)),
     )
     work = p_dir / "_work"
     info = render_episode(
@@ -593,6 +595,7 @@ def build_parser() -> argparse.ArgumentParser:
     comun.add_argument("--format", choices=[*FORMATS, "compartir"], default="clase", help="clase: lección completa (3-5 min). corto: 60-90 s para redes. compartir: piezas sueltas que se entienden fuera de la web (1-2 min con su explicación; «a fondo», 2-4 min).")
     comun.add_argument("--piezas", default=None, help="(compartir) Tipos de pieza, separados por comas: idea, pregunta, practica, caso, libro, fondo. Por defecto, todos.")
     comun.add_argument("--iconos-propuestos", action="store_true", help="(compartir) Previsualiza también los iconos por pieza aún sin aprobar de tools/video/iconos/. Solo para revisarlos: no publiques esos vídeos.")
+    comun.add_argument("--sonidos", action="store_true", help="(compartir) Añade efectos de sonido sintetizados (cambio de sección, piezas del esquema, cuenta atrás). Sin archivos de terceros.")
     comun.add_argument("--breve", action="store_true", help="(compartir) Versión de 30-60 s: la idea sin la explicación del cuerpo y el matiz en su primera frase.")
     comun.add_argument("--aspecto", choices=list(K.ASPECTOS), default="9:16", help="(compartir) 9:16 (por defecto), 1:1 o 16:9.")
     comun.add_argument("--max-seg", type=float, default=None, help="(compartir) No genera las piezas que duren (estimado) más de estos segundos; quedan anotadas en el manifiesto.")
