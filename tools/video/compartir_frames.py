@@ -53,6 +53,17 @@ def _kicker(texto: str, tema: bool = False, icono: str = "") -> str:
     return f'<div class="cs-kicker{" tema" if tema else ""}{" con-ic" if marca else ""}">{marca}<span>{_e(texto)}</span></div>'
 
 
+def _foto(v: dict[str, Any], clase: str = "") -> str:
+    """La imagen libre de la escena, con su crédito a la vista (ver `imagenes_libres`). Vacío si no hay."""
+    f = v.get("foto")
+    if not isinstance(f, dict) or not f.get("src"):
+        return ""
+    ruta = K.IM.ARCHIVOS / str(f["src"])
+    if not ruta.is_file():
+        return ""
+    return f'<figure class="cs-foto {clase}"><img src="{ruta.as_uri()}" alt=""><figcaption>{_e(f.get("credito"))}</figcaption></figure>'
+
+
 def _stage_frase(v: dict[str, Any], tag: str) -> tuple[str, str]:
     palabras = v.get("words") or []
     paginas = v.get("pages") or [[0, len(palabras)]]
@@ -84,8 +95,9 @@ def _stage_frase(v: dict[str, Any], tag: str) -> tuple[str, str]:
         if not (v.get("fig") or {}).get("title"):  # unos nombres sueltos no dicen qué momento es: lo dice el rótulo
             comp = _kicker(rotulo, icono=str(v.get("style") or "")) + comp
         return comp + f'<p class="cs-kin{talla}">{" ".join(trozos)}</p>' + puntos, "con-comp"
-    cuerpo = _kicker(rotulo, tema=bool(v.get("tema")), icono=str(v.get("style") or "")) + f'<p class="cs-kin{talla}">{" ".join(trozos)}</p>' + puntos
-    return cuerpo, ("solo" if visto == 0 else "")
+    foto = _foto(v)
+    cuerpo = foto + _kicker(rotulo, tema=bool(v.get("tema")), icono=str(v.get("style") or "")) + f'<p class="cs-kin{talla}">{" ".join(trozos)}</p>' + puntos
+    return cuerpo, ("con-foto" if foto else "solo" if visto == 0 else "")
 
 
 def _companero(v: dict[str, Any]) -> str:
@@ -306,7 +318,8 @@ def _stage_credito(v: dict[str, Any], tag: str) -> tuple[str, str]:
     rotulo = v.get("kicker") if v.get("kicker") != tag else K.ROTULOS["credito"]
     autor = f'<div class="cs-author">{_e(v.get("author"))}</div>' if v.get("author") else ""
     return (
-        _kicker(rotulo, icono="credito")
+        _foto(v, "retrato")
+        + _kicker(rotulo, icono="credito")
         + f'<h1 class="cs-book{_largo(v.get("title", ""), 28, 52)}">{_e(v.get("title"))}</h1>'
         + autor
         + f'<div class="cs-eje">{_e(v.get("eje"))}</div>',

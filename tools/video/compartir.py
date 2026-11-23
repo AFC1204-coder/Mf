@@ -31,6 +31,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from . import guia as G
+from . import imagenes_libres as IM
 from . import text as T
 from .corpus import Book, Lesson, Question
 from .scriptwriter import Beat, Episode, Part, Scene
@@ -851,6 +852,19 @@ def escena_frase(
 
 # ───────────────────────── escenas compartidas ─────────────────────────
 
+def foto_de(tipo: str, ident: str) -> dict[str, str] | None:
+    """La imagen libre aprobada para un autor («autor», id del libro) o una lección («leccion», su id), lista para la
+    vista: archivo y crédito. None si no hay: no se fuerza ninguna (ver `imagenes_libres`)."""
+    e = IM.catalogo().get((tipo, str(ident)))
+    return {"src": str(e["archivo"]), "credito": IM.credito(e)} if e else None
+
+
+def _con_foto(scene: Scene, foto: dict[str, str] | None) -> Scene:
+    if foto:
+        scene.view["foto"] = foto
+    return scene
+
+
 def _fixed(clave: str, origen: str = "plantilla", **kw: Any) -> Part:
     return Part(FORMULAS[clave].format(**kw), origen)
 
@@ -858,12 +872,15 @@ def _fixed(clave: str, origen: str = "plantilla", **kw: Any) -> Part:
 def escena_credito(book: Book, clave: str = "credito", **kw: Any) -> Scene:
     clave = clave if book.autor else f"{clave}_sin_autor"
     parte = _fixed(clave, "plantilla+titulos", libro=titulo_corto(book.titulo), autor=book.autor, **kw)
-    return Scene(
-        "c-credito",
-        "Libro",
-        {"kicker": kw.get("rotulo") or ROTULOS["credito"], "title": titulo_corto(book.titulo), "author": book.autor, "eje": book.eje},
-        [parte],
-        pause_after_s=0.3,
+    return _con_foto(
+        Scene(
+            "c-credito",
+            "Libro",
+            {"kicker": kw.get("rotulo") or ROTULOS["credito"], "title": titulo_corto(book.titulo), "author": book.autor, "eje": book.eje},
+            [parte],
+            pause_after_s=0.3,
+        ),
+        foto_de("autor", book.id),
     )
 
 
@@ -1112,7 +1129,16 @@ def _sin_pie_repetido(figura: list[Scene], lesson: Lesson) -> list[Scene]:
 
 
 def _base(book: Book, **kw: Any) -> Pieza:
-    return Pieza(book_id=book.id, book_title=book.titulo, book_author=book.autor, eje=book.eje, total=len(book.lessons), kind="pieza", number=0, **kw)
+    pieza = Pieza(book_id=book.id, book_title=book.titulo, book_author=book.autor, eje=book.eje, total=len(book.lessons), kind="pieza", number=0, **kw)
+    # Las imágenes que salen en la pieza se atribuyen también en la descripción, junto al crédito del libro.
+    usadas = {str(s.view["foto"]["src"]) for s in pieza.scenes if isinstance(s.view.get("foto"), dict)}
+    fichas = [e for e in IM.catalogo().values() if str(e.get("archivo")) in usadas]
+    if fichas and pieza.descripcion_pub:
+        creditos = "; ".join(dict.fromkeys(IM.credito_largo(e) for e in fichas))
+        pieza.descripcion_pub = "\n\n".join(
+            (par + f" Imágenes: {creditos}." if par.startswith("Del libro «") else par) for par in pieza.descripcion_pub.split("\n\n")
+        )
+    return pieza
 
 
 def _clave(tipo: str, k: int, lesson: Lesson) -> str:
@@ -1210,7 +1236,7 @@ def _pieza_idea(book: Book, index: int, apretar: int = 0, explicar: bool = False
         if caso:
             explicacion.append(escena_frase("Caso", "caso", ROTULOS["caso"], [caso], pause_after_s=0.55))
         scenes += [
-            escena_frase("Idea", "idea", ROTULOS["idea"], [Part(idea, f"leccion.{origen}")], tema_txt=tema(lesson), pause_after_s=0.4),
+            _con_foto(escena_frase("Idea", "idea", ROTULOS["idea"], [Part(idea, f"leccion.{origen}")], tema_txt=tema(lesson), pause_after_s=0.4), foto_de("leccion", lesson.id)),
             escena_credito(book),
             *explicacion,
             *figura,
@@ -1393,7 +1419,7 @@ def pieza_fondo(book: Book, index: int, breve: bool = False) -> Pieza | None:
     figura = escenas_figura(lesson, max_words=FIGURA_FONDO)
     acompanar(explicacion, figura)  # el esquema, a la vista mientras se explica; después se recorre entero igualmente
     scenes: list[Scene] = [
-        escena_frase("Idea", "idea", ROTULOS["fondo"], [Part(idea, f"leccion.{origen}")], tema_txt=tema(lesson), pause_after_s=0.4),
+        _con_foto(escena_frase("Idea", "idea", ROTULOS["fondo"], [Part(idea, f"leccion.{origen}")], tema_txt=tema(lesson), pause_after_s=0.4), foto_de("leccion", lesson.id)),
         escena_credito(book),
         *explicacion,
         *_sin_pie_repetido(figura, lesson),

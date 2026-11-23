@@ -594,6 +594,7 @@ def build_parser() -> argparse.ArgumentParser:
     comun = argparse.ArgumentParser(add_help=False)
     comun.add_argument("--format", choices=[*FORMATS, "compartir"], default="clase", help="clase: lección completa (3-5 min). corto: 60-90 s para redes. compartir: piezas sueltas que se entienden fuera de la web (1-2 min con su explicación; «a fondo», 2-4 min).")
     comun.add_argument("--piezas", default=None, help="(compartir) Tipos de pieza, separados por comas: idea, pregunta, practica, caso, libro, fondo. Por defecto, todos.")
+    comun.add_argument("--imagenes-propuestas", action="store_true", help="(compartir) Previsualiza también las imágenes libres aún sin aprobar de tools/video/imagenes/. Solo para revisarlas: no publiques esos vídeos.")
     comun.add_argument("--iconos-propuestos", action="store_true", help="(compartir) Previsualiza también los iconos por pieza aún sin aprobar de tools/video/iconos/. Solo para revisarlos: no publiques esos vídeos.")
     comun.add_argument("--sin-sonidos", dest="sonidos", action="store_false", help="(compartir) Sin los efectos de sonido sintetizados (cambio de sección, piezas del esquema, cuenta atrás), que van por defecto.")
     comun.add_argument("--sonidos", dest="sonidos", action="store_true", help=argparse.SUPPRESS)  # compatibilidad: ya es lo de siempre
@@ -667,6 +668,9 @@ def main(argv: list[str] | None = None) -> int:
         args.voice = args.voice or os.getenv("EDGE_VOICE") or K.VOZ_EDGE
         args.ritmo = args.ritmo or os.getenv("EDGE_RATE") or K.RITMO_EDGE
         args.tono = args.tono or os.getenv("EDGE_PITCH") or K.TONO_EDGE
+    if getattr(args, "imagenes_propuestas", False):
+        os.environ["IMAGENES_PROPUESTAS"] = "1"
+        K.IM.catalogo(recargar=True)
     if getattr(args, "iconos_propuestos", False):
         os.environ["ICONOS_PROPUESTOS"] = "1"
         K.iconos_de_piezas(recargar=True)

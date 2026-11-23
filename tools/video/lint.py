@@ -215,7 +215,7 @@ def _formulas_permitidas(pieza, book: Book) -> set[str]:
 
 
 # Claves de las vistas que no llevan contenido (estructura, estilos, rótulos fijos que se comprueban aparte).
-_CLAVES_SIN_TEXTO = {"spec", "style", "mode", "patron", "icon", "tone", "words", "pos", "order"}
+_CLAVES_SIN_TEXTO = {"spec", "style", "mode", "patron", "icon", "tone", "words", "pos", "order", "foto"}  # «foto» se comprueba aparte
 _CLAVES_ROTULO = {"kicker", "brand", "lema", "cta", "recuerda_rotulo", "tag"}
 
 
@@ -353,6 +353,15 @@ def lint_pieza(pieza, book: Book) -> list[Issue]:
                 issues.append(Issue("error", donde, "cambio en pantalla sin momento asignado"))
 
     issues.extend(_lint_lo_que_solo_se_ve(pieza, book, src))
+    # Una imagen solo puede salir si está en el catálogo (aprobada, con licencia aceptada) y con su crédito exacto.
+    fichas = {str(e.get("archivo")): e for e in K.IM.catalogo().values()}
+    for i, scene in enumerate(pieza.scenes, start=1):
+        foto = scene.view.get("foto")
+        if foto is None:
+            continue
+        e = fichas.get(str(foto.get("src"))) if isinstance(foto, dict) else None
+        if not e or foto.get("credito") != K.IM.credito(e) or not K.IM.licencia_aceptada(str(e.get("licencia"))):
+            issues.append(Issue("error", f"{pieza.key} · escena {i} ({scene.kind})", "imagen que no está aprobada en tools/video/imagenes/ o con el crédito cambiado"))
     if pieza.tipo == "pregunta":
         # La respuesta que se da tiene que ser la opción correcta de ESA pregunta, no cualquier opción del libro.
         lec = next((l for l in book.lessons if l.id == pieza.lesson_id), None)

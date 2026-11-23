@@ -459,3 +459,16 @@ body.cs.st-conexion { --tone: #9d8fe0; }
 .cs-comp.cp-nombres li { padding: 1em 2em 1em 1.3em; gap: 1em; border-radius: 4em; --tn2: #9d8fe0; }
 .cs-comp.cp-nombres li > b { font-size: 4.4em; white-space: nowrap; }
 .cs-comp.cp-nombres li.act > b { font-size: 4.4em; }
+
+/* Imágenes libres (Wikimedia Commons): una por lección, sobre la idea que abre la pieza, y el retrato del autor en
+   el crédito. En escala de grises con el tono del libro, para que una foto cualquiera no rompa la identidad. */
+.cs-foto { position: relative; margin: 0 0 4.4em; height: 44em; border-radius: 3em; overflow: hidden; flex: none; background: #121214; box-shadow: 0 0 0 0.2em color-mix(in srgb, var(--accent) 45%, transparent); }
+.cs-foto img { width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(1) contrast(1.06) brightness(0.86); }
+.cs-foto::after { content: ''; position: absolute; inset: 0; background: linear-gradient(#0a0a0b00 55%, #0a0a0bd9 100%), color-mix(in srgb, var(--accent) 16%, transparent); mix-blend-mode: normal; }
+.cs-foto figcaption { position: absolute; right: 1.1em; bottom: 0.7em; left: 1.1em; z-index: 1; text-align: right; font-size: 2.3em; line-height: 1.2; color: #ffffffb8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cs-foto.retrato { width: 30em; height: 30em; border-radius: 50%; margin-bottom: 3.6em; }
+.cs-foto.retrato figcaption { position: static; }
+.cs-foto.retrato::after { background: color-mix(in srgb, var(--accent) 14%, transparent); }
+.ar-1x1 .cs-foto { height: 26em; margin-bottom: 3em; }
+.ar-16x9 .cs-foto { height: 24em; margin-bottom: 2.6em; width: 62%; }
+.ar-1x1 .cs-foto.retrato, .ar-16x9 .cs-foto.retrato { width: 20em; height: 20em; }
