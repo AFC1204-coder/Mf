@@ -133,6 +133,12 @@ def retrato(nombre: str) -> dict[str, Any] | None:
     return None
 
 
+def _en_upload(url: str) -> str:
+    """Las miniaturas se anuncian en thumb.wikimedia.org; la misma ruta se sirve en upload.wikimedia.org, que es
+    la dirección que hay que tener permitida para los originales."""
+    return re.sub(r"^https://thumb\.wikimedia\.org/", "https://upload.wikimedia.org/", url)
+
+
 def descargar(ficha: dict[str, Any]) -> str:
     """Guarda la miniatura en `imagenes/archivos/` y devuelve su nombre de archivo (estable: sale del título)."""
     ARCHIVOS.mkdir(parents=True, exist_ok=True)
@@ -140,7 +146,7 @@ def descargar(ficha: dict[str, Any]) -> str:
     nombre = hashlib.sha1(ficha["titulo"].encode("utf-8")).hexdigest()[:14] + ext
     destino = ARCHIVOS / nombre
     if not destino.exists():
-        destino.write_bytes(_get(ficha["miniatura"], binario=True))
+        destino.write_bytes(_get(_en_upload(ficha["miniatura"]), binario=True))
     return nombre
 
 
