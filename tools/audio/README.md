@@ -88,3 +88,5 @@ El servicio de voz devuelve a veces una locución **cortada sin dar error**: el 
    Transcribe cada MP3 y lo compara con el texto. Falla si una lección no se reconoce en español, si falta un tramo de seis palabras o más, o si el parecido baja de 0,90.
 
 Resultado tras regrabar con las barreras 1 y 2: las 74 lecciones reconocidas en español, ningún tramo sin decir, parecido entre 0,946 y 1 (lo que baja de 1 son apellidos, cifras y palabras en inglés que el reconocedor escribe a su manera).
+
+Con los vídeos (`--piezas tools/video/output/<libro>`), sobre los 279 de los diez libros: un corte real, en una locución que venía de la caché de voz y se había guardado antes de existir la barrera 1. Desde entonces la caché (`tools/video/tts/cache.py`) valida cada locución al leerla y vuelve a pedir la que esté cortada. El reconocedor da además falsos avisos en frases con títulos o nombres en inglés («Del libro The War of Art…»): se descartan transcribiendo solo ese tramo.
