@@ -116,3 +116,42 @@ class ReintentosTest(unittest.TestCase):
             with mock.patch.object(M.EdgeTTSEngine, "_synth_async", falla_siempre), self.assertRaises(RuntimeError):
                 M.EdgeTTSEngine().synthesize("hola mundo", salida)
             self.assertEqual(len(llamadas), M.REINTENTOS)
+
+
+class CacheCortadaTest(unittest.TestCase):
+    def test_una_locucion_cortada_en_cache_se_vuelve_a_pedir(self):
+        import json
+        from pathlib import Path
+
+        from tools.video.tts.base import TTSEngine, TTSResult, WordTiming
+        from tools.video.tts.cache import CachedTTS
+
+        texto = "uno dos tres cuatro cinco seis siete ocho nueve diez"
+        enteras = [WordTiming(w, i * 0.3, i * 0.3 + 0.25) for i, w in enumerate(texto.split())]
+
+        class Motor(TTSEngine):
+            name = "edge-tts"
+            llamadas = 0
+
+            def default_voice(self):
+                return "v"
+
+            def sample_voices(self):
+                return ["v"]
+
+            def synthesize(self, text, out_path, voice=None):
+                Motor.llamadas += 1
+                Path(out_path).write_bytes(b"x")
+                return TTSResult(Path(out_path), 3.4, "edge-tts", "v", enteras)
+
+        with tempfile.TemporaryDirectory() as d:
+            c = CachedTTS(Motor(), Path(d) / "c")
+            c.synthesize(texto, Path(d) / "a.mp3")
+            c.synthesize(texto, Path(d) / "b.mp3")
+            self.assertEqual(Motor.llamadas, 1)  # entera: se reutiliza
+            meta = next((Path(d) / "c").glob("*.json"))
+            m = json.loads(meta.read_text(encoding="utf-8"))
+            m["word_timings"] = m["word_timings"][:6]  # como la guardó el servicio al cortarla
+            meta.write_text(json.dumps(m), encoding="utf-8")
+            c.synthesize(texto, Path(d) / "c.mp3")
+            self.assertEqual(Motor.llamadas, 2)

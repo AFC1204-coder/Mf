@@ -44,14 +44,21 @@ class CachedTTS(TTSEngine):
             try:
                 meta = json.loads(meta_path.read_text(encoding="utf-8"))
                 audio = self.cache_dir / meta["file"]
-                if audio.exists() and audio.stat().st_size > 0:
+                marcas = [WordTiming(**w) for w in meta.get("word_timings", [])]
+                # Una locución cortada que se guardó antes de existir la comprobación no se reutiliza: se pide otra vez.
+                entera = True
+                if meta.get("engine_name") == "edge-tts":
+                    from .edge_tts_engine import incompleta  # aquí dentro: sin edge-tts instalado la caché sigue valiendo para los otros motores
+
+                    entera = not incompleta(str(meta.get("text") or text), marcas, float(meta["duration_s"]))
+                if entera and audio.exists() and audio.stat().st_size > 0:
                     self.hits += 1
                     return TTSResult(
                         audio_path=audio,
                         duration_s=float(meta["duration_s"]),
                         engine_name=meta["engine_name"],
                         voice=meta["voice"],
-                        word_timings=[WordTiming(**w) for w in meta.get("word_timings", [])],
+                        word_timings=marcas,
                     )
             except (ValueError, KeyError, TypeError, OSError):
                 pass
