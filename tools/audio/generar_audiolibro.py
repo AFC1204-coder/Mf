@@ -193,8 +193,12 @@ def anotar(leccion_id: str, entrada: dict[str, Any] | None, ruta: Path = INDICE)
         escribir_indice(en_disco, ruta)
 
 
-def al_dia(entrada: Any, h: str, r: str, mp3: Path) -> bool:
-    return isinstance(entrada, dict) and entrada.get("h") == h and entrada.get("r") == r and mp3.is_file() and mp3.stat().st_size > 1000
+def al_dia(entrada: Any, h: str, r: str, mp3: Path, fuera: bool = False) -> bool:
+    """¿Sigue valiendo lo grabado? Mismo texto y misma receta, y el archivo está: aquí o, si el índice apunta a un
+    almacenamiento externo (`fuera`), allí (ya se subió; la copia local no hace falta)."""
+    if not (isinstance(entrada, dict) and entrada.get("h") == h and entrada.get("r") == r):
+        return False
+    return fuera or (mp3.is_file() and mp3.stat().st_size > 1000)
 
 
 # ───────────────────────── orden ─────────────────────────
@@ -211,7 +215,7 @@ def generar_libro(book: C.Book, tts: Any, voz: str, indice: dict[str, Any], *, c
         mp3 = salida / f"{lec.id}.mp3"
         h = huella_texto(lec.titulo, lec.cuerpo, lec.autocorreccion)
         previa = indice["lecciones"].get(lec.id)
-        if al_dia(previa, h, r, mp3):
+        if al_dia(previa, h, r, mp3, fuera=str(indice.get("base") or "").startswith("https://")):
             cuenta["sin_cambios"] += 1
             dur = float(previa.get("s") or 0)
             print(f"  ↷ {n:02d} {lec.titulo[:60]} — sin cambios", flush=True)
@@ -249,7 +253,7 @@ def generar_libro(book: C.Book, tts: Any, voz: str, indice: dict[str, Any], *, c
         json.dumps({"libro_id": book.id, "titulo": book.titulo, "autor": book.autor, "voz": voz, "duracion_total_s": round(sum(i["duracion_s"] for i in items), 1), "items": items}, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
-    if merge and items and not cuenta["fallidos"]:
+    if merge and items and not cuenta["fallidos"] and all((salida / f"{i['id']}.mp3").is_file() for i in items):
         unir([salida / f"{i['id']}.mp3" for i in items], out_dir / "audiolibro_completo.mp3")
         print(f"  ✓ libro completo: {out_dir / 'audiolibro_completo.mp3'}", flush=True)
     return cuenta

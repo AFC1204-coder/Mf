@@ -220,7 +220,11 @@ def _patron(v: dict[str, Any]) -> str:
             if j == int(marco.get("corte") or 0):
                 filas.append(f'<div class="cs-ice fondo">{_e(marco.get("fondo"))}</div>')
         filas.append(_panel(p, j, estado, _ancho_nivel(plantilla, j, len(pz))))
-    pie = f'<p class="cs-pie">{_e(v.get("pie"))}</p>' if modo == "pie" else ""
+    pie = f'<p class="cs-pie">{_e(v.get("pie"))}</p>' if modo == "pie" and v.get("pie") else ""
+    if modo == "pie" and K.figura_entera(v):
+        # El esquema completo, como en la web: todas las piezas abiertas a la vez y, debajo, el pie.
+        paneles = "".join(_panel(p, j, "on", _ancho_nivel(plantilla, j, len(pz))) for j, p in enumerate(pz))
+        return _centro(v) + f'<div class="cs-pat entero p-{_e(v.get("patron"))} pl-{_e(plantilla)} n-{len(pz)}">{paneles}</div>{pie}'
     if modo == "pie" and not _recapitula(v):
         return _centro(v) + pie  # con el pie, la recapitulación de títulos ya sería demasiado texto a la vez
     abierto = " abierto" if (v.get("patron") == "ciclo" and v.get("vuelta") == 0) else ""  # la flecha de vuelta aún no se ha dibujado
@@ -304,7 +308,8 @@ def _stage_figura(v: dict[str, Any], tag: str) -> tuple[str, str]:
     pie = f'<p class="cs-pie">{_e(v.get("pie"))}</p>' if modo == "pie" else ""
     if patron in LISTAS:
         # Mientras se recorre, el título de la figura ya se ha visto: el sitio es para la pieza.
-        return _kicker(v.get("kicker"), icono=str(patron or "")) + ("" if modo == "pieza" else titulo) + _patron(v), f"m-{modo} con-patron"
+        entero = " con-entero" if modo == "pie" and K.figura_entera(v) else ""
+        return _kicker(v.get("kicker"), icono=str(patron or "")) + ("" if modo == "pieza" else titulo) + _patron(v), f"m-{modo} con-patron{entero}"
     if patron in ("matriz", "espectro"):
         forma = _matriz(v) if patron == "matriz" else _espectro(v)
         return _kicker(v.get("kicker"), icono=str(patron or "")) + titulo + forma + (_tarjeta(v) if modo == "pieza" else pie), f"m-{modo} con-forma"
@@ -447,6 +452,8 @@ def palabras_en_pantalla(kind: str, view: dict[str, Any]) -> int:
             rotulos = rotulos_todos
         else:
             rotulos = 0
+        if modo == "pie" and K.figura_entera(v):
+            rotulos = sum(T.n_words(str(x)) for q in pz for x in [q.get("t"), q.get("d"), *(q.get("items") or [])] if x)
         if patron == "matriz" and modo == "pie":
             fijo = 0
         return titulo + fijo + rotulos + (T.n_words(str(v.get("pie") or "")) if modo == "pie" else 0)

@@ -36,7 +36,7 @@ from . import text as T
 from .corpus import Book, Lesson, Question
 from .scriptwriter import Beat, Episode, Part, Scene
 
-COMPARTIR_VERSION = 8
+COMPARTIR_VERSION = 9
 
 TIPOS = ("idea", "pregunta", "practica", "caso", "libro", "fondo", "recorrido")
 ASPECTOS = {"9:16": (1080, 1920), "1:1": (1080, 1080), "16:9": (1920, 1080)}
@@ -1066,6 +1066,27 @@ def _lectura(p: G.Piece, nivel: int) -> list[str]:
     return [p.t]
 
 
+ENTERO_PALABRAS = 80  # hasta cuánto texto tiene un esquema que se enseña entero, como en la web
+ENTERO_PIEZAS = 4
+ENTERO_LEER_S = 3.2  # lo que se queda a la vista el esquema entero cuando termina la voz
+
+
+def figura_entera(view: dict[str, Any]) -> bool:
+    """¿Se puede enseñar el esquema completo de una vez, como se ve en la web (título, todas las piezas con sus
+    rótulos y el pie)? Solo los que se pintan como paneles, con pocas piezas y un texto que sigue siendo legible.
+
+    Es la recapitulación: llega cuando la voz ya ha recorrido las piezas una a una, así que no hay nada nuevo que leer.
+    """
+    pz = view.get("pieces") or []
+    if view.get("patron") not in PATRONES_EN_LISTA or not (2 <= len(pz) <= ENTERO_PIEZAS):
+        return False
+    if not any(p.get("d") or p.get("items") for p in pz):
+        return False  # si las piezas son solo su título, la recapitulación de títulos ya es el esquema entero
+    total = T.n_words(str(view.get("title") or "")) + T.n_words(str(view.get("pie") or ""))
+    total += sum(T.n_words(str(x)) for p in pz for x in [p.get("t"), p.get("d"), *(p.get("items") or [])] if x)
+    return total <= ENTERO_PALABRAS
+
+
 def escenas_figura(lesson: Lesson, nivel_min: int = 0, max_words: int = FIGURA_PALABRAS, cual: int = 0) -> list[Scene]:
     """El esquema verificado en formato legible: silueta sin texto + tarjeta grande de cada pieza.
 
@@ -1114,8 +1135,12 @@ def escenas_figura(lesson: Lesson, nivel_min: int = 0, max_words: int = FIGURA_P
         scenes.append(
             Scene("c-figura", "Esquema", dict(base, mode="pieza", active=j, shown=j + 1), partes, pause_after_s=round(min(PAUSA_TARJETA_MAX, max(0.35, leer - hablado)), 2))
         )
+    entero = figura_entera(dict(base, pie=pie))
     if pie:
-        scenes.append(Scene("c-figura", "Esquema", dict(base, mode="pie", active=-1, shown=len(ps), pie=pie), [Part(_punto(pie), "esquema.pie")], pause_after_s=0.6))
+        # Con el pie, el esquema entero como en la web (si cabe): se queda un momento a la vista para repasarlo.
+        scenes.append(Scene("c-figura", "Esquema", dict(base, mode="pie", active=-1, shown=len(ps), pie=pie), [Part(_punto(pie), "esquema.pie")], pause_after_s=ENTERO_LEER_S if entero else 0.6))
+    elif entero:
+        scenes.append(Scene("c-figura", "Esquema", dict(base, mode="pie", active=-1, shown=len(ps), pie=""), [], hold_s=ENTERO_LEER_S + 1.0, pause_after_s=0.4))
     return scenes
 
 

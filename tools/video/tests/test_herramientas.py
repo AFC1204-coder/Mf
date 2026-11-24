@@ -123,5 +123,41 @@ class FondoAmpliadoTest(unittest.TestCase):
         self.assertNotEqual((next(s for s in uno.scenes if s.section == "Práctica").view.get("fig") or {}).get("patron"), "ambitos")
 
 
+class EsquemaEnteroTest(unittest.TestCase):
+    COMPARAR = {"tipo": "diagrama", "plantilla": "comparar", "titulo": "Dos modelos", "pie": "Teoría del autor; se ha discutido.", "datos": {
+        "izq": {"t": "Padre estricto", "tono": "info", "items": ["El mundo es peligroso", "Disciplina y autoridad"]},
+        "der": {"t": "Progenitor protector", "tono": "a", "items": ["Empatía y cuidado", "Responsabilidad compartida"]}}}
+
+    def _figura(self, spec):
+        libro = _libro(diagramas={"l-1": [spec]})
+        leccion = next(l for l in libro.lessons if l.id == "l-1")
+        return K.escenas_figura(leccion, max_words=K.FIGURA_FONDO)
+
+    def test_al_final_se_ve_el_esquema_completo_como_en_la_web(self):
+        fig = self._figura(self.COMPARAR)
+        ultima = fig[-1]
+        self.assertEqual(ultima.view["mode"], "pie")
+        self.assertTrue(K.figura_entera(ultima.view))
+        self.assertEqual(ultima.pause_after_s, K.ENTERO_LEER_S)  # se queda a la vista para repasarlo
+        html, clases = CF._stage_figura(CF.estados(ultima)[-1], "")
+        self.assertIn("con-entero", clases)
+        for texto in ("Dos modelos", "Padre estricto", "Progenitor protector", "El mundo es peligroso", "Disciplina y autoridad", "Empatía y cuidado", "Responsabilidad compartida", "Teoría del autor; se ha discutido."):
+            self.assertIn(texto, html)
+        # Antes del final se recorre pieza a pieza: el esquema entero no sustituye a la explicación.
+        self.assertEqual([s.view["mode"] for s in fig], ["titulo", "pieza", "pieza", "pie"])
+
+    def test_sin_pie_tambien_cierra_con_el_esquema_entero(self):
+        fig = self._figura({k: v for k, v in self.COMPARAR.items() if k != "pie"})
+        self.assertEqual(fig[-1].view["mode"], "pie")
+        self.assertEqual(fig[-1].parts, [])
+        self.assertGreater(fig[-1].hold_s, 3)
+
+    def test_un_esquema_largo_o_solo_de_titulos_no_se_apelotona(self):
+        largo = {**self.COMPARAR, "datos": {"izq": {"t": "A", "items": ["palabra " * 30] * 2}, "der": {"t": "B", "items": ["palabra " * 30]}}}
+        self.assertFalse(K.figura_entera(self._figura(largo)[-1].view))
+        titulos = {**self.COMPARAR, "datos": {"izq": {"t": "A"}, "der": {"t": "B"}}}
+        self.assertFalse(K.figura_entera(self._figura(titulos)[-1].view))
+
+
 if __name__ == "__main__":
     unittest.main()

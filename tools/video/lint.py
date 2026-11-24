@@ -336,6 +336,8 @@ def lint_pieza(pieza, book: Book) -> list[Issue]:
                 issues.append(Issue("error", donde, "el texto en pantalla no coincide con la locución"))
         for vista in CF.estados(scene) if scene.kind != "c-cierre" else []:  # el cierre repite, entero, lo que ya se ha oído
             n = CF.palabras_en_pantalla(scene.kind, vista)
+            if scene.kind == "c-figura" and vista.get("mode") == "pie" and K.figura_entera(vista):
+                continue  # el esquema entero, como en la web: es el repaso de lo que la voz ya ha recorrido pieza a pieza
             if n > MAX_PALABRAS_EN_PANTALLA:
                 issues.append(Issue("aviso", donde, f"{n} palabras en pantalla a la vez (máximo orientativo {MAX_PALABRAS_EN_PANTALLA})"))
                 break

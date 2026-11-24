@@ -460,6 +460,25 @@ body.cs.st-conexion { --tone: #9d8fe0; }
 .cs-comp.cp-nombres li > b { font-size: 4.4em; white-space: nowrap; }
 .cs-comp.cp-nombres li.act > b { font-size: 4.4em; }
 
+/* El esquema entero, como en la web: todas las piezas abiertas a la vez (repaso final) y el pie debajo. */
+.con-entero .cs-fig-title { font-size: 4.6em; font-style: italic; font-weight: 500; font-family: 'VF Serif', serif; color: var(--cs-ink2); margin-bottom: 0.9em; }
+.cs-pat.entero { gap: 1.4em; margin-bottom: 2.4em; }
+.cs-pat.entero .cs-pan, .cs-pat.entero.p-cadena .cs-pan.on { padding: 1.6em 2em; gap: 1.4em; box-shadow: none; }
+.cs-pat.entero .cs-pan.on b { font-size: 4.6em; }
+.cs-pat.entero .cs-pan span { font-size: 3.6em; margin-top: 0.3em; }
+.cs-pat.entero .cs-pan ul { margin-top: 0.5em; }
+.cs-pat.entero .cs-pan li { font-size: 3.4em; margin-bottom: 0.32em; }
+.cs-pat.entero .cs-pan > i:not(.ic) { font-size: 2.8em; }
+.con-entero .cs-pie { font-size: 4em; line-height: 1.3; color: var(--cs-ink2); }
+/* Dos lados: en columnas enfrentadas, cada una con su título subrayado en su color. */
+.cs-pat.entero.p-contraste.n-2 { flex-direction: row; align-items: stretch; gap: 1.6em; }
+.cs-pat.entero.p-contraste.n-2 .cs-pan { flex: 1 1 0; min-width: 0; flex-direction: column; gap: 0; padding: 2em 1.8em; }
+.cs-pat.entero.p-contraste.n-2 .cs-pan > i { display: none; }
+.cs-pat.entero.p-contraste.n-2 .cs-pan b { text-align: center; color: var(--tn2); padding-bottom: 0.5em; margin-bottom: 0.2em; border-bottom: 0.06em solid color-mix(in srgb, var(--tn2) 60%, transparent); }
+.cs-pat.entero.p-contraste.n-2 .cs-pan + .cs-pan::before { display: none; }
+.ar-16x9 .cs-pat.entero .cs-pan li, .ar-1x1 .cs-pat.entero .cs-pan li, .ar-16x9 .cs-pat.entero .cs-pan span, .ar-1x1 .cs-pat.entero .cs-pan span { font-size: 3.7em; }
+.ar-16x9 .con-entero .cs-pie, .ar-1x1 .con-entero .cs-pie { font-size: 3.7em; }
+
 /* Enumeración del propio texto: lista numerada; cada punto se enciende al llegar la voz. */
 .cs-comp.cp-enumera li { padding: 1.2em 2em; }
 .cs-comp.cp-enumera li > b { font-size: 4.4em; font-family: 'VF Outfit', sans-serif; font-weight: 600; }

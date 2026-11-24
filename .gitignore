@@ -12,3 +12,4 @@ tools/audio/__pycache__/
 tools/audio/**/__pycache__/
 tools/video/.modelos/
 datos/*.lock
+audio/

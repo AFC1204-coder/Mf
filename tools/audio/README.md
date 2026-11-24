@@ -47,7 +47,19 @@ El *service worker* no guarda los MP3 en su caché (pesan); la app guarda aparte
 
 ## Cuánto ocupa y dónde vive
 
-Hoy los MP3 viven en el repositorio (carpeta `audio/`) y los sirve GitHub Pages, como el resto de la web. Eso vale para una tanda de libros. La biblioteca entera no cabe: a 2,5 min y 0,9 MB por lección, las 3.719 lecciones son unas 157 horas y unos **3,4 GB**, y un sitio de GitHub Pages admite 1 GB.
+Los MP3 **no viven en el repositorio**: están en un cubo público de Cloudflare R2 (`mentefria-audio`, plan gratuito: 10 GB y descargas sin coste) y `datos/audios.json` apunta allí con su campo `base`. La carpeta `audio/` es solo la salida local del generador y está fuera de git.
+
+Después de generar libros nuevos, se suben con:
+
+```bash
+CLOUDFLARE_API_TOKEN=… python -m tools.audio.subir_r2 --cuenta <id de cuenta> --cubo mentefria-audio --base https://pub-30bd89532c4445dba84e3574b238f99e.r2.dev/
+```
+
+Sube solo lo que falta o ha cambiado y no toca el índice si algo falla. El token necesita permiso de R2 («Admin Read & Write»). La app solo acepta como `base` una ruta del propio sitio o una dirección `https://pub-….r2.dev/` (`lib/audio.js`); con un dominio propio habría que añadirlo ahí.
+
+Cuentas: a 2,5 min y 0,9 MB por lección, las 3.719 lecciones de la biblioteca serían unas 157 horas y unos 3,4 GB: caben en el plan gratuito. Cloudflare describe la dirección `r2.dev` como pensada para desarrollo y con límite de peticiones; si el tráfico crece, lo indicado es conectar al cubo un dominio propio.
+
+Comprobado tras la subida: los 74 audios están en el cubo, y uno descargado por la dirección pública es idéntico al local, llega como `audio/mpeg` y con la cabecera CORS que la app necesita.
 
 Alternativas miradas (datos de la documentación oficial de cada servicio, noviembre de 2026; lo marcado «sin confirmar» no se pudo verificar):
 
