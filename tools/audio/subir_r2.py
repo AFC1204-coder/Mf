@@ -85,8 +85,7 @@ def main(argv: list[str] | None = None) -> int:
     if fallidos:
         print("El índice no se toca hasta que todo esté arriba: vuelve a lanzar la orden.", flush=True)
         return 1
-    indice["base"] = args.base
-    G.escribir_indice(indice)
+    G.anotar(None, None, base=args.base)  # solo la base, y con cerrojo: puede haber una grabación en marcha apuntando lecciones
     print(f"datos/audios.json apunta a {args.base}", flush=True)
     return 0
 

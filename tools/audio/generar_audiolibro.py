@@ -172,8 +172,9 @@ def escribir_indice(indice: dict[str, Any], ruta: Path = INDICE) -> None:
     ruta.write_text(json.dumps(indice, ensure_ascii=False, indent=1, sort_keys=True) + "\n", encoding="utf-8")
 
 
-def anotar(leccion_id: str, entrada: dict[str, Any] | None, ruta: Path = INDICE) -> None:
-    """Apunta (o borra, con None) una lección en el índice del disco sin tocar las demás.
+def anotar(leccion_id: str | None, entrada: dict[str, Any] | None, ruta: Path = INDICE, base: str | None = None) -> None:
+    """Apunta (o borra, con None) una lección en el índice del disco sin tocar las demás; con `base`, cambia dónde
+    viven los audios (y entonces `leccion_id` puede ser None).
 
     Se relee el índice cada vez para que dos tandas a la vez, con libros distintos, no se pisen.
     """
@@ -186,7 +187,11 @@ def anotar(leccion_id: str, entrada: dict[str, Any] | None, ruta: Path = INDICE)
         except ImportError:
             pass
         en_disco = leer_indice(ruta)
-        if entrada is None:
+        if base:
+            en_disco["base"] = base
+        if leccion_id is None:
+            pass
+        elif entrada is None:
             en_disco["lecciones"].pop(leccion_id, None)
         else:
             en_disco["lecciones"][leccion_id] = entrada
