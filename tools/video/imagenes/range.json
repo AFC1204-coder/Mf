@@ -15,7 +15,7 @@
       "licencia": "CC0",
       "licencia_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
       "pagina": "https://commons.wikimedia.org/wiki/File:Modern_Fianchetto_Setup._Chess_game_Staunton_No._6.jpg",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "16d9951a-7ef0-4c6d-8755-f09c2ad8a193",
@@ -28,7 +28,7 @@
       "licencia": "CC0",
       "licencia_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
       "pagina": "https://commons.wikimedia.org/wiki/File:Golf_ball_on_tee.jpg",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "1736ba97-ba00-4b9a-b3dc-dcea500d1abb",
@@ -41,7 +41,7 @@
       "licencia": "CC BY 4.0",
       "licencia_url": "https://creativecommons.org/licenses/by/4.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:Ritchey%E2%80%93Chr%C3%A9tien_at_Kickapoo_Valley_Reserve_2-b.jpg",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "86d4ddf1-1d6e-45c1-8eb7-51323c81d803",
@@ -54,7 +54,7 @@
       "licencia": "CC0",
       "licencia_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
       "pagina": "https://commons.wikimedia.org/wiki/File:Winding_road_through_golden_hills.jpg",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "ee9f4edb-287c-4068-92a8-898ae8066c62",
@@ -67,7 +67,7 @@
       "licencia": "CC BY 2.5",
       "licencia_url": "https://creativecommons.org/licenses/by/2.5",
       "pagina": "https://commons.wikimedia.org/wiki/File:R%C3%B8d_r%C3%A6v_(Vulpes_vulpes).jpg",
-      "aprobado": false
+      "aprobado": true
     }
   ]
 }

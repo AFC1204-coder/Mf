@@ -15,7 +15,7 @@
       "licencia": "CC BY 2.0",
       "licencia_url": "https://creativecommons.org/licenses/by/2.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:Hourglass_with_sand.jpg",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "094ce585-fbb0-4af3-bd5b-ab28aca92258",
@@ -28,7 +28,7 @@
       "licencia": "CC0",
       "licencia_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
       "pagina": "https://commons.wikimedia.org/wiki/File:Hands-coffee-smartphone-technology_(23698591814).jpg",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "f2978a90-8453-4090-9317-4f69d19b84be",
@@ -41,7 +41,7 @@
       "licencia": "Public domain",
       "licencia_url": "",
       "pagina": "https://commons.wikimedia.org/wiki/File:Baby_Desert_Tortoise_Walking_(15490143732).jpg",
-      "aprobado": false
+      "aprobado": true
     }
   ]
 }

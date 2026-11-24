@@ -15,7 +15,7 @@
       "licencia": "CC BY 4.0",
       "licencia_url": "https://creativecommons.org/licenses/by/4.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:Olympia_Simplex.jpg",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "d5c016a2-d873-46ad-8c57-8ad5a3d9ffb5",
@@ -28,7 +28,7 @@
       "licencia": "Public domain",
       "licencia_url": "",
       "pagina": "https://commons.wikimedia.org/wiki/File:Muse_Glyptothek_Munich_266.jpg",
-      "aprobado": false
+      "aprobado": true
     }
   ]
 }

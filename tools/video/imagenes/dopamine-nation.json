@@ -15,7 +15,7 @@
       "licencia": "CC BY 2.0",
       "licencia_url": "https://creativecommons.org/licenses/by/2.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:Sassafras_Sweet_Co._candy_in_jars.jpg",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "b0e2ad69-dfbb-4fed-9edb-888e3c9390b9",
@@ -28,7 +28,7 @@
       "licencia": "CC BY 2.0",
       "licencia_url": "https://creativecommons.org/licenses/by/2.0",
       "pagina": "https://commons.wikimedia.org/wiki/File:Up_and_down.jpg",
-      "aprobado": false
+      "aprobado": true
     },
     {
       "leccion_id": "62852b8f-32f9-4b05-b2b1-24747018959c",
@@ -41,7 +41,7 @@
       "licencia": "CC0",
       "licencia_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
       "pagina": "https://commons.wikimedia.org/wiki/File:Addiction_to_Medication.jpg",
-      "aprobado": false
+      "aprobado": true
     }
   ]
 }
