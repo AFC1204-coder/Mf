@@ -50,6 +50,11 @@ describe('AudioLeccion', () => {
       for (const base of ['https://otro.sitio/', '//otro.sitio/', '../', 'javascript:', 7]) {
         expect(A.grabado({ base, lecciones: { [lec.id]: e } }, lec).url).toBe(`audio/${lec.id}.mp3`);
       }
+      const r2 = 'https://pub-0123456789abcdef0123456789abcdef.r2.dev/';
+      expect(A.grabado({ base: r2, lecciones: { [lec.id]: e } }, lec).url).toBe(`${r2}${lec.id}.mp3`);
+      for (const base of ['http://pub-0123456789abcdef0123456789abcdef.r2.dev/', 'https://pub-0123456789abcdef0123456789abcdef.r2.dev.otro.sitio/', 'https://pub-0123456789abcdef0123456789abcdef.r2.dev/?x=']) {
+        expect(A.grabado({ base, lecciones: { [lec.id]: e } }, lec).url).toBe(`audio/${lec.id}.mp3`);
+      }
       expect(A.grabado({ base: 'medios/audio/', lecciones: { [lec.id]: e } }, lec).url).toBe(`medios/audio/${lec.id}.mp3`);
     });
   });
