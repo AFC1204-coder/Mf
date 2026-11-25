@@ -164,7 +164,7 @@ class PiezasTest(unittest.TestCase):
         self.assertEqual(claves[0], "libro")
         self.assertEqual(sum(p.tipo == "idea" for p in self.plan.piezas), 3)
         self.assertEqual([p.key for p in self.plan.piezas if p.tipo == "pregunta"], ["pregunta-01-la-primera-idea"])
-        self.assertEqual({(o.tipo, o.leccion_n) for o in self.plan.omitidas if o.tipo not in ("caso", "fondo", "recorrido")}, {("pregunta", 2), ("pregunta", 3), ("practica", 3)})
+        self.assertEqual({(o.tipo, o.leccion_n) for o in self.plan.omitidas if o.tipo not in ("caso", "fondo", "recorrido", "presentacion")}, {("pregunta", 2), ("pregunta", 3), ("practica", 3)})
         self.assertEqual(sum(o.tipo == "fondo" for o in self.plan.omitidas), 3)  # cuerpos de dos frases: no dan para una pieza larga
         self.assertEqual(sum(o.tipo == "caso" for o in self.plan.omitidas), 3)  # el libro de prueba no cuenta ningún caso
         self.assertTrue(all(o.motivo for o in self.plan.omitidas))

@@ -176,8 +176,13 @@ def _dir_compartir(slug: str, args: argparse.Namespace) -> Path:
     return Path(args.out_dir) if args.out_dir else OUTPUT / slug / "compartir" / args.aspecto.replace(":", "x")
 
 
+SELECCION_TIPOS = "presentacion,libro,recorrido,fondo"  # con --seleccionadas: la pieza del libro (la primera que haya) y la larga de cada lección elegida
+PIEZA_DE_LIBRO = ("presentacion", "recorrido", "libro")  # por orden de preferencia
+
+
 def _tipos(args: argparse.Namespace) -> tuple[str, ...]:
-    pedidos = [t.strip() for t in (args.piezas or ",".join(K.TIPOS)).split(",") if t.strip()]
+    por_defecto = SELECCION_TIPOS if getattr(args, "seleccionadas", False) else ",".join(K.TIPOS)
+    pedidos = [t.strip() for t in (args.piezas or por_defecto).split(",") if t.strip()]
     malos = [t for t in pedidos if t not in K.TIPOS]
     if malos:
         raise SystemExit(f"Tipo de pieza desconocido: {', '.join(malos)} (usa {', '.join(K.TIPOS)})")
@@ -351,6 +356,8 @@ def process_compartir(book: Book, args: argparse.Namespace, only_lesson: int | N
         # Un vídeo del libro y los de sus lecciones elegidas (tools/video/seleccion.csv): el resto no se produce.
         quiero = SEL.elegidas(book) | {0}
         piezas = [p for p in piezas if p.leccion_n in quiero]
+        del_libro = [t for t in PIEZA_DE_LIBRO if any(p.tipo == t for p in piezas)][:1]  # un solo vídeo por libro
+        piezas = [p for p in piezas if p.leccion_n != 0 or p.tipo in del_libro]
         plan = K.Plan(piezas, plan.omitidas, K.orden_sugerido(piezas))  # el manifiesto cuenta solo lo elegido
     if args.only and only_lesson is None:
         quiero = _numeros(args.only)  # 0 = la pieza del libro, 1…N = las de esa lección

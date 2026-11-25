@@ -254,7 +254,8 @@ def _lint_lo_que_solo_se_ve(pieza, book: Book, src: dict[str, str]) -> list[Issu
 
     issues: list[Issue] = []
     nodos = sum(1 for s in pieza.scenes if s.kind == "c-nodo")
-    rotulos = {r.format(n=nodos) for r in K.ROTULOS.values()} | set(K.FORMULAS.values())
+    # «UN LIBRO EN {n} IDEAS»: el número es el de un grupo de tarjetas de la pieza (la presentación lleva dos grupos).
+    rotulos = {r.format(n=k) for r in K.ROTULOS.values() for k in range(1, nodos + 1)} | {r.format(n=nodos) for r in K.ROTULOS.values()} | set(K.FORMULAS.values())
     fuentes = [f for f in src.values() if f] + [book.titulo, book.autor, book.eje, K.titulo_corto(book.titulo)]
     vistas = [(f"{pieza.key} · escena {i} ({s.kind})", s.view) for i, s in enumerate(pieza.scenes, start=1)]
     vistas.append((f"{pieza.key} · miniatura", pieza.portada))
@@ -275,7 +276,7 @@ def _lint_lo_que_solo_se_ve(pieza, book: Book, src: dict[str, str]) -> list[Issu
     for parrafo in [x for x in pieza.descripcion_pub.split("\n\n") if x.strip()]:
         if parrafo.startswith("Del libro «") or parrafo.startswith(K.ROTULOS["marca"]):
             continue
-        trozos = sin_prefijo(parrafo).split(" · ") if pieza.tipo in ("libro", "recorrido") else [sin_prefijo(parrafo)]
+        trozos = sin_prefijo(parrafo).split(" · ") if pieza.tipo in ("libro", "recorrido", "presentacion") else [sin_prefijo(parrafo)]
         if not all(_literal_en_alguna(t, fuentes) for t in trozos):
             issues.append(Issue("error", pieza.key, f"descripción de publicación que no es literal: {parrafo[:60]!r}"))
     return issues

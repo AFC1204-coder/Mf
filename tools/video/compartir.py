@@ -38,7 +38,7 @@ from .scriptwriter import Beat, Episode, Part, Scene
 
 COMPARTIR_VERSION = 9
 
-TIPOS = ("idea", "pregunta", "practica", "caso", "libro", "fondo", "recorrido")
+TIPOS = ("idea", "pregunta", "practica", "caso", "libro", "fondo", "recorrido", "presentacion")
 ASPECTOS = {"9:16": (1080, 1920), "1:1": (1080, 1080), "16:9": (1920, 1080)}
 
 # La voz de las piezas (motor Edge, gratuito): la que el dueño del proyecto eligió de oído entre once, sin tocarle
@@ -86,6 +86,7 @@ ROTULOS = {
     "conexion": "CONECTA CON",
     "comprueba": "COMPRUÉBALO",
     "recorrido": "EL LIBRO, IDEA A IDEA",
+    "presentacion": "EL LIBRO, IDEA A IDEA",
     "de_que_va": "DE QUÉ VA",
     "detalle": "MÁS A FONDO",
     "comprueba2": "OTRA COMPROBACIÓN",
@@ -181,7 +182,7 @@ OBJETIVO_S = 60.0
 PRACTICA_BREVE = 40
 
 # Duración razonable de cada tipo (segundos estimados): fuera de ahí, aviso.
-LIMITES = {"idea": (22, 210), "pregunta": (20, 90), "practica": (22, 90), "caso": (20, 90), "libro": (22, 90), "fondo": (75, 480), "recorrido": (40, 420)}
+LIMITES = {"idea": (22, 210), "pregunta": (20, 90), "practica": (22, 90), "caso": (20, 90), "libro": (22, 90), "fondo": (75, 480), "recorrido": (40, 420), "presentacion": (45, 480)}
 
 # Texto que solo tiene sentido dentro de la web (o delante de las opciones de un test).
 ANCLA_WEB = re.compile(
@@ -1704,28 +1705,25 @@ RECORRIDO_IDEA = 34  # palabras: la idea de cada lección se ve entera, de una v
 RECORRIDO_ABRE = (6, 45)  # la descripción del libro, entera, si cabe
 
 
-def pieza_recorrido(book: Book) -> Pieza | None:
-    """El libro, lección a lección: el título de cada una y **su idea, literal** (la `idea_clave` o la idea redactada
-    por la app). Abre con la descripción del libro y, si el libro tiene mapa, cierra con la frase que une las ideas.
-
-    No resume: enumera lo que cada lección ya dice en una frase. Una lección sin idea redactada (o con una idea
-    demasiado larga para verse entera) no entra, y el recuento que se ve es el de las que entran."""
+def _paradas(book: Book) -> list[tuple[int, Lesson, str, str]]:
+    """Las lecciones que caben en un recorrido: las que tienen su idea redactada y se ve entera de una vez."""
     paradas: list[tuple[int, Lesson, str, str]] = []
     for i, lesson in enumerate(book.lessons):
         idea, origen = hilo(lesson)
         if origen in ("idea_clave", "cita_memorable") and T.n_words(idea) <= RECORRIDO_IDEA and not ANCLA_SERIE.search(idea) and not parece_ingles(lesson.titulo):
             paradas.append((i, lesson, idea, origen))
-    if len(paradas) < RECORRIDO_MIN:
-        return None
-    n = len(paradas)
-    rotulo = ROTULOS["recorrido"]
-    scenes: list[Scene] = []
+    return paradas
+
+
+def _abre_libro(book: Book) -> str:
+    """La descripción del libro, si cabe entera y se entiende fuera de la web; si no, cadena vacía."""
     abre = T.clean(book.descripcion)
-    if RECORRIDO_ABRE[0] <= T.n_words(abre) <= RECORRIDO_ABRE[1] and not parece_ingles(abre) and not ANCLA_WEB.search(abre):
-        scenes.append(escena_frase("Libro", "idea", ROTULOS["de_que_va"], [Part(_punto(abre), "libro.descripcion")], pause_after_s=0.4))
-    else:
-        abre = ""
-    scenes.append(escena_credito(book, rotulo=rotulo))
+    return abre if RECORRIDO_ABRE[0] <= T.n_words(abre) <= RECORRIDO_ABRE[1] and not parece_ingles(abre) and not ANCLA_WEB.search(abre) else ""
+
+
+def _escenas_paradas(paradas: list[tuple[int, Lesson, str, str]], rotulo: str) -> list[Scene]:
+    n = len(paradas)
+    scenes: list[Scene] = []
     for k, (i, lesson, idea, origen) in enumerate(paradas):
         titulo = T.clean(lesson.titulo).rstrip(".")
         scenes.append(
@@ -1738,6 +1736,73 @@ def pieza_recorrido(book: Book) -> Pieza | None:
                 pause_after_s=0.45,
             )
         )
+    return scenes
+
+
+def pieza_presentacion(book: Book) -> Pieza | None:
+    """La muestra del libro: su presentación y su recorrido en una sola pieza.
+
+    Abre con el libro en una frase (el cierre del mapa), dice de qué va (la descripción), enseña sus ideas centrales
+    (las etiquetas del mapa, sin su texto: el desarrollo viene después) y recorre las lecciones, cada una con su idea
+    literal. Cierra con la frase que las une. Todo es texto del corpus; sin mapa, es el recorrido."""
+    paradas = _paradas(book)
+    if len(paradas) < RECORRIDO_MIN:
+        return None
+    mapa = book.mapa or {}
+    cierre = T.clean(mapa.get("cierre"))
+    cierre = "" if not cierre or parece_ingles(cierre) else cierre
+    nodos = [n for n in (mapa.get("nodos") or []) if isinstance(n, dict) and T.clean(n.get("etiqueta"))]
+    rotulo = ROTULOS["presentacion"]
+    abre = _abre_libro(book)
+    scenes: list[Scene] = []
+    if cierre:
+        scenes.append(escena_frase("Libro", "idea", ROTULOS["libro_frase"], [Part(_punto(cierre), "mapa.cierre")], pause_after_s=0.4))
+    scenes.append(escena_credito(book, rotulo=rotulo))
+    if abre:
+        scenes.append(escena_frase("Libro", "idea", ROTULOS["de_que_va"], [Part(_punto(abre), "libro.descripcion")], pause_after_s=0.4))
+    if cierre and len(nodos) >= 3:
+        m = len(nodos)
+        for i, nodo in enumerate(nodos):
+            etiqueta = T.clean(nodo.get("etiqueta")).rstrip(".")
+            scenes.append(Scene("c-nodo", "Mapa", {"kicker": ROTULOS["libro"].format(n=m), "index": i, "n": m, "icon": nodo.get("icono"), "label": etiqueta, "text": ""}, [Part(f"{etiqueta}.", "mapa.nodos")], pause_after_s=0.2))
+    scenes.extend(_escenas_paradas(paradas, rotulo))
+    if cierre:
+        scenes.append(escena_frase("Cierre", "idea", ROTULOS["une"], [_fixed("une"), Part(_punto(cierre), "mapa.cierre")], skip_parts=1, pause_after_s=0.5))
+    gancho = cierre or abre or paradas[0][2]
+    scenes.append(escena_cierre(book, "cta_libro", recuerda=cierre or gancho))
+    return _base(
+        book,
+        key="presentacion",
+        format="presentacion",
+        tipo="presentacion",
+        title=book.titulo,
+        scenes=scenes,
+        summary=gancho,
+        gancho=gancho,
+        gancho_origen="mapa.cierre" if cierre else "libro.descripcion" if abre else f"leccion[{paradas[0][0] + 1}].{paradas[0][3]}",
+        titulo_pub=arranque_literal(f"Idea a idea: {titulo_corto(book.titulo)}", 16),
+        descripcion_pub=_descripcion(book, [_punto(cierre or abre) if (cierre or abre) else "", " · ".join(T.clean(l.titulo).rstrip(".") for _, l, _, _ in paradas)]),
+        etiquetas_pub=_etiquetas(book),
+        portada={"tag": rotulo, "text": arranque_literal(gancho, PORTADA_PALABRAS), "tema": ""},
+    )
+
+
+def pieza_recorrido(book: Book) -> Pieza | None:
+    """El libro, lección a lección: el título de cada una y **su idea, literal** (la `idea_clave` o la idea redactada
+    por la app). Abre con la descripción del libro y, si el libro tiene mapa, cierra con la frase que une las ideas.
+
+    No resume: enumera lo que cada lección ya dice en una frase. Una lección sin idea redactada (o con una idea
+    demasiado larga para verse entera) no entra, y el recuento que se ve es el de las que entran."""
+    paradas = _paradas(book)
+    if len(paradas) < RECORRIDO_MIN:
+        return None
+    rotulo = ROTULOS["recorrido"]
+    scenes: list[Scene] = []
+    abre = _abre_libro(book)
+    if abre:
+        scenes.append(escena_frase("Libro", "idea", ROTULOS["de_que_va"], [Part(_punto(abre), "libro.descripcion")], pause_after_s=0.4))
+    scenes.append(escena_credito(book, rotulo=rotulo))
+    scenes.extend(_escenas_paradas(paradas, rotulo))
     cierre = T.clean((book.mapa or {}).get("cierre"))
     if cierre and not parece_ingles(cierre):
         scenes.append(escena_frase("Cierre", "idea", ROTULOS["une"], [_fixed("une"), Part(_punto(cierre), "mapa.cierre")], skip_parts=1, pause_after_s=0.5))
@@ -1779,6 +1844,7 @@ _MOTIVO = {
     "libro": "el libro no tiene mapa con frase de cierre en datos/mapas.json",
     "fondo": "la lección no tiene cuerpo suficiente (o solo se entiende dentro de la serie) para una pieza larga",
     "recorrido": "el libro tiene menos de tres lecciones con una idea redactada que quepa entera en pantalla",
+    "presentacion": "el libro tiene menos de tres lecciones con una idea redactada que quepa entera en pantalla",
 }
 
 
@@ -1802,6 +1868,12 @@ def plan_libro(book: Book, tipos: tuple[str, ...] | list[str] = TIPOS, solo_lecc
             piezas.append(p)
         else:
             omitidas.append(Omitida("recorrido", 0, book.titulo, _MOTIVO["recorrido"]))
+    if "presentacion" in tipos and solo_leccion is None:
+        p = pieza_presentacion(book)
+        if p:
+            piezas.append(p)
+        else:
+            omitidas.append(Omitida("presentacion", 0, book.titulo, _MOTIVO["presentacion"]))
     indices = range(len(book.lessons)) if solo_leccion is None else [solo_leccion]
     constructores = {"idea": pieza_idea, "pregunta": pieza_pregunta, "practica": pieza_practica, "caso": pieza_caso, "fondo": pieza_fondo}
     for i in indices:
@@ -1819,7 +1891,7 @@ def plan_libro(book: Book, tipos: tuple[str, ...] | list[str] = TIPOS, solo_lecc
     vistos: dict[str, str] = {}
     unicas: list[Pieza] = []
     for p in piezas:
-        prefijo = f"{p.tipo}·" if p.tipo in ("fondo", "recorrido") else ""  # las versiones largas abren como las cortas a propósito
+        prefijo = f"{p.tipo}·" if p.tipo in ("fondo", "recorrido", "presentacion") else ""  # las versiones largas abren como las cortas a propósito
         h = prefijo + _huella_gancho(p.gancho)
         if h.removeprefix(prefijo) and h in vistos:
             omitidas.append(Omitida(p.tipo, p.leccion_n, p.title, f"abre igual que «{vistos[h]}»"))
@@ -1834,7 +1906,7 @@ def orden_sugerido(piezas: list[Pieza]) -> list[str]:
 
     Así el formato cambia de un día a otro y dos piezas de la misma lección no salen seguidas.
     """
-    libro = [p.key for p in piezas if p.tipo == "libro"]
+    libro = [p.key for p in piezas if p.tipo in ("presentacion", "libro")]
     ideas = [p for p in piezas if p.tipo == "idea"]
     otras = sorted((p for p in piezas if p.tipo in ("pregunta", "practica", "caso", "fondo")), key=lambda p: (p.leccion_n, p.tipo))
     # Se alternan pregunta, práctica, caso y la versión a fondo en lo posible.
