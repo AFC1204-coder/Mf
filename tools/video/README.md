@@ -195,8 +195,10 @@ Producir todas las piezas de todas las lecciones son unas 14.700; lo previsto es
 ```bash
 python -m tools.video.cli seleccion                 # toda la biblioteca → tools/video/seleccion.csv
 python -m tools.video.cli seleccion "Decisive"      # solo ese libro
-python -m tools.video.cli libro "Decisive" --format compartir --seleccionadas --piezas recorrido,idea
+python -m tools.video.cli libro "Decisive" --format compartir --seleccionadas
 ```
+
+Con `--seleccionadas` salen **un vídeo del libro** y **la pieza larga («a fondo») de cada lección elegida**. El vídeo del libro es la pieza `presentacion`: el libro en una frase (el cierre del mapa), de qué va (la descripción), sus ideas centrales (las etiquetas del mapa) y el recorrido lección a lección, cada una con su idea literal; unos dos minutos. La tienen 403 de los 519 libros; los demás usan el recorrido o la presentación corta. `--piezas` cambia los tipos (p. ej. `--piezas presentacion,idea` para la versión corta de cada lección).
 
 El corpus no dice qué lección importa más, así que la propuesta ordena con lo que sí está escrito: sube la lección que corresponde a cada idea del **mapa del libro** (`datos/mapas.json`, lo que la página ya destaca) y, después, la que más material da (idea, pregunta, práctica, caso, pieza larga, esquema que se ve entero). Propone 2 lecciones en libros de hasta 4, 3 hasta 9 y 4 en los mayores: 1.625 de las 3.719. Cada fila del CSV lleva sus motivos; la columna `decision` («sí» o «no») manda sobre la propuesta y se conserva al regenerar.
 
