@@ -105,7 +105,10 @@ def incompleta(texto: str, timings: list[WordTiming], duracion_s: float) -> str:
     palabras = len(re.findall(r"\w+", texto or ""))
     if not timings:
         return "" if palabras == 0 else "sin marcas de palabra"
-    if palabras >= 8 and len(timings) < MARCAS_MIN * len((texto or "").split()):
+    # En textos cortos el servicio funde a veces dos cifras con la palabra vecina («Lección 10: Las 42…»): se toleran
+    # dos marcas de menos; el corte de verdad lo sigue delatando la duración.
+    total = len((texto or "").split())
+    if palabras >= 8 and len(timings) < min(MARCAS_MIN * total, total - 2):
         return f"{len(timings)} marcas para {len(texto.split())} palabras"
     if duracion_s - timings[-1].end_s < COLA_MIN_S:
         return f"dura {duracion_s:.1f} s y la última palabra acaba en {timings[-1].end_s:.1f} s"
