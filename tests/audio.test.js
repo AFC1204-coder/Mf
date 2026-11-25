@@ -29,4 +29,33 @@ describe('AudioLeccion', () => {
     expect(new DataView(b.buffer).getUint32(40, true)).toBe(800);
     expect(b.slice(44).every(x => x === 128)).toBe(true);
   });
+  describe('audio grabado', () => {
+    const lec = { id: '149ffd37-1493-4b73-82af-5eec8cfdcfef', titulo: 'Señal — antojo', cuerpo: 'Uno.\n\nDos «tres» 😀.', autocorreccion: 'Pero no siempre.' };
+    it('la huella es la misma cuenta que hace tools/audio (FNV-1a sobre UTF-16)', () => {
+      expect(A.huella(lec)).toBe('f5bf28c3');
+      expect(A.huella({})).toBe(A.huella({ titulo: '', cuerpo: null }));
+      expect(A.huella({ ...lec, cuerpo: lec.cuerpo + ' ' })).not.toBe(A.huella(lec));
+    });
+    it('solo vale si el texto no ha cambiado desde que se grabó', () => {
+      const idx = { v: 1, base: 'audio/', lecciones: { [lec.id]: { s: 181, h: A.huella(lec), r: 'ab12cd' } } };
+      expect(A.grabado(idx, lec)).toEqual({ url: `audio/${lec.id}.mp3`, clave: `${lec.id}-g-${A.huella(lec)}-ab12cd`, s: 181 });
+      expect(A.tieneGrabado(idx, lec)).toBe(true);
+      expect(A.grabado(idx, { ...lec, autocorreccion: 'Otro matiz.' })).toBeNull();
+      expect(A.grabado(idx, { ...lec, id: 'otra' })).toBeNull();
+      expect(A.grabado(null, lec)).toBeNull();
+      expect(A.grabado({ lecciones: {} }, lec)).toBeNull();
+    });
+    it('una base rara del índice no llega a la dirección', () => {
+      const e = { s: 10, h: A.huella(lec), r: 'ab12cd' };
+      for (const base of ['https://otro.sitio/', '//otro.sitio/', '../', 'javascript:', 7]) {
+        expect(A.grabado({ base, lecciones: { [lec.id]: e } }, lec).url).toBe(`audio/${lec.id}.mp3`);
+      }
+      const r2 = 'https://pub-0123456789abcdef0123456789abcdef.r2.dev/';
+      expect(A.grabado({ base: r2, lecciones: { [lec.id]: e } }, lec).url).toBe(`${r2}${lec.id}.mp3`);
+      for (const base of ['http://pub-0123456789abcdef0123456789abcdef.r2.dev/', 'https://pub-0123456789abcdef0123456789abcdef.r2.dev.otro.sitio/', 'https://pub-0123456789abcdef0123456789abcdef.r2.dev/?x=']) {
+        expect(A.grabado({ base, lecciones: { [lec.id]: e } }, lec).url).toBe(`audio/${lec.id}.mp3`);
+      }
+      expect(A.grabado({ base: 'medios/audio/', lecciones: { [lec.id]: e } }, lec).url).toBe(`medios/audio/${lec.id}.mp3`);
+    });
+  });
 });

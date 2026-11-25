@@ -3,7 +3,7 @@
 ═══════════════════════════════════════════ */
 
 const SCS_ICON = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='36' fill='%23080808'/%3E%3Ctext x='96' y='125' text-anchor='middle' font-family='Georgia,serif' font-size='90' font-weight='700' fill='%23c9a84c'%3E§%3C/text%3E%3C/svg%3E";
-const CACHE_NAME = 'scs-cache-v133';
+const CACHE_NAME = 'scs-cache-v138';
 const urlsToCache = [
   '/Mf/',
   '/Mf/index.html',
@@ -27,6 +27,7 @@ const urlsToCache = [
   '/Mf/inicio-ui.js',
   '/Mf/lib/swipe.js',
   '/Mf/lib/audio.js',
+  '/Mf/lib/video.js',
   '/Mf/lib/tarjeta.js',
   '/Mf/tarjeta-ui.js',
   '/Mf/lib/recomendar.js',
@@ -85,6 +86,8 @@ self.addEventListener('fetch', (e) => {
   // Archivos propios: caché primero y actualización detrás (stale-while-revalidate). La app abre al
   // instante aunque la red vaya lenta; los cambios publicados se ven en la siguiente apertura.
   if (e.request.method !== 'GET' || new URL(e.request.url).origin !== self.location.origin) return;
+  // Los audios de las lecciones pesan: no entran en esta caché (la app guarda aparte los que se han escuchado).
+  if (/\/audio\/[^/]+\.mp3$/.test(new URL(e.request.url).pathname)) return;
   const red = fetch(e.request).then((response) => {
     if (response && response.ok) {
       const clone = response.clone();
