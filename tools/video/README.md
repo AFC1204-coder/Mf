@@ -188,6 +188,18 @@ Cada episodio guarda una huella de su guion, voz y motor de fotogramas. Al repet
 
 ---
 
+### Un vídeo por libro y los de sus lecciones elegidas
+
+Producir todas las piezas de todas las lecciones son unas 14.700; lo previsto es publicar **un vídeo por libro y los de sus lecciones más importantes**. Qué lecciones, lo propone `tools/video/seleccion.py` y lo decide el dueño:
+
+```bash
+python -m tools.video.cli seleccion                 # toda la biblioteca → tools/video/seleccion.csv
+python -m tools.video.cli seleccion "Decisive"      # solo ese libro
+python -m tools.video.cli libro "Decisive" --format compartir --seleccionadas --piezas recorrido,idea
+```
+
+El corpus no dice qué lección importa más, así que la propuesta ordena con lo que sí está escrito: sube la lección que corresponde a cada idea del **mapa del libro** (`datos/mapas.json`, lo que la página ya destaca) y, después, la que más material da (idea, pregunta, práctica, caso, pieza larga, esquema que se ve entero). Propone 2 lecciones en libros de hasta 4, 3 hasta 9 y 4 en los mayores: 1.625 de las 3.719. Cada fila del CSV lleva sus motivos; la columna `decision` («sí» o «no») manda sobre la propuesta y se conserva al regenerar.
+
 ## Salida
 
 `tools/video/output/<libro>/<formato>/`

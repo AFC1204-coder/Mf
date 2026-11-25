@@ -31,6 +31,7 @@ from .frames import _assets_stamp
 from .lint import _textos_de_vista, has_errors, lint_episode
 from .renderer import merge_videos, render_episode
 from . import compartir as K
+from . import seleccion as SEL
 from .scriptwriter import FORMATS, SCRIPT_VERSION, Episode, book_series, export_script_markdown
 from .tts import DEFAULT_ENGINE, get_tts_engine
 from .tts.cache import CachedTTS
@@ -38,7 +39,7 @@ from .tts.cache import CachedTTS
 VIDEO_DIR = Path(__file__).resolve().parent
 REPO_ROOT = VIDEO_DIR.parent.parent
 OUTPUT = VIDEO_DIR / "output"
-COMMANDS = ("leccion", "libro", "biblioteca", "calendario", "publicados")
+COMMANDS = ("leccion", "libro", "biblioteca", "calendario", "publicados", "seleccion")
 
 
 def _load_env() -> None:
@@ -346,6 +347,11 @@ def process_compartir(book: Book, args: argparse.Namespace, only_lesson: int | N
         K.ROTULOS["seguir"] = args.seguir.strip()  # el rótulo del cierre (no se lee): la cuenta o dónde seguir
     plan = _filtra_plan(K.plan_libro(book, _tipos(args), solo_leccion=only_lesson, breve=bool(getattr(args, "breve", False))), args)
     piezas = plan.piezas
+    if getattr(args, "seleccionadas", False) and only_lesson is None:
+        # Un vídeo del libro y los de sus lecciones elegidas (tools/video/seleccion.csv): el resto no se produce.
+        quiero = SEL.elegidas(book) | {0}
+        piezas = [p for p in piezas if p.leccion_n in quiero]
+        plan = K.Plan(piezas, plan.omitidas, K.orden_sugerido(piezas))  # el manifiesto cuenta solo lo elegido
     if args.only and only_lesson is None:
         quiero = _numeros(args.only)  # 0 = la pieza del libro, 1…N = las de esa lección
         piezas = [p for p in piezas if p.leccion_n in quiero]
@@ -408,7 +414,7 @@ def _write_manifiesto(book: Book, plan: K.Plan, resultados: list[Result], base: 
     datos = {
         "libro_id": book.id, "titulo": book.titulo, "autor": book.autor, "eje": book.eje,
         "formato": "compartir", "aspecto": args.aspecto, "motivo": K.motivo_libro(book),
-        "tipos": list(_tipos(args)), "breve": bool(getattr(args, "breve", False)), "filtros": {"max_seg": getattr(args, "max_seg", None), "excluir": getattr(args, "excluir", None)},
+        "tipos": list(_tipos(args)), "breve": bool(getattr(args, "breve", False)), "seleccionadas": bool(getattr(args, "seleccionadas", False)), "filtros": {"max_seg": getattr(args, "max_seg", None), "excluir": getattr(args, "excluir", None)},
         "voces": sorted({v for r in resultados for v in r.voices}),
         "piezas": items,
         "omitidas": [{"tipo": o.tipo, "leccion": o.leccion_n, "titulo": o.titulo, "motivo": o.motivo} for o in plan.omitidas],
@@ -600,6 +606,7 @@ def build_parser() -> argparse.ArgumentParser:
     comun.add_argument("--sonidos", dest="sonidos", action="store_true", help=argparse.SUPPRESS)  # compatibilidad: ya es lo de siempre
     comun.add_argument("--breve", action="store_true", help="(compartir) Versión de 30-60 s: la idea sin la explicación del cuerpo y el matiz en su primera frase.")
     comun.add_argument("--aspecto", choices=list(K.ASPECTOS), default="9:16", help="(compartir) 9:16 (por defecto), 1:1 o 16:9.")
+    comun.add_argument("--seleccionadas", action="store_true", help="(compartir) Solo las piezas del libro y las de sus lecciones elegidas en tools/video/seleccion.csv (orden «seleccion»).")
     comun.add_argument("--max-seg", type=float, default=None, help="(compartir) No genera las piezas que duren (estimado) más de estos segundos; quedan anotadas en el manifiesto.")
     comun.add_argument("--excluir", default=None, help="(compartir) Temas que no deben salir, separados por comas (p. ej. «trading,inversión»): se omite la pieza cuya locución los nombre.")
     comun.add_argument("--seguir", default=None, help="(compartir) Texto del rótulo del cierre: la cuenta o dónde seguir (p. ej. «Sigue a @mentefria»). No se lee en voz alta.")
@@ -634,6 +641,9 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--desde", default=None, help="Fecha de la primera pieza (AAAA-MM-DD). Sin ella, «día 1», «día 2»…")
     p.add_argument("--todas", action="store_true", help="Incluye también las piezas planificadas que aún no tienen vídeo.")
 
+    p = sub.add_parser("seleccion", help="(compartir) Propone qué lecciones de cada libro llevan vídeo y lo anota en tools/video/seleccion.csv (lo decidido a mano se conserva).")
+    p.add_argument("libros", nargs="*", help="Título o id de cada libro. Sin ninguno, toda la biblioteca.")
+
     p = sub.add_parser("publicados", help="(compartir) Pone al día el registro de vídeos subidos a YouTube y el índice que lee la web.")
     p.add_argument("--aspecto", choices=list(K.ASPECTOS), default="9:16")
 
@@ -661,6 +671,11 @@ def main(argv: list[str] | None = None) -> int:
         return calendario(args)
     if args.command == "publicados":
         return publicados(args)
+    if args.command == "seleccion":
+        books = [load_book(q) for q in args.libros] if args.libros else [load_book_by_row(f) for f in list_book_rows()]
+        c = SEL.anotar(books)
+        print(f"Selección: {c['libros']} libros, {c['propuestas']} lecciones propuestas de {c['lecciones']} · {c['decididas']} decididas a mano → {SEL.CSV}")
+        return 0
     if not args.engine:  # sin --engine: TTS_ENGINE o el motor gratuito por defecto
         args.engine = (os.getenv("TTS_ENGINE") or DEFAULT_ENGINE).strip().lower()
     if getattr(args, "format", "") == "compartir" and args.engine == "edge":
@@ -704,7 +719,7 @@ def main(argv: list[str] | None = None) -> int:
                 completa = bool(previo.get("completa"))
                 if completa and args.format == "compartir":
                     # …y si se hizo con los mismos tipos de pieza que ahora se piden (o más).
-                    completa = set(_tipos(args)) <= set(previo.get("tipos") or []) and bool(previo.get("breve")) == bool(getattr(args, "breve", False))
+                    completa = set(_tipos(args)) <= set(previo.get("tipos") or []) and bool(previo.get("breve")) == bool(getattr(args, "breve", False)) and (bool(getattr(args, "seleccionadas", False)) or not previo.get("seleccionadas"))
             except (ValueError, AttributeError):
                 completa = False
         if not completa:
