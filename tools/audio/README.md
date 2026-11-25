@@ -57,9 +57,9 @@ CLOUDFLARE_API_TOKEN=… python -m tools.audio.subir_r2 --cuenta <id de cuenta> 
 
 Sube solo lo que falta o ha cambiado y no toca el índice si algo falla. El token necesita permiso de R2 («Admin Read & Write»). La app solo acepta como `base` una ruta del propio sitio o una dirección `https://pub-….r2.dev/` (`lib/audio.js`); con un dominio propio habría que añadirlo ahí.
 
-Cuentas: a 2,5 min y 0,9 MB por lección, las 3.719 lecciones de la biblioteca serían unas 157 horas y unos 3,4 GB: caben en el plan gratuito. Cloudflare describe la dirección `r2.dev` como pensada para desarrollo y con límite de peticiones; si el tráfico crece, lo indicado es conectar al cubo un dominio propio.
+La biblioteca entera está grabada y subida: 3.719 lecciones de 519 libros, 156,7 horas y 3,39 GB (el plan gratuito da 10 GB). Grabarla llevó unas seis horas con diez libros a la vez. Cloudflare describe la dirección `r2.dev` como pensada para desarrollo y con límite de peticiones; si el tráfico crece, lo indicado es conectar al cubo un dominio propio.
 
-Comprobado tras la subida: los 74 audios están en el cubo, y uno descargado por la dirección pública es idéntico al local, llega como `audio/mpeg` y con la cabecera CORS que la app necesita.
+Comprobado tras la subida: el índice cubre exactamente las lecciones del corpus, 25 audios al azar responden por la dirección pública con su tamaño y tipo, y uno descargado por la dirección pública es idéntico al local, llega como `audio/mpeg` y con la cabecera CORS que la app necesita.
 
 Alternativas miradas (datos de la documentación oficial de cada servicio, noviembre de 2026; lo marcado «sin confirmar» no se pudo verificar):
 
@@ -90,3 +90,5 @@ El servicio de voz devuelve a veces una locución **cortada sin dar error**: el 
 Resultado tras regrabar con las barreras 1 y 2: las 74 lecciones reconocidas en español, ningún tramo sin decir, parecido entre 0,946 y 1 (lo que baja de 1 son apellidos, cifras y palabras en inglés que el reconocedor escribe a su manera).
 
 Con los vídeos (`--piezas tools/video/output/<libro>`), sobre los 279 de los diez libros: un corte real, en una locución que venía de la caché de voz y se había guardado antes de existir la barrera 1. Desde entonces la caché (`tools/video/tts/cache.py`) valida cada locución al leerla y vuelve a pedir la que esté cortada. El reconocedor da además falsos avisos en frases con títulos o nombres en inglés («Del libro The War of Art…»): se descartan transcribiendo solo ese tramo.
+
+Con la biblioteca entera grabada, el reconocedor pasó por una muestra de 33 libros (255 lecciones): ningún corte. Dos avisos, ambos comprobados tramo a tramo y falsos (apellidos y una frase que el reconocedor transcribió a medias).
