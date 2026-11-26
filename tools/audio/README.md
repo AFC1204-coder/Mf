@@ -92,3 +92,5 @@ Resultado tras regrabar con las barreras 1 y 2: las 74 lecciones reconocidas en 
 Con los vídeos (`--piezas tools/video/output/<libro>`), sobre los 279 de los diez libros: un corte real, en una locución que venía de la caché de voz y se había guardado antes de existir la barrera 1. Desde entonces la caché (`tools/video/tts/cache.py`) valida cada locución al leerla y vuelve a pedir la que esté cortada. El reconocedor da además falsos avisos en frases con títulos o nombres en inglés («Del libro The War of Art…»): se descartan transcribiendo solo ese tramo.
 
 Con la biblioteca entera grabada, el reconocedor pasó por una muestra de 33 libros (255 lecciones): ningún corte. Dos avisos, ambos comprobados tramo a tramo y falsos (apellidos y una frase que el reconocedor transcribió a medias).
+
+Desde entonces el verificador hace ese descarte solo: si la primera escucha deja un tramo sin oír, repite por tramos de 30 s; y con los vídeos, lo que siga sin reconocerse y lleve inglés (un título, un nombre) queda como **aviso** —no como fallo— si en su tramo del vídeo hay voz. Un tramo solo en español que no se reconoce sigue siendo fallo.

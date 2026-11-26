@@ -1,5 +1,7 @@
 """Audiolibro: lo que se dice es el texto de la lección y la huella coincide con la de la app."""
 
+import unittest
+
 from tools.audio import generar_audiolibro as G
 
 
@@ -64,3 +66,27 @@ def test_verificar_encuentra_la_frase_que_no_se_oye():
     assert V.faltan(texto, cortado) == ["ademas los estudios son de laboratorio con tareas simples"]
     # un nombre mal transcrito no es un hueco
     assert V.faltan(texto, V.palabras("El matiz. Eptain lo presenta como universal. Además, los estudios son de laboratorio con tareas simples.")) == []
+
+
+class VerificarTramosTest(unittest.TestCase):
+    def test_srt_y_tramo_de_un_hueco(self):
+        from tools.audio import verificar as V
+
+        srt = V.leer_srt("1\n00:00:01,000 --> 00:00:03,500\nPólya (How to Solve It) propone buscar problemas.\n\n2\n00:00:04,000 --> 00:00:06,000\nEl matiz.\n")
+        self.assertEqual(len(srt), 2)
+        self.assertEqual(V.tramo_de("polya how to solve it propone buscar problemas", srt), (1.0, 3.5))
+        self.assertIsNone(V.tramo_de("otra frase que no esta en los subtitulos", srt))
+        self.assertTrue(V.INGLES.search("polya how to solve it"))
+        self.assertFalse(V.INGLES.search("reformulalo como pregunta de sistema"))
+
+    def test_con_voz(self):
+        import numpy as np
+
+        from tools.audio import verificar as V
+
+        silencio = np.zeros(V.MUESTREO * 4, dtype=np.float32)
+        voz = silencio.copy()
+        voz[V.MUESTREO : V.MUESTREO * 3] = 0.2 * np.sin(np.arange(V.MUESTREO * 2) / 20)
+        self.assertTrue(V.con_voz(voz, (1.0, 3.0)))
+        self.assertFalse(V.con_voz(silencio, (1.0, 3.0)))
+        self.assertFalse(V.con_voz(voz, None))
