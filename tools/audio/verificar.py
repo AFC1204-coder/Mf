@@ -110,6 +110,16 @@ def main(argv: list[str] | None = None) -> int:
             huecos = [h for h in huecos if any(h in a or a in h for a in aun)]
             # Tercera: lo que sigue sin reconocerse y lleva inglés (un título, un nombre) no es un corte si en su
             # tramo del vídeo hay voz. Queda como aviso, para oírlo; con texto solo en español sigue siendo fallo.
+            if srt is not None and huecos:
+                # …y cada tramo que sigue sin oírse, escuchado él solo (un título en inglés justo antes despista al reconocedor).
+                def se_oye(h: str) -> bool:
+                    t = tramo_de(h, srt)
+                    if t is None:
+                        return False
+                    solo, _ = modelo.transcribe(audio[int(max(0.0, t[0] - 0.3) * MUESTREO) : int((t[1] + 0.3) * MUESTREO)], language="es", beam_size=5)
+                    return not faltan(palabras(h), palabras(" ".join(x.text for x in solo)))
+
+                huecos = [h for h in huecos if not se_oye(h)]
             if srt is not None:
                 dudosos = [h for h in huecos if INGLES.search(h) and con_voz(audio, tramo_de(h, srt))]
                 avisos, huecos = dudosos, [h for h in huecos if h not in dudosos]
