@@ -38,17 +38,20 @@ class SeleccionTest(unittest.TestCase):
             filas = S.leer(ruta)
             fuera = next(n for n in range(1, len(self.book.lessons) + 1) if n not in antes) if len(antes) < len(self.book.lessons) else None
             dentro = min(antes)
-            texto = ruta.read_text(encoding="utf-8").splitlines()
-            nuevo = [texto[0]]
-            for linea in texto[1:]:
-                n = int(linea.split(",")[2]) if linea.split(",")[2].isdigit() else None
-                id_dentro, id_fuera = self.book.lessons[dentro - 1].id, self.book.lessons[fuera - 1].id if fuera else ""
-                if id_dentro in linea:
-                    linea += "no"
-                elif id_fuera and id_fuera in linea:
-                    linea += "sí"
-                nuevo.append(linea)
-            ruta.write_text("\n".join(nuevo) + "\n", encoding="utf-8")
+            import csv
+
+            id_dentro, id_fuera = self.book.lessons[dentro - 1].id, self.book.lessons[fuera - 1].id if fuera else ""
+            with ruta.open(encoding="utf-8", newline="") as fh:
+                todas = list(csv.DictReader(fh))
+            for r in todas:
+                if r["leccion_id"] == id_dentro:
+                    r["decision"], r["nota"] = "no", "a mano"
+                elif r["leccion_id"] == id_fuera:
+                    r["decision"] = "sí"
+            with ruta.open("w", encoding="utf-8", newline="") as fh:
+                w = csv.DictWriter(fh, fieldnames=S.COLUMNAS, lineterminator="\n")
+                w.writeheader()
+                w.writerows(todas)
             despues = S.elegidas(self.book, ruta)
             self.assertNotIn(dentro, despues)
             if fuera:
@@ -56,6 +59,7 @@ class SeleccionTest(unittest.TestCase):
             S.anotar([self.book], ruta)  # regenerar no borra lo decidido
             self.assertEqual(S.elegidas(self.book, ruta), despues)
             self.assertEqual(len(S.leer(ruta)), len(filas))
+            self.assertEqual(S.leer(ruta)[id_dentro]["nota"], "a mano")
 
 
 if __name__ == "__main__":

@@ -23,7 +23,7 @@ from . import text as T
 from .corpus import Book, Lesson
 
 CSV = Path(__file__).resolve().parent / "seleccion.csv"
-COLUMNAS = ["libro_id", "libro", "n", "leccion_id", "leccion", "puntos", "motivos", "propuesta", "decision"]
+COLUMNAS = ["libro_id", "libro", "n", "leccion_id", "leccion", "puntos", "motivos", "propuesta", "decision", "nota"]  # `decision` y `nota` se escriben a mano y se conservan
 
 PUNTOS_MAPA = 3  # una idea del mapa del libro corresponde a esta lección
 SOLAPE_MIN = 2  # parecido mínimo para dar por buena esa correspondencia (una palabra del título vale 2; una de la idea, 1)
@@ -116,8 +116,9 @@ def anotar(books: list[Book], ruta: Path = CSV) -> dict[str, int]:
     cuenta = {"libros": len(books), "lecciones": 0, "propuestas": 0, "decididas": 0}
     for book in books:
         for f in puntuar(book):
-            decision = (antes.get(f.leccion.id) or {}).get("decision", "")
-            filas.append({"libro_id": book.id, "libro": book.titulo, "n": str(f.n), "leccion_id": f.leccion.id, "leccion": f.leccion.titulo, "puntos": str(f.puntos), "motivos": "; ".join(f.motivos), "propuesta": "sí" if f.propuesta else "no", "decision": decision})
+            previa = antes.get(f.leccion.id) or {}
+            decision = previa.get("decision", "")
+            filas.append({"libro_id": book.id, "libro": book.titulo, "n": str(f.n), "leccion_id": f.leccion.id, "leccion": f.leccion.titulo, "puntos": str(f.puntos), "motivos": "; ".join(f.motivos), "propuesta": "sí" if f.propuesta else "no", "decision": decision, "nota": previa.get("nota", "") or ""})
             cuenta["lecciones"] += 1
             cuenta["propuestas"] += f.propuesta
             cuenta["decididas"] += _si(decision) is not None
