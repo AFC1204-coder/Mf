@@ -90,19 +90,20 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--max", type=int, default=6, help="Cuántas subir como mucho en esta ejecución (por defecto 6).")
     ap.add_argument("--privacidad", choices=PRIVACIDADES, default="private", help="Cómo quedan en YouTube (por defecto, privados).")
     ap.add_argument("--aspecto", default="9:16")
+    ap.add_argument("--token-del-proxy", action="store_true", help="En una sesión en la nube: el permiso lo pone el proxy de red (credencial guardada para www.googleapis.com), no hay claves aquí.")
     ap.add_argument("--simular", action="store_true", help="Lista lo que subiría, con su título, y no sube nada.")
     args = ap.parse_args(argv)
     carpeta = args.aspecto.replace(":", "x")
-    hechas = P.piezas_renderizadas(OUTPUT, carpeta)
+    hechas = P.piezas_para_publicar(OUTPUT, carpeta)  # las piezas largas, en horizontal si existen así
     filas, _ = P.sincronizar(P.leer_csv(CSV), hechas)
     cola = pendientes(filas, hechas, args.libro, set(args.tipos.split(",")) if args.tipos else None)[: max(0, args.max)]
     if not cola:
         print("Nada que subir: no hay piezas renderizadas sin enlace con ese filtro.")
         return 0
-    token = "" if args.simular else token_de_acceso()
+    token = "" if args.simular else "proxy-injected" if args.token_del_proxy else token_de_acceso()
     fallos = 0
     for f in cola:
-        base = OUTPUT / f["libro"] / "compartir" / carpeta / f["pieza"]
+        base = OUTPUT / f["libro"] / "compartir" / hechas[(f["libro"], f["pieza"])].get("carpeta", carpeta) / f["pieza"]
         try:
             cuerpo = metadatos(json.loads((base / "publicacion.json").read_text(encoding="utf-8")), hechas[(f["libro"], f["pieza"])]["duracion_s"], args.privacidad)
             if args.simular:

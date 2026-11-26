@@ -76,7 +76,19 @@ def piezas_renderizadas(output: Path, carpeta: str = "9x16") -> dict[tuple[str, 
                 "leccion_id": x.get("leccion_id") or "",
                 "duracion_s": float(x.get("duracion_s") or 0),
                 "guion": str(huella.get("guion") or ""),
+                "carpeta": carpeta,
             }
+    return hechas
+
+
+HORIZONTALES = ("fondo",)  # piezas largas: en YouTube no son Shorts, así que se publican en 16:9 si están hechas así
+
+
+def piezas_para_publicar(output: Path, carpeta: str = "9x16") -> dict[tuple[str, str], dict[str, Any]]:
+    """Lo renderizado en `carpeta` y, para las piezas largas, su versión horizontal cuando existe."""
+    hechas = piezas_renderizadas(output, carpeta)
+    if carpeta != "16x9":
+        hechas.update({k: v for k, v in piezas_renderizadas(output, "16x9").items() if v["tipo"] in HORIZONTALES})
     return hechas
 
 
@@ -174,7 +186,7 @@ def construir_indice(filas: list[dict[str, str]], hechas: dict[tuple[str, str], 
 
 def actualizar(csv_ruta: Path, indice_ruta: Path, output: Path, carpeta: str = "9x16") -> tuple[dict[str, int], list[str]]:
     """Todo el paso: sincroniza el registro, escribe el índice y devuelve (recuento, avisos)."""
-    hechas = piezas_renderizadas(output, carpeta)
+    hechas = piezas_para_publicar(output, carpeta)
     filas, avisos = sincronizar(leer_csv(csv_ruta), hechas)
     try:
         previo = json.loads(indice_ruta.read_text(encoding="utf-8"))

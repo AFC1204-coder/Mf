@@ -98,3 +98,18 @@ Qué avisa la orden:
 - **Enlace que no es de YouTube, o el mismo vídeo en dos filas:** no se publica.
 - **Guion cambiado:** si regeneras una pieza y su guion ya no es el del vídeo subido, ese vídeo deja de salir en la web. Sube el nuevo y cambia el enlace de la fila.
 - Si lanzas la orden en un equipo donde no están generados todos los libros, los vídeos ya publicados de los demás se conservan.
+
+## Subir a YouTube
+
+`python -m tools.video.subir_youtube` sube las piezas renderizadas que aún no tienen enlace (las largas, en su versión horizontal si existe) y apunta cada enlace en `publicados.csv`. Quedan **privadas** salvo que se pida otra cosa con `--privacidad`. `--simular` enseña qué subiría.
+
+Hace falta, una sola vez, dar permiso de subida al canal (pasos en Google Cloud con la cuenta dueña del canal; los nombres de los menús pueden variar):
+
+1. En `console.cloud.google.com`, crear un proyecto.
+2. «APIs y servicios» → «Biblioteca» → **YouTube Data API v3** → «Habilitar».
+3. «Pantalla de consentimiento de OAuth»: tipo **Externo**, nombre y correo; después, **publicar la app** («En producción»). En «pruebas» el permiso caduca a los 7 días.
+4. «Credenciales» → «Crear credenciales» → «ID de cliente de OAuth» → **Aplicación web**, con este URI de redireccionamiento autorizado: `https://developers.google.com/oauthplayground`. Guarda el ID de cliente y el secreto.
+5. En `https://developers.google.com/oauthplayground`: rueda dentada → «Use your own OAuth credentials» → pega ID y secreto. En el paso 1 escribe el permiso `https://www.googleapis.com/auth/youtube.upload` → «Authorize APIs» → elige la cuenta del canal (si avisa de que la app no está verificada: «Configuración avanzada» → continuar) → «Exchange authorization code for tokens». Copia el **Refresh token**.
+6. En GitHub, en el repositorio: «Settings» → «Secrets and variables» → «Actions» → tres secretos: `YT_CLIENT_ID`, `YT_CLIENT_SECRET`, `YT_REFRESH_TOKEN`.
+
+Esas tres claves no se escriben nunca en el repositorio ni en un chat.
