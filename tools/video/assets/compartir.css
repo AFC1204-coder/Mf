@@ -1,0 +1,512 @@
+/* Fotogramas de las piezas compartibles. Lenguaje de vídeo corto, no de página: una sola cosa en
+   pantalla, letra grande, casi sin cromo. Prefijo cs- (styles.css se carga antes solo para que la
+   silueta del esquema use los mismos colores que la figura de la biblioteca).
+   Nada de lo que hay que leer mide menos de 30 px en el fotograma. */
+@font-face { font-family: 'VF Outfit'; src: url('fonts/Outfit-Regular.ttf'); font-weight: 100 900; }
+@font-face { font-family: 'VF Playfair'; src: url('fonts/PlayfairDisplay-Bold.ttf'); font-weight: 400 900; }
+@font-face { font-family: 'VF Playfair'; src: url('fonts/PlayfairDisplay-Italic.ttf'); font-weight: 400 900; font-style: italic; }
+@font-face { font-family: 'VF Serif'; src: url('fonts/SourceSerif4-Regular.ttf'); font-weight: 200 900; }
+
+:root {
+  --accent: #c9a84c;
+  --cs-bg: #0a0a0b;
+  --cs-ink: #f4f0e7;
+  --cs-ink2: #b8b1a4;
+  --cs-ink3: #7d776c;
+  --cs-ok: #5cbf92;
+  --cs-mal: #e67a6e;
+  --tone: var(--accent);
+  /* Zona segura 9:16: arriba y abajo quedan libres para la interfaz de TikTok, Reels y Shorts. */
+  --pad-l: 80px; --pad-r: 116px; --top: 132px; --stage-top: 236px; --stage-bottom: 474px; --foot-bottom: 372px;
+}
+html, body.cs {
+  margin: 0 !important; padding: 0 !important; overflow: hidden;
+  background: var(--cs-bg) !important; color: var(--cs-ink);
+  font-family: 'VF Outfit', sans-serif; -webkit-font-smoothing: antialiased;
+  animation: none !important; opacity: 1 !important; transform: none !important;
+}
+body.cs * { box-sizing: border-box; }
+body.cs.ar-9x16 { width: 1080px; height: 1920px; }
+body.cs.ar-1x1 { width: 1080px; height: 1080px; --pad-l: 72px; --pad-r: 72px; --top: 54px; --stage-top: 128px; --stage-bottom: 132px; --foot-bottom: 52px; }
+body.cs.ar-16x9 { width: 1920px; height: 1080px; --pad-l: 190px; --pad-r: 190px; --top: 58px; --stage-top: 138px; --stage-bottom: 136px; --foot-bottom: 54px; }
+
+body.cs.st-matiz { --tone: var(--cs-mal); }
+body.cs.st-practica, body.cs.st-respuesta { --tone: var(--cs-ok); }
+body.cs.st-caso { --tone: #6cb2e2; }
+body.cs.st-conexion { --tone: #9d8fe0; }
+
+.cs-frame { position: absolute; inset: 0; overflow: hidden; }
+
+/* ── fondo: el acento del eje + un motivo por libro (las piezas de un mismo libro se reconocen) ── */
+.cs-bg { position: absolute; inset: 0; }
+.cs-bg::before, .cs-bg::after { content: ''; position: absolute; }
+.motivo-0 .cs-bg::before { right: -34%; top: -16%; width: 96%; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--tone) 26%, transparent), transparent 72%); }
+.motivo-0 .cs-bg::after { left: -30%; bottom: -12%; width: 70%; aspect-ratio: 1; border-radius: 50%;
+  border: 2px solid color-mix(in srgb, var(--tone) 22%, transparent); }
+.motivo-1 .cs-bg::before { inset: -20% -40%; transform: rotate(-24deg);
+  background: repeating-linear-gradient(90deg, color-mix(in srgb, var(--tone) 9%, transparent) 0 140px, transparent 140px 430px); }
+.motivo-1 .cs-bg::after { inset: 0; background: radial-gradient(120% 60% at 0% 0%, color-mix(in srgb, var(--tone) 20%, transparent), transparent 60%); }
+.motivo-2 .cs-bg::before { left: -46%; bottom: -22%; width: 130%; aspect-ratio: 1; border-radius: 50%;
+  background: repeating-radial-gradient(circle, transparent 0 118px, color-mix(in srgb, var(--tone) 15%, transparent) 118px 121px); }
+.motivo-2 .cs-bg::after { inset: 0; background: radial-gradient(90% 46% at 100% 0%, color-mix(in srgb, var(--tone) 19%, transparent), transparent 64%); }
+.motivo-3 .cs-bg::before { inset: 0;
+  background-image: radial-gradient(color-mix(in srgb, var(--tone) 34%, transparent) 3px, transparent 3.6px); background-size: 72px 72px;
+  -webkit-mask-image: linear-gradient(160deg, #000 0%, transparent 46%, transparent 62%, #000 100%); mask-image: linear-gradient(160deg, #000 0%, transparent 46%, transparent 62%, #000 100%); }
+.motivo-3 .cs-bg::after { inset: 0; background: radial-gradient(80% 44% at 50% 0%, color-mix(in srgb, var(--tone) 17%, transparent), transparent 66%); }
+.cs-shade { position: absolute; inset: 0; background: linear-gradient(#0a0a0b00 40%, #0a0a0bcc 100%); }
+
+/* ── arriba: marca y tipo de pieza. Nada más. ── */
+.cs-top { position: absolute; left: var(--pad-l); right: var(--pad-r); top: var(--top); display: flex; justify-content: space-between; align-items: center; }
+.cs-brand { display: flex; align-items: center; gap: 16px; font-size: 31px; font-weight: 700; letter-spacing: 0.2em; color: var(--cs-ink); }
+.cs-brand i { font-family: 'VF Playfair', serif; font-style: normal; font-size: 46px; line-height: 1; letter-spacing: 0; color: var(--accent); }
+/* El mapa de la pieza: un tramo por sección, tan ancho como dura. */
+.cs-carril { position: absolute; left: var(--pad-l); right: var(--pad-r); top: calc(var(--top) + var(--carril, 68px)); height: 6px; display: flex; gap: 10px; z-index: 1; }
+.cs-carril i { flex: 1 1 0; min-width: 14px; border-radius: 3px; background: color-mix(in srgb, var(--cs-ink) 16%, transparent); }
+.cs-carril i.hecho { background: color-mix(in srgb, var(--accent) 55%, transparent); }
+.cs-carril i.en { background: var(--tone, var(--accent)); box-shadow: 0 0 12px color-mix(in srgb, var(--tone, var(--accent)) 60%, transparent); }
+.ar-1x1 .cs-carril, .ar-16x9 .cs-carril { --carril: 64px; height: 5px; }
+.cs-tag { font-size: 30px; font-weight: 600; letter-spacing: 0.16em; color: var(--cs-ink2); }
+
+/* ── escenario ── */
+.cs-stage {
+  position: absolute; left: var(--pad-l); right: var(--pad-r); top: var(--stage-top); bottom: var(--stage-bottom);
+  display: flex; flex-direction: column; justify-content: center; font-size: 10px;
+}
+/* Mientras se mide si cabe, el contenido va arriba (centrado, lo que sobra por arriba no cuenta): gana a cualquier otra regla. */
+.cs-stage.top { justify-content: flex-start !important; align-content: start !important; }
+
+/* ── pie: el crédito, siempre a la vista ── */
+.cs-foot {
+  position: absolute; left: var(--pad-l); right: var(--pad-r); bottom: var(--foot-bottom);
+  font-family: 'VF Serif', serif; font-size: 38px; line-height: 1.25; color: var(--cs-ink2);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.cs-foot b { font-weight: 600; font-style: italic; color: var(--cs-ink); }
+.cs-foot::before { content: ''; display: block; width: 76px; height: 4px; border-radius: 2px; background: var(--accent); margin-bottom: 18px; }
+
+/* ── rótulo de la escena ── */
+.cs-kicker { display: flex; align-items: center; gap: 0.6em; font-size: 3.7em; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--tone); margin-bottom: 1.15em; }
+.cs-kicker::before { content: ''; flex: none; width: 1.5em; height: 0.16em; border-radius: 0.08em; background: var(--tone); }
+.cs-kicker.tema { letter-spacing: 0.1em; line-height: 1.25; }
+.cs-stage.solo .cs-kicker { font-size: 9em; letter-spacing: 0.08em; margin-bottom: 0.3em; }
+.cs-stage.solo .cs-kicker::before { width: 0.9em; }
+
+/* ── texto cinético: lo que se oye, por ráfagas ── */
+.cs-kin { margin: 0; overflow-wrap: break-word; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 12.4em; line-height: 1.13; color: var(--cs-ink); text-wrap: pretty; }
+.cs-kin.m { font-size: 10.8em; }
+.cs-kin.l { font-size: 9.6em; }
+.cs-kin.xl { font-size: 8.4em; }
+.cs-kin .w.hot { color: var(--tone); }
+.cs-kin .w.off { opacity: 0; }
+.cs-pages { display: flex; gap: 1.2em; margin-top: 3.4em; }
+.cs-pages i { width: 4.4em; height: 0.7em; border-radius: 0.35em; background: #ffffff26; }
+.cs-pages i.on { background: var(--tone); }
+.cs-pages i.done { background: color-mix(in srgb, var(--tone) 45%, transparent); }
+
+.st-matiz .cs-kin, .st-respuesta .cs-kin, .st-practica .cs-kin, .st-caso .cs-kin, .st-conexion .cs-kin, .st-explica .cs-kin { font-family: 'VF Serif', serif; font-weight: 600; font-size: 10.6em; line-height: 1.2; }
+.st-matiz .cs-kin.m, .st-respuesta .cs-kin.m, .st-practica .cs-kin.m, .st-caso .cs-kin.m, .st-conexion .cs-kin.m, .st-explica .cs-kin.m { font-size: 9.4em; }
+.st-matiz .cs-kin.l, .st-respuesta .cs-kin.l, .st-practica .cs-kin.l, .st-caso .cs-kin.l, .st-conexion .cs-kin.l, .st-explica .cs-kin.l { font-size: 8.4em; }
+.st-matiz .cs-kin { padding-left: 0.5em; border-left: 0.12em solid var(--cs-mal); }
+.st-matiz .cs-stage.solo .cs-kin { border-left-color: transparent; }
+
+/* El interrogante de fondo de las piezas «pregunta»: decoración del fotograma, fuera del escenario. */
+.st-pregunta .cs-frame::after, .k-c-pausa .cs-frame::after {
+  content: '?'; position: absolute; right: 0.06em; top: 0.22em; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 640px; line-height: 0.8;
+  color: color-mix(in srgb, var(--accent) 15%, transparent); z-index: 0;
+}
+.ar-1x1 .st-pregunta .cs-frame::after, .ar-1x1.k-c-pausa .cs-frame::after, .ar-16x9.st-pregunta .cs-frame::after, .ar-16x9.k-c-pausa .cs-frame::after { font-size: 520px; top: 0.12em; }
+.cs-stage, .cs-top, .cs-foot { z-index: 1; }
+
+/* ── pausa para pensar ── */
+.cs-q-small { margin: 0 0 1.4em; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 6.6em; line-height: 1.2; color: var(--cs-ink2); text-wrap: pretty; }
+.cs-think { display: flex; align-items: center; gap: 3.4em; }
+.cs-think b { flex: none; width: 2.1em; height: 2.1em; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 13em; font-weight: 700; line-height: 1; color: #0a0a0b; background: var(--accent); box-shadow: 0 0 0 0.16em color-mix(in srgb, var(--accent) 25%, transparent); }
+.cs-think span { font-size: 4.6em; font-weight: 700; letter-spacing: 0.18em; color: var(--cs-ink); }
+
+/* ── esquema: silueta sin texto + tarjeta grande de la pieza ── */
+.tn-a { --tn2: var(--accent); } .tn-ok { --tn2: var(--cs-ok); } .tn-mal { --tn2: var(--cs-mal); }
+.tn-info { --tn2: #6cb2e2; } .tn-psi { --tn2: #b99ae0; } .tn-mute { --tn2: #a39c90; }
+.cs-fig-title { margin: 0 0 0.7em; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 4.4em; line-height: 1.2; color: var(--cs-ink2); text-wrap: balance; }
+.m-titulo .cs-fig-title { font-size: 8.6em; line-height: 1.14; color: var(--cs-ink); margin-bottom: 0.6em; }
+.cs-sil { height: 46em; margin-bottom: 3.4em; display: flex; }
+.m-titulo .cs-sil { height: 52em; margin-bottom: 0; }
+.cs-sil .dg { margin: 0 !important; padding: 0 !important; border: 0 !important; background: transparent !important; cursor: default; width: 100%; height: 100%;
+  --dg-bg: #0a0a0b; --dg-ink: #f4f0e7; --dg-ink2: #b8b1a4; --dg-rule: #3a3a3a; }
+.cs-sil #cs-dg { height: 100%; width: 100%; }
+.cs-sil svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.cs-silueta * { vector-effect: non-scaling-stroke; }
+.cs-silueta text:not(.cs-badge-t) { display: none; }
+.cs-silueta .dg-num, .cs-silueta .dg-numt { display: none; }
+.cs-silueta .dg-box { fill-opacity: 0.18; stroke-opacity: 0.9; stroke-width: 2.5; }
+.cs-badge circle { fill: #26262a; stroke: #9a9388; stroke-width: 2; }
+.cs-badge.on circle { fill: var(--accent); stroke: none; }
+.cs-badge-t { fill: #f4f0e7; font-weight: 700; text-anchor: middle; font-family: 'VF Outfit', sans-serif; }
+.cs-badge.on .cs-badge-t { fill: #0a0a0b; }
+
+.cs-card { padding: 3.4em 3.8em 3.6em; border-radius: 3.4em; border: 0.24em solid color-mix(in srgb, var(--tn2) 70%, transparent); background: color-mix(in srgb, var(--tn2) 11%, #121214); }
+.cs-card small { display: block; font-size: 3.7em; font-weight: 700; letter-spacing: 0.18em; color: var(--tn2); margin-bottom: 0.6em; }
+.cs-card b { display: block; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 7.8em; line-height: 1.13; color: var(--cs-ink); text-wrap: balance; }
+.cs-card span { display: block; margin-top: 0.55em; font-size: 5.4em; line-height: 1.26; color: var(--cs-ink); opacity: 0.86; text-wrap: pretty; }
+.cs-card ul { list-style: none; margin: 0.9em 0 0; padding: 0; }
+.cs-card li { position: relative; padding-left: 0.9em; margin-bottom: 0.42em; font-size: 5em; line-height: 1.24; color: var(--cs-ink); opacity: 0.9; text-wrap: pretty; }
+.cs-card li::before { content: ''; position: absolute; left: 0; top: 0.5em; width: 0.34em; height: 0.34em; border-radius: 50%; background: var(--tn2); }
+.cs-pie { margin: 0; font-family: 'VF Serif', serif; font-weight: 500; font-style: italic; font-size: 7.2em; line-height: 1.26; color: var(--cs-ink); text-wrap: pretty; }
+
+/* ── crédito: de qué libro sale ── */
+.cs-book { margin: 0; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 13.6em; line-height: 1.08; color: var(--cs-ink); text-wrap: balance; }
+.cs-book.long { font-size: 10.4em; } .cs-book.xlong { font-size: 8em; }
+.cs-author { margin-top: 0.9em; font-family: 'VF Serif', serif; font-style: italic; font-size: 6.6em; line-height: 1.25; color: var(--cs-ink2); }
+.cs-eje { margin-top: 2em; font-size: 3.7em; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); }
+
+/* ── una idea del mapa del libro ── */
+.cs-dots { display: flex; gap: 1.4em; margin-bottom: 4.6em; }
+.cs-dots i { flex: 1; max-width: 12em; height: 0.8em; border-radius: 0.4em; background: #ffffff24; }
+.cs-dots i.done { background: color-mix(in srgb, var(--accent) 50%, transparent); }
+.cs-dots i.on { background: var(--accent); }
+.cs-node-hd { display: flex; align-items: center; gap: 2.6em; margin-bottom: 3.4em; }
+.cs-node-n { font-family: 'VF Playfair', serif; font-weight: 700; font-size: 26em; line-height: 0.9; color: var(--accent); }
+.cs-ic { width: 17em; height: 17em; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: color-mix(in srgb, var(--accent) 14%, transparent); border: 0.26em solid color-mix(in srgb, var(--accent) 60%, transparent); }
+.cs-ic svg { width: 9em; height: 9em; fill: none; stroke: var(--accent); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.cs-node-t { margin: 0; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 12.4em; line-height: 1.1; color: var(--cs-ink); text-wrap: balance; }
+.cs-node-d.espera { visibility: hidden; }
+.cs-node-d { margin: 0.6em 0 0; font-size: 6.8em; line-height: 1.26; color: var(--cs-ink2); text-wrap: pretty; }
+
+/* ── cierre: lo que abrió la pieza, otra vez; la marca y dónde seguir ── */
+.k-c-cierre .cs-stage { align-items: flex-start; }
+.cs-recuerda { align-self: stretch; margin-bottom: 4.4em; padding: 0 0 0 2.6em; border-left: 0.5em solid var(--accent); }
+.cs-recuerda small { display: block; font-size: 3.7em; font-weight: 700; letter-spacing: 0.2em; color: var(--accent); margin-bottom: 0.6em; }
+.cs-recuerda p { margin: 0; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 7.4em; line-height: 1.16; color: var(--cs-ink); text-wrap: pretty; }
+.cs-recuerda em { display: block; margin-bottom: 0.5em; font-style: normal; font-family: 'VF Serif', serif; font-size: 4.6em; line-height: 1.25; color: var(--cs-ink2); }
+.cs-recuerda.largo p { font-size: 5.8em; }
+.cs-recuerda.largo { margin-bottom: 3em; }
+.cs-lockup { display: flex; align-items: center; gap: 2.6em; }
+.cs-mark { font-family: 'VF Playfair', serif; font-weight: 700; font-size: 17em; line-height: 1; color: var(--accent); }
+.cs-wordmark { font-size: 7.6em; font-weight: 800; letter-spacing: 0.14em; line-height: 1.05; color: var(--cs-ink); }
+.cs-lema { margin-top: 0.3em; font-family: 'VF Serif', serif; font-style: italic; font-size: 4.6em; color: var(--cs-ink2); }
+.cs-cta { margin-top: 1.1em; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 5.6em; line-height: 1.2; color: var(--cs-ink); text-wrap: balance; }
+.cs-seguir { margin-top: 1.2em; display: inline-block; padding: 0.7em 1.3em; border-radius: 3em; font-size: 4em; font-weight: 600; line-height: 1.25; color: #0a0a0b; background: var(--accent); }
+.cs-from { margin-top: 2.2em; padding-top: 1.5em; border-top: 0.2em solid #ffffff22; align-self: stretch; }
+.cs-from b { display: block; font-family: 'VF Serif', serif; font-style: italic; font-weight: 600; font-size: 4.2em; line-height: 1.25; color: var(--cs-ink); }
+.cs-from span { display: block; margin-top: 0.3em; font-size: 3.8em; color: var(--cs-ink2); }
+
+/* ── patrones visuales del esquema: contraste (dos paneles enfrentados) y cadena (eslabones) ── */
+.con-patron .cs-fig-title { margin-bottom: 1em; }
+.m-titulo.con-patron .cs-fig-title { font-size: 7.6em; }
+.cs-pat { display: flex; flex-direction: column; gap: 2em; position: relative; }
+.cs-pan { display: flex; align-items: flex-start; gap: 2.4em; padding: 2.6em 3em; border-radius: 3em; border: 0.24em solid color-mix(in srgb, var(--tn2) 55%, transparent); background: color-mix(in srgb, var(--tn2) 8%, #121214); }
+.cs-pan > i { flex: none; width: 1.7em; height: 1.7em; margin-top: 0.1em; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-style: normal; font-size: 3.8em; font-weight: 700; color: #0a0a0b; background: var(--tn2); }
+.cs-pan > div { min-width: 0; flex: 1; }
+.cs-pan b { display: block; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 5.6em; line-height: 1.16; color: var(--cs-ink); text-wrap: balance; }
+.cs-pan span { display: block; margin-top: 0.5em; font-size: 5.2em; line-height: 1.26; color: var(--cs-ink); opacity: 0.88; text-wrap: pretty; }
+.cs-pan ul { list-style: none; margin: 0.8em 0 0; padding: 0; }
+.cs-pan li { position: relative; padding-left: 0.9em; margin-bottom: 0.4em; font-size: 5em; line-height: 1.24; color: var(--cs-ink); opacity: 0.9; text-wrap: pretty; }
+.cs-pan li::before { content: ''; position: absolute; left: 0; top: 0.5em; width: 0.34em; height: 0.34em; border-radius: 50%; background: var(--tn2); }
+.cs-pan.on { border-color: var(--tn2); background: color-mix(in srgb, var(--tn2) 15%, #121214); box-shadow: 0 0 0 0.5em color-mix(in srgb, var(--tn2) 14%, transparent); }
+.cs-pan.on b { font-size: 7.4em; }
+.cs-pan.visto { opacity: 0.86; }
+.m-pieza .cs-pan.visto { opacity: 0.6; }
+.cs-pan.falta { opacity: 0.42; border-style: dashed; background: transparent; }
+.cs-pan.falta b { visibility: hidden; height: 0.6em; }
+.cs-pan.falta > i { background: transparent; color: var(--tn2); box-shadow: inset 0 0 0 0.09em var(--tn2); }
+/* contraste: en el repaso inicial y final los dos lados pesan lo mismo, con una marca de «frente a» entre ellos */
+.p-contraste { gap: 3.4em; }
+.p-contraste .cs-pan.falta b { visibility: visible; height: auto; opacity: 0.75; }  /* el otro lado se anuncia: la tensión está en el par */
+.p-contraste .cs-pan + .cs-pan::before { content: ''; position: absolute; left: 50%; margin: -2.9em 0 0 -1.2em; width: 2.4em; height: 2.4em; transform: rotate(45deg); border-radius: 0.4em; background: var(--cs-bg); border: 0.24em solid var(--cs-ink3); }
+.p-contraste .cs-pan { position: static; }
+/* cadena: un hilo une los eslabones */
+.p-cadena { gap: 1.5em; }
+/* el hilo va por tramos: cada eslabón trae el suyo, así que se dibuja con él */
+.p-cadena .cs-pan + .cs-pan::before { content: ''; position: absolute; left: 3.1em; top: -1.5em; height: 1.5em; width: 0.4em; margin-top: -0.24em; background: var(--cs-ink3); z-index: 0; }
+.p-cadena .cs-pan { position: relative; z-index: 1; padding: 1.8em 2.6em; background: color-mix(in srgb, var(--tn2) 8%, #101012); }
+.p-cadena .cs-pan.on { padding: 2.6em; background: color-mix(in srgb, var(--tn2) 16%, #121214); }
+.p-cadena.n-5 .cs-pan b, .p-cadena.n-6 .cs-pan b { font-size: 4.8em; }
+.p-cadena.n-5 .cs-pan.on b, .p-cadena.n-6 .cs-pan.on b { font-size: 6.6em; }
+.m-pie .cs-pat { margin-bottom: 3.4em; }
+.m-pie .cs-pan { padding: 1.5em 2.4em; }
+.m-pie .cs-pan b { font-size: 4.6em; }
+.m-pie.con-patron .cs-pie { font-size: 6.2em; }
+.ar-16x9 .p-contraste { flex-direction: row; align-items: stretch; }
+.ar-16x9 .p-contraste .cs-pan { flex: 1; }
+.ar-16x9 .p-contraste .cs-pan + .cs-pan::before { display: none; }
+.ar-16x9 .cs-recuerda, .ar-1x1 .cs-recuerda { margin-bottom: 2.6em; }
+.ar-16x9 .cs-recuerda p, .ar-1x1 .cs-recuerda p { font-size: 6em; }
+
+/* ── «no X, sino Y»: lo afirmado se queda en color ── */
+.cs-kin .w.afi { color: var(--tone); }
+
+/* ── centro de un mapa o de un ciclo ── */
+.cs-hub { align-self: flex-start; max-width: 100%; margin-bottom: 2.4em; padding: 1.5em 2.6em; border-radius: 5em; border: 0.26em solid var(--accent); background: color-mix(in srgb, var(--accent) 14%, #101012); }
+.cs-hub b { display: block; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 5.6em; line-height: 1.14; color: var(--cs-ink); }
+.cs-hub span { display: block; margin-top: 0.25em; font-family: 'VF Serif', serif; font-style: italic; font-size: 3.8em; color: var(--cs-ink2); }
+.m-pieza .cs-hub { padding: 1em 2em; margin-bottom: 1.8em; }
+.m-pieza .cs-hub b { font-size: 4.2em; }
+.m-pieza .cs-hub span { display: none; }
+/* radial: del centro cuelgan las piezas (un corchete a la izquierda las une); sin orden, así que sin hilo numerado */
+.p-radial { gap: 1.5em; margin-left: 3.4em; padding-left: 3em; border-left: 0.4em solid color-mix(in srgb, var(--accent) 55%, transparent); border-radius: 0 0 0 2.4em; }
+.p-radial .cs-pan { padding: 1.8em 2.6em; }
+.p-radial .cs-pan.on { padding: 2.6em; }
+.p-radial .cs-pan > i { display: none; }
+.p-radial .cs-pan.falta b { visibility: visible; height: auto; opacity: 0.7; }
+.p-radial.n-5 .cs-pan b, .p-radial.n-6 .cs-pan b { font-size: 4.8em; }
+.p-radial.n-5 .cs-pan.on b, .p-radial.n-6 .cs-pan.on b { font-size: 6.6em; }
+/* ciclo: la cadena, y una flecha que devuelve del último eslabón al primero */
+.p-ciclo { gap: 1.5em; margin-right: 6em; }
+.p-ciclo .cs-pan { position: relative; z-index: 1; padding: 1.8em 2.6em; }
+.p-ciclo .cs-pan.on { padding: 2.6em; }
+.p-ciclo::before { content: ''; position: absolute; right: -5.4em; top: 4em; bottom: 4em; width: 4.4em; border: 0.5em solid color-mix(in srgb, var(--accent) 70%, transparent); border-left: 0; border-radius: 0 4em 4em 0; }
+.p-ciclo::after { content: ''; position: absolute; right: -2.2em; top: 2.6em; width: 0; height: 0; border-style: solid; border-width: 1.5em 2.4em 1.5em 0; border-color: transparent color-mix(in srgb, var(--accent) 85%, transparent) transparent transparent; }
+.p-ciclo.n-5 .cs-pan b, .p-ciclo.n-6 .cs-pan b { font-size: 4.8em; }
+.p-ciclo.n-5 .cs-pan.on b, .p-ciclo.n-6 .cs-pan.on b { font-size: 6.6em; }
+
+/* iceberg: lo visible arriba; una línea de flotación; debajo, lo que lo sostiene */
+.p-iceberg { gap: 1.5em; }
+.p-iceberg .cs-pan { padding: 1.8em 2.6em; }
+.p-iceberg .cs-pan.on { padding: 2.6em; }
+.p-iceberg .cs-pan > i { display: none; }
+.cs-ice { font-size: 3.7em; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--cs-ink2); }
+.cs-ice.fondo { margin-top: 0.5em; padding-top: 0.9em; border-top: 0.14em dashed #6cb2e2; color: #6cb2e2; }
+.cs-ice.fondo:empty { padding-top: 0.3em; }
+
+/* ── matriz: dos ejes, cuatro cuadrantes ── */
+.con-forma .cs-fig-title { margin-bottom: 0.9em; }
+.cs-mat { display: grid; grid-template-columns: minmax(0, 0.36fr) minmax(0, 1fr) minmax(0, 1fr); gap: 1.4em; align-items: stretch; margin-bottom: 3em; }
+.cs-mat-n { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 0.6em 3.4em; margin-bottom: 0.6em; }
+.cs-mat-n em { display: flex; align-items: center; gap: 0.7em; font-style: normal; font-size: 3.7em; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); line-height: 1.2; }
+.cs-mat-n em:empty { display: none; }
+.cs-mat-n em::before { content: ''; flex: none; width: 0; height: 0; border-style: solid; }
+.cs-mat-n em.x::before { border-width: 0.32em 0 0.32em 0.56em; border-color: transparent transparent transparent var(--accent); }
+.cs-mat-n em.y::before { border-width: 0.56em 0.32em 0 0.32em; border-color: var(--accent) transparent transparent transparent; }
+.cs-mat-h, .cs-mat-v { font-size: 3.8em; font-weight: 600; line-height: 1.2; color: var(--cs-ink2); overflow-wrap: anywhere; }
+.cs-mat-h { text-align: center; align-self: end; }
+.cs-mat-v { align-self: center; }
+.cs-cel { position: relative; min-width: 0; min-height: 15em; padding: 1.8em 1.6em 1.8em 1.8em; border-radius: 2.4em; border: 0.24em solid color-mix(in srgb, var(--tn2) 55%, transparent); background: color-mix(in srgb, var(--tn2) 9%, #121214); display: flex; flex-direction: column; justify-content: center; }
+.cs-cel i { position: absolute; left: 0.5em; top: 0.4em; width: 1.6em; height: 1.6em; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-style: normal; font-size: 3.2em; font-weight: 700; color: #0a0a0b; background: var(--tn2); }
+.cs-cel b { font-family: 'VF Playfair', serif; font-weight: 700; font-size: 4.1em; line-height: 1.16; color: var(--cs-ink); padding-top: 1.5em; min-width: 0; overflow-wrap: anywhere; hyphens: auto; }
+.cs-cel.on { border-color: var(--tn2); background: color-mix(in srgb, var(--tn2) 20%, #121214); box-shadow: 0 0 0 0.5em color-mix(in srgb, var(--tn2) 16%, transparent); }
+.m-pieza .cs-cel.visto { opacity: 0.6; }
+.cs-cel.falta { opacity: 0.4; border-style: dashed; background: transparent; }
+.cs-cel.falta b { visibility: hidden; }
+.cs-coord { display: flex; align-items: center; gap: 3em; margin-bottom: 3em; }
+.cs-mini { flex: none; display: grid; grid-template-columns: 1fr 1fr; gap: 0.9em; width: 15em; height: 15em; }
+.cs-mini i { border-radius: 1.2em; border: 0.24em solid var(--cs-ink3); }
+.cs-mini i.on { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 0.5em color-mix(in srgb, var(--accent) 22%, transparent); }
+.cs-coord span { display: block; font-size: 4.6em; font-weight: 600; line-height: 1.22; color: var(--cs-ink); text-wrap: pretty; }
+.cs-coord span + span { margin-top: 0.5em; padding-top: 0.5em; border-top: 0.06em solid #ffffff2e; }
+
+/* ── espectro: dos polos y posiciones entre ellos ── */
+.cs-esp { margin: 1em 0 4.4em; }
+.cs-esp-polos { display: flex; justify-content: space-between; gap: 3em; margin-bottom: 3.6em; }
+.cs-esp-polos span { flex: 1; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 4.8em; line-height: 1.16; color: var(--cs-ink); text-wrap: balance; }
+.cs-esp-polos span + span { text-align: right; }
+.cs-esp-linea { position: relative; height: 1.2em; margin: 0 1em 3em; border-radius: 0.6em; background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 85%, transparent), #ffffff30 50%, color-mix(in srgb, var(--accent) 85%, transparent)); }
+.cs-esp-linea i { position: absolute; top: 50%; transform: translate(-50%, -50%); width: 1.9em; height: 1.9em; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-style: normal; font-size: 3.6em; font-weight: 700; color: var(--cs-ink); background: #26262a; border: 0.08em solid #9a9388; }
+.cs-esp-linea i.on { width: 2.4em; height: 2.4em; color: #0a0a0b; background: var(--tn2); border-color: var(--tn2); box-shadow: 0 0 0 0.3em color-mix(in srgb, var(--tn2) 30%, transparent); }
+.cs-esp-linea i.falta { opacity: 0.45; }
+
+/* ── cifras: el número, enorme, y qué mide ── */
+.cs-cifra b { display: block; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 26em; line-height: 1; color: var(--tn2); letter-spacing: -0.01em; overflow-wrap: anywhere; }
+.cs-cifra span { display: block; margin-top: 0.5em; font-size: 6.4em; line-height: 1.24; color: var(--cs-ink); text-wrap: pretty; }
+.cs-cifras { display: flex; flex-wrap: wrap; gap: 1.2em 4em; margin-bottom: 3em; }
+.cs-cifras b { font-family: 'VF Playfair', serif; font-weight: 700; font-size: 13em; line-height: 1.05; color: var(--tn2); }
+
+/* ── portada (miniatura): el gancho, el libro y la marca ── */
+.k-c-portada .cs-stage { justify-content: center; }
+.cs-chip { align-self: flex-start; padding: 0.5em 1.1em; border-radius: 3em; font-size: 3.8em; font-weight: 700; letter-spacing: 0.14em; color: #0a0a0b; background: var(--accent); margin-bottom: 1.3em; }
+.cs-cover { margin: 0; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 11.4em; line-height: 1.1; color: var(--cs-ink); text-wrap: balance; }
+.cs-cover.long { font-size: 9.4em; } .cs-cover.xlong { font-size: 8em; }
+.cs-cover-tema { margin-top: 1.4em; font-size: 3.8em; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+
+/* ── 16:9: el esquema y su tarjeta, lado a lado ── */
+.ar-16x9 .cs-stage { font-size: 9.2px; }
+.ar-1x1 .cs-stage { font-size: 8.3px; }
+.ar-16x9 .cs-figrow { display: flex; align-items: center; gap: 5em; }
+.ar-16x9 .cs-figrow .cs-sil { flex: 0 0 42%; height: 52em; margin-bottom: 0; }
+.ar-16x9 .cs-figrow > .cs-card, .ar-16x9 .cs-figrow > .cs-pie { flex: 1; min-width: 0; }
+.ar-16x9 .m-titulo .cs-sil { height: 40em; }
+.ar-1x1 .cs-sil { height: 30em; margin-bottom: 2.2em; }
+.ar-1x1 .m-titulo .cs-sil { height: 38em; }
+.ar-1x1 .cs-foot, .ar-16x9 .cs-foot { font-size: 32px; -webkit-line-clamp: 1; }
+.ar-1x1 .cs-foot::before, .ar-16x9 .cs-foot::before { display: none; }
+.ar-1x1 .cs-node-hd { margin-bottom: 2em; } .ar-1x1 .cs-dots { margin-bottom: 3em; }
+
+/* ── cierre en horizontal y en cuadrado: el mensaje a un lado y la marca al otro, para que nada encoja ── */
+.ar-16x9.k-c-cierre .cs-stage { display: grid; grid-template-columns: 1.25fr 1fr; column-gap: 7em; align-content: center; align-items: start; }
+.ar-16x9.k-c-cierre .cs-recuerda { grid-column: 1; grid-row: 1 / span 6; align-self: center; margin-bottom: 0; }
+.ar-16x9.k-c-cierre .cs-lockup, .ar-16x9.k-c-cierre .cs-cta, .ar-16x9.k-c-cierre .cs-seguir, .ar-16x9.k-c-cierre .cs-from { grid-column: 2; }
+.ar-16x9.k-c-cierre .cs-seguir { justify-self: start; }
+.ar-1x1.k-c-cierre .cs-recuerda { margin-bottom: 2em; }
+.ar-1x1.k-c-cierre .cs-recuerda.largo p { font-size: 5em; }
+.ar-1x1.k-c-cierre .cs-recuerda.largo em { font-size: 4em; }
+.ar-1x1.k-c-cierre .cs-lema, .ar-1x1.k-c-cierre .cs-from span { display: none; }
+.ar-1x1.k-c-cierre .cs-mark { font-size: 11em; }
+.ar-1x1.k-c-cierre .cs-wordmark { font-size: 5.6em; }
+.ar-1x1.k-c-cierre .cs-cta { font-size: 4.6em; margin-top: 0.8em; }
+.ar-1x1.k-c-cierre .cs-seguir { margin-top: 0.8em; }
+.ar-1x1.k-c-cierre .cs-from { margin-top: 1.2em; padding-top: 1em; }
+.ar-16x9.k-c-cierre .cs-mark { font-size: 11em; }
+.ar-16x9.k-c-cierre .cs-wordmark { font-size: 5.6em; }
+.ar-16x9.k-c-cierre .cs-lema { font-size: 3.8em; }
+.ar-16x9.k-c-cierre .cs-cta { font-size: 4.4em; margin-top: 0.8em; }
+.ar-16x9.k-c-cierre .cs-seguir { margin-top: 0.8em; font-size: 3.6em; }
+.ar-16x9.k-c-cierre .cs-from { margin-top: 1.2em; padding-top: 1em; }
+.ar-16x9.k-c-cierre .cs-from b { font-size: 3.8em; }
+.ar-16x9.k-c-cierre .cs-from span { font-size: 3.6em; }
+/* El último elemento del escenario no lleva margen inferior: al centrar, ese margen empujaba el contenido unos píxeles por encima. */
+.cs-stage > :last-child { margin-bottom: 0 !important; }
+
+/* ── el esquema junto a la explicación: sus rótulos a la vista, y encendidos los que la voz ya ha nombrado ── */
+.cs-stage.con-comp { justify-content: flex-start; padding-top: 2em; }
+.cs-comp { margin-bottom: 5em; }
+.cs-comp-t { display: flex; align-items: center; gap: 0.6em; font-size: 3.6em; font-weight: 700; letter-spacing: 0.1em; line-height: 1.25; text-transform: uppercase; color: var(--accent); margin-bottom: 1em; }
+.cs-comp-t::before { content: ''; flex: none; width: 1.5em; height: 0.16em; border-radius: 0.08em; background: var(--accent); }
+.cs-comp ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1.3em; position: relative; }
+.cs-comp li { display: flex; align-items: center; gap: 1.8em; padding: 1.5em 2.2em; border-radius: 2.4em; border: 0.22em dashed color-mix(in srgb, var(--tn2) 38%, transparent); background: transparent; opacity: 0.5; }
+.cs-comp li > i { flex: none; width: 1.7em; height: 1.7em; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-style: normal; font-size: 3.3em; font-weight: 700; color: var(--tn2); box-shadow: inset 0 0 0 0.09em var(--tn2); }
+.cs-comp li > b { min-width: 0; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 5em; line-height: 1.16; color: var(--cs-ink); text-wrap: balance; }
+.cs-comp li.on { opacity: 0.92; border-style: solid; border-color: color-mix(in srgb, var(--tn2) 60%, transparent); background: color-mix(in srgb, var(--tn2) 9%, #121214); }
+.cs-comp li.on > i, .cs-comp li.act > i { color: #0a0a0b; background: var(--tn2); box-shadow: none; }
+.cs-comp li.act { opacity: 1; border-style: solid; border-color: var(--tn2); background: color-mix(in srgb, var(--tn2) 20%, #121214); box-shadow: 0 0 0 0.5em color-mix(in srgb, var(--tn2) 16%, transparent); }
+.cs-comp li.act > b { font-size: 5.8em; }
+/* un contraste son dos lados enfrentados; una cadena o un ciclo, eslabones unidos */
+.cs-comp.cp-contraste.cn-2 ol { flex-direction: row; gap: 2em; }
+.cs-comp.cp-contraste.cn-2 li { flex: 1; flex-direction: column; align-items: flex-start; gap: 1em; padding: 2em; }
+.cs-comp.cn-6 li, .cs-comp.cn-7 li { padding: 1.1em 2em; }
+.cs-comp.cn-6 li > b, .cs-comp.cn-7 li > b { font-size: 4em; }
+.con-comp .cs-kin, .con-comp .cs-kin.l { font-size: 8.8em; }
+.con-comp .cs-kin.xl { font-size: 7.8em; }
+.con-comp .cs-pages { margin-top: 2.6em; }
+/* en horizontal y en cuadrado, el esquema a la izquierda y el texto a la derecha */
+.ar-16x9 .cs-stage.con-comp { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr); column-gap: 6em; align-content: start; align-items: start; padding-top: 3em; }
+.ar-16x9 .cs-comp ol { gap: 1em; }
+.ar-16x9 .cs-comp li { padding: 1.1em 1.8em; }
+.ar-16x9 .cs-comp li > b { font-size: 4.4em; }
+.ar-16x9 .cs-comp li.act > b { font-size: 5em; }
+.ar-16x9 .con-comp .cs-kin { grid-column: 2; }
+.ar-16x9 .con-comp .cs-comp { grid-row: 1 / span 2; margin-bottom: 0; }
+.ar-16x9 .con-comp .cs-pages { grid-column: 2; }
+/* Muchas páginas: las marcas se estrechan en vez de ensanchar la columna (y encoger el esquema de al lado). */
+.cs-pages i { flex: 0 1 4.4em; min-width: 0.8em; }
+.ar-16x9 .con-comp > * { min-width: 0; }
+.ar-1x1 .cs-comp { margin-bottom: 3em; }
+.ar-1x1 .cs-comp ol { flex-direction: row; flex-wrap: wrap; gap: 1em; }
+.ar-1x1 .cs-comp li { padding: 1em 1.6em; }
+
+/* una pieza que todavía no ha entrado: guarda su sitio para que nada salte cuando entre */
+.cs-pan.aun-no { visibility: hidden; }
+
+/* ── iconos de la biblioteca: qué tipo de momento (o de figura) es ── */
+.cs-kic { flex: none; display: inline-flex; width: 1.9em; height: 1.9em; align-items: center; justify-content: center; border-radius: 50%; border: 0.1em solid color-mix(in srgb, var(--tone, var(--accent)) 60%, transparent); background: color-mix(in srgb, var(--tone, var(--accent)) 13%, transparent); }
+.cs-kic svg { width: 1.15em; height: 1.15em; fill: none; stroke: var(--tone, var(--accent)); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.cs-kicker.con-ic::before, .cs-comp-t.con-ic::before { display: none; }
+.cs-kicker.con-ic > span:last-child, .cs-comp-t.con-ic > span:last-child { min-width: 0; }
+.cs-comp-t .cs-kic { border-color: color-mix(in srgb, var(--accent) 60%, transparent); background: color-mix(in srgb, var(--accent) 13%, transparent); }
+.cs-comp-t .cs-kic svg { stroke: var(--accent); }
+.cs-think .cs-kic { font-size: 5em; margin-top: 0.5em; }
+/* una pieza que aún no ha entrado en una matriz, un espectro o una fila de cifras */
+.cs-cel.aun-no, .cs-esp-linea i.aun-no, .cs-cifras b.aun-no { visibility: hidden; }
+.p-ciclo.abierto::before, .p-ciclo.abierto::after { display: none; }
+/* ── el esquema acompañante toma la forma de su figura ── */
+.cs-comp-hub { align-self: flex-start; display: inline-block; margin-bottom: 1.2em; padding: 0.9em 1.8em; border-radius: 4em; border: 0.24em solid var(--accent); background: color-mix(in srgb, var(--accent) 14%, #101012); font-family: 'VF Playfair', serif; font-weight: 700; font-size: 4.4em; line-height: 1.14; color: var(--cs-ink); }
+.cs-comp.cp-radial ol { margin-left: 2.6em; padding-left: 2.2em; border-left: 0.36em solid color-mix(in srgb, var(--accent) 55%, transparent); border-radius: 0 0 0 2em; }
+.cs-comp.cp-radial li > i { display: none; }
+.cs-comp.cp-cadena li + li::before, .cs-comp.cp-ciclo li + li::before { content: ''; position: absolute; left: 3.5em; top: -1.5em; height: 1.3em; width: 0.34em; background: color-mix(in srgb, var(--accent) 50%, transparent); }
+.cs-comp.cp-cadena li, .cs-comp.cp-ciclo li { position: relative; }
+.cs-comp.cp-ciclo ol { margin-right: 5em; }
+.cs-comp.cp-ciclo ol::after { content: ''; position: absolute; right: -4.2em; top: 2.6em; bottom: 2.6em; width: 3.2em; border: 0.4em solid color-mix(in srgb, var(--accent) 60%, transparent); border-left: 0; border-radius: 0 3em 3em 0; }
+.cs-comp.cp-ciclo ol::before { content: ''; position: absolute; right: -1.6em; top: 1.6em; width: 0; height: 0; border-style: solid; border-width: 1.2em 1.9em 1.2em 0; border-color: transparent color-mix(in srgb, var(--accent) 80%, transparent) transparent transparent; }
+.cs-comp.cp-contraste.cn-2 ol { position: relative; }
+.cs-comp.cp-contraste.cn-2 li + li::before { content: ''; position: absolute; left: 50%; top: 50%; margin: -1.2em 0 0 -1.2em; width: 2.4em; height: 2.4em; transform: rotate(45deg); border-radius: 0.4em; background: var(--cs-bg, #0c0c0d); border: 0.24em solid var(--cs-ink3); }
+.cs-comp.cp-matriz.cn-4 ol { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2em; }
+.cs-comp.cp-matriz.cn-4 li { flex-direction: column; align-items: flex-start; gap: 0.8em; padding: 1.6em 1.8em; min-height: 13em; }
+.cs-comp-polos { display: flex; justify-content: space-between; gap: 3em; margin-bottom: 1.2em; padding-bottom: 1.2em; border-bottom: 0.5em solid transparent; border-image: linear-gradient(90deg, color-mix(in srgb, var(--accent) 85%, transparent), #ffffff30 50%, color-mix(in srgb, var(--accent) 85%, transparent)) 1; }
+.cs-comp-polos span { flex: 1; font-size: 3.7em; font-weight: 700; line-height: 1.2; color: var(--cs-ink2); }
+.cs-comp-polos span + span { text-align: right; }
+.ar-1x1 .cs-comp.cp-matriz.cn-4 ol { display: grid; }
+.ar-1x1 .cs-comp.cp-matriz.cn-4 li { min-height: 0; }
+.ar-1x1 .cs-comp.cp-cadena li + li::before, .ar-1x1 .cs-comp.cp-ciclo li + li::before, .ar-1x1 .cs-comp.cp-ciclo ol::before, .ar-1x1 .cs-comp.cp-ciclo ol::after { display: none; }
+.ar-1x1 .cs-comp.cp-ciclo ol { margin-right: 0; }
+.ar-1x1 .cs-comp.cp-radial ol { margin-left: 0; padding-left: 0; border-left: 0; }
+
+/* ── icono aprobado de una pieza de esquema: ocupa el sitio de su número ── */
+.cs-pan > i.ic svg, .cs-comp li > i.ic svg { width: 68%; height: 68%; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.p-radial .cs-pan > i.ic, .p-iceberg .cs-pan > i.ic, .cs-comp.cp-radial li > i.ic { display: flex; }
+
+/* ── pirámide y embudo: niveles centrados, cada uno con su ancho; sin hilo (no es una secuencia) ── */
+.cs-pat.pl-piramide, .cs-pat.pl-embudo { align-items: center; gap: 1em; }
+.cs-pat.pl-piramide .cs-pan, .cs-pat.pl-embudo .cs-pan { justify-content: center; text-align: center; }
+.cs-pat.pl-piramide .cs-pan > div, .cs-pat.pl-embudo .cs-pan > div { flex: 0 1 auto; }
+.cs-pat.pl-piramide .cs-pan + .cs-pan::before, .cs-pat.pl-embudo .cs-pan + .cs-pan::before { display: none; }
+.cs-pat.pl-piramide .cs-pan > i:not(.ic), .cs-pat.pl-embudo .cs-pan > i:not(.ic) { display: none; }
+/* ── línea de tiempo: una raya con un punto por fecha, y la fecha en el color del eje ── */
+.cs-pat.pl-tiempo { padding-left: 5em; }
+.cs-pat.pl-tiempo::before { content: ''; position: absolute; left: 1.5em; top: 2em; bottom: 2em; width: 0.36em; border-radius: 0.2em; background: color-mix(in srgb, var(--accent) 55%, transparent); }
+.cs-pat.pl-tiempo .cs-pan + .cs-pan::before { display: none; }
+.cs-pat.pl-tiempo .cs-pan > i:not(.ic) { position: absolute; left: -4.42em; top: 50%; width: 2.2em; height: 2.2em; margin-top: -1.1em; font-size: 1em; color: transparent; background: var(--accent); box-shadow: 0 0 0 0.3em var(--cs-bg, #0c0c0d); }
+.cs-pat.pl-tiempo .cs-pan b { color: var(--accent); }
+.cs-pat.pl-tiempo .cs-pan.on span { font-size: 5.6em; opacity: 1; }
+/* ── una cifra dentro del texto ── */
+.cs-kin .w.num { font-family: 'VF Outfit', sans-serif; font-weight: 700; font-size: 1.12em; color: var(--tone); font-variant-numeric: tabular-nums; }
+
+/* el estado del que viene un fotograma intermedio: se maqueta para medirlo, pero no se ve */
+.cs-stage.cs-fantasma { visibility: hidden !important; pointer-events: none; z-index: 0; }
+.cs-stage.cs-fantasma * { visibility: hidden !important; }
+
+/* Conexiones: los autores que el texto nombra, en fila; cada uno se enciende al oírlo. */
+.cs-comp.cp-nombres ol { flex-direction: row; flex-wrap: wrap; gap: 1.2em 1.4em; }
+.cs-comp.cp-nombres li { padding: 1em 2em 1em 1.3em; gap: 1em; border-radius: 4em; --tn2: #9d8fe0; }
+.cs-comp.cp-nombres li > b { font-size: 4.4em; white-space: nowrap; }
+.cs-comp.cp-nombres li.act > b { font-size: 4.4em; }
+
+/* El esquema entero, como en la web: todas las piezas abiertas a la vez (repaso final) y el pie debajo. */
+.con-entero .cs-fig-title { font-size: 4.6em; font-style: italic; font-weight: 500; font-family: 'VF Serif', serif; color: var(--cs-ink2); margin-bottom: 0.9em; }
+.cs-pat.entero { gap: 1.4em; margin-bottom: 2.4em; }
+.cs-pat.entero .cs-pan, .cs-pat.entero.p-cadena .cs-pan.on { padding: 1.6em 2em; gap: 1.4em; box-shadow: none; }
+.cs-pat.entero .cs-pan.on b { font-size: 4.6em; }
+.cs-pat.entero .cs-pan span { font-size: 3.6em; margin-top: 0.3em; }
+.cs-pat.entero .cs-pan ul { margin-top: 0.5em; }
+.cs-pat.entero .cs-pan li { font-size: 3.4em; margin-bottom: 0.32em; }
+.cs-pat.entero .cs-pan > i:not(.ic) { font-size: 2.8em; }
+.con-entero .cs-pie { font-size: 4em; line-height: 1.3; color: var(--cs-ink2); }
+/* Dos lados: en columnas enfrentadas, cada una con su título subrayado en su color. */
+.cs-pat.entero.p-contraste.n-2 { flex-direction: row; align-items: stretch; gap: 1.6em; }
+.cs-pat.entero.p-contraste.n-2 .cs-pan { flex: 1 1 0; min-width: 0; flex-direction: column; gap: 0; padding: 2em 1.8em; }
+.cs-pat.entero.p-contraste.n-2 .cs-pan > i { display: none; }
+.cs-pat.entero.p-contraste.n-2 .cs-pan b { text-align: center; color: var(--tn2); padding-bottom: 0.5em; margin-bottom: 0.2em; border-bottom: 0.06em solid color-mix(in srgb, var(--tn2) 60%, transparent); }
+.cs-pat.entero.p-contraste.n-2 .cs-pan + .cs-pan::before { display: none; }
+.ar-16x9 .cs-pat.entero .cs-pan li, .ar-1x1 .cs-pat.entero .cs-pan li, .ar-16x9 .cs-pat.entero .cs-pan span, .ar-1x1 .cs-pat.entero .cs-pan span { font-size: 3.7em; }
+.ar-16x9 .con-entero .cs-pie, .ar-1x1 .con-entero .cs-pie { font-size: 3.7em; }
+
+/* Enumeración del propio texto: lista numerada; cada punto se enciende al llegar la voz. */
+.cs-comp.cp-enumera li { padding: 1.2em 2em; }
+.cs-comp.cp-enumera li > b { font-size: 4.4em; font-family: 'VF Outfit', sans-serif; font-weight: 600; }
+.cs-comp.cp-enumera li.act > b { font-size: 4.8em; }
+.cs-comp.cp-enumera.cn-5 li, .cs-comp.cp-enumera.cn-6 li { padding: 0.9em 1.8em; }
+.cs-comp.cp-enumera.cn-5 li > b, .cs-comp.cp-enumera.cn-6 li > b { font-size: 3.8em; }
+/* Ámbitos de aplicación: etiquetas en fila, sin número. */
+.cs-comp.cp-ambitos ol { flex-direction: row; flex-wrap: wrap; gap: 1.1em 1.3em; }
+.cs-comp.cp-ambitos li { padding: 0.9em 1.9em; border-radius: 4em; }
+.cs-comp.cp-ambitos li > i { display: none; }
+.cs-comp.cp-ambitos li > b, .cs-comp.cp-ambitos li.act > b { font-size: 4.6em; font-family: 'VF Outfit', sans-serif; font-weight: 600; white-space: nowrap; }
+
+/* Imágenes libres (Wikimedia Commons): una por lección, sobre la idea que abre la pieza, y el retrato del autor en
+   el crédito. En escala de grises con el tono del libro, para que una foto cualquiera no rompa la identidad. */
+.cs-foto { position: relative; margin: 0 0 4.4em; height: 44em; border-radius: 3em; overflow: hidden; flex: none; background: #121214; box-shadow: 0 0 0 0.2em color-mix(in srgb, var(--accent) 45%, transparent); }
+.cs-foto img { width: 100%; height: 100%; object-fit: cover; display: block; filter: grayscale(1) contrast(1.06) brightness(0.86); }
+.cs-foto::after { content: ''; position: absolute; inset: 0; background: linear-gradient(#0a0a0b00 55%, #0a0a0bd9 100%), color-mix(in srgb, var(--accent) 16%, transparent); mix-blend-mode: normal; }
+.cs-foto figcaption { position: absolute; right: 1.1em; bottom: 0.7em; left: 1.1em; z-index: 1; text-align: right; font-size: 2.3em; line-height: 1.2; color: #ffffffb8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cs-foto.retrato { width: 30em; height: 30em; border-radius: 50%; margin-bottom: 3.6em; }
+.cs-foto.retrato figcaption { position: static; }
+.cs-foto.retrato::after { background: color-mix(in srgb, var(--accent) 14%, transparent); }
+.ar-1x1 .cs-foto { height: 26em; margin-bottom: 3em; }
+.ar-16x9 .cs-foto { height: 24em; margin-bottom: 2.6em; width: 62%; }
+.ar-1x1 .cs-foto.retrato, .ar-16x9 .cs-foto.retrato { width: 20em; height: 20em; }
+/* Con imagen, el contenido se ancla arriba: si se centrara, la foto se movería al cambiar de página el texto. */
+.cs-stage.con-foto { justify-content: flex-start; padding-top: 2em; }
+/* El autor sin foto: medallón con sus iniciales. */
+.cs-medallones { display: flex; gap: 2.2em; margin-bottom: 4em; }
+.cs-medallones span { width: 5.2em; height: 5.2em; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'VF Playfair', serif; font-weight: 700; font-size: 5.4em; letter-spacing: 0.02em; color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, #121214); box-shadow: inset 0 0 0 0.05em color-mix(in srgb, var(--accent) 65%, transparent), 0 0 0 0.14em color-mix(in srgb, var(--accent) 16%, transparent); }
+.ar-1x1 .cs-medallones, .ar-16x9 .cs-medallones { margin-bottom: 2.4em; }
+.ar-1x1 .cs-medallones span, .ar-16x9 .cs-medallones span { font-size: 4em; }

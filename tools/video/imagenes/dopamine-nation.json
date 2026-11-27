@@ -1,0 +1,47 @@
+{
+  "libro": "Dopamine Nation",
+  "libro_id": "8f978a60-d21d-4788-bf8c-04d07a5b78fe",
+  "como_se_usa": "Cada entrada propone una imagen libre de Wikimedia Commons para una lección (sale sobre la idea que abre la pieza) o, en «retrato», la del autor (sale en el crédito del libro). No sale en ningún vídeo hasta que alguien la revisa y pone \"aprobado\": true. Solo valen dominio público, CC0 y CC BY. Una lección sin imagen clara no lleva ninguna.",
+  "retrato": null,
+  "lecciones": [
+    {
+      "leccion_id": "2b0c7beb-56a7-419f-a332-0f700e603d3b",
+      "leccion": "La Paradoja de la Sobreabundancia: Más Placer, Más Dolor",
+      "consulta": "candy shop sweets",
+      "por_que": "Tarros de caramelos: la abundancia de placer fácil.",
+      "archivo": "14fdf6744b6e0d.jpg",
+      "titulo": "File:Sassafras Sweet Co. candy in jars.jpg",
+      "autor": "Matthew Paul Argall",
+      "licencia": "CC BY 2.0",
+      "licencia_url": "https://creativecommons.org/licenses/by/2.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Sassafras_Sweet_Co._candy_in_jars.jpg",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "b0e2ad69-dfbb-4fed-9edb-888e3c9390b9",
+      "leccion": "Neurociencia del Sistema Dopaminérgico: La Moneda del Deseo",
+      "consulta": "seesaw playground",
+      "por_que": "Un balancín: el placer y el dolor a uno y otro lado.",
+      "archivo": "46dfa3d3e7b409.jpg",
+      "titulo": "File:Up and down.jpg",
+      "autor": "Roberto Picco",
+      "licencia": "CC BY 2.0",
+      "licencia_url": "https://creativecommons.org/licenses/by/2.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Up_and_down.jpg",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "62852b8f-32f9-4b05-b2b1-24747018959c",
+      "leccion": "La Cultura de la Automedicación: Por Qué Estamos Todos Aquí",
+      "consulta": "pills medication",
+      "por_que": "Pastillas en una mano: la automedicación.",
+      "archivo": "3257bb344dd74d.jpg",
+      "titulo": "File:Addiction to Medication.jpg",
+      "autor": "guvo59",
+      "licencia": "CC0",
+      "licencia_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Addiction_to_Medication.jpg",
+      "aprobado": true
+    }
+  ]
+}

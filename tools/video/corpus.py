@@ -59,6 +59,8 @@ class Lesson:
     conexion_cruzada: str = ""
     autores_relacionados: list[str] = field(default_factory=list)
     etiquetas: list[str] = field(default_factory=list)
+    # Apartados de ampliación que algunas lecciones traen: [{"titulo", "cuerpo"}], en su orden.
+    detalles: list[dict[str, str]] = field(default_factory=list)
     diagramas: list[dict[str, Any]] = field(default_factory=list)
     preguntas: list[Question] = field(default_factory=list)
 
@@ -109,6 +111,20 @@ class Book:
 
 
 # ───────────────────────── construcción a partir de filas (pura, sin red) ─────────────────────────
+
+def _detalles(v: Any) -> list[dict[str, str]]:
+    """Los apartados de ampliación de una lección, solo los que traen título y cuerpo."""
+    if isinstance(v, str):
+        try:
+            v = json.loads(v)
+        except ValueError:
+            return []
+    out = []
+    for x in v if isinstance(v, list) else []:
+        if isinstance(x, dict) and str(x.get("titulo") or "").strip() and str(x.get("cuerpo") or "").strip():
+            out.append({"titulo": T.clean(x.get("titulo")), "cuerpo": str(x.get("cuerpo")).strip()})
+    return out
+
 
 def _as_list(v: Any) -> list[str]:
     if isinstance(v, list):
@@ -163,6 +179,7 @@ def book_from_rows(
                 conexion_cruzada=str(l.get("conexion_cruzada") or "").strip(),
                 autores_relacionados=_as_list(l.get("autores_relacionados")),
                 etiquetas=_as_list(l.get("dominio_aplicacion")),
+                detalles=_detalles(l.get("detalles")),
                 diagramas=specs if isinstance(specs, list) else [],
                 preguntas=por_leccion.get(l["id"], []),
             )

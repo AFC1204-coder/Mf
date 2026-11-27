@@ -81,6 +81,8 @@ const msgTimer = setInterval(() => {
    STATE
 ═══════════════════════════════════════════ */
 let libros=[], lecs=[], preg=[], prog=[], revisiones=[];
+let audiosIdx=null;   // datos/audios.json: qué lecciones tienen el audio grabado (lib/audio.js)
+let videosIdx=null;   // datos/videos.json: qué lección y qué libro tienen vídeo (lib/video.js)
 let libroActual=null, lecActual=null;
 let ejeActivo=null, subEjeActivo=null, searchQ='', lecFilter='all';
 let testPregs=[], testIdx=0, testResp=[], testCorr=0, testErr=0;
@@ -521,17 +523,19 @@ const leerJSON=async u=>{ try{ const r=await fetch(u,{cache:'no-cache'}); return
 
 /** Contenido: libros, lecciones (sin índice de búsqueda ni SVG antiguos), preguntas, diagramas y mapas. */
 async function descargarCorpus(){
-  const [lb, ls, pr, conUrl, conSvg, dg, mp] = await Promise.all([
+  const [lb, ls, pr, conUrl, conSvg, dg, mp, vd, au] = await Promise.all([
     sb('libros?select=*&publico=eq.true&order=fecha_creacion.asc'),
     sbAll(`lecciones?select=${Corpus.COLUMNAS_LECCION}&activa=eq.true&order=orden.asc`),
     sbAll('preguntas?select=*&activa=eq.true'),
     sbAll('lecciones?select=id,imagen_principal&activa=eq.true&imagen_principal=not.like.data:*'),
     sbAll('lecciones?select=id&activa=eq.true&imagen_principal=like.data:*'),
     leerJSON('datos/diagramas.json'),
-    leerJSON('datos/mapas.json')
+    leerJSON('datos/mapas.json'),
+    leerJSON('datos/videos.json'),
+    leerJSON('datos/audios.json')
   ]);
   Corpus.fusionarImagenes(ls, conUrl, conSvg);
-  return { v: Corpus.VERSION, ts: Date.now(), libros: lb, lecs: ls, preg: pr, dg, mp };
+  return { v: Corpus.VERSION, ts: Date.now(), libros: lb, lecs: ls, preg: pr, dg, mp, vd, au };
 }
 /** Datos del usuario (pequeños): se piden en cada apertura. */
 async function descargarUsuario(){
@@ -544,6 +548,8 @@ async function descargarUsuario(){
 function aplicarCorpus(c){
   libros = c.libros.map(l=>({...l, eje:normalizeEje(l.eje)}));
   lecs = c.lecs; preg = c.preg || [];
+  videosIdx = c.vd || null;
+  audiosIdx = c.au || null;
   try{
     if(typeof Visuales!=='undefined'){
       Visuales.fusionarDiagramas(lecs, c.dg, Diagrama);
@@ -1876,6 +1882,7 @@ function renderLibroHero(){
         </div>
       </div>
     </div>
+    ${videoBloqueHtml(typeof VideoLeccion!=='undefined'?VideoLeccion.deLibro(videosIdx,l.id):[])}
     ${ideasInvHtml}
     ${infografiaLibroHtml(l)}`;
   if(!l.portada_url){
@@ -1926,6 +1933,7 @@ function renderLecs(list,q=''){
         <div class="ruta-m">
           <span>${Didactica.minutosLectura(l)} min</span>
           ${conFigura?`<span>con diagrama</span>`:''}
+          ${typeof VideoLeccion!=='undefined'&&VideoLeccion.tiene(videosIdx,l.id)?`<span>con vídeo</span>`:''}
           ${nA?`<span>${nA} autor${nA>1?'es':''} cruzado${nA>1?'s':''}</span>`:''}
           ${sig&&sig.id===l.id?`<span class="ruta-sig">siguiente</span>`:''}
         </div>
@@ -2019,6 +2027,39 @@ function renderRuta(){
 }
 
 /* ═══════════════════════════════════════════
+   VÍDEO DE LA LECCIÓN Y DEL LIBRO (YouTube, bajo demanda)
+   Hasta que se pulsa no se carga nada de YouTube: ni reproductor ni miniatura.
+═══════════════════════════════════════════ */
+function videoBloqueHtml(items){
+  if(!items||!items.length) return '';
+  return `<div class="vid-bloque">
+    <div class="vid-botones">`+items.map(v=>`<button type="button" class="vid-btn" data-yt="${v.yt}" aria-expanded="false" onclick="videoAbrir(this)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="7,4 20,12 7,20"/></svg>
+      <span>${esc(v.etiqueta)}</span>${v.duracion?`<span class="vid-dur">${esc(v.duracion)}</span>`:''}
+    </button>`).join('')+`</div>
+    <div class="vid-marco" hidden></div>
+  </div>`;
+}
+function videoAbrir(btn){
+  const bloque=btn.closest('.vid-bloque'), marco=bloque&&bloque.querySelector('.vid-marco');
+  const yt=btn.dataset.yt, url=VideoLeccion.urlIncrustar(yt);
+  if(!marco||!url) return;
+  const yaAbierto=btn.getAttribute('aria-expanded')==='true';
+  videoCerrar();
+  if(yaAbierto) return;                              // segundo toque en el mismo botón: cerrar
+  if(typeof ttsStop==='function') ttsStop();         // el audio de la lección y el vídeo no suenan a la vez
+  btn.setAttribute('aria-expanded','true');
+  marco.innerHTML=`<div class="vid-caja"><iframe src="${url}" title="${esc(btn.querySelector('span').textContent)}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+    <div class="vid-pie"><a href="${VideoLeccion.urlVer(yt)}" target="_blank" rel="noopener">Abrir en YouTube</a><button type="button" onclick="videoCerrar()">Cerrar</button></div>`;
+  marco.hidden=false;
+  marco.scrollIntoView({block:'nearest',behavior:'smooth'});
+}
+function videoCerrar(){
+  document.querySelectorAll('.vid-marco').forEach(m=>{ m.innerHTML=''; m.hidden=true; });
+  document.querySelectorAll('.vid-btn[aria-expanded="true"]').forEach(b=>b.setAttribute('aria-expanded','false'));
+}
+
+/* ═══════════════════════════════════════════
    VER LECCION
 ═══════════════════════════════════════════ */
 function verLeccion(id, from=null, skipPush=false, replace=false){
@@ -2094,7 +2135,7 @@ function verLeccion(id, from=null, skipPush=false, replace=false){
     </button>
     <div class="tts-info">
       <span class="tts-label">Escuchar lección</span>
-      <span class="tts-engine" id="tts-engine"></span>
+      <span class="tts-engine" id="tts-engine">${ttsRotuloGrabado()}</span>
     </div>
     <span class="tts-status" id="tts-status"></span>
     <button class="tts-btn${ttsAudiolibro?' active':''}" id="tts-book-btn" onclick="ttsToggleAudiolibro()" title="Modo audiolibro: encadena las lecciones del libro">
@@ -2107,6 +2148,8 @@ function verLeccion(id, from=null, skipPush=false, replace=false){
       <svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>
     </button>
   </div>`;
+
+  html+=videoBloqueHtml(typeof VideoLeccion!=='undefined'?VideoLeccion.deLeccion(videosIdx,lecActual.id):[]);
 
   if(lecActual.detalles?.length){
     html+=`<div class="det-grid">`+
@@ -2340,6 +2383,7 @@ let ttsAudio=null;
 let ttsAudioBlob=null;
 let ttsMode=null;
 let ttsLeccionId=null, ttsSilencioUrl=null;
+let ttsGrabada=false;   // lo que suena es el audio grabado (no la voz generada al momento)
 let ttsAudiolibro=localStorage.getItem('mf_audiolibro')==='1';
 
 function ttsToggleAudiolibro(){
@@ -2493,7 +2537,7 @@ function ttsUpdateUI(state){
     stopBtn.style.display='flex';
     dlBtn.style.display=showDl?'flex':'none';
     status.textContent='Reproduciendo…';
-    if(engine) engine.textContent=ttsMode==='cloud'?'Google Cloud · sigue con la pantalla apagada':'Voz del navegador · se detiene al apagar la pantalla';
+    if(engine) engine.textContent=ttsMode==='cloud'?(ttsGrabada?'Audio grabado':'Google Cloud')+' · sigue con la pantalla apagada':'Voz del navegador · se detiene al apagar la pantalla';
   } else if(state==='paused'){
     playBtn.innerHTML='<svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>';
     playBtn.title='Reanudar';
@@ -2508,11 +2552,30 @@ function ttsUpdateUI(state){
     stopBtn.style.display='none';
     dlBtn.style.display='none';
     status.textContent='';
-    if(engine) engine.textContent='';
+    if(engine) engine.textContent=ttsRotuloGrabado();
     ttsPaused=false;
   }
 }
 
+/** El audio grabado con la voz de los vídeos (datos/audios.json), si la lección lo tiene y sigue diciendo lo que el texto. */
+function ttsGrabado(lec){
+  return typeof AudioLeccion!=='undefined'&&AudioLeccion.grabado?AudioLeccion.grabado(audiosIdx,lec):null;
+}
+/** «Audio grabado · 3 min» mientras no suena nada, para saber qué se va a oír. Vacío si la lección no lo tiene. */
+function ttsRotuloGrabado(){
+  const g=lecActual?ttsGrabado(lecActual):null;
+  if(!g) return '';
+  const d=typeof VideoLeccion!=='undefined'?VideoLeccion.duracion(g.s):'';
+  return 'Audio grabado'+(d?' · '+d:'');
+}
+async function ttsFetchGrabado(g){
+  try{
+    const r=await fetch(g.url);
+    if(!r.ok) return null;
+    const b=await r.blob();
+    return b&&b.size>1000?b:null;
+  }catch(e){ return null; }
+}
 async function ttsFetchPreGenerated(id){
   try{
     const r=await fetch(`${AUDIO_BUCKET_URL}/${id}.mp3`);
@@ -2544,8 +2607,16 @@ async function ttsTogglePlay(){
   ttsUpdateUI('loading');
 
   try{
+    const grabado=ttsGrabado(lecActual);
+    let blob=null;
+    ttsGrabada=false;
+    if(grabado){
+      blob=await ttsCacheGet(grabado.clave);
+      if(!blob){ blob=await ttsFetchGrabado(grabado); if(blob) await ttsCachePut(grabado.clave,blob); }
+      ttsGrabada=!!blob;
+    }
     const cacheId=lecActual.id+'-v5';
-    let blob=await ttsCacheGet(cacheId);
+    if(!blob) blob=await ttsCacheGet(cacheId);
     if(!blob){
       blob=await ttsFetchPreGenerated(lecActual.id);
       if(!blob) blob=await ttsCallGoogle(text);
@@ -3324,6 +3395,7 @@ function verAutor(enc){
    NAVIGATION
 ═══════════════════════════════════════════ */
 function showView(name, skipPush=false, replace=false){
+  videoCerrar();   // un vídeo abierto no sigue sonando en otra pantalla
   if(name!=='leccion' && typeof lecturaPausar==='function') lecturaPausar();
   if(name!=='leccion'){if(ttsAudio){ttsAudio.pause();ttsAudio=null;}if(window.speechSynthesis){speechSynthesis.cancel();}ttsUtterance=null;ttsPaused=false;ttsMode=null;ttsAudioUrl=null;}
   document.body.classList.toggle('noche', name==='cuaderno');

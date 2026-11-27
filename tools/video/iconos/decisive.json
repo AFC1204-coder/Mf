@@ -1,0 +1,207 @@
+{
+  "libro": "Decisive",
+  "libro_id": "7e663827-1e5e-4bca-9e10-535d3a8838f5",
+  "como_se_usa": "Cada entrada propone un icono de la biblioteca para una pieza de esquema. No sale en ningún vídeo hasta que alguien revisa la propuesta y pone \"aprobado\": true. Iconos válidos: balanza, bandera, bombilla, brujula, camino, ciclo, dado, diana, escudo, grafico, grupo, libro, llave, lupa, ojo, pregunta, red, reloj.",
+  "piezas": [
+    {
+      "leccion_id": "b5db45f2-9b8d-4cba-b7da-a9b775f075a4",
+      "leccion": "Los cuatro villanos de la decisión",
+      "esquema": "Los cuatro villanos de la decisión",
+      "pieza": "Marco estrecho",
+      "icono": "ojo",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "b5db45f2-9b8d-4cba-b7da-a9b775f075a4",
+      "leccion": "Los cuatro villanos de la decisión",
+      "esquema": "Los cuatro villanos de la decisión",
+      "pieza": "Sesgo de confirmación",
+      "icono": "lupa",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "b5db45f2-9b8d-4cba-b7da-a9b775f075a4",
+      "leccion": "Los cuatro villanos de la decisión",
+      "esquema": "Los cuatro villanos de la decisión",
+      "pieza": "Emoción a corto plazo",
+      "icono": "reloj",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "b5db45f2-9b8d-4cba-b7da-a9b775f075a4",
+      "leccion": "Los cuatro villanos de la decisión",
+      "esquema": "Los cuatro villanos de la decisión",
+      "pieza": "Exceso de confianza",
+      "icono": "dado",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "197bb40a-62f2-4c06-8581-cc766713728c",
+      "leccion": "Ampliar las opciones",
+      "esquema": "Ampliar las opciones",
+      "pieza": "El problema: marco estrecho",
+      "icono": "ojo",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "197bb40a-62f2-4c06-8581-cc766713728c",
+      "leccion": "Ampliar las opciones",
+      "esquema": "Ampliar las opciones",
+      "pieza": "Opciones que desaparecen",
+      "icono": "pregunta",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "197bb40a-62f2-4c06-8581-cc766713728c",
+      "leccion": "Ampliar las opciones",
+      "esquema": "Ampliar las opciones",
+      "pieza": "Seguimiento en paralelo",
+      "icono": "red",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "197bb40a-62f2-4c06-8581-cc766713728c",
+      "leccion": "Ampliar las opciones",
+      "esquema": "Ampliar las opciones",
+      "pieza": "Quien ya lo resolvió",
+      "icono": "grupo",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "b6b9ce29-d22c-4dea-bfee-518b3c6742af",
+      "leccion": "Contrastar los supuestos con la realidad",
+      "esquema": "Contrastar los supuestos con la realidad",
+      "pieza": "Buscar lo que contradice",
+      "icono": "balanza",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "b6b9ce29-d22c-4dea-bfee-518b3c6742af",
+      "leccion": "Contrastar los supuestos con la realidad",
+      "esquema": "Contrastar los supuestos con la realidad",
+      "pieza": "Mirar desde fuera",
+      "icono": "grafico",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "b6b9ce29-d22c-4dea-bfee-518b3c6742af",
+      "leccion": "Contrastar los supuestos con la realidad",
+      "esquema": "Contrastar los supuestos con la realidad",
+      "pieza": "Mirar desde cerca",
+      "icono": "lupa",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "b6b9ce29-d22c-4dea-bfee-518b3c6742af",
+      "leccion": "Contrastar los supuestos con la realidad",
+      "esquema": "Contrastar los supuestos con la realidad",
+      "pieza": "Probar en pequeño",
+      "icono": "diana",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "b4b44d25-181d-48fe-b3f3-da788991e159",
+      "leccion": "Tomar distancia: la regla 10/10/10",
+      "esquema": "Tomar distancia: la regla 10/10/10",
+      "pieza": "Regla 10/10/10",
+      "icono": "reloj",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "b4b44d25-181d-48fe-b3f3-da788991e159",
+      "leccion": "Tomar distancia: la regla 10/10/10",
+      "esquema": "Tomar distancia: la regla 10/10/10",
+      "pieza": "Consejo a un amigo",
+      "icono": "grupo",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "b4b44d25-181d-48fe-b3f3-da788991e159",
+      "leccion": "Tomar distancia: la regla 10/10/10",
+      "esquema": "Tomar distancia: la regla 10/10/10",
+      "pieza": "Prioridades esenciales",
+      "icono": "brujula",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "84b80988-51df-4fc3-8456-5fdd87370237",
+      "leccion": "Prepararse para equivocarse",
+      "esquema": "Prepararse para equivocarse",
+      "pieza": "Un abanico de resultados",
+      "icono": "dado",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "84b80988-51df-4fc3-8456-5fdd87370237",
+      "leccion": "Prepararse para equivocarse",
+      "esquema": "Prepararse para equivocarse",
+      "pieza": "Análisis previo al fracaso",
+      "icono": "lupa",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "84b80988-51df-4fc3-8456-5fdd87370237",
+      "leccion": "Prepararse para equivocarse",
+      "esquema": "Prepararse para equivocarse",
+      "pieza": "Preparar también el éxito",
+      "icono": "bandera",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "84b80988-51df-4fc3-8456-5fdd87370237",
+      "leccion": "Prepararse para equivocarse",
+      "esquema": "Prepararse para equivocarse",
+      "pieza": "Cables trampa",
+      "icono": "escudo",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "6d416e06-b6a8-4096-a6d1-9517d84c9e30",
+      "leccion": "El proceso WRAP completo",
+      "esquema": "El proceso WRAP completo",
+      "pieza": "Ampliar las opciones",
+      "icono": "red",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "6d416e06-b6a8-4096-a6d1-9517d84c9e30",
+      "leccion": "El proceso WRAP completo",
+      "esquema": "El proceso WRAP completo",
+      "pieza": "Contrastar supuestos con la realidad",
+      "icono": "balanza",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "6d416e06-b6a8-4096-a6d1-9517d84c9e30",
+      "leccion": "El proceso WRAP completo",
+      "esquema": "El proceso WRAP completo",
+      "pieza": "Tomar distancia antes de decidir",
+      "icono": "reloj",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "6d416e06-b6a8-4096-a6d1-9517d84c9e30",
+      "leccion": "El proceso WRAP completo",
+      "esquema": "El proceso WRAP completo",
+      "pieza": "Prepararse para equivocarse",
+      "icono": "escudo",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "26002584-f210-4027-a2e7-fcf2a6ecefd8",
+      "leccion": "Cuándo usar el proceso y sus límites",
+      "esquema": "Cuánto proceso aplicar a una decisión",
+      "pieza": "Error barato y reversible",
+      "icono": "ciclo",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "26002584-f210-4027-a2e7-fcf2a6ecefd8",
+      "leccion": "Cuándo usar el proceso y sus límites",
+      "esquema": "Cuánto proceso aplicar a una decisión",
+      "pieza": "Error caro e incierto",
+      "icono": "dado",
+      "aprobado": true
+    }
+  ]
+}

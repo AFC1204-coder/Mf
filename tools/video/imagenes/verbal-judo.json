@@ -1,0 +1,21 @@
+{
+  "libro": "Verbal Judo",
+  "libro_id": "dba2ee67-e0f4-4906-ac96-e4831612b9bc",
+  "como_se_usa": "Cada entrada propone una imagen libre de Wikimedia Commons para una lección (sale sobre la idea que abre la pieza) o, en «retrato», la del autor (sale en el crédito del libro). No sale en ningún vídeo hasta que alguien la revisa y pone \"aprobado\": true. Solo valen dominio público, CC0 y CC BY. Una lección sin imagen clara no lleva ninguna.",
+  "retrato": null,
+  "lecciones": [
+    {
+      "leccion_id": "8eb2e1d6-c70a-42d0-a3a8-80ac7af52b51",
+      "leccion": "El principio del judo verbal: responder, no reaccionar",
+      "consulta": "judo throw",
+      "por_que": "Una proyección de judo: usar la fuerza del otro en vez de chocar con ella.",
+      "archivo": "4f579bad87647a.jpg",
+      "titulo": "File:Kata Guruma 01.jpg",
+      "autor": "Alfredo Fontana",
+      "licencia": "CC BY 2.0",
+      "licencia_url": "https://creativecommons.org/licenses/by/2.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Kata_Guruma_01.jpg",
+      "aprobado": true
+    }
+  ]
+}

@@ -17,7 +17,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
-from .frames import WIDTH, episode_pages, render_frames
+from .frames import HEIGHT, WIDTH, State, episode_pages, render_frames
 from .scriptwriter import Episode
 from .tts.base import TTSEngine, WordTiming
 
@@ -28,9 +28,30 @@ FONTS_DIR = Path(__file__).resolve().parent / "assets" / "fonts"
 LEAD_IN_S = 0.35  # silencio antes de la primera palabra
 FADE_SCENE_S = 0.40  # fundido entre escenas
 FADE_BEAT_S = 0.24  # fundido cuando aparece un elemento dentro de la escena
+FADE_PAGE_S = 0.18  # fundido al pasar de una página de texto a la siguiente (donde el texto entra con barrido)
 FADE_STEP_S = 1 / 15  # resolución de los fundidos
 SUB_Y = 1390  # franja de subtítulos (debajo del escenario)
 SUB_H = 260
+
+
+@dataclass
+class RenderStyle:
+    """Cómo se monta un formato. Los valores por defecto son los del formato «clase»."""
+
+    width: int = WIDTH
+    height: int = HEIGHT
+    burn_subs: bool = True  # barra de subtítulos quemada (las piezas compartibles llevan el texto en el propio fotograma)
+    lead_in_s: float = LEAD_IN_S
+    fade_scene_s: float = FADE_SCENE_S
+    fade_beat_s: float = FADE_BEAT_S
+    progress_color: str = ""
+    trim_tail_s: float | None = None  # si se da: el silencio que el motor deja tras la última palabra se recorta a esto  # «#rrggbb»: barra de progreso continua arriba (vacío = sin barra)
+    push_s: float = 0.0  # si > 0: al cambiar de sección, el fotograma nuevo entra empujando al anterior (en vez de fundirse)
+    reveal_s: float = 0.0  # si > 0: lo que cambia en un esquema no aparece de golpe, se dibuja de arriba abajo en este tiempo
+    move_s: float = 0.0  # si > 0: duración del movimiento de los paneles de un esquema al cambiar de pieza (con `tweens`)
+    reveal_text_s: float = 0.0  # si > 0: cada ráfaga de texto entra con un barrido breve de izquierda a derecha
+    sfx: bool = False  # efectos de sonido sintetizados (ver `_pista_sfx`): cambio de sección, pieza de esquema, cuenta atrás
+    extra_deps: list[Path] = field(default_factory=list)  # estilos propios, para la huella de los fotogramas
 
 
 @dataclass
@@ -243,6 +264,67 @@ def _subtitle_track(chunks: list[Chunk], total_s: float, sub_dir: Path) -> Path:
     return _write_concat(entries, sub_dir / "subs.txt")
 
 
+SFX_NIVEL = 1.0  # volumen de los efectos frente a la voz ya normalizada
+
+
+def _pista_sfx(eventos: list[tuple[float, str]], total_s: float, out_wav: Path) -> Path:
+    """Efectos de sonido **sintetizados aquí** (ningún archivo de terceros): un tono o un soplo breve y bajo en cada
+    cambio que se ve. `paso`: cambio de sección (soplo que sube) · `pieza`: entra o se abre una pieza del esquema
+    (toque corto) · `tic`: cuenta atrás de la pausa para pensar · `resp`: llega la respuesta (dos notas).
+    Mismo guion, mismos sonidos: el ruido sale de una semilla fija."""
+    import math
+    import random
+
+    n = int((total_s + 0.5) * SAMPLE_RATE)
+    buf = [0.0] * n
+    rng = random.Random(7)
+
+    def poner(t0: float, muestras: list[float]) -> None:
+        i0 = int(t0 * SAMPLE_RATE)
+        for k, v in enumerate(muestras):
+            if 0 <= i0 + k < n:
+                buf[i0 + k] += v
+
+    def tono(hz: float, dur: float, amp: float, caida: float = 5.0, hz_fin: float | None = None) -> list[float]:
+        m = int(dur * SAMPLE_RATE)
+        out, fase = [], 0.0
+        for k in range(m):
+            x = k / m
+            f = hz + ((hz_fin or hz) - hz) * x
+            fase += 2 * math.pi * f / SAMPLE_RATE
+            ataque = min(1.0, k / (0.004 * SAMPLE_RATE))
+            out.append(amp * ataque * math.exp(-caida * x) * math.sin(fase))
+        return out
+
+    def soplo(dur: float, amp: float) -> list[float]:
+        m = int(dur * SAMPLE_RATE)
+        out, y = [], 0.0
+        for k in range(m):
+            x = k / m
+            alfa = 0.02 + 0.10 * x  # el filtro se abre: el soplo «sube»
+            y += alfa * (rng.uniform(-1, 1) - y)
+            out.append(amp * math.sin(math.pi * x) ** 2 * y)
+        return out
+
+    for t0, tipo in eventos:
+        if tipo == "paso":
+            poner(t0, soplo(0.34, 0.5))
+        elif tipo == "pieza":
+            poner(t0, tono(740, 0.09, 0.13, caida=6, hz_fin=660))
+        elif tipo == "tic":
+            poner(t0, tono(520, 0.07, 0.16, caida=7))
+        elif tipo == "resp":
+            poner(t0, tono(587, 0.16, 0.14, caida=4))
+            poner(t0 + 0.11, tono(880, 0.30, 0.14, caida=4))
+    pcm = array.array("h", (int(max(-1.0, min(1.0, v)) * 32767 * SFX_NIVEL) for v in buf))
+    with wave.open(str(out_wav), "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(SAMPLE_RATE)
+        w.writeframes(pcm.tobytes())
+    return out_wav
+
+
 def _write_concat(entries: list[tuple[Path, float]], out_txt: Path) -> Path:
     lines: list[str] = []
     for p, d in entries:
@@ -270,7 +352,73 @@ def _blend_frames(a: Path, b: Path, steps: int, blend_dir: Path) -> list[Path]:
     return outs
 
 
-def _video_entries(cuts: list[tuple[float, Path, bool]], total_s: float, blend_dir: Path) -> list[tuple[Path, float]]:
+def _push_frames(a: Path, b: Path, steps: int, blend_dir: Path) -> list[Path]:
+    """Fotogramas de un empuje lateral de `a` a `b`: el nuevo entra por la derecha y frena al llegar."""
+    clave = hashlib.sha256(f"empuje|{a.name}|{b.name}|{steps}".encode()).hexdigest()[:16]
+    outs = [blend_dir / f"e_{clave}_{i}.png" for i in range(steps)]
+    if all(p.exists() for p in outs):
+        return outs
+    blend_dir.mkdir(parents=True, exist_ok=True)
+    with Image.open(a) as ia, Image.open(b) as ib:
+        ia, ib = ia.convert("RGB"), ib.convert("RGB")
+        ancho = ia.width
+        for i, p in enumerate(outs):
+            t = (i + 1) / (steps + 1)
+            dx = int(round(ancho * (1 - (1 - t) ** 3)))  # sale deprisa y frena
+            lienzo = Image.new("RGB", ia.size)
+            lienzo.paste(ia, (-dx, 0))
+            lienzo.paste(ib, (ancho - dx, 0))
+            lienzo.save(p, compress_level=1)
+    return outs
+
+
+def _reveal_frames(a: Path, b: Path, steps: int, blend_dir: Path, hacia: str = "abajo") -> list[Path]:
+    """Fotogramas en los que lo que cambia de `a` a `b` se va descubriendo con un barrido de borde suave
+    (hacia «abajo» o hacia la «derecha»): la pieza nueva de un esquema se dibuja, no aparece de golpe.
+    Solo se toca la zona que cambia; el resto del fotograma no se mueve. [] si no cambia nada."""
+    from PIL import ImageChops
+
+    clave = hashlib.sha256(f"barrido|{hacia}|{a.name}|{b.name}|{steps}".encode()).hexdigest()[:16]
+    outs = [blend_dir / f"r_{clave}_{i}.png" for i in range(steps)]
+    if all(p.exists() for p in outs):
+        return outs
+    blend_dir.mkdir(parents=True, exist_ok=True)
+    with Image.open(a) as ia, Image.open(b) as ib:
+        ia, ib = ia.convert("RGB"), ib.convert("RGB")
+        caja = ImageChops.difference(ia, ib).convert("L").point(lambda v: 255 if v > 10 else 0).getbbox()
+        if not caja:
+            return []
+        x0, y0, x1, y1 = caja
+        ra, rb = ia.crop(caja), ib.crop(caja)
+        w, h = x1 - x0, y1 - y0
+        if hacia == "derecha" and h > ia.height * 0.45:
+            hacia = "abajo"  # un cambio que ocupa media pantalla no es una palabra que entra
+        largo = h if hacia == "abajo" else w
+        suave = max(24, int(largo * 0.22))
+        for i, p in enumerate(outs):
+            t = (i + 1) / (steps + 1)
+            t = 1 - (1 - t) ** 2  # sale deprisa y frena
+            frente = t * (largo + suave)
+            rampa = bytes(max(0, min(255, int(255 * (frente - k) / suave))) for k in range(largo))
+            mascara = Image.frombytes("L", (1, largo) if hacia == "abajo" else (largo, 1), rampa).resize((w, h))
+            lienzo = ia.copy()
+            lienzo.paste(Image.composite(rb, ra, mascara), (x0, y0))
+            lienzo.save(p, compress_level=1)
+    return outs
+
+
+def _video_entries(
+    cuts: list[tuple[float, Path, bool]],
+    total_s: float,
+    blend_dir: Path,
+    fade_scene_s: float = FADE_SCENE_S,
+    fade_beat_s: float = FADE_BEAT_S,
+    push_s: float = 0.0,
+    reveal_s: float = 0.0,
+    reveal_text_s: float = 0.0,
+    movimientos: dict[int, list[Path]] | None = None,
+    move_s: float = 0.0,
+) -> list[tuple[Path, float]]:
     """De una lista de cortes (segundo, imagen, ¿cambia de escena?) a imágenes con duración, con fundidos."""
     entries: list[tuple[Path, float]] = []
     for i, (t0, png, new_scene) in enumerate(cuts):
@@ -280,10 +428,31 @@ def _video_entries(cuts: list[tuple[float, Path, bool]], total_s: float, blend_d
             continue
         fade = 0.0
         if i > 0 and cuts[i - 1][1] != png:
-            fade = FADE_SCENE_S if new_scene else FADE_BEAT_S
+            fade = fade_scene_s if new_scene in (1, 2, 3) else FADE_PAGE_S if new_scene == 5 else fade_beat_s
             if slot < fade + 0.2:
                 fade = 0.0
-        if fade:
+        mov = (movimientos or {}).get(i)
+        if mov and move_s and slot >= move_s + 0.1:
+            # Movimiento real: los paneles del esquema van de donde estaban a donde van, fotograma a fotograma.
+            for b in mov:
+                entries.append((b, move_s / len(mov)))
+            entries.append((png, slot - move_s))
+            continue
+        distinto = i > 0 and cuts[i - 1][1] != png
+        barrido = (reveal_s if new_scene == 3 else reveal_text_s if new_scene == 4 else 0.0) if distinto else 0.0
+        if barrido and slot >= barrido + 0.08:
+            steps = max(2, int(round(barrido * FPS)))
+            cuadros = _reveal_frames(cuts[i - 1][1], png, steps, blend_dir, "abajo" if new_scene == 3 else "derecha")
+            for b in cuadros:
+                entries.append((b, barrido / steps))
+            entries.append((png, slot - (barrido if cuadros else 0.0)))
+            continue
+        if fade and push_s and new_scene == 2 and slot >= push_s + 0.2:
+            fade = push_s
+            steps = max(4, int(round(fade * FPS)))
+            for b in _push_frames(cuts[i - 1][1], png, steps, blend_dir):
+                entries.append((b, fade / steps))
+        elif fade:
             steps = max(2, int(round(fade / FADE_STEP_S)))
             for b in _blend_frames(cuts[i - 1][1], png, steps, blend_dir):
                 entries.append((b, fade / steps))
@@ -318,27 +487,51 @@ def render_episode(
     voice: str | None = None,
     photo: Path | None = None,
     log=print,
+    style: RenderStyle | None = None,
+    pages: tuple[list[State], list[str]] | None = None,
+    thumb_page: str | None = None,
+    tweens: dict[int, list[str]] | None = None,
 ) -> RenderInfo:
-    """Renderiza un episodio completo. Devuelve duración, capítulos (para la descripción) y voces usadas."""
+    """Renderiza un episodio completo. Devuelve duración, capítulos (para la descripción) y voces usadas.
+
+    `style`, `pages` y `thumb_page` permiten montar otro formato (las piezas compartibles) con la misma
+    línea de tiempo: otro tamaño, otros fotogramas, sin barra de subtítulos y con miniatura propia.
+    """
+    style = style or RenderStyle()
     work_dir.mkdir(parents=True, exist_ok=True)
     out_mp4.parent.mkdir(parents=True, exist_ok=True)
     frames_dir = frames_dir or (work_dir / "frames")
+    size = (style.width, style.height)
 
     # 1 · Fotogramas.
-    states, pages = episode_pages(episode, photo)
-    pngs = render_frames(pages, frames_dir)
+    states, docs = pages if pages is not None else episode_pages(episode, photo)
+    # Fotogramas intermedios (movimiento dentro de un esquema): índice del estado de llegada → sus HTML.
+    tweens = tweens or {}
+    docs_mov = [d for n in sorted(tweens) for d in tweens[n]]
+    todos = render_frames(docs + docs_mov + ([thumb_page] if thumb_page else []), frames_dir, size=size, extra_deps=style.extra_deps)
+    pngs = todos[: len(docs)]
+    mov_pngs: dict[int, list[Path]] = {}
+    k = len(docs)
+    for n in sorted(tweens):
+        mov_pngs[n] = todos[k : k + len(tweens[n])]
+        k += len(tweens[n])
     log(f"      ✓ {len(set(pngs))} fotogramas")
 
     # 2 · Voz, escena a escena, y línea de tiempo.
-    pcm = bytearray(_silence(LEAD_IN_S))
+    pcm = bytearray(_silence(style.lead_in_s))
     timings: list[SceneTiming] = []
     voices: list[str] = []
-    cursor = LEAD_IN_S
+    cursor = style.lead_in_s
     audio_dir = work_dir / "audio"
     for i, scene in enumerate(episode.scenes):
         if scene.narration:
             res = tts.synthesize(scene.speech, audio_dir / f"escena_{i + 1:02d}.mp3", voice=voice)
             datos = _decode_pcm(res.audio_path)
+            if style.trim_tail_s is not None and res.word_timings:
+                # Edge deja ~1 s de silencio tras la última palabra, que se suma a la pausa del guion: en un vídeo
+                # corto son segundos de aire muerto. La pausa la manda el guion (pause_after_s), no el motor.
+                fin = int((max(w.end_s for w in res.word_timings) + style.trim_tail_s) * SAMPLE_RATE) * 2
+                datos = datos[: max(2, min(len(datos), fin))]
             speech_s = len(datos) / 2 / SAMPLE_RATE
             etiqueta = f"{res.engine_name} · {res.voice}"
             if etiqueta not in voices:
@@ -359,7 +552,10 @@ def render_episode(
 
     # 3 · Cuándo entra cada estado.
     cuts: list[tuple[float, Path, bool]] = []
-    for st, png in zip(states, pngs):
+    states_prev: list[State] = []
+    eventos: list[tuple[float, str]] = []  # (momento, tipo) de los efectos de sonido, si el estilo los pide
+    movimientos: dict[int, list[Path]] = {}  # índice del corte → fotogramas intermedios que llevan a él
+    for n_estado, (st, png) in enumerate(zip(states, pngs)):
         scene = episode.scenes[st.scene_index]
         tm = timings[st.scene_index]
         es_inicio = st.at_word == 0 and st.at_s == 0.0
@@ -372,10 +568,34 @@ def render_episode(
             pos = mapa[min(len(mapa) - 1, max(0, st.at_word or 0))] if mapa else 0
             t = tm.start_s + (tm.words[min(pos, len(tm.words) - 1)][1] if tm.words else 0.0)
         t = min(max(t, cuts[-1][0] if cuts else 0.0), max(0.0, tm.start_s + tm.total_s - 0.12))
-        cuts.append((t, png, es_inicio))
+        # 0: cambio dentro de la escena · 1: escena nueva · 2: escena nueva que además cambia de sección
+        cambia = st.scene_index > 0 and (scene.section, scene.kind) != (episode.scenes[st.scene_index - 1].section, episode.scenes[st.scene_index - 1].kind)
+        # · 3: cambio dentro de un esquema (se dibuja) · 4: ráfaga de texto (entra con un barrido)
+        # Cada cambio, con la transición que le corresponde:
+        #  · se AÑADE algo sobre lo que había (una pieza del esquema, una ráfaga de texto en la misma página) → se dibuja;
+        #  · se SUSTITUYE lo que había (otra pieza abierta, otra página de texto) → fundido: un barrido mezclaría dos textos.
+        if es_inicio:
+            codigo = 2 if cambia else 1
+        elif scene.kind == "c-figura" and style.reveal_s:
+            codigo = 3
+        elif scene.kind == "c-frase" and style.reveal_text_s:
+            misma_pagina = bool(states_prev) and states_prev[-1].scene_index == st.scene_index and states_prev[-1].view.get("page") == st.view.get("page")
+            codigo = 4 if misma_pagina else 5
+        else:
+            codigo = 0
+        if es_inicio and cambia and st.scene_index > 0:
+            eventos.append((t, "resp" if scene.section == "Respuesta" else "tic" if scene.kind == "c-pausa" else "paso"))
+        elif scene.kind == "c-pausa" and not es_inicio:
+            eventos.append((t, "tic"))
+        elif codigo == 3 and (st.view.get("mode") == "pieza" or st.view.get("shown") is not None):
+            eventos.append((t, "pieza"))
+        states_prev.append(st)
+        if n_estado in mov_pngs:
+            movimientos[len(cuts)] = mov_pngs[n_estado]
+        cuts.append((t, png, codigo))
 
     blend_dir = work_dir / "fundidos"
-    video_txt = _write_concat(_video_entries(cuts, total_s, blend_dir), work_dir / "video.txt")
+    video_txt = _write_concat(_video_entries(cuts, total_s, blend_dir, style.fade_scene_s, style.fade_beat_s, style.push_s, style.reveal_s, style.reveal_text_s, movimientos, style.move_s), work_dir / "video.txt")
 
     # 4 · Capítulos: dónde empieza cada sección del índice.
     chapters: list[tuple[str, float]] = []
@@ -388,7 +608,6 @@ def render_episode(
     # 5 · Subtítulos y audio.
     chunks = build_subtitle_chunks(timings)
     write_srt(timings, out_mp4.with_suffix(".srt"))
-    subs_txt = _subtitle_track(chunks, total_s, work_dir / "subs")
     wav = work_dir / "locucion.wav"
     with wave.open(str(wav), "wb") as w:
         w.setnchannels(1)
@@ -399,15 +618,33 @@ def render_episode(
     meta = _chapters_file(chapters, total_s, episode, work_dir / "capitulos.txt")
 
     # 6 · Mezcla final.
-    audio_filter = "[2:a]loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000[a]" if con_voz else "[2:a]anull[a]"
+    # Entradas: 0 fotogramas · 1 locución · 2 metadatos · (3 subtítulos, si se queman).
+    audio_filter = "[1:a]loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000[a]" if con_voz else "[1:a]anull[a]"
+    entradas = ["-f", "concat", "-safe", "0", "-i", str(video_txt), "-i", str(wav), "-f", "ffmetadata", "-i", str(meta)]
+    video_filter = f"[0:v]fps={FPS},format=yuv420p[v0]"
+    ultimo = "v0"
+    if style.sfx and eventos and not style.burn_subs:
+        fx = _pista_sfx(eventos, total_s, work_dir / "efectos.wav")
+        entradas += ["-i", str(fx)]  # entrada 3: va antes que los subtítulos, que aquí no se queman
+        audio_filter = audio_filter.replace("[a]", "[voz]") + ";[3:a]aresample=48000[fx];[voz][fx]amix=inputs=2:duration=first:normalize=0[a]"
+    if style.burn_subs:
+        subs_txt = _subtitle_track(chunks, total_s, work_dir / "subs")
+        entradas += ["-f", "concat", "-safe", "0", "-i", str(subs_txt)]
+        video_filter += f";[{ultimo}][3:v]overlay=0:{SUB_Y}:eof_action=pass[v1]"
+        ultimo = "v1"
+    if style.progress_color:
+        # Barra de progreso continua: lo único que se mueve entre corte y corte (el vídeo no parece una diapositiva).
+        color = "0x" + style.progress_color.lstrip("#")
+        video_filter += (
+            f";color=c={color}:s={style.width}x10:r={FPS}[pb];"
+            f"[{ultimo}][pb]overlay=x='-W+W*t/{total_s:.3f}':y=0:shortest=0:eof_action=pass[v2]"
+        )
+        ultimo = "v2"
     cmd = [
         "ffmpeg", "-y", "-v", "error",
-        "-f", "concat", "-safe", "0", "-i", str(video_txt),
-        "-f", "concat", "-safe", "0", "-i", str(subs_txt),
-        "-i", str(wav),
-        "-f", "ffmetadata", "-i", str(meta),
-        "-filter_complex", f"[0:v]fps={FPS},format=yuv420p[bg];[bg][1:v]overlay=0:{SUB_Y}:eof_action=pass[v];{audio_filter}",
-        "-map", "[v]", "-map", "[a]", "-map_metadata", "3", "-map_chapters", "3",
+        *entradas,
+        "-filter_complex", f"{video_filter};{audio_filter}",
+        "-map", f"[{ultimo}]", "-map", "[a]", "-map_metadata", "2", "-map_chapters", "2",
         "-t", f"{total_s:.3f}",
         "-c:v", "libx264", "-preset", "veryfast", "-crf", "21", "-pix_fmt", "yuv420p", "-r", str(FPS),
         "-c:a", "aac", "-b:a", "160k", "-ar", "48000",
@@ -420,7 +657,10 @@ def render_episode(
 
     thumb = out_mp4.with_name("miniatura.png")
     # La miniatura es la portada (título y lugar en la serie), no el gancho que la precede.
-    portada = next((png for st, png in zip(states, pngs) if episode.scenes[st.scene_index].kind in ("portada", "libro")), pngs[0])
+    if thumb_page:
+        portada = todos[-1]
+    else:
+        portada = next((png for st, png in zip(states, pngs) if episode.scenes[st.scene_index].kind in ("portada", "libro")), pngs[0])
     shutil.copyfile(portada, thumb)
     return RenderInfo(out_mp4, round(total_s, 2), chapters, voices, len(set(pngs)), thumb)
 

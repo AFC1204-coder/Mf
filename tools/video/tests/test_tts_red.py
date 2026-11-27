@@ -1,0 +1,157 @@
+"""Red del motor Edge TTS: proxy y certificados del entorno. Sin red."""
+
+from __future__ import annotations
+
+import os
+import ssl
+import tempfile
+import unittest
+from unittest import mock
+
+from tools.video.tts import edge_tts_engine as E
+
+
+class RedTest(unittest.TestCase):
+    def test_usa_el_proxy_https_del_entorno(self):
+        with mock.patch.dict(os.environ, {"HTTPS_PROXY": "http://127.0.0.1:3128", "NO_PROXY": "localhost"}, clear=True):
+            self.assertEqual(E.proxy_de_entorno(), "http://127.0.0.1:3128")
+
+    def test_respeta_no_proxy(self):
+        with mock.patch.dict(os.environ, {"HTTPS_PROXY": "http://127.0.0.1:3128", "NO_PROXY": ".bing.com"}, clear=True):
+            self.assertIsNone(E.proxy_de_entorno())
+
+    def test_sin_proxy_sale_directo(self):
+        with mock.patch.dict(os.environ, {}, clear=True):
+            self.assertIsNone(E.proxy_de_entorno())
+
+    def test_proxy_con_esquema_que_aiohttp_no_entiende(self):
+        with mock.patch.dict(os.environ, {"ALL_PROXY": "socks5://127.0.0.1:1080"}, clear=True):
+            self.assertIsNone(E.proxy_de_entorno())
+
+    def test_anade_la_autoridad_del_entorno_a_la_de_edge_tts(self):
+        with mock.patch.dict(os.environ, {}, clear=True):
+            self.assertIsNone(E._contexto_tls())
+        import certifi
+
+        with tempfile.NamedTemporaryFile("w", suffix=".pem", delete=False) as f:
+            f.write(open(certifi.where(), encoding="utf-8").read())
+        try:
+            with mock.patch.dict(os.environ, {"SSL_CERT_FILE": f.name}, clear=True):
+                ctx = E._contexto_tls()
+            self.assertIsInstance(ctx, ssl.SSLContext)
+            self.assertGreater(ctx.cert_store_stats()["x509_ca"], 0)
+        finally:
+            os.unlink(f.name)
+
+    def test_el_motor_pasa_el_proxy_a_edge_tts(self):
+        with mock.patch.dict(os.environ, {"HTTPS_PROXY": "http://127.0.0.1:3128"}, clear=True):
+            motor = E.EdgeTTSEngine()
+        self.assertEqual(motor.proxy, "http://127.0.0.1:3128")
+
+
+if __name__ == "__main__":
+    unittest.main()
+
+
+class AjustesDeVozTest(unittest.TestCase):
+    def test_ritmo_y_tono_se_normalizan_y_cambian_la_cache(self):
+        from tools.video.tts.cache import CachedTTS
+        from tools.video.tts.edge_tts_engine import EdgeTTSEngine, _ajuste
+
+        self.assertEqual(_ajuste("0", "%", "-8%"), "+0%")
+        self.assertEqual(_ajuste("-5%", "%", "-8%"), "-5%")
+        self.assertEqual(_ajuste("+2hz", "Hz", "-2Hz"), "+2Hz")
+        self.assertEqual(_ajuste(None, "%", "-8%"), "-8%")
+        with self.assertRaises(ValueError):
+            _ajuste("rápido", "%", "-8%")
+        normal, natural = EdgeTTSEngine(), EdgeTTSEngine(rate="+0%", pitch="+0Hz")
+        self.assertEqual(normal.ajustes(), "")  # los valores de siempre no invalidan la caché que ya existe
+        self.assertEqual(natural.ajustes(), "+0%,+0Hz")
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as d:
+            self.assertNotEqual(CachedTTS(normal, Path(d))._key("hola", "v"), CachedTTS(natural, Path(d))._key("hola", "v"))
+
+
+class ReintentosTest(unittest.TestCase):
+    def test_un_fallo_pasajero_se_reintenta_y_uno_persistente_se_rinde(self):
+        import tempfile
+        from pathlib import Path
+
+        from tools.video.tts import edge_tts_engine as M
+
+        with tempfile.TemporaryDirectory() as d, mock.patch.object(M, "ESPERA_REINTENTO_S", 0), mock.patch.object(M, "probe_duration", return_value=1.0):
+            salida = Path(d) / "a.mp3"
+            llamadas = []
+
+            async def falla_dos_veces(self, text, out_path, voice):
+                llamadas.append(1)
+                if len(llamadas) < 3:
+                    raise RuntimeError("No audio was received.")
+                out_path.write_bytes(b"x")
+                return [M.WordTiming(text="hola", start_s=0.0, end_s=0.3), M.WordTiming(text="mundo", start_s=0.3, end_s=0.6)]
+
+            with mock.patch.object(M.EdgeTTSEngine, "_synth_async", falla_dos_veces):
+                M.EdgeTTSEngine().synthesize("hola mundo", salida)
+            self.assertEqual(len(llamadas), 3)
+
+            # Una locución cortada (el audio acaba antes que su última palabra) cuenta como fallo pasajero.
+            async def cortada_una_vez(self, text, out_path, voice):
+                llamadas.append(1)
+                out_path.write_bytes(b"x")
+                fin = 5.0 if len(llamadas) < 2 else 0.6
+                return [M.WordTiming(text="hola", start_s=0.0, end_s=0.3), M.WordTiming(text="mundo", start_s=0.3, end_s=fin)]
+
+            llamadas.clear()
+            with mock.patch.object(M.EdgeTTSEngine, "_synth_async", cortada_una_vez):
+                M.EdgeTTSEngine().synthesize("hola mundo", salida)
+            self.assertEqual(len(llamadas), 2)
+
+            async def falla_siempre(self, text, out_path, voice):
+                llamadas.append(1)
+                raise RuntimeError("No audio was received.")
+
+            llamadas.clear()
+            with mock.patch.object(M.EdgeTTSEngine, "_synth_async", falla_siempre), self.assertRaises(RuntimeError):
+                M.EdgeTTSEngine().synthesize("hola mundo", salida)
+            self.assertEqual(len(llamadas), M.REINTENTOS)
+
+
+class CacheCortadaTest(unittest.TestCase):
+    def test_una_locucion_cortada_en_cache_se_vuelve_a_pedir(self):
+        import json
+        from pathlib import Path
+
+        from tools.video.tts.base import TTSEngine, TTSResult, WordTiming
+        from tools.video.tts.cache import CachedTTS
+
+        texto = "uno dos tres cuatro cinco seis siete ocho nueve diez"
+        enteras = [WordTiming(w, i * 0.3, i * 0.3 + 0.25) for i, w in enumerate(texto.split())]
+
+        class Motor(TTSEngine):
+            name = "edge-tts"
+            llamadas = 0
+
+            def default_voice(self):
+                return "v"
+
+            def sample_voices(self):
+                return ["v"]
+
+            def synthesize(self, text, out_path, voice=None):
+                Motor.llamadas += 1
+                Path(out_path).write_bytes(b"x")
+                return TTSResult(Path(out_path), 3.4, "edge-tts", "v", enteras)
+
+        with tempfile.TemporaryDirectory() as d:
+            c = CachedTTS(Motor(), Path(d) / "c")
+            c.synthesize(texto, Path(d) / "a.mp3")
+            c.synthesize(texto, Path(d) / "b.mp3")
+            self.assertEqual(Motor.llamadas, 1)  # entera: se reutiliza
+            meta = next((Path(d) / "c").glob("*.json"))
+            m = json.loads(meta.read_text(encoding="utf-8"))
+            m["word_timings"] = m["word_timings"][:6]  # como la guardó el servicio al cortarla
+            meta.write_text(json.dumps(m), encoding="utf-8")
+            c.synthesize(texto, Path(d) / "c.mp3")
+            self.assertEqual(Motor.llamadas, 2)

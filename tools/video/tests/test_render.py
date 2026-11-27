@@ -116,3 +116,29 @@ class LineaDeTiempo(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class EfectosDeSonidoTest(unittest.TestCase):
+    def test_pista_sintetizada_repetible_y_mas_baja_que_la_voz(self):
+        import array
+        import tempfile
+        import wave
+        from pathlib import Path
+
+        from tools.video import renderer as R
+
+        eventos = [(0.5, "paso"), (1.0, "pieza"), (2.0, "tic"), (3.0, "resp")]
+        with tempfile.TemporaryDirectory() as d:
+            a = R._pista_sfx(eventos, 4.0, Path(d) / "a.wav")
+            b = R._pista_sfx(eventos, 4.0, Path(d) / "b.wav")
+            self.assertEqual(a.read_bytes(), b.read_bytes())
+            with wave.open(str(a)) as w:
+                self.assertEqual((w.getnchannels(), w.getframerate()), (1, R.SAMPLE_RATE))
+                pcm = array.array("h", w.readframes(w.getnframes()))
+        pico = max(abs(v) for v in pcm) / 32767
+        self.assertGreater(pico, 0.03)  # se oye
+        self.assertLess(pico, 0.25)  # y queda muy por debajo de la voz (normalizada cerca de 0,85)
+        sr = R.SAMPLE_RATE
+        self.assertEqual(max(abs(v) for v in pcm[: int(0.45 * sr)]), 0)  # nada antes del primer evento
+        for t in (0.6, 1.02, 2.02, 3.05):
+            self.assertGreater(max(abs(v) for v in pcm[int(t * sr) : int((t + 0.05) * sr)]), 200, t)

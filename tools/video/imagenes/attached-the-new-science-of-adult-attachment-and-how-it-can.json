@@ -1,0 +1,34 @@
+{
+  "libro": "Attached: The New Science of Adult Attachment and How It Can Help You Find—and Keep—Love",
+  "libro_id": "cf9a48f9-0645-4324-8daa-127a604a58ca",
+  "como_se_usa": "Cada entrada propone una imagen libre de Wikimedia Commons para una lección (sale sobre la idea que abre la pieza) o, en «retrato», la del autor (sale en el crédito del libro). No sale en ningún vídeo hasta que alguien la revisa y pone \"aprobado\": true. Solo valen dominio público, CC0 y CC BY. Una lección sin imagen clara no lleva ninguna.",
+  "retrato": null,
+  "lecciones": [
+    {
+      "leccion_id": "5439dd88-2261-4ff7-8700-9626fee8000d",
+      "leccion": "Tres maneras de vincularse: seguro, ansioso y evitativo",
+      "consulta": "holding hands",
+      "por_que": "Dos manos cogidas: el vínculo de pareja.",
+      "archivo": "8337c06898858a.jpg",
+      "titulo": "File:Crew 2016-01-10 (Unsplash xCmvrpzctaQ).jpg",
+      "autor": "Crew",
+      "licencia": "CC0",
+      "licencia_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Crew_2016-01-10_(Unsplash_xCmvrpzctaQ).jpg",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "1fad1f46-112c-4221-8dc3-5f43ede14114",
+      "leccion": "La paradoja de la dependencia y la base segura",
+      "consulta": "harbour boats",
+      "por_que": "Barcos en un puerto: la base segura desde la que se sale.",
+      "archivo": "969c76422f8283.jpg",
+      "titulo": "File:Boats - harbour of Frontignan 001.jpg",
+      "autor": "Christian Ferrer",
+      "licencia": "CC BY 4.0",
+      "licencia_url": "https://creativecommons.org/licenses/by/4.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Boats_-_harbour_of_Frontignan_001.jpg",
+      "aprobado": true
+    }
+  ]
+}

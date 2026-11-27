@@ -1,0 +1,34 @@
+{
+  "libro": "The War of Art: Break Through the Blocks and Win Your Inner Creative Battles",
+  "libro_id": "64d0bb20-64a9-4caf-8461-8f9f236c337c",
+  "como_se_usa": "Cada entrada propone una imagen libre de Wikimedia Commons para una lección (sale sobre la idea que abre la pieza) o, en «retrato», la del autor (sale en el crédito del libro). No sale en ningún vídeo hasta que alguien la revisa y pone \"aprobado\": true. Solo valen dominio público, CC0 y CC BY. Una lección sin imagen clara no lleva ninguna.",
+  "retrato": null,
+  "lecciones": [
+    {
+      "leccion_id": "88b66018-c3b6-460c-826f-120a8f633b11",
+      "leccion": "La Resistencia: la fuerza invisible que frena el trabajo que importa",
+      "consulta": "typewriter",
+      "por_que": "Una máquina de escribir: el trabajo que espera a quien escribe.",
+      "archivo": "06268159a753c6.jpg",
+      "titulo": "File:Olympia Simplex.jpg",
+      "autor": "Sammlung der Medien und Wissenschaft",
+      "licencia": "CC BY 4.0",
+      "licencia_url": "https://creativecommons.org/licenses/by/4.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Olympia_Simplex.jpg",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "d5c016a2-d873-46ad-8c57-8ad5a3d9ffb5",
+      "leccion": "La Musa y el yo superior: el tramo místico del libro",
+      "consulta": "Muse sculpture",
+      "por_que": "Una estatua clásica de una musa: la Musa de la que habla la lección.",
+      "archivo": "d286708201d920.jpg",
+      "titulo": "File:Muse Glyptothek Munich 266.jpg",
+      "autor": "Autor desconocido",
+      "licencia": "Public domain",
+      "licencia_url": "",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Muse_Glyptothek_Munich_266.jpg",
+      "aprobado": true
+    }
+  ]
+}

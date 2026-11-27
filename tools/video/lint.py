@@ -7,6 +7,7 @@ que no esté en la biblioteca.
 
 from __future__ import annotations
 
+import re
 import json
 import shutil
 import subprocess
@@ -51,8 +52,11 @@ def _sources(book: Book, episode: Episode) -> dict[str, str]:
     src["pregunta.explicacion"] = " ¶ ".join(q.explicacion for q in preguntas)
 
     def campos(prefijo: str, lec) -> None:
-        for campo in ("cuerpo", "idea_clave", "cita_memorable", "autocorreccion", "aplicacion_practica", "titulo"):
+        for campo in ("cuerpo", "idea_clave", "cita_memorable", "autocorreccion", "aplicacion_practica", "conexion_cruzada", "titulo"):
             src[f"{prefijo}.{campo}"] = T.clean(getattr(lec, campo))
+        src[f"{prefijo}.autores_relacionados"] = " ¶ ".join(T.clean(a) for a in lec.autores_relacionados)
+        src[f"{prefijo}.etiquetas"] = " ¶ ".join(T.clean(a) for a in lec.etiquetas)
+        src[f"{prefijo}.detalles"] = " ¶ ".join(f"{T.clean(x.get('titulo'))}. ¶ {T.clean(x.get('cuerpo'))}" for x in getattr(lec, "detalles", []) or [])
 
     for i, lec in enumerate(book.lessons):
         campos(f"leccion[{i + 1}]", lec)
@@ -62,6 +66,7 @@ def _sources(book: Book, episode: Episode) -> dict[str, str]:
                 campos("leccion_anterior", book.lessons[i - 1])
             src["esquema.datos"] = " ¶ ".join(_strings([d.get("datos") for d in lec.diagramas if isinstance(d, dict)]))
             src["esquema.pie"] = " ¶ ".join(T.clean(d.get("pie")) for d in lec.diagramas if isinstance(d, dict))
+            src["esquema.titulo"] = " ¶ ".join(T.clean(d.get("titulo")) for d in lec.diagramas if isinstance(d, dict))
     return src
 
 
@@ -80,6 +85,25 @@ def _contained(part: str, source: str) -> bool:
     a = " ".join(part.split())
     b = " ".join(source.split())
     return bool(a) and (a in b or a.rstrip(".") in b)
+
+
+def _desde_inicio_de_frase(part: str, source: str) -> bool:
+    """Como `_contained`, pero el trozo tiene que empezar donde empieza una frase (o un rótulo) de la fuente.
+
+    «toda intuición falla» está dentro de «No toda intuición falla», y dice lo contrario: un recorte literal
+    solo vale si no se come el arranque de su frase.
+    """
+    a = " ".join(part.split())
+    b = " ".join(source.split())
+    for cand in {a, a.rstrip(".")}:
+        pos = b.find(cand) if cand else -1
+        while pos >= 0:
+            previo = b[:pos].rstrip()
+            # …o donde acaba una cita entre comillas simples que cierra su frase: «…diciendo 'Ahí estás tú!' La segunda…».
+            if not previo or previo[-1] in ".!?…¶:;»”\")—–" or re.search(r"[.!?…]['’]$", previo):
+                return True
+            pos = b.find(cand, pos + 1)
+    return False
 
 
 def _check_diagrams(specs: list[dict]) -> list[bool] | None:
@@ -172,3 +196,247 @@ def lint_episode(episode: Episode, book: Book) -> list[Issue]:
 
 def has_errors(issues: list[Issue]) -> bool:
     return any(i.level == "error" for i in issues)
+
+
+# ───────────────────────── piezas compartibles ─────────────────────────
+
+def _formulas_permitidas(pieza, book: Book) -> set[str]:
+    """Las únicas frases que una pieza puede decir sin que estén en el corpus: `compartir.FORMULAS` con los datos del libro."""
+    from . import compartir as K
+
+    titulos = {""}
+    for lec in book.lessons:
+        if lec.id == pieza.lesson_id:
+            titulos |= {T.clean(d.get("titulo")).rstrip(".") for d in lec.diagramas if isinstance(d, dict)}
+    nodos = len([n for n in ((book.mapa or {}).get("nodos") or []) if isinstance(n, dict) and T.clean(n.get("etiqueta"))])
+    permitidas: set[str] = set()
+    for plantilla in K.FORMULAS.values():
+        for titulo in titulos:
+            permitidas.add(plantilla.format(libro=K.titulo_corto(book.titulo), autor=book.autor, n=nodos, titulo=titulo))
+    return permitidas
+
+
+# Claves de las vistas que no llevan contenido (estructura, estilos, rótulos fijos que se comprueban aparte).
+_CLAVES_SIN_TEXTO = {"spec", "style", "mode", "patron", "icon", "tone", "words", "pos", "order", "foto"}  # «foto» se comprueba aparte
+_CLAVES_ROTULO = {"kicker", "brand", "lema", "cta", "recuerda_rotulo", "tag"}
+
+
+def _textos_de_vista(view: dict) -> list[tuple[str, str]]:
+    """(clave, texto) de todo lo que una vista pone en pantalla como contenido."""
+    out: list[tuple[str, str]] = []
+
+    def walk(clave: str, o) -> None:
+        if isinstance(o, str):
+            if o.strip():
+                out.append((clave, o))
+        elif isinstance(o, dict):
+            for k, v in o.items():
+                if k not in _CLAVES_SIN_TEXTO:
+                    walk(k, v)
+        elif isinstance(o, list):
+            for v in o:
+                walk(clave, v)
+
+    walk("", view)
+    return out
+
+
+def _literal_en_alguna(texto: str, fuentes: list[str]) -> bool:
+    t = " ".join(texto.split()).strip()
+    candidatos = {t, t.rstrip(".:"), t.rstrip("…").rstrip(), t.rstrip("…").rstrip(" .:")}  # el «…» final es el del recorte; los de dentro son del texto
+    return not t or any(_desde_inicio_de_frase(c, f) for c in candidatos if c for f in fuentes)
+
+
+def _lint_lo_que_solo_se_ve(pieza, book: Book, src: dict[str, str]) -> list[Issue]:
+    """Lo que se ve y no se dice (tarjetas, marco de la figura, tema, crédito, miniatura, textos de publicación)
+    también tiene que ser literal del corpus o un rótulo declarado: que hoy lo sea por construcción no basta."""
+    from . import compartir as K
+
+    issues: list[Issue] = []
+    nodos = sum(1 for s in pieza.scenes if s.kind == "c-nodo")
+    # «UN LIBRO EN {n} IDEAS»: el número es el de un grupo de tarjetas de la pieza (la presentación lleva dos grupos).
+    rotulos = {r.format(n=k) for r in K.ROTULOS.values() for k in range(1, nodos + 1)} | {r.format(n=nodos) for r in K.ROTULOS.values()} | set(K.FORMULAS.values())
+    fuentes = [f for f in src.values() if f] + [book.titulo, book.autor, book.eje, K.titulo_corto(book.titulo)]
+    vistas = [(f"{pieza.key} · escena {i} ({s.kind})", s.view) for i, s in enumerate(pieza.scenes, start=1)]
+    vistas.append((f"{pieza.key} · miniatura", pieza.portada))
+    for donde, view in vistas:
+        for clave, texto in _textos_de_vista(view):
+            if clave in _CLAVES_ROTULO or clave == "said":
+                if texto not in rotulos:
+                    issues.append(Issue("error", donde, f"rótulo no declarado en compartir.ROTULOS ({clave}): {texto[:60]!r}"))
+            elif not _literal_en_alguna(texto, fuentes):
+                issues.append(Issue("error", donde, f"texto en pantalla que no es literal del corpus ({clave}): {texto[:60]!r}"))
+
+    def sin_prefijo(t: str) -> str:
+        return next((t[len(pre):] for pre in K.PREFIJOS_PUB if t.startswith(pre)), t)
+
+    en_ideas = f"{K.titulo_corto(book.titulo)} en {nodos} ideas"
+    if not en_ideas.startswith(pieza.titulo_pub.rstrip("…")) and not _literal_en_alguna(sin_prefijo(pieza.titulo_pub), fuentes):
+        issues.append(Issue("error", pieza.key, f"título de publicación que no es literal: {pieza.titulo_pub[:60]!r}"))
+    for parrafo in [x for x in pieza.descripcion_pub.split("\n\n") if x.strip()]:
+        if parrafo.startswith("Del libro «") or parrafo.startswith(K.ROTULOS["marca"]):
+            continue
+        trozos = sin_prefijo(parrafo).split(" · ") if pieza.tipo in ("libro", "recorrido", "presentacion") else [sin_prefijo(parrafo)]
+        if not all(_literal_en_alguna(t, fuentes) for t in trozos):
+            issues.append(Issue("error", pieza.key, f"descripción de publicación que no es literal: {parrafo[:60]!r}"))
+    return issues
+
+
+def lint_pieza(pieza, book: Book) -> list[Issue]:
+    """Control de una pieza compartible: fidelidad literal, fórmulas declaradas, nada que ancle a la web y texto breve."""
+    from . import compartir as K
+    from . import compartir_frames as CF
+
+    issues: list[Issue] = []
+    if not pieza.scenes:
+        return [Issue("error", pieza.key, "la pieza no tiene escenas")]
+    src = _sources(book, pieza)
+    permitidas = _formulas_permitidas(pieza, book)
+    specs: list[dict] = []
+    donde_spec: list[str] = []
+    con_figura = False
+    leccion = next((l for l in book.lessons if l.id == pieza.lesson_id), None) if pieza.lesson_id else None
+    parrafos_cuerpo = set(T.paragraphs(leccion.cuerpo)) if leccion else set()
+    for i, scene in enumerate(pieza.scenes, start=1):
+        donde = f"{pieza.key} · escena {i} ({scene.kind})"
+        if scene.kind not in CF.STAGES:
+            issues.append(Issue("error", donde, "plantilla visual desconocida"))
+            continue
+        if not scene.narration and scene.hold_s <= 0:
+            issues.append(Issue("error", donde, "escena sin voz ni duración"))
+        for part in scene.parts:
+            if not part.text.strip():
+                issues.append(Issue("error", donde, "tramo de locución vacío"))
+                continue
+            if part.origin.startswith("plantilla"):
+                if part.text not in permitidas:
+                    issues.append(Issue("error", donde, f"fórmula no declarada en compartir.FORMULAS: {part.text[:70]!r}"))
+                elif K.ANCLA_WEB.search(part.text):
+                    # La fórmula es de las declaradas: lo que alude a «la lección» es el título del esquema que lleva dentro.
+                    issues.append(Issue("aviso", donde, f"el texto del corpus alude a la lección o a la web: {part.text[:60]!r}"))
+                continue
+            ref = src.get(part.origin)
+            if ref is None:
+                issues.append(Issue("error", donde, f"origen desconocido: {part.origin}"))
+            elif not _contained(part.text, ref):
+                issues.append(Issue("error", donde, f"la locución no es literal de «{part.origin}»: {part.text[:70]!r}"))
+            elif not _desde_inicio_de_frase(part.text, ref) and T.clean(part.text) not in parrafos_cuerpo:  # un párrafo entero empieza donde debe aunque el anterior acabe sin punto
+                issues.append(Issue("error", donde, f"la locución empieza a media frase de «{part.origin}»: {part.text[:70]!r}"))
+            if K.ANCLA_WEB.search(part.text):
+                issues.append(Issue("aviso", donde, f"el texto del corpus alude a la lección o a la web: {part.text[:60]!r}"))
+            if K.parece_ingles(part.text):
+                issues.append(Issue("aviso", donde, f"tramo que parece estar en otro idioma: {part.text[:60]!r}"))
+            for frase in T.split_sentences(part.text):
+                if T.n_words(frase) > 60:
+                    issues.append(Issue("aviso", donde, f"frase de {T.n_words(frase)} palabras: difícil de seguir en una pieza corta"))
+        # Todo lo que se oye se ve: en el texto cinético, las palabras en pantalla son las de la locución.
+        if scene.kind == "c-frase":
+            dichas = scene.narration.split()
+            vistas = scene.view.get("words") or []
+            if vistas != dichas[len(dichas) - len(vistas):] or not vistas:
+                issues.append(Issue("error", donde, "el texto en pantalla no coincide con la locución"))
+        for vista in CF.estados(scene) if scene.kind != "c-cierre" else []:  # el cierre repite, entero, lo que ya se ha oído
+            n = CF.palabras_en_pantalla(scene.kind, vista)
+            if scene.kind == "c-figura" and vista.get("mode") == "pie" and K.figura_entera(vista):
+                continue  # el esquema entero, como en la web: es el repaso de lo que la voz ya ha recorrido pieza a pieza
+            if n > MAX_PALABRAS_EN_PANTALLA:
+                issues.append(Issue("aviso", donde, f"{n} palabras en pantalla a la vez (máximo orientativo {MAX_PALABRAS_EN_PANTALLA})"))
+                break
+        if scene.kind == "c-figura" and scene.view.get("patron") == "silueta":
+            specs.append(scene.view.get("spec") or {})
+            donde_spec.append(donde)
+        if scene.kind == "c-figura":
+            con_figura = True
+        # Lo que el cierre deja escrito para llevarse es un arranque literal de algo que la pieza ya dijo.
+        recuerda = str(scene.view.get("recuerda") or "").rstrip("…").strip() if scene.kind == "c-cierre" else ""
+        if recuerda and not any(_desde_inicio_de_frase(recuerda, ref) for ref in src.values() if ref):
+            issues.append(Issue("error", donde, f"el mensaje de cierre no es literal del corpus: {recuerda[:60]!r}"))
+        if recuerda and str(scene.view.get("recuerda") or "").endswith("…"):
+            issues.append(Issue("aviso", donde, "el mensaje de cierre va recortado («…»): comprueba que no pierde su salvedad"))
+        for beat in scene.beats:
+            if beat.at_word is None and beat.at_s is None:
+                issues.append(Issue("error", donde, "cambio en pantalla sin momento asignado"))
+
+    issues.extend(_lint_lo_que_solo_se_ve(pieza, book, src))
+    # Una imagen solo puede salir si está en el catálogo (aprobada, con licencia aceptada) y con su crédito exacto.
+    fichas = {str(e.get("archivo")): e for e in K.IM.catalogo().values()}
+    for i, scene in enumerate(pieza.scenes, start=1):
+        foto = scene.view.get("foto")
+        if foto is None:
+            continue
+        e = fichas.get(str(foto.get("src"))) if isinstance(foto, dict) else None
+        if not e or foto.get("credito") != K.IM.credito(e) or not K.IM.licencia_aceptada(str(e.get("licencia"))):
+            issues.append(Issue("error", f"{pieza.key} · escena {i} ({scene.kind})", "imagen que no está aprobada en tools/video/imagenes/ o con el crédito cambiado"))
+    if pieza.tipo == "pregunta":
+        # La respuesta que se da tiene que ser la opción correcta de ESA pregunta, no cualquier opción del libro.
+        lec = next((l for l in book.lessons if l.id == pieza.lesson_id), None)
+        q = next((x for x in (lec.preguntas if lec else []) if x.texto == pieza.gancho and x.valid), None)
+        dichas = [p.text for s in pieza.scenes for p in s.parts if p.origin == "pregunta.opcion"]
+        if not q or len(dichas) != 1 or dichas[0].rstrip(".") != T.clean(q.opciones[q.correcta]).rstrip("."):
+            issues.append(Issue("error", pieza.key, "la respuesta que se da no es la opción correcta de la pregunta que se hace"))
+        elif K.PREGUNTA_INVERSA.search(q.texto):
+            issues.append(Issue("error", pieza.key, "pregunta en negativo o que depende de la lista de opciones: su «respuesta» suelta desinforma"))
+    else:
+        # En cualquier otra pieza, una opción de test solo puede decirse como respuesta a su pregunta, hecha en la
+        # misma pieza, y tiene que ser la correcta.
+        lec = next((l for l in book.lessons if l.id == pieza.lesson_id), None)
+        # Una pieza larga puede hacer más de una pregunta: cada una, seguida de su respuesta, y ninguna dos veces.
+        turnos = [(p.origin, p.text) for s in pieza.scenes for p in s.parts if p.origin in ("pregunta.texto", "pregunta.opcion")]
+        validas = [x for x in (lec.preguntas if lec else []) if x.valid]
+        bien = len(turnos) % 2 == 0 and len({t for o, t in turnos if o == "pregunta.texto"}) == len(turnos) // 2
+        for (o1, hecha), (o2, dicha) in zip(turnos[0::2], turnos[1::2]):
+            # (Una lección puede traer la misma pregunta dos veces: vale la respuesta correcta de cualquiera de las dos.)
+            qs = [x for x in validas if x.texto == hecha]
+            bien = bien and o1 == "pregunta.texto" and o2 == "pregunta.opcion" and any(dicha.rstrip(".") == T.clean(q.opciones[q.correcta]).rstrip(".") for q in qs)
+        if turnos and not bien:
+            issues.append(Issue("error", pieza.key, "la respuesta que se da no es la opción correcta de la pregunta que se hace"))
+        elif any(K.PREGUNTA_INVERSA.search(t) for o, t in turnos if o == "pregunta.texto"):
+            issues.append(Issue("error", pieza.key, "pregunta en negativo o que depende de la lista de opciones: su «respuesta» suelta desinforma"))
+    for rotulo in [*K.ROTULOS.values(), *K.FORMULAS.values()]:
+        if K.ANCLA_WEB.search(rotulo):
+            issues.append(Issue("error", pieza.key, f"rótulo o fórmula que ancla a la web: {rotulo!r}"))
+    # Toda pieza de una lección lleva su matiz (si la lección lo tiene) y todas dicen de qué libro salen.
+    if not any(s.kind == "c-credito" for s in pieza.scenes):
+        issues.append(Issue("error", pieza.key, "la pieza no dice de qué libro sale"))
+    if pieza.lesson_id:
+        lec = next((l for l in book.lessons if l.id == pieza.lesson_id), None)
+        if lec and T.clean(lec.autocorreccion) and not any(p.origin == "leccion.autocorreccion" for s in pieza.scenes for p in s.parts):
+            issues.append(Issue("error", pieza.key, "la lección tiene matiz y la pieza no lo lleva"))
+        # La explicación es el cuerpo desde su principio, por párrafos enteros y sin saltos: una frase sacada de en
+        # medio puede quedarse sin la salvedad que la sigue. Lo único que entra suelto es una salvedad de seguridad.
+        if lec:
+            parrafos = T.paragraphs(lec.cuerpo)
+            j = 0
+            dicho = " ".join(x.narration for x in pieza.scenes if x.kind == "c-frase" and x.section != "Explicación")
+            if parrafos and all(f in dicho for f in T.split_sentences(parrafos[0])):
+                j = 1  # la pieza abrió con el primer párrafo entero
+            for s in pieza.scenes:
+                if s.section != "Explicación":
+                    continue
+                for part in s.parts:
+                    t = T.clean(part.text)
+                    if j < len(parrafos) and parrafos[j] == t:
+                        j += 1
+                    elif j == 0 and parrafos and parrafos[0].endswith(t) and all(f in dicho for f in T.split_sentences(parrafos[0][: -len(t)])):
+                        j = 1  # el arranque del primer párrafo ya lo dijo la pieza al abrir
+                    elif K.SALVEDAD.search(t) and any(t in q for q in parrafos[j:]):
+                        continue
+                    else:
+                        issues.append(Issue("error", pieza.key, f"la explicación no sigue el cuerpo por párrafos enteros desde el principio: {t[:60]!r}"))
+                        break
+        if pieza.tipo == "idea" and not con_figura:
+            issues.append(Issue("aviso", pieza.key, "la figura de la lección no se puede recorrer por piezas: la pieza va sin esquema"))
+    if not T.clean(pieza.gancho):
+        issues.append(Issue("error", pieza.key, "pieza sin gancho"))
+
+    dibujables = _check_diagrams(specs[:1])
+    if dibujables is not None and specs and not dibujables[0]:
+        issues.append(Issue("error", donde_spec[0], "el motor de esquemas no sabe dibujar esta figura"))
+
+    minimo, maximo = K.LIMITES.get(pieza.tipo, (0, 10**6))
+    est = pieza.estimated_seconds
+    if est < minimo:
+        issues.append(Issue("aviso", pieza.key, f"dura ~{est:.0f} s: corta para una pieza «{pieza.tipo}» (mínimo orientativo {minimo} s)"))
+    if est > maximo:
+        issues.append(Issue("aviso", pieza.key, f"dura ~{est:.0f} s: larga para una pieza «{pieza.tipo}» (máximo orientativo {maximo} s)"))
+    return issues

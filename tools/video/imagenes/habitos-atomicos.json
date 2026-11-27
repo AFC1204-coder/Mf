@@ -1,0 +1,21 @@
+{
+  "libro": "Hábitos Atómicos",
+  "libro_id": "982704b8-95e7-4ec3-91d3-1a5dfd9d68b4",
+  "como_se_usa": "Cada entrada propone una imagen libre de Wikimedia Commons para una lección (sale sobre la idea que abre la pieza) o, en «retrato», la del autor (sale en el crédito del libro). No sale en ningún vídeo hasta que alguien la revisa y pone \"aprobado\": true. Solo valen dominio público, CC0 y CC BY. Una lección sin imagen clara no lleva ninguna.",
+  "retrato": null,
+  "lecciones": [
+    {
+      "leccion_id": "149ffd37-1493-4b73-82af-5eec8cfdcfef",
+      "leccion": "El Poder del 1%: Mejora Marginal Compuesta y la Trampa de las Metas",
+      "consulta": "stone steps staircase",
+      "por_que": "Una escalera de piedra: se sube peldaño a peldaño.",
+      "archivo": "570950df63a2d1.jpg",
+      "titulo": "File:Moss-Covered Woodland Steps at Youlbury.jpg",
+      "autor": "TudorTulok",
+      "licencia": "CC BY 4.0",
+      "licencia_url": "https://creativecommons.org/licenses/by/4.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Moss-Covered_Woodland_Steps_at_Youlbury.jpg",
+      "aprobado": true
+    }
+  ]
+}

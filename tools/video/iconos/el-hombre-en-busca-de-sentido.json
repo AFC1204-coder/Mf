@@ -1,0 +1,183 @@
+{
+  "libro": "El hombre en busca de sentido",
+  "libro_id": "5db71134-47e4-4b9f-97b4-6915e68f99aa",
+  "como_se_usa": "Cada entrada propone un icono para una pieza de esquema. No sale en ningún vídeo hasta que alguien revisa la propuesta y pone \"aprobado\": true. Iconos válidos: los 18 de la biblioteca de la app (balanza, bandera, bombilla, brujula, camino, ciclo, dado, diana, escudo, grafico, grupo, libro, llave, lupa, ojo, pregunta, red, reloj) y los de Lucide incorporados en tools/video/assets/iconos-lucide.js, escritos con el prefijo «lu-» (lu-brain, lu-scale…). Un icono vacío deja el número de la pieza.",
+  "piezas": [
+    {
+      "leccion_id": "823e23b4-0f0a-4196-9c3c-47a412a7f240",
+      "leccion": "Llegada: shock, ilusión del indulto y humor",
+      "esquema": "La llegada al campo según Frankl",
+      "pieza": "Ilusión del indulto",
+      "icono": "lu-sparkles",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "823e23b4-0f0a-4196-9c3c-47a412a7f240",
+      "leccion": "Llegada: shock, ilusión del indulto y humor",
+      "esquema": "La llegada al campo según Frankl",
+      "pieza": "Despojo",
+      "icono": "",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "823e23b4-0f0a-4196-9c3c-47a412a7f240",
+      "leccion": "Llegada: shock, ilusión del indulto y humor",
+      "esquema": "La llegada al campo según Frankl",
+      "pieza": "Curiosidad fría",
+      "icono": "lu-microscope",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "823e23b4-0f0a-4196-9c3c-47a412a7f240",
+      "leccion": "Llegada: shock, ilusión del indulto y humor",
+      "esquema": "La llegada al campo según Frankl",
+      "pieza": "Humor",
+      "icono": "lu-drama",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "c622add7-d470-43d9-a249-67c44255a585",
+      "leccion": "Apatía y vida interior: la coraza y el refugio",
+      "esquema": "Apatía y vida interior",
+      "pieza": "Apatía: la coraza",
+      "icono": "lu-shield",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "c622add7-d470-43d9-a249-67c44255a585",
+      "leccion": "Apatía y vida interior: la coraza y el refugio",
+      "esquema": "Apatía y vida interior",
+      "pieza": "Vida interior: el refugio",
+      "icono": "lu-house",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "da04ff31-fd95-4d52-8035-4234b539108f",
+      "leccion": "La última libertad: elegir la actitud",
+      "esquema": "La última libertad según Frankl",
+      "pieza": "Lo que queda",
+      "icono": "lu-key",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "da04ff31-fd95-4d52-8035-4234b539108f",
+      "leccion": "La última libertad: elegir la actitud",
+      "esquema": "La última libertad según Frankl",
+      "pieza": "Pocos casos bastan",
+      "icono": "lu-users",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "da04ff31-fd95-4d52-8035-4234b539108f",
+      "leccion": "La última libertad: elegir la actitud",
+      "esquema": "La última libertad según Frankl",
+      "pieza": "Sin esencialismo",
+      "icono": "pregunta",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "da04ff31-fd95-4d52-8035-4234b539108f",
+      "leccion": "La última libertad: elegir la actitud",
+      "esquema": "La última libertad según Frankl",
+      "pieza": "Poder desafiante del espíritu",
+      "icono": "lu-flame",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "da04ff31-fd95-4d52-8035-4234b539108f",
+      "leccion": "La última libertad: elegir la actitud",
+      "esquema": "La última libertad según Frankl",
+      "pieza": "Libertad como respuesta",
+      "icono": "lu-compass",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "ec3972fd-53c6-4cce-920b-31ea5514dfd8",
+      "leccion": "Un porqué para vivir: el futuro como sostén",
+      "esquema": "Un porqué para vivir",
+      "pieza": "Sin fe en el futuro",
+      "icono": "lu-hourglass",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "ec3972fd-53c6-4cce-920b-31ea5514dfd8",
+      "leccion": "Un porqué para vivir: el futuro como sostén",
+      "esquema": "Un porqué para vivir",
+      "pieza": "Con una tarea por delante",
+      "icono": "lu-target",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "e0b3ac07-1548-49b6-843c-41d6e59ffe28",
+      "leccion": "Voluntad de sentido y vacío existencial",
+      "esquema": "Placer, poder o sentido",
+      "pieza": "Freud y Adler",
+      "icono": "lu-users",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "e0b3ac07-1548-49b6-843c-41d6e59ffe28",
+      "leccion": "Voluntad de sentido y vacío existencial",
+      "esquema": "Placer, poder o sentido",
+      "pieza": "Frankl: voluntad de sentido",
+      "icono": "lu-compass",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "c054d325-a52b-41e6-80b0-b182cb0ba0c2",
+      "leccion": "Tres caminos hacia el sentido",
+      "esquema": "Tres vías hacia el sentido",
+      "pieza": "Una obra o un acto",
+      "icono": "lu-hammer",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "c054d325-a52b-41e6-80b0-b182cb0ba0c2",
+      "leccion": "Tres caminos hacia el sentido",
+      "esquema": "Tres vías hacia el sentido",
+      "pieza": "Experimentar algo o a alguien",
+      "icono": "lu-heart",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "c054d325-a52b-41e6-80b0-b182cb0ba0c2",
+      "leccion": "Tres caminos hacia el sentido",
+      "esquema": "Tres vías hacia el sentido",
+      "pieza": "La actitud ante lo inevitable",
+      "icono": "lu-mountain",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "2466ba44-20fe-4edf-9c92-54d36bef5a1e",
+      "leccion": "Sufrimiento inevitable y optimismo trágico",
+      "esquema": "Optimismo trágico según Frankl",
+      "pieza": "Tríada trágica",
+      "icono": "lu-triangle-exclamation-point",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "2466ba44-20fe-4edf-9c92-54d36bef5a1e",
+      "leccion": "Sufrimiento inevitable y optimismo trágico",
+      "esquema": "Optimismo trágico según Frankl",
+      "pieza": "Cómo transformarla",
+      "icono": "lu-refresh-cw",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "65082173-bb5b-4002-98d1-22562506ccdb",
+      "leccion": "Intención paradójica, desreflexión y responsabilidad",
+      "esquema": "Dos técnicas de la logoterapia",
+      "pieza": "Intención paradójica",
+      "icono": "pregunta",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "65082173-bb5b-4002-98d1-22562506ccdb",
+      "leccion": "Intención paradójica, desreflexión y responsabilidad",
+      "esquema": "Dos técnicas de la logoterapia",
+      "pieza": "Desreflexión",
+      "icono": "lu-eye-off",
+      "aprobado": true
+    }
+  ]
+}

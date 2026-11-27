@@ -1,0 +1,73 @@
+{
+  "libro": "Range",
+  "libro_id": "1903788c-d5a2-475a-b026-db608bf300b5",
+  "como_se_usa": "Cada entrada propone una imagen libre de Wikimedia Commons para una lección (sale sobre la idea que abre la pieza) o, en «retrato», la del autor (sale en el crédito del libro). No sale en ningún vídeo hasta que alguien la revisa y pone \"aprobado\": true. Solo valen dominio público, CC0 y CC BY. Una lección sin imagen clara no lleva ninguna.",
+  "retrato": null,
+  "lecciones": [
+    {
+      "leccion_id": "8153db1a-ddc7-425a-9f83-7baa3a936578",
+      "leccion": "Dominios Amables vs. Dominios Perversos: Cuándo Funciona la Especialización",
+      "consulta": "chess board",
+      "por_que": "Un tablero de ajedrez: el ejemplo de dominio con reglas claras y patrones que se repiten.",
+      "archivo": "13e49ec4e8c1b0.jpg",
+      "titulo": "File:Modern Fianchetto Setup. Chess game Staunton No. 6.jpg",
+      "autor": "Wilfredor",
+      "licencia": "CC0",
+      "licencia_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Modern_Fianchetto_Setup._Chess_game_Staunton_No._6.jpg",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "16d9951a-7ef0-4c6d-8755-f09c2ad8a193",
+      "leccion": "El Mito de Tiger Woods: La Trampa de la Especialización Temprana",
+      "consulta": "golf ball tee",
+      "por_que": "Una pelota de golf: el deporte del caso de Tiger Woods.",
+      "archivo": "359a797f4e29a8.jpg",
+      "titulo": "File:Golf ball on tee.jpg",
+      "autor": "Stefanschenkon",
+      "licencia": "CC0",
+      "licencia_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Golf_ball_on_tee.jpg",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "1736ba97-ba00-4b9a-b3dc-dcea500d1abb",
+      "leccion": "El Pensamiento desde Fuera de la Categoría: Outsiders y Analogías",
+      "consulta": "telescope",
+      "por_que": "Un telescopio bajo las estrellas: mirar el problema desde fuera.",
+      "archivo": "5712f301ee6ab2.jpg",
+      "titulo": "File:Ritchey–Chrétien at Kickapoo Valley Reserve 2-b.jpg",
+      "autor": "Brainandforce y Cart",
+      "licencia": "CC BY 4.0",
+      "licencia_url": "https://creativecommons.org/licenses/by/4.0",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Ritchey%E2%80%93Chr%C3%A9tien_at_Kickapoo_Valley_Reserve_2-b.jpg",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "86d4ddf1-1d6e-45c1-8eb7-51323c81d803",
+      "leccion": "La Carrera en Zigzag: Exploración Tardía como Ventaja",
+      "consulta": "winding road",
+      "por_que": "Una carretera que serpentea: la carrera en zigzag.",
+      "archivo": "e60aaabe940adf.jpg",
+      "titulo": "File:Winding road through golden hills.jpg",
+      "autor": "Sasha",
+      "licencia": "CC0",
+      "licencia_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "pagina": "https://commons.wikimedia.org/wiki/File:Winding_road_through_golden_hills.jpg",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "ee9f4edb-287c-4068-92a8-898ae8066c62",
+      "leccion": "La Ventaja del Generalista en Problemas Complejos: Foxes vs Hedgehogs",
+      "consulta": "red fox",
+      "por_que": "Un zorro: el generalista de la imagen del zorro y el erizo.",
+      "archivo": "a52cd8f171fa8c.jpg",
+      "titulo": "File:Rød ræv (Vulpes vulpes).jpg",
+      "autor": "Malene Thyssen",
+      "licencia": "CC BY 2.5",
+      "licencia_url": "https://creativecommons.org/licenses/by/2.5",
+      "pagina": "https://commons.wikimedia.org/wiki/File:R%C3%B8d_r%C3%A6v_(Vulpes_vulpes).jpg",
+      "aprobado": true
+    }
+  ]
+}

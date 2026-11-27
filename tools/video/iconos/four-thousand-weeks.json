@@ -1,0 +1,199 @@
+{
+  "libro": "Four Thousand Weeks",
+  "libro_id": "b64353e5-af8f-4aee-8cb1-4ecec4f718f2",
+  "como_se_usa": "Cada entrada propone un icono para una pieza de esquema. No sale en ningún vídeo hasta que alguien revisa la propuesta y pone \"aprobado\": true. Iconos válidos: los 18 de la biblioteca de la app (balanza, bandera, bombilla, brujula, camino, ciclo, dado, diana, escudo, grafico, grupo, libro, llave, lupa, ojo, pregunta, red, reloj) y los de Lucide incorporados en tools/video/assets/iconos-lucide.js, escritos con el prefijo «lu-» (lu-brain, lu-scale…). Un icono vacío deja el número de la pieza.",
+  "piezas": [
+    {
+      "leccion_id": "cab602ee-068d-4b62-ac0a-fd51350fb327",
+      "leccion": "Cuatro mil semanas",
+      "esquema": "Cuatro mil semanas",
+      "pieza": "Promesa de la productividad",
+      "icono": "lu-rocket",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "cab602ee-068d-4b62-ac0a-fd51350fb327",
+      "leccion": "Cuatro mil semanas",
+      "esquema": "Cuatro mil semanas",
+      "pieza": "Planteamiento de Burkeman",
+      "icono": "lu-book-open",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "ec5eaadc-3c9e-4cc6-b8af-70bd3f181831",
+      "leccion": "La trampa de la eficiencia",
+      "esquema": "La trampa de la eficiencia",
+      "pieza": "Intentas rendir más con tu tiempo",
+      "icono": "lu-timer",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "ec5eaadc-3c9e-4cc6-b8af-70bd3f181831",
+      "leccion": "La trampa de la eficiencia",
+      "esquema": "La trampa de la eficiencia",
+      "pieza": "Respondes rápido, resuelves más",
+      "icono": "lu-send",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "ec5eaadc-3c9e-4cc6-b8af-70bd3f181831",
+      "leccion": "La trampa de la eficiencia",
+      "esquema": "La trampa de la eficiencia",
+      "pieza": "Te llega más trabajo",
+      "icono": "lu-mail",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "ec5eaadc-3c9e-4cc6-b8af-70bd3f181831",
+      "leccion": "La trampa de la eficiencia",
+      "esquema": "La trampa de la eficiencia",
+      "pieza": "Más ocupación, prisa y ansiedad",
+      "icono": "lu-activity",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "2e7a1dd9-a4fd-4c82-a3e2-8ea14c90fbbd",
+      "leccion": "Elegir es renunciar",
+      "esquema": "Elegir es renunciar",
+      "pieza": "Asumir la renuncia",
+      "icono": "lu-scale",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "2e7a1dd9-a4fd-4c82-a3e2-8ea14c90fbbd",
+      "leccion": "Elegir es renunciar",
+      "esquema": "Elegir es renunciar",
+      "pieza": "Pagarse primero",
+      "icono": "lu-piggy-bank",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "2e7a1dd9-a4fd-4c82-a3e2-8ea14c90fbbd",
+      "leccion": "Elegir es renunciar",
+      "esquema": "Elegir es renunciar",
+      "pieza": "Limitar el trabajo en curso",
+      "icono": "lu-layers",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "2e7a1dd9-a4fd-4c82-a3e2-8ea14c90fbbd",
+      "leccion": "Elegir es renunciar",
+      "esquema": "Elegir es renunciar",
+      "pieza": "Elegir en qué fallar",
+      "icono": "lu-dices",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "094ce585-fbb0-4af3-bd5b-ab28aca92258",
+      "leccion": "La distracción como huida",
+      "esquema": "La distracción como huida",
+      "pieza": "Tarea importante",
+      "icono": "lu-target",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "094ce585-fbb0-4af3-bd5b-ab28aca92258",
+      "leccion": "La distracción como huida",
+      "esquema": "La distracción como huida",
+      "pieza": "Incomodidad ante los límites",
+      "icono": "lu-thermometer",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "094ce585-fbb0-4af3-bd5b-ab28aca92258",
+      "leccion": "La distracción como huida",
+      "esquema": "La distracción como huida",
+      "pieza": "Huida: la distracción",
+      "icono": "lu-door-open",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "094ce585-fbb0-4af3-bd5b-ab28aca92258",
+      "leccion": "La distracción como huida",
+      "esquema": "La distracción como huida",
+      "pieza": "Quedarse con la tarea",
+      "icono": "lu-anchor",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "f2978a90-8453-4090-9317-4f69d19b84be",
+      "leccion": "Paciencia en un mundo con prisa",
+      "esquema": "Paciencia en un mundo con prisa",
+      "pieza": "La prisa",
+      "icono": "lu-timer",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "f2978a90-8453-4090-9317-4f69d19b84be",
+      "leccion": "Paciencia en un mundo con prisa",
+      "esquema": "Paciencia en un mundo con prisa",
+      "pieza": "Gusto por los problemas",
+      "icono": "lu-puzzle",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "f2978a90-8453-4090-9317-4f69d19b84be",
+      "leccion": "Paciencia en un mundo con prisa",
+      "esquema": "Paciencia en un mundo con prisa",
+      "pieza": "Incrementalismo radical",
+      "icono": "lu-trending-up",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "f2978a90-8453-4090-9317-4f69d19b84be",
+      "leccion": "Paciencia en un mundo con prisa",
+      "esquema": "Paciencia en un mundo con prisa",
+      "pieza": "Quedarse en el autobús",
+      "icono": "lu-route",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "862dedf7-bee4-46fe-9566-3971fc23a1de",
+      "leccion": "Herramientas para abrazar la finitud",
+      "esquema": "Herramientas para abrazar la finitud",
+      "pieza": "Volumen fijo",
+      "icono": "lu-ruler",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "862dedf7-bee4-46fe-9566-3971fc23a1de",
+      "leccion": "Herramientas para abrazar la finitud",
+      "esquema": "Herramientas para abrazar la finitud",
+      "pieza": "Terminar uno a uno",
+      "icono": "lu-list-checks",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "862dedf7-bee4-46fe-9566-3971fc23a1de",
+      "leccion": "Herramientas para abrazar la finitud",
+      "esquema": "Herramientas para abrazar la finitud",
+      "pieza": "Decidir en qué fracasar",
+      "icono": "lu-dices",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "862dedf7-bee4-46fe-9566-3971fc23a1de",
+      "leccion": "Herramientas para abrazar la finitud",
+      "esquema": "Herramientas para abrazar la finitud",
+      "pieza": "Mirar lo ya hecho",
+      "icono": "lu-circle-check",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "862dedf7-bee4-46fe-9566-3971fc23a1de",
+      "leccion": "Herramientas para abrazar la finitud",
+      "esquema": "Herramientas para abrazar la finitud",
+      "pieza": "Pocas causas",
+      "icono": "lu-hand-heart",
+      "aprobado": true
+    },
+    {
+      "leccion_id": "862dedf7-bee4-46fe-9566-3971fc23a1de",
+      "leccion": "Herramientas para abrazar la finitud",
+      "esquema": "Herramientas para abrazar la finitud",
+      "pieza": "Practicar la inacción",
+      "icono": "lu-hourglass",
+      "aprobado": true
+    }
+  ]
+}

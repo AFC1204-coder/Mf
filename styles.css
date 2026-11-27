@@ -1206,6 +1206,41 @@ mark.hl { background:var(--hl); color:#000; border-radius:2px; padding:0 1px; }
   font-weight: 600;
 }
 
+/* ── Vídeo de la lección y del libro (YouTube, bajo demanda) ── */
+.vid-bloque { margin:0 0 var(--sp-7); font-family:var(--font-ui); }
+.vid-botones { display:flex; flex-wrap:wrap; gap:var(--sp-2); }
+.vid-btn {
+  display:inline-flex; align-items:center; gap:0.5rem;
+  min-height:44px; padding:0.5rem 1rem;
+  background:transparent; color:var(--accent); cursor:pointer;
+  border:1px solid var(--accent-dim); border-radius:var(--radius-pill);
+  font-family:inherit; font-size:0.82rem; font-weight:600; letter-spacing:0.02em;
+  transition:var(--trans);
+}
+.vid-btn:hover, .vid-btn[aria-expanded="true"] { background:var(--accent-bg); border-color:var(--accent); }
+.vid-btn svg { width:14px; height:14px; fill:currentColor; flex-shrink:0; }
+.vid-dur { opacity:0.7; font-weight:400; }
+.vid-dur::before { content:"· "; }
+.vid-marco { margin-top:var(--sp-3); }
+.vid-caja {
+  width:min(100%, 340px); aspect-ratio:9/16; max-height:78vh;
+  margin:0 auto; background:#000; border-radius:14px; overflow:hidden;
+}
+.vid-caja iframe { width:100%; height:100%; border:0; display:block; }
+.vid-pie {
+  display:flex; justify-content:center; gap:var(--sp-5); margin-top:var(--sp-2);
+  font-size:0.75rem;
+}
+.vid-pie a, .vid-pie button {
+  background:none; border:0; padding:0.6rem 0.2rem; cursor:pointer;
+  color:inherit; opacity:0.75; font:inherit; text-decoration:underline; text-underline-offset:3px;
+}
+.vid-pie a:hover, .vid-pie button:hover { opacity:1; }
+.folio .vid-btn { color:#8a6a28; border-color:#cbb992; }
+.folio .vid-btn:hover, .folio .vid-btn[aria-expanded="true"] { background:rgba(138,106,40,.1); border-color:#8a6a28; }
+#libro-hero-cont .vid-bloque { margin-top:var(--sp-4); }
+@media print { .vid-bloque { display:none; } }
+
 /* ── Audio TTS Player ── */
 .tts-player {
   display:flex; align-items:center; gap:var(--sp-3);
