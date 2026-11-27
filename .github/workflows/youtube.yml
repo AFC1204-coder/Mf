@@ -1,0 +1,109 @@
+name: Subir a YouTube
+
+# Cada día renderiza las siguientes piezas pendientes de los libros de tools/video/cola_youtube.txt y las sube a YouTube
+# (privadas por defecto; las pasas a públicas en YouTube Studio). Anota los enlaces en publicados.csv y datos/videos.json
+# y lo guarda en la misma rama. Lo que no cabe hoy en el cupo de subidas de Google queda para el día siguiente.
+#
+# Hace falta, en Settings → Secrets and variables → Actions → Repository secrets:
+#   YT_CLIENT_ID, YT_CLIENT_SECRET, YT_REFRESH_TOKEN   (ver tools/video/LOTE.md, «Subir a YouTube»)
+# Voz: Edge TTS (gratis, sin clave).
+#
+# A mano: Actions → «Subir a YouTube» → Run workflow (elige la rama donde está el código de vídeo).
+# El horario solo se activa cuando este archivo está en la rama principal del repositorio.
+
+on:
+  workflow_dispatch:
+    inputs:
+      cuantas:
+        description: 'Cuántas piezas subir como máximo en esta ejecución'
+        type: string
+        default: '2'
+      privacidad:
+        description: 'Cómo quedan en YouTube'
+        type: choice
+        options: [private, unlisted, public]
+        default: private
+      simular:
+        description: 'Solo mostrar qué haría (no renderiza ni sube)'
+        type: boolean
+        default: false
+  schedule:
+    - cron: '17 9 * * *'   # una vez al día, después de que Google renueve el cupo
+
+permissions:
+  contents: write
+
+concurrency:
+  group: youtube
+  cancel-in-progress: false
+
+jobs:
+  subir:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    env:
+      CUANTAS: ${{ inputs.cuantas || '2' }}
+      PRIVACIDAD: ${{ inputs.privacidad || 'private' }}
+      SIMULAR: ${{ inputs.simular || 'false' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Dependencias
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          pip install -q -r tools/video/requirements.txt
+      - name: Voz ya generada (para no repetirla)
+        uses: actions/cache@v4
+        with:
+          path: tools/video/output/_cache
+          key: voz-youtube-${{ github.run_id }}
+          restore-keys: voz-youtube-
+      - name: Qué toca hoy
+        id: cola
+        run: |
+          python -m tools.video.cola_youtube --max "$CUANTAS" --solo-libros > libros.txt
+          cat libros.txt
+          echo "hay=$([ -s libros.txt ] && echo si || echo no)" >> "$GITHUB_OUTPUT"
+      - name: Renderizar
+        if: steps.cola.outputs.hay == 'si' && env.SIMULAR != 'true'
+        run: |
+          # Presentación o pieza del libro en vertical; las piezas largas, en horizontal (no son Shorts).
+          while IFS= read -r libro; do
+            python -m tools.video.cli libro "$libro" --format compartir --seleccionadas --piezas presentacion,libro,recorrido --engine edge
+            python -m tools.video.cli libro "$libro" --format compartir --seleccionadas --piezas fondo --aspecto 16:9 --engine edge
+          done < libros.txt
+      - name: Subir
+        if: steps.cola.outputs.hay == 'si'
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+        run: |
+          if [ "$SIMULAR" = "true" ]; then
+            python -m tools.video.cola_youtube --max "$CUANTAS"
+          else
+            python -m tools.video.subir_youtube --max "$CUANTAS" --privacidad "$PRIVACIDAD"
+            python -m tools.video.cli publicados
+          fi
+      - name: Guardar los enlaces
+        if: env.SIMULAR != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tools/video/publicados.csv datos/videos.json
+          if git diff --cached --quiet; then echo "Nada nuevo que guardar."; exit 0; fi
+          git commit -m "YouTube: vídeos subidos hoy"
+          for i in 1 2 3; do git pull --rebase -q origin "${GITHUB_REF_NAME}" && git push -q origin "HEAD:${GITHUB_REF_NAME}" && break || sleep 5; done
+      - name: Si algo falló, guardar lo generado
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: youtube-${{ github.run_number }}
+          path: |
+            tools/video/output/
+            !tools/video/output/_cache/
+          if-no-files-found: ignore
+          retention-days: 7

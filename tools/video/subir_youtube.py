@@ -114,7 +114,10 @@ def main(argv: list[str] | None = None) -> int:
             print(f"  ✓ {f['libro']}/{f['pieza']} → https://youtu.be/{f['youtube']}", flush=True)
         except Exception as exc:  # noqa: BLE001 (una pieza que falla no detiene la tanda)
             fallos += 1
-            print(f"  ✗ {f['libro']}/{f['pieza']}: {exc}", flush=True)
+            print(f"  ✗ {f['libro']}/{f['pieza']}: {str(exc)[:300]}", flush=True)
+            if "Quota exceeded" in str(exc) or "quotaExceeded" in str(exc) or "uploadLimitExceeded" in str(exc):
+                print("  Se acabó el cupo de subidas de hoy: el resto queda para mañana.", flush=True)
+                break  # seguir solo gasta intentos
     if not args.simular:
         print("Ahora: python -m tools.video.cli publicados")
     return 1 if fallos else 0

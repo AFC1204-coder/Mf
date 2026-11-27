@@ -113,3 +113,13 @@ Hace falta, una sola vez, dar permiso de subida al canal (pasos en Google Cloud 
 6. En GitHub, en el repositorio: «Settings» → «Secrets and variables» → «Actions» → tres secretos: `YT_CLIENT_ID`, `YT_CLIENT_SECRET`, `YT_REFRESH_TOKEN`.
 
 Esas tres claves no se escriben nunca en el repositorio ni en un chat.
+
+### Que suba solo cada día (GitHub Actions)
+
+El flujo `.github/workflows/youtube.yml` («Subir a YouTube») renderiza las siguientes piezas pendientes y las sube sin que tengas el ordenador encendido.
+
+1. En el repositorio: Settings → Secrets and variables → Actions → New repository secret. Crea `YT_CLIENT_ID`, `YT_CLIENT_SECRET` y `YT_REFRESH_TOKEN` con los valores de Google (el Refresh token es el que sale en el OAuth Playground). Nunca los pegues en un chat ni en un archivo.
+2. Lanza una vez a mano: Actions → «Subir a YouTube» → Run workflow, elegida la rama `claude/video-compartible`. Con «simular» marcado solo muestra lo que subiría.
+3. Los libros que entran en la cola están en `tools/video/cola_youtube.txt`, en orden; añade uno cuando su selección de lecciones esté revisada.
+
+Los vídeos quedan **privados**; los pasas a públicos en YouTube Studio. Cada ejecución sube como mucho las que pongas en «cuántas» (2 por defecto) y se para sola cuando Google dice que se acabó el cupo del día. El horario diario solo funciona cuando el archivo del flujo está en la rama principal; mientras no lo esté, se lanza a mano.

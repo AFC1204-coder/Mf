@@ -180,6 +180,14 @@ SELECCION_TIPOS = "presentacion,libro,recorrido,fondo"  # con --seleccionadas: l
 PIEZA_DE_LIBRO = ("presentacion", "recorrido", "libro")  # por orden de preferencia
 
 
+def piezas_seleccionadas(book: Book, piezas: list[K.Pieza]) -> list[K.Pieza]:
+    """Del plan, las del libro (un solo vídeo, el de la primera clase que haya) y las de sus lecciones elegidas."""
+    quiero = SEL.elegidas(book) | {0}
+    piezas = [p for p in piezas if p.leccion_n in quiero]
+    del_libro = [t for t in PIEZA_DE_LIBRO if any(p.tipo == t for p in piezas)][:1]
+    return [p for p in piezas if p.leccion_n != 0 or p.tipo in del_libro]
+
+
 def _tipos(args: argparse.Namespace) -> tuple[str, ...]:
     por_defecto = SELECCION_TIPOS if getattr(args, "seleccionadas", False) else ",".join(K.TIPOS)
     pedidos = [t.strip() for t in (args.piezas or por_defecto).split(",") if t.strip()]
@@ -354,10 +362,7 @@ def process_compartir(book: Book, args: argparse.Namespace, only_lesson: int | N
     piezas = plan.piezas
     if getattr(args, "seleccionadas", False) and only_lesson is None:
         # Un vídeo del libro y los de sus lecciones elegidas (tools/video/seleccion.csv): el resto no se produce.
-        quiero = SEL.elegidas(book) | {0}
-        piezas = [p for p in piezas if p.leccion_n in quiero]
-        del_libro = [t for t in PIEZA_DE_LIBRO if any(p.tipo == t for p in piezas)][:1]  # un solo vídeo por libro
-        piezas = [p for p in piezas if p.leccion_n != 0 or p.tipo in del_libro]
+        piezas = piezas_seleccionadas(book, piezas)
         plan = K.Plan(piezas, plan.omitidas, K.orden_sugerido(piezas))  # el manifiesto cuenta solo lo elegido
     if args.only and only_lesson is None:
         quiero = _numeros(args.only)  # 0 = la pieza del libro, 1…N = las de esa lección

@@ -1,0 +1,12 @@
+# Libros que se suben solos a YouTube, uno por línea y en este orden (título o id).
+# Se añaden aquí cuando su selección de lecciones (seleccion.csv) está revisada.
+Decisive
+Four Thousand Weeks
+Hábitos Atómicos
+El hombre en busca de sentido
+The War of Art
+Dopamine Nation
+Range
+Verbal Judo
+Attached
+Games People Play
